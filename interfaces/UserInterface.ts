@@ -43,21 +43,6 @@ export interface UserInterface {
   acceptedBy?: string; // the id of the admin user who accepted the service user
 }
 
-export const initialUserData = (): UserInterface => {
-  return {
-    id: "",
-    fullName: "",
-    phoneNumber: "",
-    photoUrl: "",
-    comments: [],
-    vehicles: [],
-    services: [Services.Normal],
-    servicesData: servicesData,
-    pickUpLocationsHistory: [],
-    deliveryLocationsHistory: [],
-  };
-};
-
 export interface UserQuery {
   vehicles: VehicleInterface[];
   pickUpLocationsHistory?: HistoryReadLocationInterface[];
