@@ -4,7 +4,7 @@ export default function App() {
     return (
         <main>
             <div>BIENVENIDO</div>
-            <Link href={"/auth"}>Comenzar</Link>
+            <Link href={"/auth/signin"}>Comenzar</Link>
         </main>
     );
 }
