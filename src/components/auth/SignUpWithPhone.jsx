@@ -12,9 +12,8 @@ const SignUpWithPhone = () => {
     const [authState, setAuthState] = useState({
         sendingData: false,
         readyForOTP: false,
+        verifier: null,
     });
-
-    const [verifier, setVerifier] = useState(null);
 
     const setupRecaptcha = () => {
         if (!window.recaptchaVerifier) {
@@ -38,10 +37,10 @@ const SignUpWithPhone = () => {
 
         signInWithPhoneNumber(auth, phone, appVerifier)
             .then((confirmationResult) => {
-                setVerifier(confirmationResult);
                 setAuthState({
                     readyForOTP: true,
                     sendingData: false,
+                    verifier: confirmationResult,
                 });
             })
             .catch((error) => {
@@ -51,17 +50,14 @@ const SignUpWithPhone = () => {
 
     const sendCode = (e) => {
         e.preventDefault();
-        setAuthState({ ...authState, sendingData: true });
 
-        verifier
+        authState.verifier
             .confirm(code)
             .then(async (res) => {
                 console.log("success");
-                setAuthState({ ...authState, sendingData: false });
             })
             .catch((error) => {
                 console.log("failed");
-                setAuthState({ ...authState, sendingData: false });
             });
     };
 
@@ -71,7 +67,7 @@ const SignUpWithPhone = () => {
                 <input
                     type="text"
                     placeholder="000000"
-                    onChange={(code) => setCode(code)}
+                    onChange={(e) => setCode(e.target.value)}
                 />
             </fieldset>
             <button>{authState.sendingData ? "Enviando..." : "Enviar codigo"}</button>
