@@ -4,4 +4,5 @@ export enum Collections {
     Trips = "trips",
     AdminUsers = "admin-users",
     SupportUsers = "support-users",
+    Enterprises = "enterprises"
 }
