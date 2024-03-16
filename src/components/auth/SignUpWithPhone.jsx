@@ -1,14 +1,32 @@
 "use client";
 
 import { auth } from "@/firebase/FirebaseConfig";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import {
+    EmailAuthProvider,
+    RecaptchaVerifier,
+    linkWithCredential,
+    signInWithPhoneNumber,
+} from "firebase/auth";
 import { useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
+import { toast } from "react-toastify";
+import { getUserById, saveUser } from "../../utils/requests/UserRequester";
+import { servicesData } from "@/interfaces/ServicesDataInterface";
 
 const SignUpWithPhone = () => {
     const [phone, setPhone] = useState("");
     const [code, setCode] = useState("");
+    const [credentials, setCredentials] = useState({
+        fullName: "",
+        email: "",
+        password: "",
+    });
+    const [linkState, setLinkState] = useState({
+        loading: false,
+        readyToLink: false,
+        asNewUser: true,
+    });
     const [authState, setAuthState] = useState({
         sendingData: false,
         readyForOTP: false,
@@ -54,14 +72,78 @@ const SignUpWithPhone = () => {
         authState.verifier
             .confirm(code)
             .then(async (res) => {
-                console.log("success");
+                var user = res.user;
+                toast("Numero verificado exitosamente");
+                console.log(user);
             })
             .catch((error) => {
-                console.log("failed");
+                toast("Codigo invalido, vuelva a intentarlo mas tarde");
             });
     };
 
-    return authState.readyForOTP ? (
+    const linkAccount = async () => {
+        const credential = EmailAuthProvider.credential(
+            credentials.email,
+            credentials.password,
+        );
+
+        const userSaved = await getUserById(auth.currentUser.uid);
+        if (!userSaved) {
+            const emptyUserData = {
+                id: auth.currentUser.uid,
+                fullName: credentials.fullName,
+                phoneNumber: phone,
+                photoUrl: "",
+
+                comments: [],
+                vehicles: [],
+                services: [],
+
+                servicesData: servicesData,
+                pickUpLocationsHistory: [],
+                deliveryLocationsHistory: [],
+
+                email: credentials.email,
+            };
+            await saveUser(auth.currentUser.uid, emptyUserData);
+        }
+
+        linkWithCredential(auth.currentUser, credential)
+            .then((usercred) => {
+                const user = usercred.user;
+                toast("Registro exitoso");
+                console.log(user);
+            })
+            .catch((error) => {
+                toast("Error al registrarse, vuelva a intentarlo mas tarde");
+            });
+    };
+
+    return linkState.readyToLink ? (
+        <form onSubmit={linkAccount}>
+            <span>Elige un Correo y Contraseña</span>
+            <fieldset>
+                <input
+                    type="email"
+                    placeholder="Correo Electronico"
+                    onChange={(e) =>
+                        setCredentials({ ...credentials, email: e.target.value })
+                    }
+                />
+            </fieldset>
+            <fieldset>
+                <input
+                    type="text"
+                    placeholder="Contraseña"
+                    onChange={(e) =>
+                        setCredentials({ ...credentials, password: e.target.value })
+                    }
+                />
+            </fieldset>
+
+            <button>{linkState.loading ? "Registrando..." : "Registrarse"}</button>
+        </form>
+    ) : authState.readyForOTP ? (
         <form onSubmit={sendCode}>
             <fieldset>
                 <input
@@ -74,7 +156,10 @@ const SignUpWithPhone = () => {
         </form>
     ) : (
         <form onSubmit={onSignInSubmit}>
-            <div>No se borraran los datos que ya tienes en la aplicacion.</div>
+            <div>
+                Podras seguir ingresando a nuestra aplicacion usando tu numero de celular.
+                Ademas no se perderan los datos que ya tienes en nuestra aplicacion.
+            </div>
             <PhoneInput
                 defaultCountry="bo"
                 value={phone}
