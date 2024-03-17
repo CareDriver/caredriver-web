@@ -119,24 +119,26 @@ const SignUpWithPhone = () => {
     };
 
     return linkState.readyToLink ? (
-        <form onSubmit={linkAccount}>
+        <form onSubmit={linkAccount} className="form-container">
             <span>Elige un Correo y Contraseña</span>
-            <fieldset>
+            <fieldset className="form-section">
                 <input
                     type="email"
                     placeholder="Correo Electronico"
                     onChange={(e) =>
                         setCredentials({ ...credentials, email: e.target.value })
                     }
+                    className="form-section-input"
                 />
             </fieldset>
-            <fieldset>
+            <fieldset className="form-section">
                 <input
                     type="text"
                     placeholder="Contraseña"
                     onChange={(e) =>
                         setCredentials({ ...credentials, password: e.target.value })
                     }
+                    className="form-section-input"
                 />
             </fieldset>
 
@@ -147,11 +149,12 @@ const SignUpWithPhone = () => {
         </form>
     ) : authState.readyForOTP ? (
         <form onSubmit={sendCode}>
-            <fieldset>
+            <fieldset className="form-section">
                 <input
                     type="text"
                     placeholder="000000"
                     onChange={(e) => setCode(e.target.value)}
+                    className="form-section-input"
                 />
             </fieldset>
             <button>
@@ -166,7 +169,7 @@ const SignUpWithPhone = () => {
                 Ademas no se perderan los datos que ya tienes en nuestra aplicacion.
             </div>
 
-            <fieldset>
+            <fieldset className="form-section">
                 <PhoneInput
                     defaultCountry="bo"
                     value={phone.value}
@@ -176,7 +179,11 @@ const SignUpWithPhone = () => {
             </fieldset>
             <div id="recaptcha-container"></div>
 
-            <button disabled={phone.errorMessage !== ""}>
+            <button
+                disabled={phone.errorMessage !== ""}
+                className="general-button | touchable margin-top-25"
+                data-theme="dark"
+            >
                 {authState.sendingData && <i className="loader"></i>}
                 <span>Confirmar</span>
             </button>

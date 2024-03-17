@@ -131,41 +131,44 @@ const SignUpAsNew = () => {
     };
 
     return (
-        <form onSubmit={signUp}>
-            <fieldset>
+        <form onSubmit={signUp} className="form-container">
+            <fieldset className="form-section">
                 <input
                     type="text"
                     name="fullName"
                     placeholder="Nombre Completo"
                     onChange={(e) => handleInputChange(e, isValidName)}
+                    className="form-section-input"
                 />
                 {credentials.fullName.errorMessage.length > 0 && (
                     <small>{credentials.fullName.errorMessage}</small>
                 )}
             </fieldset>
-            <fieldset>
+            <fieldset className="form-section">
                 <input
                     type="email"
                     name="email"
                     placeholder="Correo Electronico"
                     onChange={(e) => handleInputChange(e, isValidEmail)}
+                    className="form-section-input"
                 />
                 {credentials.email.errorMessage.length > 0 && (
                     <small>{credentials.email.errorMessage}</small>
                 )}
             </fieldset>
-            <fieldset>
+            <fieldset className="form-section">
                 <input
                     type="text"
                     name="password"
                     placeholder="Contraseña"
                     onChange={(e) => handleInputChange(e, isValidPassword)}
+                    className="form-section-input"
                 />
                 {credentials.password.errorMessage.length > 0 && (
                     <small>{credentials.password.errorMessage}</small>
                 )}
             </fieldset>
-            <fieldset>
+            <fieldset className="form-section">
                 <PhoneInput
                     defaultCountry="bo"
                     value={credentials.phone.value}
@@ -177,6 +180,8 @@ const SignUpAsNew = () => {
             </fieldset>
 
             <button
+                className="general-button | touchable margin-top-25"
+                data-theme="dark"
                 disabled={
                     credentials.fullName.errorMessage !== "" ||
                     credentials.phone.errorMessage !== "" ||

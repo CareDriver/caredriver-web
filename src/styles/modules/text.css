@@ -8,7 +8,7 @@
 }
 
 .text.big {
-    font-size: 1.25em;
+    font-size: 40px;
 }
 
 .text.medium {
@@ -16,7 +16,7 @@
 }
 
 .text.small {
-    font-size: 7.25em;
+    font-size: 14px;
 }
 
 .text.smaller {
@@ -41,4 +41,12 @@
 
 .text.lighter {
     font-weight: 100;
+}
+
+.text.underline {
+    text-decoration: underline;
+}
+
+.text.center {
+    text-align: center;
 }

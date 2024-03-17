@@ -74,30 +74,36 @@ const SignIn = () => {
 
     return (
         <section>
-            <h1>Iniciar Sesion</h1>
-            <form onSubmit={login}>
-                <fieldset>
+            <h1 className="text | big bold">Iniciar Sesion</h1>
+            <form onSubmit={login} className="form-container">
+                <fieldset className="form-section">
                     <input
                         type="email"
                         placeholder="Correo Electronico"
                         name="email"
                         value={credentials.email.value}
                         onChange={(e) => handleInputChange(e, isValidEmail)}
+                        className="form-section-input"
                     />
                     {credentials.email.errorMessage.length > 0 && (
-                        <small>{credentials.email.errorMessage}</small>
+                        <small className="form-section-message">
+                            {credentials.email.errorMessage}
+                        </small>
                     )}
                 </fieldset>
-                <fieldset>
+                <fieldset className="form-section">
                     <input
                         type="text"
                         placeholder="Contraseña"
                         name="password"
                         value={credentials.password.value}
                         onChange={(e) => handleInputChange(e, isValidPassword)}
+                        className="form-section-input"
                     />
                     {credentials.password.errorMessage.length > 0 && (
-                        <small>{credentials.password.errorMessage}</small>
+                        <small className="form-section-message">
+                            {credentials.password.errorMessage}
+                        </small>
                     )}
                 </fieldset>
 
@@ -110,12 +116,16 @@ const SignIn = () => {
                         credentials.email.errorMessage !== "" ||
                         credentials.password.errorMessage !== ""
                     }
+                    className="general-button | touchable margin-top-25"
+                    data-theme="dark"
                 >
                     {formState.loading && <i className="loader"></i>}
                     <span>Iniciar sesion</span>
                 </button>
             </form>
-            <Link href={"/auth/signup"}>Todavia no tienes cuenta? Registrate ahora</Link>
+            <Link href={"/auth/signup"} className="text | small bold underline">
+                Todavia no tienes cuenta? Registrate ahora
+            </Link>
         </section>
     );
 };

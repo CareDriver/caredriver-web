@@ -8,3 +8,31 @@
 .touchable:active {
     transform: scale(0.8);
 }
+
+.general-button {
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px 60px;
+    border: none;
+    border-radius: 10px;
+}
+
+.general-button[data-theme="dark"] {
+    background-color: black;
+    color: white;
+}
+
+.option-button {
+    padding: 10px 20px;
+
+    border: none;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+.option-button.selected {
+    background-color: black;
+    color: white;
+}

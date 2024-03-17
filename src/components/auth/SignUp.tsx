@@ -15,15 +15,27 @@ const SignUp = () => {
 
     return (
         <section>
-            <h1>Registrate</h1>
+            <h1 className="text | big bold">Registrate</h1>
             <div>
-                <button onClick={() => setMethod(Method.AsNew)}>Nuevo Usuario</button>
-                <button onClick={() => setMethod(Method.WithPhone)}>
+                <button
+                    onClick={() => setMethod(Method.AsNew)}
+                    className={`option-button ${method === Method.AsNew && "selected"}`}
+                >
+                    Nuevo Usuario
+                </button>
+                <button
+                    onClick={() => setMethod(Method.WithPhone)}
+                    className={`option-button ${
+                        method === Method.WithPhone && "selected"
+                    }`}
+                >
                     Usuario Registrado
                 </button>
             </div>
             {method === Method.AsNew ? <SignUpAsNew /> : <SignUpWithPhone />}
-            <Link href={"/auth/signin"}>Ya tienes cuenta? Inicia sesion</Link>
+            <Link href={"/auth/signin"} className="text | small bold underline">
+                Ya tienes cuenta? Inicia sesion
+            </Link>
         </section>
     );
 };
