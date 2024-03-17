@@ -1,7 +1,7 @@
 import { auth } from "@/firebase/FirebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { UserInterface } from "@/interfaces/UserInterface";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { createContext, useState, useEffect } from "react";
 import { getUserById } from "@/utils/requests/UserRequester";
 import { toast } from "react-toastify";
@@ -21,6 +21,7 @@ export const AuthContext = createContext<authContextType>(authContextDefaultValu
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<UserInterface>();
     const router = useRouter();
+    const pathname = usePathname();
 
     const isLogged = () => {
         if (!user) {
@@ -40,12 +41,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                             setUser(userData);
                         })
                         .catch(() => {
-                            toast("Necesitar iniciar sesión");
-                            router.push("/");
+                            if (pathname !== "/" || !pathname.includes("auth")) {
+                                toast("Necesitas iniciar sesión");
+                                router.push("/");
+                            }
                         });
                 } else {
-                    toast("Necesitar iniciar sesión");
-                    router.push("/");
+                    if (pathname !== "/" || !pathname.includes("auth")) {
+                        toast("Necesitas iniciar sesión");
+                        router.push("/");
+                    }
                 }
             });
         }

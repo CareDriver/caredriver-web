@@ -21,7 +21,7 @@ const usersCollection = collection(firestore, "users");
  */
 const saveUser = async (
     uid: string,
-    userData: Omit<UserInterface, "id">,
+    userData: UserInterface,
 ): Promise<DocumentReference> => {
     try {
         const userRef = doc(usersCollection, uid);

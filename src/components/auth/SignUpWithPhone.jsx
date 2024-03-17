@@ -1,6 +1,7 @@
 "use client";
 
 import { auth } from "@/firebase/FirebaseConfig";
+import { isPhoneValid } from "@/utils/validator/CredentialsValidator";
 import {
     EmailAuthProvider,
     RecaptchaVerifier,
@@ -11,11 +12,12 @@ import { useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { toast } from "react-toastify";
-import { getUserById, saveUser } from "../../utils/requests/UserRequester";
-import { servicesData } from "@/interfaces/ServicesDataInterface";
 
 const SignUpWithPhone = () => {
-    const [phone, setPhone] = useState("");
+    const [phone, setPhone] = useState({
+        value: "",
+        errorMessage: "",
+    });
     const [code, setCode] = useState("");
     const [credentials, setCredentials] = useState({
         fullName: "",
@@ -75,6 +77,10 @@ const SignUpWithPhone = () => {
                 var user = res.user;
                 toast("Numero verificado exitosamente");
                 console.log(user);
+                setLinkState({
+                    ...linkState,
+                    readyToLink: true,
+                });
             })
             .catch((error) => {
                 toast("Codigo invalido, vuelva a intentarlo mas tarde");
@@ -82,41 +88,34 @@ const SignUpWithPhone = () => {
     };
 
     const linkAccount = async () => {
+        setLinkState({
+            ...linkState,
+            loading: true,
+        });
         const credential = EmailAuthProvider.credential(
             credentials.email,
             credentials.password,
         );
 
-        const userSaved = await getUserById(auth.currentUser.uid);
-        if (!userSaved) {
-            const emptyUserData = {
-                id: auth.currentUser.uid,
-                fullName: credentials.fullName,
-                phoneNumber: phone,
-                photoUrl: "",
-
-                comments: [],
-                vehicles: [],
-                services: [],
-
-                servicesData: servicesData,
-                pickUpLocationsHistory: [],
-                deliveryLocationsHistory: [],
-
-                email: credentials.email,
-            };
-            await saveUser(auth.currentUser.uid, emptyUserData);
-        }
-
         linkWithCredential(auth.currentUser, credential)
             .then((usercred) => {
                 const user = usercred.user;
                 toast("Registro exitoso");
+                router.push("/services/drive");
                 console.log(user);
             })
             .catch((error) => {
                 toast("Error al registrarse, vuelva a intentarlo mas tarde");
             });
+    };
+
+    const validatePhone = (phone) => {
+        const { isValid, message } = isPhoneValid(phone);
+
+        setPhone({
+            value: phone,
+            errorMessage: isValid ? "" : message,
+        });
     };
 
     return linkState.readyToLink ? (
@@ -141,7 +140,10 @@ const SignUpWithPhone = () => {
                 />
             </fieldset>
 
-            <button>{linkState.loading ? "Registrando..." : "Registrarse"}</button>
+            <button>
+                {linkState.sendingData && <i className="loader"></i>}
+                <span>Registrarse</span>
+            </button>
         </form>
     ) : authState.readyForOTP ? (
         <form onSubmit={sendCode}>
@@ -152,7 +154,10 @@ const SignUpWithPhone = () => {
                     onChange={(e) => setCode(e.target.value)}
                 />
             </fieldset>
-            <button>{authState.sendingData ? "Enviando..." : "Enviar codigo"}</button>
+            <button>
+                {authState.sendingData && <i className="loader"></i>}
+                <span>Enviar codigo</span>
+            </button>
         </form>
     ) : (
         <form onSubmit={onSignInSubmit}>
@@ -160,14 +165,21 @@ const SignUpWithPhone = () => {
                 Podras seguir ingresando a nuestra aplicacion usando tu numero de celular.
                 Ademas no se perderan los datos que ya tienes en nuestra aplicacion.
             </div>
-            <PhoneInput
-                defaultCountry="bo"
-                value={phone}
-                onChange={(phone) => setPhone(phone)}
-            />
+
+            <fieldset>
+                <PhoneInput
+                    defaultCountry="bo"
+                    value={phone.value}
+                    onChange={validatePhone}
+                />
+                {phone.errorMessage.length > 0 && <small>{phone.errorMessage}</small>}
+            </fieldset>
             <div id="recaptcha-container"></div>
 
-            <button>{authState.sendingData ? "Enviando..." : "Confirmar"}</button>
+            <button disabled={phone.errorMessage !== ""}>
+                {authState.sendingData && <i className="loader"></i>}
+                <span>Confirmar</span>
+            </button>
         </form>
     );
 };
