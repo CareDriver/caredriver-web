@@ -1,20 +1,14 @@
 .text {
-    font-size: 1em;
+    font-size: 17px;
     font-weight: 500;
-
-    color: var(--pr-color);
-}
-
-.text.light {
-    font-weight: 300;
 }
 
 .text.bigger {
-    font-size: 1.5em;
+    font-size: 70px;
 }
 
 .text.big {
-    font-size: 1.25em;
+    font-size: 40px;
 }
 
 .text.medium {
@@ -22,9 +16,37 @@
 }
 
 .text.small {
-    font-size: 7.25em;
+    font-size: 14px;
 }
 
 .text.smaller {
     font-size: 0.5em;
+}
+
+.text.bolder {
+    font-weight: 900;
+}
+
+.text.bold {
+    font-weight: 700;
+}
+
+.text.medium {
+    font-weight: 500;
+}
+
+.text.light {
+    font-weight: 300;
+}
+
+.text.lighter {
+    font-weight: 100;
+}
+
+.text.underline {
+    text-decoration: underline;
+}
+
+.text.center {
+    text-align: center;
 }

@@ -6,5 +6,8 @@
 
 @import "modules/form.css";
 @import "modules/text.css";
+@import "modules/loader.css";
+@import "modules/buttons.css";
+@import "modules/space.css";
 
 @import "theme/theme-light.css";

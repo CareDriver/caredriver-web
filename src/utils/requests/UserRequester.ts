@@ -1,4 +1,4 @@
-import { firestore } from "../firebase/FirebaseConfig";
+import { firestore } from "../../firebase/FirebaseConfig";
 import {
     collection,
     addDoc,
@@ -7,7 +7,7 @@ import {
     doc,
     setDoc,
 } from "firebase/firestore";
-import { UserInterface } from "../interfaces/UserInterface";
+import { UserInterface } from "../../interfaces/UserInterface";
 
 const usersCollection = collection(firestore, "users");
 
@@ -21,7 +21,7 @@ const usersCollection = collection(firestore, "users");
  */
 const saveUser = async (
     uid: string,
-    userData: Omit<UserInterface, "id">,
+    userData: UserInterface,
 ): Promise<DocumentReference> => {
     try {
         const userRef = doc(usersCollection, uid);
