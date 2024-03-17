@@ -41,13 +41,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                             setUser(userData);
                         })
                         .catch(() => {
-                            if (pathname !== "/" || !pathname.includes("auth")) {
+                            if (pathname !== "/") {
                                 toast("Necesitas iniciar sesión");
                                 router.push("/");
                             }
                         });
                 } else {
-                    if (pathname !== "/" || !pathname.includes("auth")) {
+                    if (pathname !== "/") {
                         toast("Necesitas iniciar sesión");
                         router.push("/");
                     }

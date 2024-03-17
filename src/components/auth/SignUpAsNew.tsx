@@ -58,6 +58,7 @@ const SignUpAsNew = () => {
             .then((res) => {
                 wasSuccess = true;
                 console.log(res);
+
                 const emptyUserData = {
                     id: res.user.uid,
                     fullName: credentials.fullName.value,
@@ -74,7 +75,7 @@ const SignUpAsNew = () => {
 
                     email: credentials.email.value,
                 };
-                
+
                 saveUser(res.user.uid, emptyUserData)
                     .then(() => {
                         setFormState({

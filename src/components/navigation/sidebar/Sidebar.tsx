@@ -26,7 +26,7 @@ const SideBar = () => {
             <li>
                 <Link href={"/services/drive"}>Chofer</Link>
                 <Link href={"/services/mechanic"}>Mecanico</Link>
-                <Link href={"/services/crange"}>Grua</Link>
+                <Link href={"/services/tow"}>Grua</Link>
             </li>
             <li>
                 <button onClick={logout}>Log out</button>
