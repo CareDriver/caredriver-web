@@ -5,8 +5,8 @@ export interface VehicleInterface {
     name: string; // The name of the vehicle
     description: string; // Description or details about the vehicle
     type: "car" | "motorcycle"; // Type of the vehicle, either 'car' or 'motorcycle'
-    transmission: "automatic" | "mechanical"; // Type of transmission, either 'automatic' or 'mechanical'
-    usedTimes: number; // Number of trips vehicle is used
+    transmission?: "automatic" | "mechanical"; // Type of transmission, either 'automatic' or 'mechanical'
+    usedTimes: number; // Number of trips vehicle was used
 }
 
 // Object of an empty new vehicle to add

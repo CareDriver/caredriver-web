@@ -1,8 +1,8 @@
 import { GeoPoint } from "firebase/firestore";
 import { VehicleInterface } from "./VehicleInterface";
 import { Services } from "./Services";
-import { ServicesData, servicesData } from "./ServicesDataInterface";
-import { CIInterface, LicenseInterface } from "./PersonalDocumentsInterface";
+import { ServicesData } from "./ServicesDataInterface";
+import { LicenseInterface } from "./PersonalDocumentsInterface";
 import { Payment, Price } from "./Payment";
 
 export interface HistoryLocationInterface {
@@ -36,12 +36,14 @@ export interface UserInterface {
 
     // Attributes just for services user:
     license?: LicenseInterface; // Driver's license (just for drivers users)
-    ci?: CIInterface; // User's national identification number (CI)
     email?: string; // User's email
     currentDebtWithTheApp?: Price; // current debt of a server user towards the application, will contain the money that the user owes to the application following the services made and last time he/she paid
     appPaymentHistory?: Payment[]; // Array of the payments made by the service user to the app.
-    acceptedBy?: string; // the id of the admin user who accepted the service user
-}
+    location?: Locations; // Location user begins
+    disable?: boolean; // true when user did not paid to the app and was disabled.
+    mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
+    towEnterpriteId: string; // id of the tow enterprise user works for if is tow user
+} 
 
 export interface UserQuery {
     vehicles: VehicleInterface[];
