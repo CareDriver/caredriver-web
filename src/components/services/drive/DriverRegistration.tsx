@@ -72,18 +72,20 @@ const DriverRegistration = () => {
 
     const [userConfirmation, setUserConfirmation] = useState<string | null>(null);
 
-    const [vehiclesState, setVehiclesState] = useState({
+    const [vehiclesState, setVehiclesState] = useState<{
+        chosen: VehicleType[];
+        free: VehicleType[];
+    }>({
         chosen: [],
         free: vehiclesTypes,
     });
 
     const addNewVehicle = () => {
-        
         setVehicles([...vehicles]);
     };
 
     const updateTypeVehicle = (index: number, type: VehicleType) => {
-        var array = vehicles;
+        var array = [...vehicles];
         for (let i = 0; i < array.length; i++) {
             if (index == i) {
                 array[i].type.type = type;
@@ -94,36 +96,54 @@ const DriverRegistration = () => {
     };
 
     const updateNumberLicense = (index: number, number: string) => {
-        var array = vehicles;
-        for (let i = 0; i < array.length; i++) {
-            if (index == i) {
-                array[i].license.number = number;
-            }
-        }
-
-        setVehicles(array);
+        setVehicles((prevVehicles) => {
+            return prevVehicles.map((vehicle, i) => {
+                if (i === index) {
+                    return {
+                        ...vehicle,
+                        license: {
+                            ...vehicle.license,
+                            number: number,
+                        },
+                    };
+                }
+                return vehicle;
+            });
+        });
     };
 
     const updateFrontLicenseImage = (index: number, image: string | null) => {
-        var array = vehicles;
-        for (let i = 0; i < array.length; i++) {
-            if (index == i) {
-                array[i].license.frontPhoto = image;
-            }
-        }
-
-        setVehicles(array);
+        setVehicles((prevVehicles) => {
+            return prevVehicles.map((vehicle, i) => {
+                if (i === index) {
+                    return {
+                        ...vehicle,
+                        license: {
+                            ...vehicle.license,
+                            frontPhoto: image,
+                        },
+                    };
+                }
+                return vehicle;
+            });
+        });
     };
 
     const updateBehindLicenseImage = (index: number, image: string | null) => {
-        var array = vehicles;
-        for (let i = 0; i < array.length; i++) {
-            if (index == i) {
-                array[i].license.behindPhoto = image;
-            }
-        }
-
-        setVehicles(array);
+        setVehicles((prevVehicles) => {
+            return prevVehicles.map((vehicle, i) => {
+                if (i === index) {
+                    return {
+                        ...vehicle,
+                        license: {
+                            ...vehicle.license,
+                            behindPhoto: image,
+                        },
+                    };
+                }
+                return vehicle;
+            });
+        });
     };
 
     const string2vehicle = (typeToFind: string) => {
@@ -138,11 +158,15 @@ const DriverRegistration = () => {
     };
 
     useEffect(() => {
-        var chosen = [];
-        var free = vehiclesTypes;
+        let chosen: VehicleType[] = [];
+        let free: VehicleType[] = vehiclesTypes;
         vehicles.forEach((vehicle) => {
             chosen.push(vehicle.type.type);
             free = free.filter((stillfree) => stillfree != vehicle.type.type);
+        });
+        setVehiclesState({
+            chosen: chosen,
+            free: free,
         });
     }, [vehicles]);
 
@@ -169,73 +193,70 @@ const DriverRegistration = () => {
                         indicator: "Foto de Perfil",
                     }}
                 />
-                <>
-                    {vehicles.map((vehicle, i) => (
-                        <>
-                            <h2>Tipo de Vehiculo</h2>
-                            <select
-                                defaultValue={vehicle.type.type}
-                                onChange={(option) => {
-                                    updateTypeVehicle(
-                                        i,
-                                        string2vehicle(option.target.value),
-                                    );
-                                }}
-                            >
-                                {vehiclesState.free.map((vehicleType) => (
-                                    <option value={vehicleType}>{vehicleType}</option>
+                {vehicles.map((vehicle, i) => (
+                    <div key={`vehicle-${i}`}>
+                        <h2>Tipo de Vehiculo</h2>
+                        <select
+                            defaultValue={vehicle.type.type}
+                            onChange={(option) => {
+                                updateTypeVehicle(i, string2vehicle(option.target.value));
+                            }}
+                        >
+                            {vehiclesTypes.map((vehicleType, i) => (
+                                <option key={`vehicleType-${i}`} value={vehicleType}>
+                                    {vehicleType}
+                                </option>
+                            ))}
+                        </select>
+                        {vehicle.type.type === VehicleType.Car && (
+                            <select defaultValue={vehicle.type.mode}>
+                                {carModes.map((carMode, i) => (
+                                    <option key={`vehicleMod-${i}`} value={carMode}>
+                                        {carMode}
+                                    </option>
                                 ))}
                             </select>
-                            {vehicle.type.type === VehicleType.Car && (
-                                <select defaultValue={vehicle.type.mode}>
-                                    {carModes.map((carMode) => (
-                                        <option value={carMode}>{carMode}</option>
-                                    ))}
-                                </select>
-                            )}
-                            <h2>Licencia</h2>
-                            <p>
-                                Las fotos de tu licencia de conducir se eliminaran cuando
-                                se acepte o rechaze tu solicitud.
-                            </p>
-                            <fieldset>
-                                <input
-                                    type="text"
-                                    placeholder="Numero"
-                                    value={vehicle.license.number}
-                                    onChange={(e) =>
-                                        updateNumberLicense(i, e.target.value)
-                                    }
-                                />
-                            </fieldset>
-                            <fieldset>
-                                <input type="date" />
-                            </fieldset>
-                            <ImageUploader
-                                uploader={{
-                                    image: vehicle.license.frontPhoto,
-                                    setImage: (image: string | null) => {
-                                        updateFrontLicenseImage(i, image);
-                                    },
-                                }}
-                                content={{
-                                    indicator: "Parte Frontal de la Licencia",
-                                }}
+                        )}
+                        <h2>Licencia</h2>
+                        <p>
+                            Las fotos de tu licencia de conducir se eliminaran cuando se
+                            acepte o rechaze tu solicitud.
+                        </p>
+                        <fieldset>
+                            <input
+                                type="text"
+                                placeholder="Numero"
+                                value={vehicle.license.number}
+                                onChange={(e) => updateNumberLicense(i, e.target.value)}
                             />
-                            <ImageUploader
-                                uploader={{
-                                    image: vehicle.license.behindPhoto,
-                                    setImage: (image: string | null) => {
-                                        updateBehindLicenseImage(i, image);
-                                    },
-                                }}
-                                content={{
-                                    indicator: "Parte Posterior de la Licencia",
-                                }}
-                            />
-                        </>
-                    ))}
-                </>
+                        </fieldset>
+                        <fieldset>
+                            <input type="date" />
+                        </fieldset>
+                        <ImageUploader
+                            uploader={{
+                                image: vehicle.license.frontPhoto,
+                                setImage: (image: string | null) => {
+                                    updateFrontLicenseImage(i, image);
+                                },
+                            }}
+                            content={{
+                                indicator: "Parte Frontal de la Licencia",
+                            }}
+                        />
+                        <ImageUploader
+                            uploader={{
+                                image: vehicle.license.behindPhoto,
+                                setImage: (image: string | null) => {
+                                    updateBehindLicenseImage(i, image);
+                                },
+                            }}
+                            content={{
+                                indicator: "Parte Posterior de la Licencia",
+                            }}
+                        />
+                    </div>
+                ))}
                 {vehiclesState.free.length > 0 && <button>Agregar Otro Vehiculo</button>}
                 <h2>Confirmacion del Usuario</h2>
                 <p>
