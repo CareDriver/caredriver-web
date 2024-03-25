@@ -20,6 +20,7 @@ interface DragAndDropContent {
 const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
     const [draggingOver, setDraggingOver] = useState<boolean>(false);
     const [uploading, setUploading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -28,7 +29,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
         const file = e.dataTransfer.files[0];
         if (file) {
             if (file.size > 1024 * 1024) {
-                alert(
+                setError(
                     "La imagen es demasiado grande. Por favor, sube una imagen menor a 1MB.",
                 );
                 return;
@@ -37,7 +38,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
             const allowedExtensions = ["jpg", "jpeg", "png"];
             const fileExtension = file.name.split(".").pop()?.toLowerCase() || "";
             if (!allowedExtensions.includes(fileExtension)) {
-                alert(
+                setError(
                     "Tipo de archivo no permitido. Por favor, sube una imagen con extensión jpg, jpeg o png.",
                 );
                 return;
@@ -54,7 +55,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
             };
             reader.readAsDataURL(file);
         } else {
-            alert("Por favor, sube solo imágenes.");
+            setError("Por favor, sube solo imágenes.");
         }
     };
 
@@ -104,6 +105,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
                     <p>{content.indicator}</p>
                 </div>
             )}
+            {error && <small>{error}</small>}
         </div>
     );
 };
