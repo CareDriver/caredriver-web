@@ -80,8 +80,30 @@ const DriverRegistration = () => {
         free: vehiclesTypes,
     });
 
+    const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
+
     const addNewVehicle = () => {
-        setVehicles([...vehicles]);
+        if (vehiclesState.free.length > 0) {
+            var availableType = vehiclesState.free[0];
+            var vehicleType: Vehicle;
+            if (availableType == VehicleType.Motorcycle) {
+                vehicleType = {
+                    type: {
+                        type: availableType,
+                    },
+                    license: defaultLicense,
+                };
+            } else {
+                vehicleType = {
+                    type: {
+                        type: availableType,
+                        mode: CarMode.Automatic,
+                    },
+                    license: defaultLicense,
+                };
+            }
+            setVehicles([...vehicles, vehicleType]);
+        }
     };
 
     const updateTypeVehicle = (index: number, type: VehicleType) => {
@@ -202,7 +224,8 @@ const DriverRegistration = () => {
                                 updateTypeVehicle(i, string2vehicle(option.target.value));
                             }}
                         >
-                            {vehiclesTypes.map((vehicleType, i) => (
+                            <option value={vehicle.type.type}>{vehicle.type.type}</option>
+                            {vehiclesState.free.map((vehicleType, i) => (
                                 <option key={`vehicleType-${i}`} value={vehicleType}>
                                     {vehicleType}
                                 </option>
@@ -257,7 +280,11 @@ const DriverRegistration = () => {
                         />
                     </div>
                 ))}
-                {vehiclesState.free.length > 0 && <button>Agregar Otro Vehiculo</button>}
+                {vehiclesState.free.length > 0 && (
+                    <button type="button" onClick={addNewVehicle}>
+                        Agregar Otro Vehiculo
+                    </button>
+                )}
                 <h2>Confirmacion del Usuario</h2>
                 <p>
                     Sube una selfie para verificar que eres el que esta solicitando
@@ -274,12 +301,14 @@ const DriverRegistration = () => {
                     }}
                 />
 
-                <input
-                    type="checkbox"
-                    value={
-                        "Acepto las Politicas de Privacidad, Terminos y Condiciones de Uso, recibir comunicaciones de CaReDriver y chatear con nosotros por WhatsApp"
-                    }
-                />
+                <div onClick={() => setAcceptedTerms(!acceptedTerms)}>
+                    <input type="checkbox" checked={acceptedTerms} onChange={() => {}} />
+                    <p>
+                        Acepto las Politicas de Privacidad, Terminos y Condiciones de Uso,
+                        recibir comunicaciones de CaReDriver y chatear con nosotros por
+                        WhatsApp
+                    </p>
+                </div>
                 <button>Enviar Solicitud</button>
             </form>
         </div>
