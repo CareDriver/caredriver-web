@@ -1,10 +1,5 @@
-export type InputValidator = (input: string) => InputState;
 import { PhoneNumberUtil } from "google-libphonenumber";
-
-export interface InputState {
-    isValid: boolean;
-    message: string;
-}
+import { InputState } from "../InputValidator";
 
 export const isValidName = (name: string): InputState => {
     const nameRegex: RegExp = /^[a-zA-Z\s]+$/;

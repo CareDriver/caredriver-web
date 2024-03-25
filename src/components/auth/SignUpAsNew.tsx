@@ -4,18 +4,17 @@ import { auth } from "@/firebase/FirebaseConfig";
 import { servicesData } from "@/interfaces/ServicesDataInterface";
 import { saveUser } from "@/utils/requests/UserRequester";
 import { PhoneInput } from "react-international-phone";
+import { InputValidator } from "@/utils/validator/InputValidator";
 import {
-    InputValidator,
     isPhoneValid,
     isValidEmail,
     isValidName,
     isValidPassword,
-} from "@/utils/validator/CredentialsValidator";
+} from "@/utils/validator/auth/CredentialsValidator";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
-import { doc, setDoc } from "firebase/firestore";
 
 const SignUpAsNew = () => {
     const router = useRouter();

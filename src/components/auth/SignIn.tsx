@@ -1,11 +1,11 @@
 "use client";
 
 import { auth } from "@/firebase/FirebaseConfig";
+import { InputValidator } from "@/utils/validator/InputValidator";
 import {
-    InputValidator,
     isValidEmail,
     isValidPassword,
-} from "@/utils/validator/CredentialsValidator";
+} from "@/utils/validator/auth/CredentialsValidator";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

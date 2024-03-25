@@ -42,7 +42,7 @@ export interface UserInterface {
     location?: Locations; // Location user begins
     disable?: boolean; // true when user did not paid to the app and was disabled.
     mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
-    towEnterpriteId: string; // id of the tow enterprise user works for if is tow user
+    towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
 } 
 
 export interface UserQuery {
