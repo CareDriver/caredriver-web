@@ -23,12 +23,19 @@ const SideBar = () => {
 
     return (
         <nav>
+            <span>Servicios</span>
             <li>
                 <Link href={"/services/drive"}>Chofer</Link>
                 <Link href={"/services/mechanic"}>Mecanico</Link>
                 <Link href={"/services/tow"}>Grua</Link>
             </li>
             <li>
+                <Link href={"/registration/mechanicalworkshop"}>Talleres</Link>
+                <Link href={"/registration/cranecompany"}>Empresas de Grua</Link>
+            </li>
+            <li>
+                <Link href={"/user/profile"}>Mi Perfil</Link>
+                <Link href={"/user/location"}>Ubicacion</Link>
                 <button onClick={logout}>Log out</button>
             </li>
         </nav>
