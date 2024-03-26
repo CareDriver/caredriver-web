@@ -1,4 +1,4 @@
-enum Locations {
+export enum Locations {
     CochabambaBolivia = "Cochabamba, Bolivia",
     SantaCruzBolivia = "Santa Cruz, Bolivia",
     LaPazBolivia = "La Paz, Bolivia",
