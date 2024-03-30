@@ -72,19 +72,12 @@ const DriverRegistration = () => {
 
     const [userConfirmation, setUserConfirmation] = useState<string | null>(null);
 
-    const [vehiclesState, setVehiclesState] = useState<{
-        chosen: VehicleType[];
-        free: VehicleType[];
-    }>({
-        chosen: [],
-        free: vehiclesTypes,
-    });
-
     const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
 
     const addNewVehicle = () => {
-        if (vehiclesState.free.length > 0) {
-            var availableType = vehiclesState.free[0];
+        var free = getFreeVehicles(vehicles);
+        if (free.length > 0) {
+            var availableType = free[0];
             var vehicleType: Vehicle;
             if (availableType == VehicleType.Motorcycle) {
                 vehicleType = {
@@ -106,15 +99,26 @@ const DriverRegistration = () => {
         }
     };
 
-    const updateTypeVehicle = (index: number, type: VehicleType) => {
-        var array = [...vehicles];
-        for (let i = 0; i < array.length; i++) {
-            if (index == i) {
-                array[i].type.type = type;
-            }
-        }
-
-        setVehicles(array);
+    const updateTypeVehicle = (index: number, type: string) => {
+        setVehicles((prevVehicles) => {
+            return prevVehicles.map((vehicle, i) => {
+                if (i === index) {
+                    return {
+                        ...vehicle,
+                        type:
+                            type === VehicleType.Car
+                                ? {
+                                      type: VehicleType.Car,
+                                      mode: CarMode.Automatic,
+                                  }
+                                : {
+                                      type: VehicleType.Motorcycle,
+                                  },
+                    };
+                }
+                return vehicle;
+            });
+        });
     };
 
     const updateNumberLicense = (index: number, number: string) => {
@@ -168,29 +172,18 @@ const DriverRegistration = () => {
         });
     };
 
-    const string2vehicle = (typeToFind: string) => {
-        let typeFound: VehicleType = VehicleType.Car;
-        vehiclesTypes.forEach((type) => {
-            if (type == typeToFind) {
-                typeFound = type;
-            }
-        });
+    const getFreeVehicles = (vehicles: Vehicle[]) => {
+        const chosen = getChosenVehicles(vehicles);
+        const free: VehicleType[] = vehiclesTypes.filter(
+            (type) => !chosen.includes(type),
+        );
 
-        return typeFound;
+        return free;
     };
 
-    useEffect(() => {
-        let chosen: VehicleType[] = [];
-        let free: VehicleType[] = vehiclesTypes;
-        vehicles.forEach((vehicle) => {
-            chosen.push(vehicle.type.type);
-            free = free.filter((stillfree) => stillfree != vehicle.type.type);
-        });
-        setVehiclesState({
-            chosen: chosen,
-            free: free,
-        });
-    }, [vehicles]);
+    const getChosenVehicles = (vehicles: Vehicle[]) => {
+        return vehicles.map((vehicle) => vehicle.type.type);
+    };
 
     return (
         <div>
@@ -221,15 +214,22 @@ const DriverRegistration = () => {
                         <select
                             defaultValue={vehicle.type.type}
                             onChange={(option) => {
-                                updateTypeVehicle(i, string2vehicle(option.target.value));
+                                updateTypeVehicle(i, option.target.value);
                             }}
                         >
                             <option value={vehicle.type.type}>{vehicle.type.type}</option>
-                            {vehiclesState.free.map((vehicleType, i) => (
-                                <option key={`vehicleType-${i}`} value={vehicleType}>
-                                    {vehicleType}
-                                </option>
-                            ))}
+                            {vehiclesTypes.map((vehicleType, i) => {
+                                if (!getChosenVehicles(vehicles).includes(vehicleType)) {
+                                    return (
+                                        <option
+                                            key={`vehicleType-${i}`}
+                                            value={vehicleType}
+                                        >
+                                            {vehicleType}
+                                        </option>
+                                    );
+                                }
+                            })}
                         </select>
                         {vehicle.type.type === VehicleType.Car && (
                             <select defaultValue={vehicle.type.mode}>
@@ -280,7 +280,7 @@ const DriverRegistration = () => {
                         />
                     </div>
                 ))}
-                {vehiclesState.free.length > 0 && (
+                {vehicles.length < vehiclesTypes.length && (
                     <button type="button" onClick={addNewVehicle}>
                         Agregar Otro Vehiculo
                     </button>
