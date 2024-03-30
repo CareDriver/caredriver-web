@@ -4,7 +4,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { Services } from "@/interfaces/Services";
 import { useContext, useEffect, useState } from "react";
 import DrivePanel from "./DrivePanel";
-import DriverRegistration from "./DriverRegistration";
+import DriverRegistration from "./registration/DriverRegistration";
 
 const DriveService = () => {
     const { user } = useContext(AuthContext);
