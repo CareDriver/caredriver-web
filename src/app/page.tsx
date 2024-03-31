@@ -1,11 +1,12 @@
 import Link from "next/link";
-import "../styles/components/home.css";
+import "@/styles/components/home.css";
+import "@/styles/base/reset.css";
 
 export default function App() {
     return (
         <main className="home-container">
-            <h1 className="text | bigger bolder">BIENVENIDO</h1>
-            <Link href={"/auth/signin"} className="action-button text | medium touchable">
+            <img src="/images/logowithname.png" alt="" />
+            <Link href={"/auth/signin"} className="action-button">
                 Comenzar
             </Link>
         </main>
