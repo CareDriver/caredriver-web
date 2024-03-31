@@ -1,4 +1,6 @@
 "use client";
+import Trash from "@/icons/Trash";
+import Upload from "@/icons/Upload";
 import React, { useState } from "react";
 
 interface ImageUploaderProps {
@@ -9,6 +11,7 @@ interface ImageUploaderProps {
 interface UploaderProps {
     image: string | null;
     setImage: ImageSetter;
+    isCircle: boolean;
 }
 
 type ImageSetter = (image: string | null) => void;
@@ -24,9 +27,34 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
+        setError(null);
         setDraggingOver(false);
+        uploadImage(e.dataTransfer.files[0]);
+    };
 
-        const file = e.dataTransfer.files[0];
+    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setDraggingOver(true);
+    };
+
+    const handleDragLeave = () => {
+        setDraggingOver(false);
+    };
+
+    const removeImage = () => {
+        uploader.setImage(null);
+        setError("Necesitas subir una imagen");
+    };
+
+    const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            uploadImage(file);
+        }
+    };
+
+    const uploadImage = (file: File) => {
+        setError(null);
         if (file) {
             if (file.size > 1024 * 1024) {
                 setError(
@@ -59,29 +87,18 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
         }
     };
 
-    const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-        e.preventDefault();
-        setDraggingOver(true);
-    };
-
-    const handleDragLeave = () => {
-        setDraggingOver(false);
-    };
-
-    const removeImage = () => {
-        uploader.setImage(null);
-    };
-
     return (
         <div
-            style={{
-                border: `2px dashed ${draggingOver ? "blue" : "#ccc"}`,
-                position: "relative",
-            }}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
         >
+            <input
+                type="file"
+                id="fileInput"
+                style={{ display: "none" }}
+                onChange={handleFileInputChange}
+            />
             {uploading && (
                 <div
                     style={{
@@ -95,17 +112,37 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
                 </div>
             )}
             {uploader.image ? (
-                <div>
-                    <img src={uploader.image} alt="preview" />
-                    <button onClick={removeImage}>Eliminar</button>
+                <div className={`form-section-uploaded ${uploader.isCircle && "circle"}`}>
+                    <img
+                        src={uploader.image}
+                        alt="preview"
+                        className="form-section-uploaded-image"
+                    />
+                    <button
+                        onClick={removeImage}
+                        className="form-section-uploaded-button"
+                    >
+                        <Trash />
+                    </button>
                 </div>
             ) : (
-                <div>
-                    <span>Subir Foto</span>
-                    <p>{content.indicator}</p>
-                </div>
+                <label htmlFor="fileInput">
+                    <div
+                        className={`form-section-uploader icon-wrapper | column medium center ${
+                            draggingOver && "uploading"
+                        }`}
+                    >
+                        <Upload />
+                        <span className="text | bold gray-dark | margin-top-15">
+                            Subir Foto
+                        </span>
+                        <p className="text | medium-big bold gray-dark">
+                            {content.indicator}
+                        </p>
+                    </div>
+                </label>
             )}
-            {error && <small>{error}</small>}
+            {error && <small className="form-section-message">{error}</small>}
         </div>
     );
 };

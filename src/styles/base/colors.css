@@ -1,6 +1,7 @@
 :root {
     --main-dark: #2a7b54;
     --main-light: #3bb770;
+    --main-light-opacity: rgba(59, 183, 112, .2);
 
     --second-dark: #0E1724;
     --second-light: #456079;

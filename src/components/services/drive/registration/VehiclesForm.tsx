@@ -2,6 +2,9 @@ import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface"
 import { carModes, defaultLicense, Vehicle, vehiclesTypes } from "./FormModels";
 import ImageUploader from "@/components/form/ImageUploader";
 import { Dispatch, SetStateAction } from "react";
+import Car from "@/icons/Car";
+import AddressCar from "@/icons/AddressCar";
+import Plus from "@/icons/Plus";
 
 const VehiclesForm = ({
     vehicles,
@@ -122,51 +125,69 @@ const VehiclesForm = ({
     };
 
     return (
-        <>
+        <div className="form-sub-container | margin-top-25">
             {vehicles.map((vehicle, i) => (
-                <div key={`vehicle-${i}`}>
-                    <h2>Tipo de Vehiculo</h2>
-                    <select
-                        defaultValue={vehicle.type.type}
-                        onChange={(option) => {
-                            updateTypeVehicle(i, option.target.value);
-                        }}
-                    >
-                        <option value={vehicle.type.type}>{vehicle.type.type}</option>
-                        {vehiclesTypes.map((vehicleType, i) => {
-                            if (!getChosenVehicles(vehicles).includes(vehicleType)) {
-                                return (
-                                    <option key={`vehicleType-${i}`} value={vehicleType}>
-                                        {vehicleType}
-                                    </option>
-                                );
-                            }
-                        })}
-                    </select>
-                    {vehicle.type.type === VehicleType.CAR && (
-                        <select defaultValue={vehicle.type.mode}>
-                            {carModes.map((carMode, i) => (
-                                <option key={`vehicleMod-${i}`} value={carMode}>
-                                    {carMode}
-                                </option>
-                            ))}
+                <div className="form-sub-container" key={`vehicle-${i}`}>
+                    <h2 className="text icon-wrapper | medium-big bold">
+                        <Car /> Tipo de Vehiculo
+                    </h2>
+                    <fieldset className="form-section">
+                        <select
+                            defaultValue={vehicle.type.type}
+                            onChange={(option) => {
+                                updateTypeVehicle(i, option.target.value);
+                            }}
+                            className="form-section-input"
+                        >
+                            <option value={vehicle.type.type}>{vehicle.type.type}</option>
+                            {vehiclesTypes.map((vehicleType, i) => {
+                                if (!getChosenVehicles(vehicles).includes(vehicleType)) {
+                                    return (
+                                        <option
+                                            key={`vehicleType-${i}`}
+                                            value={vehicleType}
+                                        >
+                                            {vehicleType}
+                                        </option>
+                                    );
+                                }
+                            })}
                         </select>
+                    </fieldset>
+                    {vehicle.type.type === VehicleType.CAR && (
+                        <fieldset className="form-section">
+                            <select
+                                defaultValue={vehicle.type.mode}
+                                className="form-section-input"
+                            >
+                                {carModes.map((carMode, i) => (
+                                    <option key={`vehicleMod-${i}`} value={carMode}>
+                                        {carMode}
+                                    </option>
+                                ))}
+                            </select>
+                        </fieldset>
                     )}
-                    <h2>Licencia</h2>
-                    <p>
-                        Las fotos de tu licencia de conducir se eliminaran cuando se
-                        acepte o rechaze tu solicitud.
-                    </p>
-                    <fieldset>
+                    <div>
+                        <h2 className="text icon-wrapper | medium-big bold margin-top-25">
+                            <AddressCar /> Licencia
+                        </h2>
+                        <p>
+                            Las fotos de tu licencia de conducir se eliminaran cuando se
+                            acepte o rechaze tu solicitud.
+                        </p>
+                    </div>
+                    <fieldset className="form-section">
                         <input
                             type="text"
                             placeholder="Numero"
                             value={vehicle.license.number}
                             onChange={(e) => updateNumberLicense(i, e.target.value)}
+                            className="form-section-input"
                         />
                     </fieldset>
-                    <fieldset>
-                        <input type="date" />
+                    <fieldset className="form-section">
+                        <input type="date" className="form-section-input" />
                     </fieldset>
                     <ImageUploader
                         uploader={{
@@ -174,6 +195,7 @@ const VehiclesForm = ({
                             setImage: (image: string | null) => {
                                 updateFrontLicenseImage(i, image);
                             },
+                            isCircle: false,
                         }}
                         content={{
                             indicator: "Parte Frontal de la Licencia",
@@ -185,6 +207,7 @@ const VehiclesForm = ({
                             setImage: (image: string | null) => {
                                 updateBehindLicenseImage(i, image);
                             },
+                            isCircle: false,
                         }}
                         content={{
                             indicator: "Parte Posterior de la Licencia",
@@ -193,11 +216,16 @@ const VehiclesForm = ({
                 </div>
             ))}
             {vehicles.length < vehiclesTypes.length && (
-                <button type="button" onClick={addNewVehicle}>
+                <button
+                    type="button"
+                    onClick={addNewVehicle}
+                    className="icon-wrapper general-button | no-full gray"
+                >
+                    <Plus />
                     Agregar Otro Vehiculo
                 </button>
             )}
-        </>
+        </div>
     );
 };
 

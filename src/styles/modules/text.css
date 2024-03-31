@@ -11,6 +11,10 @@
     font-size: 40px;
 }
 
+.text.medium-big{
+    font-size: 22px;
+}
+
 .text.medium {
     font-size: 18px;
 }
@@ -49,4 +53,8 @@
 
 .text.center {
     text-align: center;
+}
+
+.text.gray-dark {
+    color: var(--gray-dark);
 }

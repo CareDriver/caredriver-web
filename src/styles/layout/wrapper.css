@@ -2,3 +2,10 @@
     display: flex;
     gap: 40px;
 }
+
+.service-form-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    padding: 70px 40px;
+}

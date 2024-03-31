@@ -25,6 +25,27 @@
     color: var(--white);
 }
 
+.general-button.no-full {
+    display: inline-flex;
+    justify-content: center;
+
+    padding: 14px;
+    font-size: 16px;
+    max-width: 40%;
+    width: auto;
+}
+
+.general-button.gray {
+    border: 2px solid var(--gray-medium);
+    background-color: var(--gray-lighter);
+    color: var(--gray-dark);
+}
+
+.general-button.gray > * {
+    color: var(--gray-dark);
+    fill: var(--gray-dark);
+}
+
 .option-button {
     font-weight: bold;
     font-size: 18px;

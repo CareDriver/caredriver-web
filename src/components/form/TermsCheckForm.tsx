@@ -8,7 +8,10 @@ const TermsCheckForm = ({
     setAcceptedTerms: Dispatch<SetStateAction<boolean>>;
 }) => {
     return (
-        <div onClick={() => setAcceptedTerms(!isAcceptedTerms)}>
+        <div
+            onClick={() => setAcceptedTerms(!isAcceptedTerms)}
+            className="form-sub-container | row | margin-top-25"
+        >
             <input type="checkbox" checked={isAcceptedTerms} onChange={() => {}} />
             <p>
                 Acepto las Politicas de Privacidad, Terminos y Condiciones de Uso, recibir

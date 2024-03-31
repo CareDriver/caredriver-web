@@ -26,13 +26,15 @@ const DriverRegistration = () => {
     const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
 
     return (
-        <div>
-            <h1>Solicita trabajar como Chofer con nosotros!</h1>
+        <div className="service-form-wrapper">
+            <h1 className="text | big bold">
+                Solicita trabajar como Chofer con nosotros!
+            </h1>
             <p>
                 Por favor llena este formulario con datos reales para que tu solicitud sea
                 aprovada y puedas empezar a trabajar con nosotros.
             </p>
-            <form>
+            <form className="form-sub-container | max-width-60">
                 <PersonalDataForm
                     personalData={personalData}
                     setPersonalData={setPersonalData}
@@ -48,7 +50,7 @@ const DriverRegistration = () => {
                     isAcceptedTerms={acceptedTerms}
                     setAcceptedTerms={setAcceptedTerms}
                 />
-                <button>Enviar Solicitud</button>
+                <button className="general-button | margin-top-25">Enviar Solicitud</button>
             </form>
         </div>
     );

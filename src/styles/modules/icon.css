@@ -1,0 +1,24 @@
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icon-wrapper.center {
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-wrapper.column {
+    flex-direction: column;
+}
+
+.icon-wrapper > svg {
+    height: 20px;
+    width: 20px;
+}
+
+.icon-wrapper.medium > svg{
+    height: 50px;
+    width: 50px;
+}
