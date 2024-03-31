@@ -4,7 +4,7 @@
 }
 
 .text.bigger {
-    font-size: 70px;
+    font-size: 60px;
 }
 
 .text.big {
@@ -12,11 +12,11 @@
 }
 
 .text.medium {
-    font-size: 1.1em;
+    font-size: 18px;
 }
 
 .text.small {
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .text.smaller {
@@ -31,7 +31,7 @@
     font-weight: 700;
 }
 
-.text.medium {
+.text.normal {
     font-weight: 500;
 }
 

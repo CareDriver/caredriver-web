@@ -1,7 +1,7 @@
 "use client";
 
 import { auth } from "@/firebase/FirebaseConfig";
-import { isPhoneValid } from "@/utils/validator/CredentialsValidator";
+import { isPhoneValid } from "@/utils/validator/auth/CredentialsValidator";
 import {
     EmailAuthProvider,
     RecaptchaVerifier,
