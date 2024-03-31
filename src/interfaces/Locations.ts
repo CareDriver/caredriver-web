@@ -9,3 +9,15 @@ export enum Locations {
     BeniBolivia = "Beni, Bolivia",
     PandoBolivia = "Pando, Bolivia",
 }
+
+export const locationList = [
+    Locations.CochabambaBolivia,
+    Locations.SantaCruzBolivia,
+    Locations.LaPazBolivia,
+    Locations.TarijaBolivia,
+    Locations.ChuquisacaBolivia,
+    Locations.PotosiBolivia,
+    Locations.OruroBolivia,
+    Locations.BeniBolivia,
+    Locations.PandoBolivia,
+];

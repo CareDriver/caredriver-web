@@ -28,9 +28,10 @@
 
     border: 1px solid #ddd;
     border-radius: 15px;
+    background-color: var(--white);
 }
 
-.form-section-message {
+.form-section > small, .form-section-message {
     color: var(--red);
     font-weight: normal;
 }

@@ -26,15 +26,21 @@
 }
 
 .option-button {
+    font-weight: bold;
+    font-size: 18px;
     padding: 10px 20px;
 
     border: none;
-    border: 1px solid #ddd;
-    border-radius: 5px;
     background-color: transparent;
 }
 
 .option-button.selected {
     background-color: black;
     color: white;
+}
+
+.double-button-wrapper {
+    overflow: hidden;
+    border-radius: 25px;
+    border: 1px solid var(--black-darker);
 }

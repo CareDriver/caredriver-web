@@ -15,6 +15,8 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
+import { locationList } from "@/interfaces/Locations";
+import PhoneForm from "../form/PhoneForm";
 
 const SignUpAsNew = () => {
     const router = useRouter();
@@ -133,18 +135,6 @@ const SignUpAsNew = () => {
         <form onSubmit={signUp} className="form-container">
             <fieldset className="form-section">
                 <input
-                    type="text"
-                    name="fullName"
-                    placeholder="Nombre Completo"
-                    onChange={(e) => handleInputChange(e, isValidName)}
-                    className="form-section-input"
-                />
-                {credentials.fullName.errorMessage.length > 0 && (
-                    <small>{credentials.fullName.errorMessage}</small>
-                )}
-            </fieldset>
-            <fieldset className="form-section">
-                <input
                     type="email"
                     name="email"
                     placeholder="Correo Electronico"
@@ -168,14 +158,34 @@ const SignUpAsNew = () => {
                 )}
             </fieldset>
             <fieldset className="form-section">
-                <PhoneInput
-                    defaultCountry="bo"
-                    value={credentials.phone.value}
-                    onChange={validatePhone}
+                <input
+                    type="text"
+                    name="fullName"
+                    placeholder="Nombre Completo"
+                    onChange={(e) => handleInputChange(e, isValidName)}
+                    className="form-section-input"
+                />
+                {credentials.fullName.errorMessage.length > 0 && (
+                    <small>{credentials.fullName.errorMessage}</small>
+                )}
+            </fieldset>
+            <fieldset className="form-section">
+                <PhoneForm
+                    phone={credentials.phone.value}
+                    validatePhone={validatePhone}
                 />
                 {credentials.phone.errorMessage.length > 0 && (
                     <small>{credentials.phone.errorMessage}</small>
                 )}
+            </fieldset>
+            <fieldset className="form-section">
+                <select className="form-section-input">
+                    {locationList.map((location, i) => (
+                        <option key={`location-option-${i}`} value={location}>
+                            {location}
+                        </option>
+                    ))}
+                </select>
             </fieldset>
 
             <button
