@@ -9,5 +9,6 @@
 @import "modules/loader.css";
 @import "modules/buttons.css";
 @import "modules/space.css";
+@import "modules/decoration.css";
 
 @import "theme/theme-light.css";
