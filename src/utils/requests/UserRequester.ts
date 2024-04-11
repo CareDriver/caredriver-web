@@ -6,6 +6,7 @@ import {
     getDoc,
     doc,
     setDoc,
+    updateDoc,
 } from "firebase/firestore";
 import { UserInterface } from "../../interfaces/UserInterface";
 
@@ -26,10 +27,8 @@ const saveUser = async (
     try {
         const userRef = doc(usersCollection, uid);
         await setDoc(userRef, userData);
-        console.log("User added with ID: ", userRef.id);
         return userRef;
     } catch (error) {
-        console.error("Error adding user: ", error);
         throw error;
     }
 };
@@ -52,4 +51,24 @@ const getUserById = async (userId: string): Promise<UserInterface | undefined> =
     }
 };
 
-export { saveUser, getUserById };
+/**
+ * Updates a user document in the database.
+ *
+ * @param {string} userId - The ID of the user document to update.
+ * @param {Partial<UserInterface>} newData - The partial data to update in the user document.
+ * @returns {Promise<void>} A promise that resolves when the document is successfully updated.
+ * @throws {Error} If there is an error updating the user document.
+ */
+const updateUser = async (
+    userId: string,
+    newData: Partial<UserInterface>,
+): Promise<void> => {
+    try {
+        const userRef = doc(usersCollection, userId);
+        await updateDoc(userRef, newData);
+    } catch (error) {
+        throw error;
+    }
+};
+
+export { saveUser, getUserById, updateUser };

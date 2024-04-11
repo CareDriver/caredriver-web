@@ -1,9 +1,6 @@
-import SideBar from "../navigation/sidebar/Sidebar";
-
 const ServiceWrapper = ({ children }: { children: React.ReactNode }) => {
     return (
-        <main>
-            <SideBar />
+        <main className="wrapper">
             {children}
         </main>
     );

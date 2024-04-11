@@ -1,7 +1,7 @@
 "use client";
 
 import { auth } from "@/firebase/FirebaseConfig";
-import { isPhoneValid } from "@/utils/validator/CredentialsValidator";
+import { isPhoneValid } from "@/utils/validator/auth/CredentialsValidator";
 import {
     EmailAuthProvider,
     RecaptchaVerifier,
@@ -12,6 +12,7 @@ import { useState } from "react";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { toast } from "react-toastify";
+import PhoneForm from "@/components/form/PhoneForm";
 
 const SignUpWithPhone = () => {
     const [phone, setPhone] = useState({
@@ -142,7 +143,7 @@ const SignUpWithPhone = () => {
                 />
             </fieldset>
 
-            <button>
+            <button className="general-button | touchable margin-top-25">
                 {linkState.sendingData && <i className="loader"></i>}
                 <span>Registrarse</span>
             </button>
@@ -157,24 +158,20 @@ const SignUpWithPhone = () => {
                     className="form-section-input"
                 />
             </fieldset>
-            <button>
+            <button className="general-button | touchable margin-top-25">
                 {authState.sendingData && <i className="loader"></i>}
                 <span>Enviar codigo</span>
             </button>
         </form>
     ) : (
         <form onSubmit={onSignInSubmit}>
-            <div>
+            <p className="text | small center | margin-bottom-25">
                 Podras seguir ingresando a nuestra aplicacion usando tu numero de celular.
                 Ademas no se perderan los datos que ya tienes en nuestra aplicacion.
-            </div>
+            </p>
 
             <fieldset className="form-section">
-                <PhoneInput
-                    defaultCountry="bo"
-                    value={phone.value}
-                    onChange={validatePhone}
-                />
+                <PhoneForm phone={phone.value} validatePhone={validatePhone} />
                 {phone.errorMessage.length > 0 && <small>{phone.errorMessage}</small>}
             </fieldset>
             <div id="recaptcha-container"></div>
@@ -182,7 +179,6 @@ const SignUpWithPhone = () => {
             <button
                 disabled={phone.errorMessage !== ""}
                 className="general-button | touchable margin-top-25"
-                data-theme="dark"
             >
                 {authState.sendingData && <i className="loader"></i>}
                 <span>Confirmar</span>

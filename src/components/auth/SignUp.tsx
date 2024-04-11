@@ -14,9 +14,9 @@ const SignUp = () => {
     const [method, setMethod] = useState(Method.AsNew);
 
     return (
-        <section>
-            <h1 className="text | big bold">Registrate</h1>
-            <div>
+        <section className="form-container | center">
+            <h1 className="text | bigger bold">Registrate!</h1>
+            <div className="double-button-wrapper | margin-bottom-25">
                 <button
                     onClick={() => setMethod(Method.AsNew)}
                     className={`option-button ${method === Method.AsNew && "selected"}`}
@@ -33,7 +33,7 @@ const SignUp = () => {
                 </button>
             </div>
             {method === Method.AsNew ? <SignUpAsNew /> : <SignUpWithPhone />}
-            <Link href={"/auth/signin"} className="text | small bold underline">
+            <Link href={"/auth/signin"} className="text | small underline">
                 Ya tienes cuenta? Inicia sesion
             </Link>
         </section>

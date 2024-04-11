@@ -1,6 +1,6 @@
 import { GeoPoint } from "firebase/firestore";
 import { VehicleInterface, VehicleTransmission, VehicleType } from "./VehicleInterface";
-import { Services } from "./Services";
+import { ServiceReqState, Services } from "./Services";
 import { ServicesData } from "./ServicesDataInterface";
 import { LicenseInterface } from "./PersonalDocumentsInterface";
 import { Payment, Price } from "./Payment";
@@ -32,8 +32,8 @@ export interface UserInterface {
     services: Services[]; // The services the user can provide, just "normal" if it's a non-service user
 
     servicesData: ServicesData; // The comments and rating per service for the user
-    pickUpLocationsHistory: HistoryReadLocationInterface[]; // Array of historical pickup locations
-    deliveryLocationsHistory: HistoryReadLocationInterface[]; // Array of historical delivery locations
+    pickUpLocationsHistory: HistoryLocationInterface[]; // Array of historical pickup locations
+    deliveryLocationsHistory: HistoryLocationInterface[]; // Array of historical delivery locations
 
     // Attributes just for services user:
     licenses?: {
@@ -47,12 +47,48 @@ export interface UserInterface {
     location?: Locations; // Location user begins
     disable?: boolean; // true when user did not paid to the app and was disabled.
     mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
-    towEnterpriteId: string; // id of the tow enterprise user works for if is tow user
-    drivenVehicle?: { // The vehicle driver can drive
+    towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
+    drivenVehicle?: {
+        // The vehicle driver can drive
         type: VehicleType[]; // Type of the vehicle, either 'car' or 'motorcycle'
         transmission?: VehicleTransmission[]; // Type of transmission, either 'automatic' or 'mechanical'
-    }
-} 
+    };
+
+    serviceRequests: {
+        drive: {
+            id: string;
+            state: ServiceReqState;
+        };
+        mechanic: {
+            id: string;
+            state: ServiceReqState;
+        };
+        tow: {
+            id: string;
+            state: ServiceReqState;
+        };
+    };
+}
+
+export const defaultServiceReq = {
+    drive: {
+        id: "",
+        state: ServiceReqState.NotSent,
+    },
+    mechanic: {
+        id: "",
+        state: ServiceReqState.NotSent,
+    },
+    tow: {
+        id: "",
+        state: ServiceReqState.NotSent,
+    },
+};
+
+export interface ServiceRequest {
+    type: Services;
+    state: ServiceReqState;
+}
 
 export interface UserQuery {
     vehicles: VehicleInterface[];

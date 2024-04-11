@@ -1,11 +1,11 @@
 "use client";
 
 import { auth } from "@/firebase/FirebaseConfig";
+import { InputValidator } from "@/utils/validator/InputValidator";
 import {
-    InputValidator,
     isValidEmail,
     isValidPassword,
-} from "@/utils/validator/CredentialsValidator";
+} from "@/utils/validator/auth/CredentialsValidator";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -73,8 +73,8 @@ const SignIn = () => {
     };
 
     return (
-        <section>
-            <h1 className="text | big bold">Iniciar Sesion</h1>
+        <section className="form-container | center">
+            <h1 className="text | bigger bold | margin-bottom-50">Iniciar Sesion</h1>
             <form onSubmit={login} className="form-container">
                 <fieldset className="form-section">
                     <input
@@ -119,11 +119,17 @@ const SignIn = () => {
                     className="general-button | touchable margin-top-25"
                     data-theme="dark"
                 >
-                    {formState.loading && <i className="loader"></i>}
-                    <span>Iniciar sesion</span>
+                    {formState.loading ? (
+                        <i className="loader"></i>
+                    ) : (
+                        <span>Iniciar sesion</span>
+                    )}
                 </button>
             </form>
-            <Link href={"/auth/signup"} className="text | small bold underline">
+            <Link
+                href={"/auth/signup"}
+                className="text | underline medium normal | margin-top-15"
+            >
                 Todavia no tienes cuenta? Registrate ahora
             </Link>
         </section>

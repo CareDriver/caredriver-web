@@ -1,0 +1,15 @@
+import "@/styles/components/inprogress.css";
+
+const RequestInProgress = () => {
+    return (
+        <section className="inprogress-wrapper">
+            <h1 className="text | big bolder">Tu solicitud esta siendo revisada</h1>
+            <p className="text | bold">
+                Espera a que uno de nuestros administradores apruebe tu solicitud.
+            </p>
+            <img className="inprogress-image" src="/images/image2.png" alt="" />
+        </section>
+    );
+};
+
+export default RequestInProgress;

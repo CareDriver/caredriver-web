@@ -2,12 +2,41 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+
+    width: 95%;
+}
+
+.form-container.center {
+    align-items: center;
+    justify-content: center;
+}
+
+.form-sub-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-sub-container.row {
+    flex-direction: row;
+}
+
+.form-sub-container.align-center {
+    align-items: center;
+}
+
+.form-sub-container.justify-center {
+    justify-content: center;
+}
+
+.form-sub-container.max-width-60 {
+    max-width: 60%;
 }
 
 .form-section {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
 
     width: 100%;
 
@@ -15,13 +44,92 @@
 }
 
 .form-section-input {
-    font-size: 18px;
-    padding: 15px 15px;
+    width: 100%;
+    font-size: 20px;
+    padding: 22px;
 
     border: 1px solid #ddd;
-    border-radius: 10px;
+    border-radius: 15px;
+    background-color: var(--white);
 }
 
+.form-section > small,
 .form-section-message {
-    color: #2f2f2f;
+    color: var(--red);
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.form-section-uploader {
+    --border-color: var(--gray-medium);
+    --background-color: var(--gray-lighter);
+
+    gap: 0px !important;
+    position: relative;
+
+    padding: 60px 20px;
+    border-radius: 15px;
+
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+}
+
+.form-section-uploader.uploading > * {
+    color: white !important;
+    fill: white !important;
+}
+
+.form-section-uploader.uploading {
+    --border-color: var(--main-light);
+    --background-color: var(--main-light-opacity);
+}
+
+.form-section-uploader > svg {
+    fill: var(--gray-dark);
+}
+
+.form-section-uploaded {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    border-radius: 15px;
+    border: 1px solid var(--gray-medium);
+    background-color: var(--gray-lighter);
+}
+
+.form-section-uploaded-image {
+    width: 100%;
+    max-height: 30vh;
+    border-radius: 15px;
+
+    object-fit: cover;
+}
+
+.form-section-uploaded.circle {
+    padding: 20px 0;
+}
+
+.form-section-uploaded.circle > .form-section-uploaded-image {
+    width: 250px;
+    height: 250px;
+
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.form-section-uploaded-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    background-color: transparent;
+    border: none;
+}
+
+.form-section-uploaded-button > svg {
+    width: 25px;
+    height: 25px;
+    fill: var(--gray-medium);
 }

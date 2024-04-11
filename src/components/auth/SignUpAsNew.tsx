@@ -3,19 +3,21 @@
 import { auth } from "@/firebase/FirebaseConfig";
 import { servicesData } from "@/interfaces/ServicesDataInterface";
 import { saveUser } from "@/utils/requests/UserRequester";
-import { PhoneInput } from "react-international-phone";
+import { InputValidator } from "@/utils/validator/InputValidator";
 import {
-    InputValidator,
     isPhoneValid,
     isValidEmail,
     isValidName,
     isValidPassword,
-} from "@/utils/validator/CredentialsValidator";
+} from "@/utils/validator/auth/CredentialsValidator";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
-import { doc, setDoc } from "firebase/firestore";
+import { locationList, Locations } from "@/interfaces/Locations";
+import PhoneForm from "../form/PhoneForm";
+import { defaultServiceReq, UserInterface } from "@/interfaces/UserInterface";
+import { Services } from "@/interfaces/Services";
 
 const SignUpAsNew = () => {
     const router = useRouter();
@@ -40,6 +42,7 @@ const SignUpAsNew = () => {
             value: "",
             errorMessage: "",
         },
+        location: Locations.CochabambaBolivia,
     });
 
     const signUp = async (e: FormEvent) => {
@@ -57,9 +60,8 @@ const SignUpAsNew = () => {
         )
             .then((res) => {
                 wasSuccess = true;
-                console.log(res);
 
-                const emptyUserData = {
+                const emptyUserData: UserInterface = {
                     id: res.user.uid,
                     fullName: credentials.fullName.value,
                     phoneNumber: credentials.phone.value,
@@ -67,13 +69,16 @@ const SignUpAsNew = () => {
 
                     comments: [],
                     vehicles: [],
-                    services: [],
+                    services: [Services.Normal],
 
                     servicesData: servicesData,
                     pickUpLocationsHistory: [],
                     deliveryLocationsHistory: [],
 
+                    location: credentials.location,
                     email: credentials.email.value,
+
+                    serviceRequests: defaultServiceReq,
                 };
 
                 saveUser(res.user.uid, emptyUserData)
@@ -130,20 +135,19 @@ const SignUpAsNew = () => {
         });
     };
 
+    const getLocation = (input: string): Locations => {
+        var location = Locations.CochabambaBolivia;
+        locationList.forEach((value) => {
+            if (value === input) {
+                location = value;
+            }
+        });
+
+        return location;
+    };
+
     return (
         <form onSubmit={signUp} className="form-container">
-            <fieldset className="form-section">
-                <input
-                    type="text"
-                    name="fullName"
-                    placeholder="Nombre Completo"
-                    onChange={(e) => handleInputChange(e, isValidName)}
-                    className="form-section-input"
-                />
-                {credentials.fullName.errorMessage.length > 0 && (
-                    <small>{credentials.fullName.errorMessage}</small>
-                )}
-            </fieldset>
             <fieldset className="form-section">
                 <input
                     type="email"
@@ -169,14 +173,43 @@ const SignUpAsNew = () => {
                 )}
             </fieldset>
             <fieldset className="form-section">
-                <PhoneInput
-                    defaultCountry="bo"
-                    value={credentials.phone.value}
-                    onChange={validatePhone}
+                <input
+                    type="text"
+                    name="fullName"
+                    placeholder="Nombre Completo"
+                    onChange={(e) => handleInputChange(e, isValidName)}
+                    className="form-section-input"
+                />
+                {credentials.fullName.errorMessage.length > 0 && (
+                    <small>{credentials.fullName.errorMessage}</small>
+                )}
+            </fieldset>
+            <fieldset className="form-section">
+                <PhoneForm
+                    phone={credentials.phone.value}
+                    validatePhone={validatePhone}
                 />
                 {credentials.phone.errorMessage.length > 0 && (
                     <small>{credentials.phone.errorMessage}</small>
                 )}
+            </fieldset>
+            <fieldset className="form-section">
+                <select
+                    className="form-section-input"
+                    onChange={(e) => {
+                        setCredentials({
+                            ...credentials,
+                            location: getLocation(e.target.value),
+                        });
+                    }}
+                    value={credentials.location}
+                >
+                    {locationList.map((location, i) => (
+                        <option key={`location-option-${i}`} value={location}>
+                            {location}
+                        </option>
+                    ))}
+                </select>
             </fieldset>
 
             <button

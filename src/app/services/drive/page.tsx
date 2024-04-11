@@ -1,11 +1,14 @@
 import DriveService from "@/components/services/drive/DriveService";
 import ServiceWrapper from "@/components/services/ServiceWrapper";
+import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
 
 const DrivePage = () => {
     return (
-        <ServiceWrapper>
-            <DriveService />
-        </ServiceWrapper>
+        <WrapperWithSideBar>
+            <ServiceWrapper>
+                <DriveService />
+            </ServiceWrapper>
+        </WrapperWithSideBar>
     );
 };
 

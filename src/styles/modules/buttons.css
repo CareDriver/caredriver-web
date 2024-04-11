@@ -1,8 +1,12 @@
 .action-button {
-    padding: 20px 60px;
+    padding: 20px 100px;
 
-    border: 1px solid black;
     border-radius: 40px;
+    font-size: 25px;
+    font-weight: bold;
+
+    background-color: var(--white);
+    color: var(--second-dark);
 }
 
 .touchable:active {
@@ -11,28 +15,53 @@
 
 .general-button {
     width: 100%;
-    font-size: 18px;
+    font-size: 22px;
     font-weight: bold;
-    padding: 12px 60px;
+    padding: 18px;
     border: none;
     border-radius: 10px;
+
+    background-color: var(--main-light);
+    color: var(--white);
 }
 
-.general-button[data-theme="dark"] {
-    background-color: black;
-    color: white;
+.general-button.no-full {
+    display: inline-flex;
+    justify-content: center;
+
+    padding: 14px;
+    font-size: 16px;
+    max-width: 40%;
+    width: auto;
+}
+
+.general-button.gray {
+    border: 2px solid var(--gray-medium);
+    background-color: var(--gray-lighter);
+    color: var(--gray-dark);
+}
+
+.general-button.gray > * {
+    color: var(--gray-dark);
+    fill: var(--gray-dark);
 }
 
 .option-button {
+    font-weight: bold;
+    font-size: 18px;
     padding: 10px 20px;
 
     border: none;
-    border: 1px solid #ddd;
-    border-radius: 5px;
     background-color: transparent;
 }
 
 .option-button.selected {
     background-color: black;
     color: white;
+}
+
+.double-button-wrapper {
+    overflow: hidden;
+    border-radius: 25px;
+    border: 1px solid var(--black-darker);
 }

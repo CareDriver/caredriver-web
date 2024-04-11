@@ -1,26 +1,30 @@
 .text {
-    font-size: 17px;
+    font-size: 1rem;
     font-weight: 500;
 }
 
 .text.bigger {
-    font-size: 70px;
+    font-size: 60px;
 }
 
 .text.big {
-    font-size: 40px;
+    font-size: 2.5rem;
+}
+
+.text.medium-big {
+    font-size: 22px;
 }
 
 .text.medium {
-    font-size: 1.1em;
+    font-size: 1.1rem;
 }
 
 .text.small {
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .text.smaller {
-    font-size: 0.5em;
+    font-size: 14px;
 }
 
 .text.bolder {
@@ -31,7 +35,7 @@
     font-weight: 700;
 }
 
-.text.medium {
+.text.normal {
     font-weight: 500;
 }
 
@@ -49,4 +53,16 @@
 
 .text.center {
     text-align: center;
+}
+
+.text.gray-dark {
+    color: var(--gray-dark);
+}
+
+.text.gray-medium {
+    color: var(--gray-medium);
+}
+
+.text.red {
+    color: var(--red);
 }
