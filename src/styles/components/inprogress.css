@@ -1,0 +1,16 @@
+.inprogress-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow: hidden;
+
+    padding: 70px 50px;
+    height: 100vh;
+}
+
+.inprogress-image {
+    height: 60vh;
+
+    object-fit: contain;
+}

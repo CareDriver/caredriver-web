@@ -1,5 +1,11 @@
+import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+
 const CraneCompanyRegistrationPage = () => {
-    return <div>empresas de grua que creo el usuario</div>;
+    return (
+        <WrapperWithSideBar>
+            <div>empresas de grua que creo el usuario</div>
+        </WrapperWithSideBar>
+    );
 };
 
 export default CraneCompanyRegistrationPage;

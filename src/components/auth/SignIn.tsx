@@ -119,8 +119,11 @@ const SignIn = () => {
                     className="general-button | touchable margin-top-25"
                     data-theme="dark"
                 >
-                    {formState.loading && <i className="loader"></i>}
-                    <span>Iniciar sesion</span>
+                    {formState.loading ? (
+                        <i className="loader"></i>
+                    ) : (
+                        <span>Iniciar sesion</span>
+                    )}
                 </button>
             </form>
             <Link

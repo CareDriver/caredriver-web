@@ -2,6 +2,7 @@
 import Trash from "@/icons/Trash";
 import Upload from "@/icons/Upload";
 import React, { useState } from "react";
+import { PhotoField } from "@/components/services/FormModels";
 
 interface ImageUploaderProps {
     uploader: UploaderProps;
@@ -9,25 +10,28 @@ interface ImageUploaderProps {
 }
 
 interface UploaderProps {
-    image: string | null;
+    image: PhotoField;
     setImage: ImageSetter;
-    isCircle: boolean;
 }
 
-type ImageSetter = (image: string | null) => void;
+type ImageSetter = (data: PhotoField) => void;
 
 interface DragAndDropContent {
+    id: string,
     indicator: string;
+    isCircle: boolean;
 }
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
     const [draggingOver, setDraggingOver] = useState<boolean>(false);
     const [uploading, setUploading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
-        setError(null);
+        uploader.setImage({
+            ...uploader.image,
+            message: null,
+        });
         setDraggingOver(false);
         uploadImage(e.dataTransfer.files[0]);
     };
@@ -42,8 +46,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
     };
 
     const removeImage = () => {
-        uploader.setImage(null);
-        setError("Necesitas subir una imagen");
+        uploader.setImage({
+            value: null,
+            message: "Necesitas subir una imagen",
+        });
     };
 
     const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,21 +60,28 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
     };
 
     const uploadImage = (file: File) => {
-        setError(null);
+        uploader.setImage({
+            ...uploader.image,
+            message: null,
+        });
         if (file) {
             if (file.size > 1024 * 1024) {
-                setError(
-                    "La imagen es demasiado grande. Por favor, sube una imagen menor a 1MB.",
-                );
+                uploader.setImage({
+                    ...uploader.image,
+                    message:
+                        "La imagen es demasiado grande. Por favor, sube una imagen menor a 1MB.",
+                });
                 return;
             }
 
             const allowedExtensions = ["jpg", "jpeg", "png"];
             const fileExtension = file.name.split(".").pop()?.toLowerCase() || "";
             if (!allowedExtensions.includes(fileExtension)) {
-                setError(
-                    "Tipo de archivo no permitido. Por favor, sube una imagen con extensión jpg, jpeg o png.",
-                );
+                uploader.setImage({
+                    ...uploader.image,
+                    message:
+                        "Tipo de archivo no permitido. Por favor, sube una imagen con extensión jpg, jpeg o png.",
+                });
                 return;
             }
 
@@ -77,13 +90,19 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
             const reader = new FileReader();
             reader.onload = () => {
                 if (typeof reader.result === "string") {
-                    uploader.setImage(reader.result);
+                    uploader.setImage({
+                        value: reader.result,
+                        message: null,
+                    });
                     setUploading(false);
                 }
             };
             reader.readAsDataURL(file);
         } else {
-            setError("Por favor, sube solo imágenes.");
+            uploader.setImage({
+                ...uploader.image,
+                message: "Por favor, sube solo imágenes.",
+            });
         }
     };
 
@@ -92,10 +111,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
             onDrop={handleDrop}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
+            className="form-section"
         >
             <input
                 type="file"
-                id="fileInput"
+                id={content.id}
                 style={{ display: "none" }}
                 onChange={handleFileInputChange}
             />
@@ -111,10 +131,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
                     Cargando...
                 </div>
             )}
-            {uploader.image ? (
-                <div className={`form-section-uploaded ${uploader.isCircle && "circle"}`}>
+            {uploader.image.value ? (
+                <div className={`form-section-uploaded ${content.isCircle && "circle"}`}>
                     <img
-                        src={uploader.image}
+                        src={uploader.image.value}
                         alt="preview"
                         className="form-section-uploaded-image"
                     />
@@ -126,14 +146,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
                     </button>
                 </div>
             ) : (
-                <label htmlFor="fileInput">
+                <label htmlFor={content.id}>
                     <div
-                        className={`form-section-uploader icon-wrapper | column medium center ${
+                        className={`form-section-uploader icon-wrapper | column bg center ${
                             draggingOver && "uploading"
                         }`}
                     >
                         <Upload />
-                        <span className="text | bold gray-dark | margin-top-15">
+                        <span className="text | normal gray-dark | margin-top-15">
                             Subir Foto
                         </span>
                         <p className="text | medium-big bold gray-dark">
@@ -142,7 +162,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
                     </div>
                 </label>
             )}
-            {error && <small className="form-section-message">{error}</small>}
+            {uploader.image.message && (
+                <small className="form-section-message">{uploader.image.message}</small>
+            )}
         </div>
     );
 };

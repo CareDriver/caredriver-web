@@ -1,20 +1,21 @@
 import PersonQuestion from "@/icons/PersonQuestion";
 import ImageUploader from "./ImageUploader";
+import { PhotoField } from "../services/FormModels";
 
 const SelfieConfirmer = ({
     image,
     setImage,
 }: {
-    image: string | null;
-    setImage: (image: string | null) => void;
+    image: PhotoField;
+    setImage: (image: PhotoField) => void;
 }) => {
     return (
         <div className="form-sub-container | margin-top-25">
             <div>
-                <h2 className="text icon-wrapper | medium-big bold">
+                <h2 className="text icon-wrapper | lb medium-big bold">
                     <PersonQuestion /> Confirmacion del Usuario
                 </h2>
-                <p>
+                <p className="text | normal">
                     Sube una selfie para verificar que eres el que esta solicitando
                     nuestro servicio. Esta foto sera eliminada cuando tu solicitud sera
                     aceptada o rechazada
@@ -24,10 +25,11 @@ const SelfieConfirmer = ({
                 uploader={{
                     image: image,
                     setImage: setImage,
-                    isCircle: true,
                 }}
                 content={{
+                    id: "selfie-confirmer-uploader",
                     indicator: "Selfie",
+                    isCircle: true,
                 }}
             />
         </div>

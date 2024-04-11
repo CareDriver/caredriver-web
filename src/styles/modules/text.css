@@ -1,5 +1,5 @@
 .text {
-    font-size: 17px;
+    font-size: 1rem;
     font-weight: 500;
 }
 
@@ -8,19 +8,19 @@
 }
 
 .text.big {
-    font-size: 40px;
+    font-size: 2.5rem;
 }
 
-.text.medium-big{
+.text.medium-big {
     font-size: 22px;
 }
 
 .text.medium {
-    font-size: 18px;
+    font-size: 1.1rem;
 }
 
 .text.small {
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .text.smaller {
@@ -57,4 +57,12 @@
 
 .text.gray-dark {
     color: var(--gray-dark);
+}
+
+.text.gray-medium {
+    color: var(--gray-medium);
+}
+
+.text.red {
+    color: var(--red);
 }

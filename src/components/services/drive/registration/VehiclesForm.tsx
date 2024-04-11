@@ -1,17 +1,22 @@
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
-import { carModes, defaultLicense, Vehicle, vehiclesTypes } from "./FormModels";
+import { carModes, defaultLicense, VehicleForm, vehiclesTypes } from "./FormModels";
 import ImageUploader from "@/components/form/ImageUploader";
 import { Dispatch, SetStateAction } from "react";
 import Car from "@/icons/Car";
 import AddressCar from "@/icons/AddressCar";
 import Plus from "@/icons/Plus";
+import { PhotoField } from "../../FormModels";
+import {
+    isValidLicenseNumber,
+    isValidLicenseDate,
+} from "@/utils/validator/service_requests/DriveValidator";
 
 const VehiclesForm = ({
     vehicles,
     setVehicles,
 }: {
-    vehicles: Vehicle[];
-    setVehicles: Dispatch<SetStateAction<Vehicle[]>>;
+    vehicles: VehicleForm[];
+    setVehicles: Dispatch<SetStateAction<VehicleForm[]>>;
 }) => {
     const updateTypeVehicle = (index: number, type: string) => {
         setVehicles((prevVehicles) => {
@@ -36,6 +41,7 @@ const VehiclesForm = ({
     };
 
     const updateNumberLicense = (index: number, number: string) => {
+        const { isValid, message } = isValidLicenseNumber(number);
         setVehicles((prevVehicles) => {
             return prevVehicles.map((vehicle, i) => {
                 if (i === index) {
@@ -43,7 +49,10 @@ const VehiclesForm = ({
                         ...vehicle,
                         license: {
                             ...vehicle.license,
-                            number: number,
+                            number: {
+                                value: number,
+                                message: isValid ? null : message,
+                            },
                         },
                     };
                 }
@@ -52,7 +61,34 @@ const VehiclesForm = ({
         });
     };
 
-    const updateFrontLicenseImage = (index: number, image: string | null) => {
+    const updateDateLicense = (
+        index: number,
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {
+        const dateString = event.target.value;
+    const [year, month, day] = dateString.split('-').map(Number);
+    const selectedDate = new Date(year, month - 1, day);
+        const { isValid, message } = isValidLicenseDate(selectedDate);
+        setVehicles((prevVehicles) => {
+            return prevVehicles.map((vehicle, i) => {
+                if (i === index) {
+                    return {
+                        ...vehicle,
+                        license: {
+                            ...vehicle.license,
+                            expirationDate: {
+                                value: selectedDate,
+                                message: isValid ? null : message,
+                            },
+                        },
+                    };
+                }
+                return vehicle;
+            });
+        });
+    };
+
+    const updateFrontLicenseImage = (index: number, image: PhotoField) => {
         setVehicles((prevVehicles) => {
             return prevVehicles.map((vehicle, i) => {
                 if (i === index) {
@@ -69,7 +105,7 @@ const VehiclesForm = ({
         });
     };
 
-    const updateBehindLicenseImage = (index: number, image: string | null) => {
+    const updateBehindLicenseImage = (index: number, image: PhotoField) => {
         setVehicles((prevVehicles) => {
             return prevVehicles.map((vehicle, i) => {
                 if (i === index) {
@@ -90,7 +126,7 @@ const VehiclesForm = ({
         var free = getFreeVehicles(vehicles);
         if (free.length > 0) {
             var availableType = free[0];
-            var vehicleType: Vehicle;
+            var vehicleType: VehicleForm;
             if (availableType == VehicleType.MOTORCYCLE) {
                 vehicleType = {
                     type: {
@@ -111,7 +147,7 @@ const VehiclesForm = ({
         }
     };
 
-    const getFreeVehicles = (vehicles: Vehicle[]) => {
+    const getFreeVehicles = (vehicles: VehicleForm[]) => {
         const chosen = getChosenVehicles(vehicles);
         const free: VehicleType[] = vehiclesTypes.filter(
             (type) => !chosen.includes(type),
@@ -120,7 +156,7 @@ const VehiclesForm = ({
         return free;
     };
 
-    const getChosenVehicles = (vehicles: Vehicle[]) => {
+    const getChosenVehicles = (vehicles: VehicleForm[]) => {
         return vehicles.map((vehicle) => vehicle.type.type);
     };
 
@@ -169,7 +205,7 @@ const VehiclesForm = ({
                         </fieldset>
                     )}
                     <div>
-                        <h2 className="text icon-wrapper | medium-big bold margin-top-25">
+                        <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
                             <AddressCar /> Licencia
                         </h2>
                         <p>
@@ -181,36 +217,48 @@ const VehiclesForm = ({
                         <input
                             type="text"
                             placeholder="Numero"
-                            value={vehicle.license.number}
+                            value={vehicle.license.number.value}
                             onChange={(e) => updateNumberLicense(i, e.target.value)}
                             className="form-section-input"
                         />
+                        {vehicle.license.number.message && (
+                            <small>{vehicle.license.number.message}</small>
+                        )}
                     </fieldset>
                     <fieldset className="form-section">
-                        <input type="date" className="form-section-input" />
+                        <input
+                            type="date"
+                            onChange={(e) => updateDateLicense(i, e)}
+                            className="form-section-input"
+                        />
+                        {vehicle.license.expirationDate.message && (
+                            <small>{vehicle.license.expirationDate.message}</small>
+                        )}
                     </fieldset>
                     <ImageUploader
                         uploader={{
                             image: vehicle.license.frontPhoto,
-                            setImage: (image: string | null) => {
+                            setImage: (image: PhotoField) => {
                                 updateFrontLicenseImage(i, image);
                             },
-                            isCircle: false,
                         }}
                         content={{
                             indicator: "Parte Frontal de la Licencia",
+                            isCircle: false,
+                            id: `vehicle-license-front-photo-${i}`
                         }}
                     />
                     <ImageUploader
                         uploader={{
                             image: vehicle.license.behindPhoto,
-                            setImage: (image: string | null) => {
+                            setImage: (image: PhotoField) => {
                                 updateBehindLicenseImage(i, image);
                             },
-                            isCircle: false,
                         }}
                         content={{
                             indicator: "Parte Posterior de la Licencia",
+                            isCircle: false,
+                            id: `vehicle-license-behind-photo-${i}`
                         }}
                     />
                 </div>

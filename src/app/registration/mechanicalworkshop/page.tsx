@@ -1,5 +1,11 @@
+import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+
 const MechanicalWorkshopRegistrationPage = () => {
-    return <div>talleres mecanicos que creo el usuario</div>;
+    return (
+        <WrapperWithSideBar>
+            <div>talleres mecanicos que creo el usuario</div>
+        </WrapperWithSideBar>
+    );
 };
 
 export default MechanicalWorkshopRegistrationPage;

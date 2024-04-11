@@ -23,7 +23,7 @@ const SideBar = () => {
     const logout = () => {
         auth.signOut()
             .then(() => {
-                toast("Sesion cerrada existosamente");
+                toast.success("Sesion cerrada existosamente");
                 router.push("/");
             })
             .catch(() => {
@@ -37,7 +37,9 @@ const SideBar = () => {
             <Link href={"/"}>
                 <img src="/images/logo.png" className="sidebar-logo" alt="" />
             </Link>
-            <span className="text | medium bold | margin-top-25">Servicios</span>
+            <span className="text | medium bolder | margin-top-25 margin-bottom-15">
+                Servicios
+            </span>
             <li className="sidebar-options">
                 <Link
                     href={"/services/drive"}
@@ -98,9 +100,9 @@ const SideBar = () => {
                     <span>Mi Perfil</span>
                 </Link>
                 <Link
-                    href={"/user/profile"}
+                    href={"/user/location"}
                     className={`sidebar-option ${
-                        pathname.includes("profile") && "selected"
+                        pathname.includes("location") && "selected"
                     }`}
                 >
                     <LocationDot />

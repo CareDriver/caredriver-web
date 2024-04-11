@@ -7,8 +7,10 @@
     gap: 5px;
 
     height: 100vh;
-    width: 17%;
-    padding: 50px 70px 50px 40px;
+    min-width: 320px;
+    width: 22%;
+    max-width: 350px;
+    padding: 50px 40px;
 
     border-right: 1px solid var(--gray-medium);
     background-color: var(--white);
@@ -28,9 +30,8 @@
     text-align: left;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 13px;
 
-    width: 100%;
     border-radius: 15px;
     padding: 13px 20px;
 
@@ -43,7 +44,8 @@
 }
 
 .sidebar-option > span {
-    font-size: 18px;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .sidebar-option:hover,

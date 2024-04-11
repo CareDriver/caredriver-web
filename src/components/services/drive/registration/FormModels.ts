@@ -1,38 +1,46 @@
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
+import { defaultPhoto, PhotoField } from "@/components/services/FormModels";
+import { CarType, MotorcycleType } from "@/interfaces/UserRequest";
 
 export interface PersonalData {
-    fullname: string;
-    photo: string | null;
+    fullname: {
+        value: string;
+        message: string | null;
+    };
+    photo: PhotoField;
 }
 
-export interface License {
-    number: string;
-    expirationDate: Date;
-    frontPhoto: string | null;
-    behindPhoto: string | null;
+export interface LicenseForm {
+    number: {
+        value: string;
+        message: string | null;
+    };
+    expirationDate: {
+        value: Date | null;
+        message: string | null;
+    };
+    frontPhoto: PhotoField;
+    behindPhoto: PhotoField;
 }
 
-export interface Vehicle {
+export interface VehicleForm {
     type: CarType | MotorcycleType;
-    license: License;
-}
-
-export interface MotorcycleType {
-    type: VehicleType.MOTORCYCLE;
-}
-
-export interface CarType {
-    type: VehicleType.CAR;
-    mode: VehicleTransmission;
+    license: LicenseForm;
 }
 
 export const carModes = [VehicleTransmission.AUTOMATIC, VehicleTransmission.MECHANICAL];
 
 export const vehiclesTypes = [VehicleType.CAR, VehicleType.MOTORCYCLE];
 
-export const defaultLicense: License = {
-    number: "",
-    expirationDate: new Date(),
-    frontPhoto: null,
-    behindPhoto: null,
+export const defaultLicense: LicenseForm = {
+    number: {
+        value: "",
+        message: null,
+    },
+    expirationDate: {
+        value: null,
+        message: null,
+    },
+    frontPhoto: defaultPhoto,
+    behindPhoto: defaultPhoto,
 };

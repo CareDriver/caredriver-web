@@ -26,6 +26,12 @@
         -850px -50px 0 rgba(69, 96, 121, 0.1), -500px -300px 0 rgba(69, 96, 121, 0.1);
 }
 
+.circles-right-bottom.green {
+    box-shadow: -800px -300px 0 var(--main-light-opacity),
+        -850px -50px 0 var(--main-light-opacity),
+        -500px -300px 0 var(--main-light-opacity);
+}
+
 .separator-horizontal {
     width: 100%;
     height: 1px;
