@@ -1,5 +1,5 @@
 "use client";
-import "@/styles/base/reset.css"
+import "react-international-phone/style.css";
 
 import { AuthContext } from "@/context/AuthContext";
 import { isValidWorkshopName } from "@/utils/validator/enterprises/EnterpriseValidator";
@@ -75,13 +75,13 @@ const CraneRegistration = () => {
 
     return (
         <section className="service-form-wrapper">
-            <h1>Registar Empresa Operadora de Grua</h1>
+            <h1 className="text | big bolder">Registar Empresa Operadora de Grua</h1>
             <p>
                 Necesitamos verificar que la nueva empresa sea valida antes de
                 registrarla.
             </p>
-            <form className="form-sub-container | max-width-60" onSubmit={handleSummbit}>
-                <fieldset className="form-section">
+            <form className="form-sub-container | margin-top-25" onSubmit={handleSummbit}>
+                <fieldset className="form-section | max-width-60">
                     <input
                         type="text"
                         placeholder="Nombre de la Empresa"
@@ -93,29 +93,32 @@ const CraneRegistration = () => {
 
                     {formData.name.message && <small>{formData.name.message}</small>}
                 </fieldset>
-                <fieldset className="form-section">
+                <fieldset className="form-section | max-width-60">
                     <PhoneForm
                         phone={formData.phone.value}
                         validatePhone={validatePhone}
                     />
                     {formData.phone.message && <small>{formData.phone.message}</small>}
                 </fieldset>
-                <ImageUploader
-                    uploader={{
-                        image: formData.logo,
-                        setImage: (photoField) =>
-                            setFormData({
-                                ...formData,
-                                logo: photoField,
-                            }),
-                    }}
-                    content={{
-                        id: "workshop-uploader-image",
-                        indicator: "Logo del Taller",
-                        isCircle: true,
-                    }}
-                />
-                <fieldset>
+                <div className="max-width-60">
+                    <ImageUploader
+                        uploader={{
+                            image: formData.logo,
+                            setImage: (photoField) =>
+                                setFormData({
+                                    ...formData,
+                                    logo: photoField,
+                                }),
+                        }}
+                        content={{
+                            id: "workshop-uploader-image",
+                            indicator: "Logo del Taller",
+                            isCircle: true,
+                        }}
+                    />
+                </div>
+                <span className="text | bold gray-dark">Ubicacion del Taller</span>
+                <fieldset className="form-section-map | max-width-80">
                     <MapForm
                         setLocation={(location: Location) =>
                             setFormData({
@@ -126,7 +129,7 @@ const CraneRegistration = () => {
                     />
                 </fieldset>
                 <button
-                    className="general-button | margin-top-25"
+                    className="general-button | margin-top-25 max-width-60"
                     title={
                         !formState.isValid
                             ? "Por favor completa los campos con datos validos"
