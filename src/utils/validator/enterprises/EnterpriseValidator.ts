@@ -1,7 +1,7 @@
 import { InputState } from "../InputValidator";
 
 export const isValidWorkshopName = (name: string): InputState => {
-    const nameRegex: RegExp = /^[a-zA-Z\s]+$/;
+    const nameRegex: RegExp = /^[a-zA-Z\d\s]+$/;
 
     if (name.trim() === "") {
         return {
@@ -11,7 +11,7 @@ export const isValidWorkshopName = (name: string): InputState => {
     } else if (!nameRegex.test(name)) {
         return {
             isValid: false,
-            message: "El nombre solo puede contener letras del alfabeto",
+            message: "El nombre solo puede contener letras del alfabeto y numeros",
         };
     } else {
         return {

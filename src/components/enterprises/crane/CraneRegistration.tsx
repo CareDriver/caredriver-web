@@ -3,13 +3,21 @@ import "react-international-phone/style.css";
 
 import { AuthContext } from "@/context/AuthContext";
 import { isValidWorkshopName } from "@/utils/validator/enterprises/EnterpriseValidator";
-import { useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import PhoneForm from "../../form/PhoneForm";
 import { isPhoneValid } from "@/utils/validator/auth/CredentialsValidator";
 import ImageUploader from "../../form/ImageUploader";
 import { PhotoField } from "../../services/FormModels";
 import { Location } from "@/utils/map/Locator";
 import MapForm from "../../form/MapForm";
+import { sendEnterpriseReq } from "@/utils/requests/EnterpriseRequester";
+import { Enterprise } from "@/interfaces/Enterprise";
+import { nanoid } from "nanoid";
+import { GeoPoint } from "firebase/firestore";
+import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { toast } from "react-toastify";
+import { DirectoryPath } from "@/firebase/StoragePaths";
+import { useRouter } from "next/navigation";
 
 interface FormData {
     name: {
@@ -21,11 +29,15 @@ interface FormData {
         message: string | null;
     };
     logo: PhotoField;
-    coordinates: Location | null;
+    coordinates: {
+        value: Location | null;
+        message: string | null;
+    };
 }
 
 const CraneRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
+    const router = useRouter();
     const [formState, setFormState] = useState({
         isValid: true,
         loading: false,
@@ -43,10 +55,74 @@ const CraneRegistration = () => {
             value: null,
             message: null,
         },
-        coordinates: null,
+        coordinates: {
+            value: null,
+            message: null,
+        },
     });
 
-    const handleSummbit = async () => {};
+    const handleSummbit = async (e: FormEvent) => {
+        e.preventDefault();
+        setFormState({
+            ...formState,
+            loading: true,
+        });
+        if (formData.coordinates.value === null) {
+            setFormData({
+                ...formData,
+                coordinates: {
+                    value: null,
+                    message: "Por favor selecciona la ubicacion de la Empresa de Grua",
+                },
+            });
+        } else if (!loadingUser && user.data && user.data.id) {
+            if (
+                formData.name.value &&
+                formData.logo.value &&
+                formData.phone.value &&
+                formData.coordinates.value
+            ) {
+                const { url } = await toast.promise(
+                    uploadImageBase64(DirectoryPath.Enterprises, formData.logo.value),
+                    {
+                        pending: "Subiendo el logo, por favor espera",
+                        success: "Logo subido",
+                        error: "Error al subir el logo, intentalo de nuevo por favor",
+                    },
+                );
+
+                var id = nanoid(25);
+                const enterprise: Enterprise = {
+                    id,
+                    type: "tow",
+                    name: formData.name.value,
+                    logoImgUrl: url,
+                    coordinates: new GeoPoint(
+                        formData.coordinates.value.lat,
+                        formData.coordinates.value.lng,
+                    ),
+                    phone: formData.phone.value,
+                    userId: user.data.id,
+                    aproved: false,
+                };
+
+                await toast.promise(sendEnterpriseReq(id, enterprise), {
+                    pending: "Enviando el formulario, por favor espera",
+                    success: "Formulario enviado",
+                    error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                });
+
+                setFormState({
+                    ...formState,
+                    loading: false,
+                });
+                toast.info("Tu solicitud sera revisada, por favor se paciente");
+                router.push("/enterprise/cranes");
+            } else {
+                console.log("error");
+            }
+        }
+    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -63,15 +139,29 @@ const CraneRegistration = () => {
 
     const validatePhone = (phone: string) => {
         const { isValid, message } = isPhoneValid(phone);
-
         setFormData({
             ...formData,
             phone: {
                 value: phone,
-                message: isValid ? "" : message,
+                message: isValid ? null : message,
             },
         });
     };
+
+    useEffect(() => {
+        setFormState({
+            ...formState,
+            isValid:
+                !formData.name.message &&
+                !formData.phone.message &&
+                !formData.logo.message &&
+                !formData.coordinates.message &&
+                formData.name.value !== null &&
+                formData.logo.value !== null &&
+                formData.phone.value !== null &&
+                formData.coordinates.value !== null,
+        });
+    }, [formData]);
 
     return (
         <section className="service-form-wrapper">
@@ -117,16 +207,24 @@ const CraneRegistration = () => {
                         }}
                     />
                 </div>
-                <span className="text | bold gray-dark">Ubicacion del Taller</span>
-                <fieldset className="form-section-map | max-width-80">
-                    <MapForm
-                        setLocation={(location: Location) =>
-                            setFormData({
-                                ...formData,
-                                coordinates: location,
-                            })
-                        }
-                    />
+                <fieldset className="form-section">
+                    <span className="text | bold gray-dark">Ubicacion del Taller</span>
+                    <div className="form-section-map | max-width-80">
+                        <MapForm
+                            setLocation={(location: Location) =>
+                                setFormData((prev) => ({
+                                    ...prev,
+                                    coordinates: {
+                                        value: location,
+                                        message: null,
+                                    },
+                                }))
+                            }
+                        />
+                    </div>
+                    {formData.coordinates.message && (
+                        <small>{formData.coordinates.message}</small>
+                    )}
                 </fieldset>
                 <button
                     className="general-button | margin-top-25 max-width-60"
