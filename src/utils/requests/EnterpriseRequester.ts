@@ -7,6 +7,15 @@ import {
     doc,
     setDoc,
     updateDoc,
+    query,
+    orderBy,
+    limit,
+    DocumentSnapshot,
+    startAfter,
+    endBefore,
+    limitToLast,
+    getDocs,
+    getCountFromServer,
 } from "firebase/firestore";
 import { Collections } from "@/firebase/CollecionNames";
 import { Enterprise } from "@/interfaces/Enterprise";
@@ -39,4 +48,39 @@ export const aproveEnterpriseReq = async (
     } catch (error) {
         throw error;
     }
+};
+
+export const getPaginatedData = async (
+    direction: "next" | "prev" | undefined,
+    startAfterDoc?: DocumentSnapshot,
+    endBeforeDoc?: DocumentSnapshot,
+    numPerPage: number = 12,
+) => {
+    let dataQuery = query(enterpriseCollection, orderBy("name"), limit(numPerPage));
+
+    if (direction === "next" && startAfterDoc) {
+        dataQuery = query(dataQuery, startAfter(startAfterDoc));
+    } else if (direction === "prev" && endBeforeDoc) {
+        dataQuery = query(
+            enterpriseCollection,
+            orderBy("name"),
+            endBefore(endBeforeDoc),
+            limitToLast(numPerPage),
+        );
+    }
+
+    const productsSnapshot = await getDocs(dataQuery);
+    const products = productsSnapshot.docs.map((doc) => doc.data());
+
+    return {
+        result: products as Enterprise[],
+        lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
+        firstDoc: productsSnapshot.docs[0],
+    };
+};
+
+export const getNumPages = async (numPerPages: number): Promise<number> => {
+    const count = await getCountFromServer(enterpriseCollection);
+    const numPages = Math.ceil(count.data().count / numPerPages);
+    return numPages;
 };
