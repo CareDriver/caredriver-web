@@ -1,3 +1,4 @@
+import { SoftEnterprise } from "@/interfaces/Enterprise";
 import { CarType, MotorcycleType } from "@/interfaces/UserRequest";
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
 
@@ -58,3 +59,8 @@ export const defaultLicense: LicenseForm = {
     frontPhoto: defaultPhoto,
     behindPhoto: defaultPhoto,
 };
+
+export interface EnterpriseField {
+    value: SoftEnterprise | null;
+    message: string | null;
+}

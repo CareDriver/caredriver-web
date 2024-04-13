@@ -31,3 +31,12 @@ export interface ReqEditEnterprise {
     aproved?: boolean; // If the enterprise was aproved or is in reviewing
     aprovedBy?: string;
 }
+
+export interface SoftEnterprise {
+    id?: string;
+    type: "mechanical" | "tow";
+    name: string;
+    logoImgUrl: ImgWithRef;
+    coordinates?: GeoPoint;
+    phone?: string;
+}

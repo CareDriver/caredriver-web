@@ -9,8 +9,10 @@
 
 .enterprise-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 19%));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 15%));
     grid-auto-rows: 1fr;
+
+    gap: 15px;
 }
 
 .enterprise-item {
@@ -25,9 +27,10 @@
     border-radius: 15px;
 
     background-color: var(--white);
+    cursor: pointer;
 }
 
-.enterprise-item.selected,
+.enterprise-item[data-state="selected"],
 .enterprise-item:hover {
     border-color: var(--main-light);
 }

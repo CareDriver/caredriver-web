@@ -4,6 +4,7 @@ import { LicenseInterface } from "./PersonalDocumentsInterface";
 import { Services } from "./Services";
 import { VehicleTransmission, VehicleType } from "./VehicleInterface";
 import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
+import { Enterprise, SoftEnterprise } from "./Enterprise";
 
 export interface MotorcycleType {
     type: VehicleType.MOTORCYCLE;
@@ -33,11 +34,11 @@ export interface UserRequest {
     }[];
     realTimePhotoImgUrl: ImgWithRef;
     // the url of the real time user selfie for identification verification for the request
-    mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
-    towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
+    mechanicalWorkShop?: SoftEnterprise; // id of the mechanical user works for if is mechanic user
+    towEnterprite?: SoftEnterprise; // id of the tow enterprise user works for if is tow user
     services: Services[];
     location?: Locations; // just if user does not have a location registered yet.
-    vehicles: Vehicle[];
+    vehicles?: Vehicle[];
 }
 
 export const licenseBuilder = (
@@ -53,14 +54,6 @@ export const licenseBuilder = (
         backImgUrl,
     };
 };
-
-/* export const reviewerBuilder = (adminId: string, date: Date, aproved: boolean) => {
-    return {
-        adminId,
-        dateTime: Timestamp.fromDate(date),
-        aproved,
-    };
-}; */
 
 export const driveReqBuilder = (
     id: string,
@@ -97,5 +90,28 @@ export const emptyDriveReq = (): UserRequest => {
         services: [],
         location: Locations.CochabambaBolivia,
         vehicles: [],
+    };
+};
+
+export const mechanicReqBuilder = (
+    id: string,
+    newFullName: string,
+    newProfilePhotoImgUrl: string | ImgWithRef,
+    mechanicalWorkShop: SoftEnterprise,
+    realTimePhotoImgUrl: ImgWithRef,
+    services: Services[],
+    location: Locations,
+): UserRequest => {
+    return {
+        id,
+        newFullName,
+        newProfilePhotoImgUrl,
+        aproved: false,
+        active: true,
+        reviewedByHistory: [],
+        realTimePhotoImgUrl,
+        services: services,
+        location,
+        mechanicalWorkShop,
     };
 };

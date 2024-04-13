@@ -1,13 +1,7 @@
 "use client";
 
 import { FormEvent, useContext, useEffect, useState } from "react";
-import {
-    defaultLicense,
-    PersonalData,
-    PersonalDataFormField,
-    VehicleForm,
-} from "../../FormModels";
-import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
+import { EnterpriseField, PersonalDataFormField } from "../../FormModels";
 import PersonalDataForm from "../../../form/PersonalDataForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
@@ -17,10 +11,9 @@ import { DirectoryPath } from "@/firebase/StoragePaths";
 import {
     isValidForm,
     verifyNoEmptyData,
-} from "@/utils/validator/service_requests/DriveValidator";
+} from "@/utils/validator/service_requests/MechanicValidator";
 import { AuthContext } from "@/context/AuthContext";
 import { Vehicle, driveReqBuilder } from "@/interfaces/UserRequest";
-import { Timestamp } from "firebase/firestore";
 import { saveDriveReq } from "@/utils/requests/services/DriveRequester";
 import { Locations } from "@/interfaces/Locations";
 import { emptyPhotoWithRef, ImgWithRef } from "@/interfaces/ImageInterface";
@@ -31,7 +24,9 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import ServiceHeader from "../../ServiceHeader";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
-import WorkshopSelector from "./WorkshopSelector";
+import EnterpriseSelector from "../../EnterpriseSelector";
+import Warehouse from "@/icons/Warehouse";
+import { EnterpriseType, SoftEnterprise } from "@/interfaces/Enterprise";
 
 const MechanicRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -45,15 +40,12 @@ const MechanicRegistration = () => {
             message: null,
         },
     });
-    const [vehicles, setVehicles] = useState<VehicleForm[]>([
-        {
-            type: {
-                type: VehicleType.CAR,
-                mode: VehicleTransmission.AUTOMATIC,
-            },
-            license: defaultLicense,
-        },
-    ]);
+
+    const [mechanicWorkshop, setMechanicWorkshop] = useState<EnterpriseField>({
+        value: null,
+        message: null,
+    });
+
     const [userConfirmation, setUserConfirmation] = useState<PhotoField>(defaultPhoto);
     const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
     const [formState, setFormState] = useState({
@@ -79,38 +71,6 @@ const MechanicRegistration = () => {
                         personalData.photo.value,
                     );
                 } catch (e) {}
-            }
-
-            for (let i = 0; i < vehicles.length; i++) {
-                var vehicle = vehicles[i];
-                if (
-                    vehicle.license.frontPhoto.value &&
-                    vehicle.license.behindPhoto.value
-                ) {
-                    try {
-                        const frontImgUrl = await uploadImageBase64(
-                            DirectoryPath.Licenses,
-                            vehicle.license.frontPhoto.value,
-                        );
-                        const behindImgUrl = await uploadImageBase64(
-                            DirectoryPath.Licenses,
-                            vehicle.license.behindPhoto.value,
-                        );
-                        if (vehicle.license.expirationDate.value) {
-                            vehiclesData.push({
-                                type: vehicle.type,
-                                license: {
-                                    licenseNumber: vehicle.license.number.value,
-                                    expiredDateLicense: Timestamp.fromDate(
-                                        vehicle.license.expirationDate.value,
-                                    ),
-                                    frontImgUrl: frontImgUrl,
-                                    backImgUrl: behindImgUrl,
-                                },
-                            });
-                        }
-                    } catch (e) {}
-                }
             }
 
             if (userConfirmation.value) {
@@ -179,14 +139,14 @@ const MechanicRegistration = () => {
         });
         var isValid = verifyNoEmptyData(
             personalData,
-            vehicles,
+            mechanicWorkshop,
             userConfirmation,
             acceptedTerms,
         );
         if (isValid) {
             isValid = isValidForm(
                 personalData,
-                vehicles,
+                mechanicWorkshop,
                 userConfirmation,
                 acceptedTerms,
             );
@@ -230,12 +190,12 @@ const MechanicRegistration = () => {
                 ...formState,
                 isValid: isValidForm(
                     personalData,
-                    vehicles,
+                    mechanicWorkshop,
                     userConfirmation,
                     acceptedTerms,
                 ),
             }),
-        [personalData, vehicles, userConfirmation, acceptedTerms],
+        [personalData, userConfirmation, acceptedTerms],
     );
 
     return (
@@ -265,7 +225,20 @@ const MechanicRegistration = () => {
                     setPersonalData={setPersonalData}
                 />
 
-                <WorkshopSelector />
+                <div className="form-sub-container | margin-top-25">
+                    <h2 className="text icon-wrapper | medium-big bold">
+                        <Warehouse />
+                        Taller mecanico {"(Opcional)"}
+                    </h2>
+
+                    <EnterpriseSelector
+                        type={EnterpriseType.Mechanical}
+                        selected={mechanicWorkshop.value}
+                        setEnterprise={(enterprise: SoftEnterprise | null) =>
+                            setMechanicWorkshop({ value: enterprise, message: null })
+                        }
+                    />
+                </div>
 
                 <SelfieConfirmer
                     image={userConfirmation}
