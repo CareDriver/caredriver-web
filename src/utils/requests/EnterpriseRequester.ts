@@ -16,6 +16,7 @@ import {
     limitToLast,
     getDocs,
     getCountFromServer,
+    where,
 } from "firebase/firestore";
 import { Collections } from "@/firebase/CollecionNames";
 import { Enterprise } from "@/interfaces/Enterprise";
@@ -56,7 +57,13 @@ export const getPaginatedData = async (
     endBeforeDoc?: DocumentSnapshot,
     numPerPage: number = 12,
 ) => {
-    let dataQuery = query(enterpriseCollection, orderBy("name"), limit(numPerPage));
+    let dataQuery = query(
+        enterpriseCollection,
+        orderBy("name"),
+        limit(numPerPage),
+        where("aproved", "==", true),
+        where("type", "==", "tow"),
+    );
 
     if (direction === "next" && startAfterDoc) {
         dataQuery = query(dataQuery, startAfter(startAfterDoc));
@@ -66,6 +73,8 @@ export const getPaginatedData = async (
             orderBy("name"),
             endBefore(endBeforeDoc),
             limitToLast(numPerPage),
+            where("aproved", "==", true),
+            where("type", "==", "tow"),
         );
     }
 
@@ -80,7 +89,13 @@ export const getPaginatedData = async (
 };
 
 export const getNumPages = async (numPerPages: number): Promise<number> => {
-    const count = await getCountFromServer(enterpriseCollection);
+    const count = await getCountFromServer(
+        query(
+            enterpriseCollection,
+            where("aproved", "==", true),
+            where("type", "==", "tow"),
+        ),
+    );
     const numPages = Math.ceil(count.data().count / numPerPages);
     return numPages;
 };
