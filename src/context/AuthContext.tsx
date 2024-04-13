@@ -76,6 +76,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                 hasPhoto: userBuilt.photoUrl.trim().length > 0,
                             });
                             setLoadingUser(false);
+                            if (pathname === "/") {
+                                router.push("/services/drive");
+                            }
                         } else {
                             setUser({
                                 data: null,

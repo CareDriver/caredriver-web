@@ -1,0 +1,15 @@
+.pagination-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+    padding: 30px 20px;
+}
+
+.pagination-indicator {
+    font-size: 1.1rem;
+    font-weight: 700;
+
+    color: var(--main-light);
+}

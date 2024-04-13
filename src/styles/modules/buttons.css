@@ -10,7 +10,7 @@
 }
 
 .touchable:active {
-    transform: scale(0.8);
+    transform: scale(0.9);
 }
 
 .general-button {
@@ -33,6 +33,18 @@
     font-size: 16px;
     max-width: 40%;
     width: auto;
+}
+
+.general-button.min-30 {
+    min-width: 35%;
+}
+
+.general-button.less-padding {
+    padding: 10px;
+}
+
+.general-button.max-20 {
+    max-width: 15%;
 }
 
 .general-button.gray {
@@ -64,4 +76,21 @@
     overflow: hidden;
     border-radius: 25px;
     border: 1px solid var(--black-darker);
+}
+
+.circle-button {
+    border-radius: 50%;
+    padding: 10px;
+
+    border: 2px solid var(--main-light);
+    cursor: pointer;
+}
+
+.circle-button:disabled {
+    border-color: var(--gray-dark);
+    opacity: .3;
+}
+
+.circle-button:disabled > svg {
+    fill: var(--gray-dark) !important;
 }

@@ -26,6 +26,7 @@ import { updateUser } from "@/utils/requests/UserRequester";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import ServiceHeader from "../../ServiceHeader";
+import { isImageBase64 } from "@/utils/validator/ImageValidator";
 
 const DriverRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -61,15 +62,18 @@ const DriverRegistration = () => {
         var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
 
         if (user.data) {
-            if (!loadingUser && !user.hasPhoto && personalData.photo.value) {
+            newProfilePhotoImgUrl = user.data.photoUrl;
+            if (
+                !loadingUser &&
+                personalData.photo.value &&
+                isImageBase64(user.data.photoUrl)
+            ) {
                 try {
                     newProfilePhotoImgUrl = await uploadImageBase64(
                         DirectoryPath.TempProfilePhotos,
                         personalData.photo.value,
                     );
                 } catch (e) {}
-            } else {
-                newProfilePhotoImgUrl = user.data.photoUrl;
             }
 
             for (let i = 0; i < vehicles.length; i++) {

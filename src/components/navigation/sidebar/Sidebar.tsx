@@ -70,18 +70,18 @@ const SideBar = () => {
             <i className="separator-horizontal"></i>
             <li className="sidebar-options">
                 <Link
-                    href={"/registration/mechanicalworkshop"}
+                    href={"/enterprise/workshops"}
                     className={`sidebar-option ${
-                        pathname.includes("mechanicalworkshop") && "selected"
+                        pathname.includes("workshops") && "selected"
                     }`}
                 >
                     <Warehouse />
                     <span>Talleres</span>
                 </Link>
                 <Link
-                    href={"/registration/cranecompany"}
+                    href={"/enterprise/cranes"}
                     className={`sidebar-option ${
-                        pathname.includes("cranecompany") && "selected"
+                        pathname.includes("cranes") && "selected"
                     }`}
                 >
                     <Building />
