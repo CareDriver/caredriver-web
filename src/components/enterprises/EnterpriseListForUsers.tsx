@@ -6,6 +6,9 @@ import { Enterprise } from "@/interfaces/Enterprise";
 import { getNumPages, getPaginatedData } from "@/utils/requests/EnterpriseRequester";
 import { AuthContext } from "@/context/AuthContext";
 import EnterpriseItem from "./EnterpriseItem";
+import AngleLeft from "@/icons/AngleLeft";
+import AngleRight from "@/icons/AngleRight";
+import "@/styles/components/pagination.css";
 
 const EnterpriseListForUsers = ({ type }: { type: string }) => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -57,7 +60,7 @@ const EnterpriseListForUsers = ({ type }: { type: string }) => {
     return data ? (
         data.length > 0 ? (
             <div>
-                <div>
+                <div className="enterprise-list">
                     {data.map((product, i) => (
                         <EnterpriseItem
                             key={`enterprise-item-${i}`}
@@ -67,19 +70,28 @@ const EnterpriseListForUsers = ({ type }: { type: string }) => {
                     ))}
                 </div>
 
-                <div>
-                    <button disabled={page === 1} onClick={handlePreviousClick}>
-                        Previous
-                    </button>
+                {pages && pages > 1 && (
+                    <div className="pagination-wrapper">
+                        <button
+                            className="icon-wrapper circle-button touchable green-icon"
+                            disabled={page === 1}
+                        >
+                            <AngleLeft />
+                        </button>
 
-                    <span>
-                        Page {page} of {pages}
-                    </span>
+                        <span className="pagination-indicator">
+                            Pagina {page} de {pages}
+                        </span>
 
-                    <button disabled={page === pages} onClick={handleNextClick}>
-                        Next
-                    </button>
-                </div>
+                        <button
+                            className="icon-wrapper circle-button touchable green-icon"
+                            disabled={page === pages}
+                            onClick={handleNextClick}
+                        >
+                            <AngleRight />
+                        </button>
+                    </div>
+                )}
             </div>
         ) : (
             <div className="empty-wrapper | auto-height">

@@ -13,9 +13,10 @@ const EnterpriseItem = ({
             href={`/enterprise/${type === "tow" ? "cranes" : "workshops"}/edit/${
                 enterprise.id
             }`}
+            className="enterprise-item"
         >
-            <h3>{enterprise.name}</h3>
-            <img src={enterprise.logoImgUrl.url} alt="" />
+            <h3 className="enterprise-item-title">{enterprise.name}</h3>
+            <img className="enterprise-item-logo" src={enterprise.logoImgUrl.url} alt="" />
         </Link>
     );
 };

@@ -1,10 +1,19 @@
 import Link from "next/link";
 import EnterpriseListForUsers from "../EnterpriseListForUsers";
+import Plus from "@/icons/Plus";
+import "@/styles/components/enterprise.css"
 
 const CranesPanel = () => {
     return (
-        <section>
-            <Link href={"/enterprise/cranes/register"}>Nueva Empresa</Link>
+        <section className="enterprise-main-wrapper">
+            <h1 className="text | big bolder">Talleres mecanicos que registraste</h1>
+            <Link
+                className="general-button icon-wrapper | max-20 less-padding no-full center white-icon"
+                href={"/enterprise/cranes/register"}
+            >
+                <Plus />
+                <span className="text | bold">Nueva Empresa</span>
+            </Link>
             <EnterpriseListForUsers type="tow" />
         </section>
     );

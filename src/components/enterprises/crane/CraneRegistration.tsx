@@ -211,6 +211,7 @@ const CraneRegistration = () => {
                     <span className="text | bold gray-dark">Ubicacion del Taller</span>
                     <div className="form-section-map | max-width-80">
                         <MapForm
+                            location={formData.coordinates.value}
                             setLocation={(location: Location) =>
                                 setFormData((prev) => ({
                                     ...prev,
