@@ -52,6 +52,8 @@ export const aproveEnterpriseReq = async (
 };
 
 export const getPaginatedData = async (
+    type: string,
+    userId: string,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
     endBeforeDoc?: DocumentSnapshot,
@@ -61,8 +63,9 @@ export const getPaginatedData = async (
         enterpriseCollection,
         orderBy("name"),
         limit(numPerPage),
+        where("userId", "==", userId),
         where("aproved", "==", true),
-        where("type", "==", "tow"),
+        where("type", "==", type),
     );
 
     if (direction === "next" && startAfterDoc) {
@@ -73,6 +76,7 @@ export const getPaginatedData = async (
             orderBy("name"),
             endBefore(endBeforeDoc),
             limitToLast(numPerPage),
+            where("userId", "==", userId),
             where("aproved", "==", true),
             where("type", "==", "tow"),
         );
@@ -88,12 +92,17 @@ export const getPaginatedData = async (
     };
 };
 
-export const getNumPages = async (numPerPages: number): Promise<number> => {
+export const getNumPages = async (
+    numPerPages: number,
+    type: string,
+    userId: string,
+): Promise<number> => {
     const count = await getCountFromServer(
         query(
             enterpriseCollection,
+            where("userId", "==", userId),
             where("aproved", "==", true),
-            where("type", "==", "tow"),
+            where("type", "==", type),
         ),
     );
     const numPages = Math.ceil(count.data().count / numPerPages);

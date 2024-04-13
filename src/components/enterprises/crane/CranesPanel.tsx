@@ -1,12 +1,11 @@
-
 import Link from "next/link";
-import EnterpriseList from "./EnterpriseList";
+import EnterpriseListForUsers from "../EnterpriseListForUsers";
 
 const CranesPanel = () => {
     return (
         <section>
             <Link href={"/enterprise/cranes/register"}>Nueva Empresa</Link>
-            <EnterpriseList />
+            <EnterpriseListForUsers type="tow" />
         </section>
     );
 };
