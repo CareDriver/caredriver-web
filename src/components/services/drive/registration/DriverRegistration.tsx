@@ -71,14 +71,16 @@ const DriverRegistration = () => {
             if (
                 !loadingUser &&
                 personalData.photo.value &&
-                isImageBase64(user.data.photoUrl)
+                isImageBase64(personalData.photo.value)
             ) {
                 try {
                     newProfilePhotoImgUrl = await uploadImageBase64(
                         DirectoryPath.TempProfilePhotos,
                         personalData.photo.value,
                     );
-                } catch (e) {}
+                } catch (e) {
+                    throw e;
+                }
             }
 
             for (let i = 0; i < vehicles.length; i++) {
@@ -109,7 +111,9 @@ const DriverRegistration = () => {
                                 },
                             });
                         }
-                    } catch (e) {}
+                    } catch (e) {
+                        throw e;
+                    }
                 }
             }
 
@@ -119,7 +123,9 @@ const DriverRegistration = () => {
                         DirectoryPath.Selfies,
                         userConfirmation.value,
                     );
-                } catch (e) {}
+                } catch (e) {
+                    throw e;
+                }
             }
         }
 
@@ -165,9 +171,13 @@ const DriverRegistration = () => {
                     };
                     try {
                         await updateUser(user.data.id, toUpdate);
-                    } catch (e) {}
+                    } catch (e) {
+                        throw e;
+                    }
                 }
-            } catch (e) {}
+            } catch (e) {
+                throw e;
+            }
         }
     };
 

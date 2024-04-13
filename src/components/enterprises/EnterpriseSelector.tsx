@@ -8,15 +8,16 @@ import { DocumentSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import "@/styles/components/enterprise.css";
 import Plus from "@/icons/Plus";
+import { EnterpriseField } from "../services/FormModels";
 
 const EnterpriseSelector = ({
     type,
-    selected,
+    enterpriseFiled,
     setEnterprise,
 }: {
     type: EnterpriseType;
-    selected: SoftEnterprise | null;
-    setEnterprise: (enterprise: SoftEnterprise | null) => void;
+    enterpriseFiled: EnterpriseField;
+    setEnterprise: (enterprise: EnterpriseField) => void;
 }) => {
     const numPerPage = 1;
     const [data, setData] = useState<Enterprise[] | null>(null);
@@ -50,19 +51,30 @@ const EnterpriseSelector = ({
 
     const selectEnterprise = (enterprise: Enterprise) => {
         if (data) {
-            if (selected && selected.id === enterprise.id) {
-                setEnterprise(null);
+            if (enterpriseFiled.value && enterpriseFiled.value.id === enterprise.id) {
+                setEnterprise({
+                    value: null,
+                    message:
+                        type === EnterpriseType.Mechanical
+                            ? null
+                            : "Necesitas indicar la empresa operadora de grua",
+                });
             } else {
-                var softEnterprise: SoftEnterprise = {
-                    id: enterprise.id,
-                    logoImgUrl: enterprise.logoImgUrl,
-                    name: enterprise.name,
-                    type: enterprise.type,
-                    coordinates: enterprise.coordinates,
-                    phone: enterprise.phone,
-                };
+                if (enterprise.id) {
+                    var softEnterprise: SoftEnterprise = {
+                        id: enterprise.id,
+                        logoImgUrl: enterprise.logoImgUrl.url,
+                        name: enterprise.name,
+                        type: enterprise.type,
+                        coordinates: enterprise.coordinates,
+                        phone: enterprise.phone,
+                    };
 
-                setEnterprise(softEnterprise);
+                    setEnterprise({
+                        value: softEnterprise,
+                        message: null,
+                    });
+                }
             }
         }
     };
@@ -75,7 +87,9 @@ const EnterpriseSelector = ({
                         <div
                             className="enterprise-item"
                             data-state={
-                                selected && selected.id === enterprise.id && "selected"
+                                enterpriseFiled.value &&
+                                enterpriseFiled.value.id === enterprise.id &&
+                                "selected"
                             }
                             key={i}
                             onClick={() => selectEnterprise(enterprise)}

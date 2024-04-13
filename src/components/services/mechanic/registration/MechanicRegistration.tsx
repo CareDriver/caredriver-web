@@ -13,7 +13,7 @@ import {
     verifyNoEmptyData,
 } from "@/utils/validator/service_requests/MechanicValidator";
 import { AuthContext } from "@/context/AuthContext";
-import { Vehicle, driveReqBuilder } from "@/interfaces/UserRequest";
+import { Vehicle, driveReqBuilder, mechanicReqBuilder } from "@/interfaces/UserRequest";
 import { saveDriveReq } from "@/utils/requests/services/DriveRequester";
 import { Locations } from "@/interfaces/Locations";
 import { emptyPhotoWithRef, ImgWithRef } from "@/interfaces/ImageInterface";
@@ -24,9 +24,10 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import ServiceHeader from "../../ServiceHeader";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
-import EnterpriseSelector from "../../EnterpriseSelector";
+import EnterpriseSelector from "../../../enterprises/EnterpriseSelector";
 import Warehouse from "@/icons/Warehouse";
-import { EnterpriseType, SoftEnterprise } from "@/interfaces/Enterprise";
+import { EnterpriseType } from "@/interfaces/Enterprise";
+import { saveMechanicReq } from "@/utils/requests/services/MechanicRequester";
 
 const MechanicRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -54,7 +55,6 @@ const MechanicRegistration = () => {
     });
 
     const uploadImages = async () => {
-        let vehiclesData: Vehicle[] = [];
         var newProfilePhotoImgUrl: string | ImgWithRef = emptyPhotoWithRef;
         var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
 
@@ -63,14 +63,16 @@ const MechanicRegistration = () => {
             if (
                 !loadingUser &&
                 personalData.photo.value &&
-                isImageBase64(user.data.photoUrl)
+                isImageBase64(personalData.photo.value)
             ) {
                 try {
                     newProfilePhotoImgUrl = await uploadImageBase64(
                         DirectoryPath.TempProfilePhotos,
                         personalData.photo.value,
                     );
-                } catch (e) {}
+                } catch (e) {
+                    throw e;
+                }
             }
 
             if (userConfirmation.value) {
@@ -79,37 +81,37 @@ const MechanicRegistration = () => {
                         DirectoryPath.Selfies,
                         userConfirmation.value,
                     );
-                } catch (e) {}
+                } catch (e) {
+                    throw e;
+                }
             }
         }
 
         return {
-            vehiclesData,
             newProfilePhotoImgUrl,
             realTimePhotoImgUrl,
         };
     };
 
     const uploadForm = async (
-        vehiclesData: Vehicle[],
         newProfilePhotoImgUrl: string | ImgWithRef,
         realTimePhotoImgUrl: ImgWithRef,
     ) => {
         if (user.data) {
             var formId = nanoid(30);
             try {
-                await saveDriveReq(
+                await saveMechanicReq(
                     formId,
-                    driveReqBuilder(
+                    mechanicReqBuilder(
                         user.data.id === undefined ? "" : user.data.id,
                         personalData.fullname.value,
                         newProfilePhotoImgUrl,
-                        vehiclesData,
                         realTimePhotoImgUrl,
                         user.data.services,
                         user.data.location === undefined
                             ? Locations.CochabambaBolivia
                             : user.data.location,
+                        mechanicWorkshop.value,
                     ),
                 );
 
@@ -117,7 +119,7 @@ const MechanicRegistration = () => {
                     var toUpdate: Partial<UserInterface> = {
                         serviceRequests: {
                             ...user.data.serviceRequests,
-                            drive: {
+                            mechanic: {
                                 id: formId,
                                 state: ServiceReqState.Reviewing,
                             },
@@ -125,9 +127,13 @@ const MechanicRegistration = () => {
                     };
                     try {
                         await updateUser(user.data.id, toUpdate);
-                    } catch (e) {}
+                    } catch (e) {
+                        throw e;
+                    }
                 }
-            } catch (e) {}
+            } catch (e) {
+                throw e;
+            }
         }
     };
 
@@ -137,28 +143,18 @@ const MechanicRegistration = () => {
             ...formState,
             loading: true,
         });
-        var isValid = verifyNoEmptyData(
-            personalData,
-            mechanicWorkshop,
-            userConfirmation,
-            acceptedTerms,
-        );
+        var isValid = verifyNoEmptyData(personalData, userConfirmation, acceptedTerms);
         if (isValid) {
-            isValid = isValidForm(
-                personalData,
-                mechanicWorkshop,
-                userConfirmation,
-                acceptedTerms,
-            );
+            isValid = isValidForm(personalData, userConfirmation, acceptedTerms);
             if (isValid && user.data) {
-                const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
+                const { newProfilePhotoImgUrl, realTimePhotoImgUrl } =
                     await toast.promise(uploadImages(), {
                         pending: "Subiendo imagenes, por favor espera",
                         success: "Imagenes subidas",
                         error: "Error al subir imagenes, intentalo de nuevo por favor",
                     });
                 await toast.promise(
-                    uploadForm(vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl),
+                    uploadForm(newProfilePhotoImgUrl, realTimePhotoImgUrl),
                     {
                         pending: "Enviando el formulario, por favor espera",
                         success: "Formulario enviado",
@@ -188,12 +184,7 @@ const MechanicRegistration = () => {
         () =>
             setFormState({
                 ...formState,
-                isValid: isValidForm(
-                    personalData,
-                    mechanicWorkshop,
-                    userConfirmation,
-                    acceptedTerms,
-                ),
+                isValid: isValidForm(personalData, userConfirmation, acceptedTerms),
             }),
         [personalData, userConfirmation, acceptedTerms],
     );
@@ -233,10 +224,8 @@ const MechanicRegistration = () => {
 
                     <EnterpriseSelector
                         type={EnterpriseType.Mechanical}
-                        selected={mechanicWorkshop.value}
-                        setEnterprise={(enterprise: SoftEnterprise | null) =>
-                            setMechanicWorkshop({ value: enterprise, message: null })
-                        }
+                        enterpriseFiled={mechanicWorkshop}
+                        setEnterprise={setMechanicWorkshop}
                     />
                 </div>
 

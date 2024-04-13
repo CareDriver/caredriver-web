@@ -97,7 +97,44 @@ export const mechanicReqBuilder = (
     id: string,
     newFullName: string,
     newProfilePhotoImgUrl: string | ImgWithRef,
-    mechanicalWorkShop: SoftEnterprise,
+    realTimePhotoImgUrl: ImgWithRef,
+    services: Services[],
+    location: Locations,
+    mechanicalWorkShop: SoftEnterprise | null,
+): UserRequest => {
+    if (mechanicalWorkShop !== null) {
+        return {
+            id,
+            newFullName,
+            newProfilePhotoImgUrl,
+            aproved: false,
+            active: true,
+            reviewedByHistory: [],
+            realTimePhotoImgUrl,
+            services: services,
+            location,
+            mechanicalWorkShop,
+        };
+    } else {
+        return {
+            id,
+            newFullName,
+            newProfilePhotoImgUrl,
+            aproved: false,
+            active: true,
+            reviewedByHistory: [],
+            realTimePhotoImgUrl,
+            services: services,
+            location,
+        };
+    }
+};
+
+export const towReqBuilder = (
+    id: string,
+    newFullName: string,
+    newProfilePhotoImgUrl: string | ImgWithRef,
+    towEnterprite: SoftEnterprise,
     realTimePhotoImgUrl: ImgWithRef,
     services: Services[],
     location: Locations,
@@ -112,6 +149,6 @@ export const mechanicReqBuilder = (
         realTimePhotoImgUrl,
         services: services,
         location,
-        mechanicalWorkShop,
+        towEnterprite: towEnterprite,
     };
 };

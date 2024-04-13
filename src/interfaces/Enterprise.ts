@@ -33,10 +33,10 @@ export interface ReqEditEnterprise {
 }
 
 export interface SoftEnterprise {
-    id?: string;
+    id: string;
     type: "mechanical" | "tow";
     name: string;
-    logoImgUrl: ImgWithRef;
+    logoImgUrl: string;
     coordinates?: GeoPoint;
     phone?: string;
 }
