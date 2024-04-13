@@ -4,20 +4,26 @@ import "react-international-phone/style.css";
 import { AuthContext } from "@/context/AuthContext";
 import { isValidWorkshopName } from "@/utils/validator/enterprises/EnterpriseValidator";
 import { FormEvent, useContext, useEffect, useState } from "react";
-import PhoneForm from "../../form/PhoneForm";
+import PhoneForm from "../form/PhoneForm";
 import { isPhoneValid } from "@/utils/validator/auth/CredentialsValidator";
-import ImageUploader from "../../form/ImageUploader";
-import { PhotoField } from "../../services/FormModels";
+import ImageUploader from "../form/ImageUploader";
+import { PhotoField } from "../services/FormModels";
 import { Location } from "@/utils/map/Locator";
-import MapForm from "../../form/MapForm";
-import { sendEnterpriseReq } from "@/utils/requests/EnterpriseRequester";
-import { Enterprise } from "@/interfaces/Enterprise";
+import MapForm from "../form/MapForm";
+import {
+    getEnterpriseById,
+    sendEditEnterpriseReq,
+    sendEnterpriseReq,
+} from "@/utils/requests/EnterpriseRequester";
+import { Enterprise, ReqEditEnterprise } from "@/interfaces/Enterprise";
 import { nanoid } from "nanoid";
 import { GeoPoint } from "firebase/firestore";
 import { uploadImageBase64 } from "@/utils/requests/FileUploader";
 import { toast } from "react-toastify";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
+import { isImageBase64 } from "@/utils/validator/ImageValidator";
+import PageLoader from "../PageLoader";
 
 interface FormData {
     name: {
@@ -35,9 +41,10 @@ interface FormData {
     };
 }
 
-const CraneEditData = () => {
+const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
     const { user, loadingUser } = useContext(AuthContext);
     const router = useRouter();
+    const [enterpriseData, setEnterpriseData] = useState<Enterprise | null>(null);
     const [formState, setFormState] = useState({
         isValid: true,
         loading: false,
@@ -79,34 +86,44 @@ const CraneEditData = () => {
             if (
                 formData.name.value &&
                 formData.logo.value &&
-                formData.phone.value &&
-                formData.coordinates.value
+                formData.coordinates.value &&
+                enterpriseData
             ) {
-                const { url } = await toast.promise(
-                    uploadImageBase64(DirectoryPath.Enterprises, formData.logo.value),
-                    {
-                        pending: "Subiendo el logo, por favor espera",
-                        success: "Logo subido",
-                        error: "Error al subir el logo, intentalo de nuevo por favor",
-                    },
-                );
+                var image = {
+                    url: formData.logo.value,
+                    ref: enterpriseData.logoImgUrl.ref,
+                };
+                if (isImageBase64(formData.logo.value)) {
+                    const imgWithRef = await toast.promise(
+                        uploadImageBase64(DirectoryPath.Enterprises, formData.logo.value),
+                        {
+                            pending: "Subiendo el logo, por favor espera",
+                            success: "Logo subido",
+                            error: "Error al subir el logo, intentalo de nuevo por favor",
+                        },
+                    );
+                    image = imgWithRef;
+                }
 
-                var id = nanoid(25);
-                const enterprise: Enterprise = {
-                    id,
-                    type: "tow",
+                var reqId = nanoid(25);
+                const enterprise: ReqEditEnterprise = {
+                    id: reqId,
+                    enterpriseId: id,
+                    type: type === "tow" ? "tow" : "mechanical",
                     name: formData.name.value,
-                    logoImgUrl: url,
+                    logoImgUrl: image,
                     coordinates: new GeoPoint(
                         formData.coordinates.value.lat,
                         formData.coordinates.value.lng,
                     ),
-                    phone: formData.phone.value,
+                    phone: isPhoneValid(formData.phone.value).isValid
+                        ? formData.phone.value
+                        : undefined,
                     userId: user.data.id,
                     aproved: false,
                 };
 
-                await toast.promise(sendEnterpriseReq(id, enterprise), {
+                await toast.promise(sendEditEnterpriseReq(reqId, enterprise), {
                     pending: "Enviando el formulario, por favor espera",
                     success: "Formulario enviado",
                     error: "Error al enviar el formulario, intentalo de nuevo por favor",
@@ -117,7 +134,7 @@ const CraneEditData = () => {
                     loading: false,
                 });
                 toast.info("Tu solicitud sera revisada, por favor se paciente");
-                router.push("/enterprise/cranes");
+                router.push(`/enterprise/${type === "tow" ? "cranes" : "workshops"}`);
             } else {
                 console.log("error");
             }
@@ -149,26 +166,78 @@ const CraneEditData = () => {
     };
 
     useEffect(() => {
+        getEnterpriseById(id)
+            .then((data) => {
+                if (
+                    data !== undefined &&
+                    data.coordinates?.latitude &&
+                    data.coordinates?.longitude
+                ) {
+                    setFormData({
+                        name: {
+                            value: data.name,
+                            message: null,
+                        },
+                        phone: {
+                            value: data.phone === undefined ? "" : data.phone,
+                            message: null,
+                        },
+                        coordinates: {
+                            value: {
+                                lat: data.coordinates.latitude,
+                                lng: data.coordinates.longitude,
+                            },
+                            message: null,
+                        },
+                        logo: {
+                            value: data.logoImgUrl.url,
+                            message: null,
+                        },
+                    });
+                    setEnterpriseData(data);
+                } else {
+                    router.push("/");
+                    toast.error(
+                        (type === "tow" ? "Empresa de grua" : "Taller mecanico").concat(
+                            " no encontrado",
+                        ),
+                    );
+                }
+            })
+            .catch(() => {
+                router.push("/");
+                toast.error(
+                    (type === "tow" ? "Empresa de grua" : "Taller mecanico").concat(
+                        " no encontrado",
+                    ),
+                );
+            });
+    }, []);
+
+    useEffect(() => {
         setFormState({
             ...formState,
             isValid:
                 !formData.name.message &&
-                !formData.phone.message &&
                 !formData.logo.message &&
                 !formData.coordinates.message &&
                 formData.name.value !== null &&
                 formData.logo.value !== null &&
-                formData.phone.value !== null &&
                 formData.coordinates.value !== null,
         });
     }, [formData]);
 
-    return (
+    return enterpriseData ? (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">Registar Empresa Operadora de Grua</h1>
+            <h1 className="text | big bolder">
+                {type === "tow"
+                    ? "Editar Empresa Operadora de Gruas"
+                    : "Editar Taller Mecanico"}
+            </h1>
             <p>
-                Necesitamos verificar que la nueva empresa sea valida antes de
-                registrarla.
+                {type === "tow"
+                    ? "Necesitamos verificar que los nuevos datos de la Empresa sean validos antes de editarlo."
+                    : "Necesitamos verificar que los nuevos datos del taller mecanico son validos antes de editarlo."}
             </p>
             <form className="form-sub-container | margin-top-25" onSubmit={handleSummbit}>
                 <fieldset className="form-section | max-width-60">
@@ -188,7 +257,11 @@ const CraneEditData = () => {
                         phone={formData.phone.value}
                         validatePhone={validatePhone}
                     />
-                    {formData.phone.message && <small>{formData.phone.message}</small>}
+                    {formData.phone.message && (
+                        <small className="yellow">
+                            {formData.phone.message} {"(Este campo es opcional)"}
+                        </small>
+                    )}
                 </fieldset>
                 <div className="max-width-60">
                     <ImageUploader
@@ -208,9 +281,12 @@ const CraneEditData = () => {
                     />
                 </div>
                 <fieldset className="form-section">
-                    <span className="text | bold gray-dark">Ubicacion del Taller</span>
+                    <span className="text | bold gray-dark">
+                        Ubicacion {type === "tow" ? "de la Empresa" : "del Taller"}
+                    </span>
                     <div className="form-section-map | max-width-80">
                         <MapForm
+                            location={formData.coordinates.value}
                             setLocation={(location: Location) =>
                                 setFormData((prev) => ({
                                     ...prev,
@@ -226,24 +302,39 @@ const CraneEditData = () => {
                         <small>{formData.coordinates.message}</small>
                     )}
                 </fieldset>
-                <button
-                    className="general-button | margin-top-25 max-width-60"
-                    title={
-                        !formState.isValid
-                            ? "Por favor completa los campos con datos validos"
-                            : ""
-                    }
-                    disabled={!formState.isValid}
-                >
-                    {formState.loading ? (
-                        <span className="loader"></span>
-                    ) : (
-                        "Solicitar registro"
-                    )}
-                </button>
+                <div className="row-wrapper | gap-20 | margin-top-25 max-width-60">
+                    <button
+                        className="general-button | gray "
+                        type="button"
+                        onClick={() =>
+                            router.push(
+                                `/enterprise/${type === "tow" ? "cranes" : "workshops"}`,
+                            )
+                        }
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        className="general-button"
+                        title={
+                            !formState.isValid
+                                ? "Por favor completa los campos con datos validos"
+                                : ""
+                        }
+                        disabled={!formState.isValid}
+                    >
+                        {formState.loading ? (
+                            <span className="loader"></span>
+                        ) : (
+                            "Solicitar Edicion"
+                        )}
+                    </button>
+                </div>
             </form>
         </section>
+    ) : (
+        <PageLoader />
     );
 };
 
-export default CraneEditData;
+export default EnterpriseEditData;

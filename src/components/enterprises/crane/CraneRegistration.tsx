@@ -82,7 +82,7 @@ const CraneRegistration = () => {
                 formData.phone.value &&
                 formData.coordinates.value
             ) {
-                const { url } = await toast.promise(
+                const imgWithRef = await toast.promise(
                     uploadImageBase64(DirectoryPath.Enterprises, formData.logo.value),
                     {
                         pending: "Subiendo el logo, por favor espera",
@@ -96,7 +96,7 @@ const CraneRegistration = () => {
                     id,
                     type: "tow",
                     name: formData.name.value,
-                    logoImgUrl: url,
+                    logoImgUrl: imgWithRef,
                     coordinates: new GeoPoint(
                         formData.coordinates.value.lat,
                         formData.coordinates.value.lng,

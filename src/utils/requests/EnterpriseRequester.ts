@@ -19,7 +19,7 @@ import {
     where,
 } from "firebase/firestore";
 import { Collections } from "@/firebase/CollecionNames";
-import { Enterprise } from "@/interfaces/Enterprise";
+import { Enterprise, ReqEditEnterprise } from "@/interfaces/Enterprise";
 
 const enterpriseCollection = collection(firestore, Collections.Enterprises);
 
@@ -46,6 +46,31 @@ export const aproveEnterpriseReq = async (
     try {
         const userRef = doc(enterpriseCollection, enterPriseId);
         await updateDoc(userRef, newData);
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const sendEditEnterpriseReq = async (
+    id: string,
+    enterpriseReq: ReqEditEnterprise,
+): Promise<void> => {
+    try {
+        const collectionEdit = collection(firestore, Collections.EditEnterprises);
+        const enterpriseRef = doc(collectionEdit, id);
+        await setDoc(enterpriseRef, enterpriseReq);
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getEnterpriseById = async (id: string): Promise<Enterprise | undefined> => {
+    try {
+        const enterpriseDoc = await getDoc(doc(enterpriseCollection, id));
+        if (enterpriseDoc.exists()) {
+            return enterpriseDoc.data() as Enterprise;
+        }
+        return undefined;
     } catch (error) {
         throw error;
     }

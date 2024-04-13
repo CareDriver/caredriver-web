@@ -2,6 +2,7 @@ export enum Collections {
     Users = "users",
     Proposals = "proposals",
     Enterprises = "enterprises",
+    EditEnterprises = "edit-enterprises",
     DriverServices = "driver-services",
     MechanicalServices = "mechanical-services",
     TowsServices = "tow-services",

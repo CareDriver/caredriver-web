@@ -4,9 +4,16 @@ import { Loader } from "@googlemaps/js-api-loader";
 import { DEFAULT_LOCATION, Location } from "@/utils/map/Locator";
 import { GOOGLEMAPS_TOKEN } from "@/map/Config";
 
-const MapForm = ({ setLocation }: { setLocation: (location: Location) => void }) => {
+const MapForm = ({
+    location,
+    setLocation,
+}: {
+    location: Location | null;
+    setLocation: (location: Location) => void;
+}) => {
     const mapRef = useRef<HTMLDivElement>(null);
-    var lastMarker: google.maps.marker.AdvancedMarkerElement | null = null;
+    const [lastMarker, setLastMarker] =
+        useState<google.maps.marker.AdvancedMarkerElement | null>(null);
 
     useEffect(() => {
         const initMap = async () => {
@@ -17,7 +24,7 @@ const MapForm = ({ setLocation }: { setLocation: (location: Location) => void })
 
             const { Map } = await loader.importLibrary("maps");
 
-            const position: Location = DEFAULT_LOCATION;
+            const position: Location = location ? location : DEFAULT_LOCATION;
 
             const mapOptions: google.maps.MapOptions = {
                 center: position,
@@ -39,6 +46,16 @@ const MapForm = ({ setLocation }: { setLocation: (location: Location) => void })
             infoWindow.open(map); */
 
             // Configure the click listener.
+
+            if (location) {
+                setLastMarker(
+                    new AdvancedMarkerElement({
+                        map,
+                        position: location,
+                    }),
+                );
+            }
+
             map.addListener("click", (mapsMouseEvent: any) => {
                 var newPosition: Location = {
                     lat: mapsMouseEvent.latLng.toJSON().lat,
@@ -48,12 +65,12 @@ const MapForm = ({ setLocation }: { setLocation: (location: Location) => void })
                 if (lastMarker) {
                     lastMarker.position = newPosition;
                 } else {
-                    const marker = new AdvancedMarkerElement({
-                        map,
-                        position: newPosition,
-                    });
-
-                    lastMarker = marker;
+                    setLastMarker(
+                        new AdvancedMarkerElement({
+                            map,
+                            position: newPosition,
+                        }),
+                    );
                 }
 
                 setLocation(newPosition);

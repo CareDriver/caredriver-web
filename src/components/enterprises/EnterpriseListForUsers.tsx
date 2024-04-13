@@ -5,11 +5,12 @@ import { DocumentSnapshot } from "firebase/firestore";
 import { Enterprise } from "@/interfaces/Enterprise";
 import { getNumPages, getPaginatedData } from "@/utils/requests/EnterpriseRequester";
 import { AuthContext } from "@/context/AuthContext";
+import EnterpriseItem from "./EnterpriseItem";
 
 const EnterpriseListForUsers = ({ type }: { type: string }) => {
     const { loadingUser, user } = useContext(AuthContext);
     const numPerPage = 12;
-    const [data, setData] = useState<Enterprise[]>([]);
+    const [data, setData] = useState<Enterprise[] | null>(null);
     const [firstDoc, setFirstDoc] = useState<DocumentSnapshot | undefined>(undefined);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
     const [pages, setPages] = useState<number | null>(null);
@@ -53,38 +54,46 @@ const EnterpriseListForUsers = ({ type }: { type: string }) => {
         setPage((prev) => prev + 1);
     };
 
-    return (
-        <div>
-            <div className="grid grid-cols-3 gap-4">
-                {data.map((product, i) => (
-                    <div key={`enterprise-item-${i}`}>
-                        <h3>{product.name}</h3>
-                        <img src={product.logoImgUrl} alt="" />
-                    </div>
-                ))}
+    return data ? (
+        data.length > 0 ? (
+            <div>
+                <div>
+                    {data.map((product, i) => (
+                        <EnterpriseItem
+                            key={`enterprise-item-${i}`}
+                            type={type}
+                            enterprise={product}
+                        />
+                    ))}
+                </div>
+
+                <div>
+                    <button disabled={page === 1} onClick={handlePreviousClick}>
+                        Previous
+                    </button>
+
+                    <span>
+                        Page {page} of {pages}
+                    </span>
+
+                    <button disabled={page === pages} onClick={handleNextClick}>
+                        Next
+                    </button>
+                </div>
             </div>
-
-            <div className="flex items-center justify-start space-x-2 p-4">
-                <button
-                    className="btn btn-outline"
-                    disabled={page === 1}
-                    onClick={handlePreviousClick}
-                >
-                    Previous
-                </button>
-
-                <span>
-                    Page {page} of {pages}
-                </span>
-
-                <button
-                    className="btn btn-outline"
-                    disabled={page === pages}
-                    onClick={handleNextClick}
-                >
-                    Next
-                </button>
+        ) : (
+            <div className="empty-wrapper | auto-height">
+                <h2>
+                    No tienes{" "}
+                    {type === "tow"
+                        ? "ninguna empresa de grua creada"
+                        : "ningun taller mecanico creado"}
+                </h2>
             </div>
+        )
+    ) : (
+        <div className="empty-wrapper | auto-height">
+            <span className="loader-green | big-loader"></span>
         </div>
     );
 };
