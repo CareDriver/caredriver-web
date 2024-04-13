@@ -75,6 +75,7 @@ const EnterpriseListForUsers = ({ type }: { type: string }) => {
                         <button
                             className="icon-wrapper circle-button touchable green-icon"
                             disabled={page === 1}
+                            onClick={handlePreviousClick}
                         >
                             <AngleLeft />
                         </button>
@@ -98,8 +99,8 @@ const EnterpriseListForUsers = ({ type }: { type: string }) => {
                 <h2>
                     No tienes{" "}
                     {type === "tow"
-                        ? "ninguna empresa de grua creada"
-                        : "ningun taller mecanico creado"}
+                        ? "ninguna empresa de grua fue creada"
+                        : "ningun taller mecanico fue creado"}
                 </h2>
             </div>
         )

@@ -9,7 +9,6 @@ import {
 } from "../../FormModels";
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
 import PersonalDataForm from "../../../form/PersonalDataForm";
-import VehiclesForm from "./VehiclesForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
 import { defaultPhoto, PhotoField } from "../../FormModels";
@@ -32,8 +31,9 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import ServiceHeader from "../../ServiceHeader";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
+import WorkshopSelector from "./WorkshopSelector";
 
-const DriverRegistration = () => {
+const MechanicRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
         fullname: {
@@ -243,19 +243,19 @@ const DriverRegistration = () => {
             <ServiceHeader
                 title={
                     user.data &&
-                    user.data.serviceRequests.drive.state === ServiceReqState.Refused
+                    user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
                         ? "Tu solicitud fue Rechazada!"
-                        : "Solicita trabajar como Chofer con nosotros!"
+                        : "Trabaja con nosotros como Mecanico!"
                 }
                 description={
                     user.data &&
-                    user.data.serviceRequests.drive.state === ServiceReqState.Refused
+                    user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
                         ? "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud."
-                        : "Por favor llena este formulario con datos reales para que tu solicitud sea aprovada y puedas empezar a trabajar con nosotros."
+                        : "Necesitamos verificar que trabajas en un taller antes que empieces a trabajar con nosotros."
                 }
                 state={
                     user.data
-                        ? user.data.serviceRequests.drive.state
+                        ? user.data.serviceRequests.mechanic.state
                         : ServiceReqState.NotSent
                 }
             />
@@ -264,7 +264,8 @@ const DriverRegistration = () => {
                     personalData={personalData}
                     setPersonalData={setPersonalData}
                 />
-                <VehiclesForm vehicles={vehicles} setVehicles={setVehicles} />
+
+                <WorkshopSelector />
 
                 <SelfieConfirmer
                     image={userConfirmation}
@@ -295,4 +296,4 @@ const DriverRegistration = () => {
     );
 };
 
-export default DriverRegistration;
+export default MechanicRegistration;

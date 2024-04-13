@@ -1,18 +1,17 @@
 "use client";
 
 import ImageUploader from "@/components/form/ImageUploader";
-import { PersonalData } from "../services/drive/registration/FormModels";
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import UserIcon from "@/icons/UserIcon";
-import { PhotoField } from "../services/FormModels";
+import { PersonalDataFormField, PhotoField } from "../services/FormModels";
 import { validateFullName } from "@/utils/validator/service_requests/RequestValidator";
 import { AuthContext } from "@/context/AuthContext";
 const PersonalDataForm = ({
     personalData,
     setPersonalData,
 }: {
-    personalData: PersonalData;
-    setPersonalData: Dispatch<SetStateAction<PersonalData>>;
+    personalData: PersonalDataFormField;
+    setPersonalData: Dispatch<SetStateAction<PersonalDataFormField>>;
 }) => {
     const { user, loadingUser } = useContext(AuthContext);
     const [loading, setLoading] = useState<boolean>(true);

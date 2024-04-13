@@ -1,5 +1,5 @@
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
-import { carModes, defaultLicense, VehicleForm, vehiclesTypes } from "./FormModels";
+import { carModes, defaultLicense, VehicleForm, vehiclesTypes } from "../../FormModels";
 import ImageUploader from "@/components/form/ImageUploader";
 import { Dispatch, SetStateAction } from "react";
 import Car from "@/icons/Car";
@@ -66,8 +66,8 @@ const VehiclesForm = ({
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
         const dateString = event.target.value;
-    const [year, month, day] = dateString.split('-').map(Number);
-    const selectedDate = new Date(year, month - 1, day);
+        const [year, month, day] = dateString.split("-").map(Number);
+        const selectedDate = new Date(year, month - 1, day);
         const { isValid, message } = isValidLicenseDate(selectedDate);
         setVehicles((prevVehicles) => {
             return prevVehicles.map((vehicle, i) => {
@@ -245,7 +245,7 @@ const VehiclesForm = ({
                         content={{
                             indicator: "Parte Frontal de la Licencia",
                             isCircle: false,
-                            id: `vehicle-license-front-photo-${i}`
+                            id: `vehicle-license-front-photo-${i}`,
                         }}
                     />
                     <ImageUploader
@@ -258,7 +258,7 @@ const VehiclesForm = ({
                         content={{
                             indicator: "Parte Posterior de la Licencia",
                             isCircle: false,
-                            id: `vehicle-license-behind-photo-${i}`
+                            id: `vehicle-license-behind-photo-${i}`,
                         }}
                     />
                 </div>

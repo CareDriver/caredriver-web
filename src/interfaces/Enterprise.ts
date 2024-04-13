@@ -1,6 +1,11 @@
 import { GeoPoint } from "firebase/firestore";
 import { ImgWithRef } from "./ImageInterface";
 
+export enum EnterpriseType {
+    Mechanical = "mechanical",
+    Tow = "tow",
+}
+
 // Interface for crane companies
 export interface Enterprise {
     id?: string;
