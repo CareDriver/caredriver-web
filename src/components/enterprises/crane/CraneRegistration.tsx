@@ -82,42 +82,46 @@ const CraneRegistration = () => {
                 formData.phone.value &&
                 formData.coordinates.value
             ) {
-                const imgWithRef = await toast.promise(
-                    uploadImageBase64(DirectoryPath.Enterprises, formData.logo.value),
-                    {
-                        pending: "Subiendo el logo, por favor espera",
-                        success: "Logo subido",
-                        error: "Error al subir el logo, intentalo de nuevo por favor",
-                    },
-                );
+                try {
+                    const imgWithRef = await toast.promise(
+                        uploadImageBase64(DirectoryPath.Enterprises, formData.logo.value),
+                        {
+                            pending: "Subiendo el logo, por favor espera",
+                            success: "Logo subido",
+                            error: "Error al subir el logo, intentalo de nuevo por favor",
+                        },
+                    );
 
-                var id = nanoid(25);
-                const enterprise: Enterprise = {
-                    id,
-                    type: "tow",
-                    name: formData.name.value,
-                    logoImgUrl: imgWithRef,
-                    coordinates: new GeoPoint(
-                        formData.coordinates.value.lat,
-                        formData.coordinates.value.lng,
-                    ),
-                    phone: formData.phone.value,
-                    userId: user.data.id,
-                    aproved: false,
-                };
+                    var id = nanoid(25);
+                    const enterprise: Enterprise = {
+                        id,
+                        type: "tow",
+                        name: formData.name.value,
+                        logoImgUrl: imgWithRef,
+                        coordinates: new GeoPoint(
+                            formData.coordinates.value.lat,
+                            formData.coordinates.value.lng,
+                        ),
+                        phone: formData.phone.value,
+                        userId: user.data.id,
+                        aproved: false,
+                    };
 
-                await toast.promise(sendEnterpriseReq(id, enterprise), {
-                    pending: "Enviando el formulario, por favor espera",
-                    success: "Formulario enviado",
-                    error: "Error al enviar el formulario, intentalo de nuevo por favor",
-                });
+                    await toast.promise(sendEnterpriseReq(id, enterprise), {
+                        pending: "Enviando el formulario, por favor espera",
+                        success: "Formulario enviado",
+                        error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                    });
 
-                setFormState({
-                    ...formState,
-                    loading: false,
-                });
-                toast.info("Tu solicitud sera revisada, por favor se paciente");
-                router.push("/enterprise/cranes");
+                    setFormState({
+                        ...formState,
+                        loading: false,
+                    });
+                    toast.info("Tu solicitud sera revisada, por favor se paciente");
+                    router.push("/enterprise/cranes");
+                } catch (e) {
+                    window.location.reload();
+                }
             } else {
                 console.log("error");
             }
@@ -170,7 +174,11 @@ const CraneRegistration = () => {
                 Necesitamos verificar que la nueva empresa sea valida antes de
                 registrarla.
             </p>
-            <form className="form-sub-container | margin-top-25" onSubmit={handleSummbit}>
+            <form
+                className="form-sub-container | margin-top-25"
+                onSubmit={handleSummbit}
+                data-state={formState.loading ? "loading" : "loaded"}
+            >
                 <fieldset className="form-section | max-width-60">
                     <input
                         type="text"

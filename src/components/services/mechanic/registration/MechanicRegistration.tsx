@@ -147,25 +147,33 @@ const MechanicRegistration = () => {
         if (isValid) {
             isValid = isValidForm(personalData, userConfirmation, acceptedTerms);
             if (isValid && user.data) {
-                const { newProfilePhotoImgUrl, realTimePhotoImgUrl } =
-                    await toast.promise(uploadImages(), {
-                        pending: "Subiendo imagenes, por favor espera",
-                        success: "Imagenes subidas",
-                        error: "Error al subir imagenes, intentalo de nuevo por favor",
+                try {
+                    const { newProfilePhotoImgUrl, realTimePhotoImgUrl } =
+                        await toast.promise(uploadImages(), {
+                            pending: "Subiendo imagenes, por favor espera",
+                            success: "Imagenes subidas",
+                            error: "Error al subir imagenes, intentalo de nuevo por favor",
+                        });
+                    await toast.promise(
+                        uploadForm(newProfilePhotoImgUrl, realTimePhotoImgUrl),
+                        {
+                            pending: "Enviando el formulario, por favor espera",
+                            success: "Formulario enviado",
+                            error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                        },
+                    );
+                    window.location.reload();
+                    setFormState({
+                        loading: false,
+                        isValid: true,
                     });
-                await toast.promise(
-                    uploadForm(newProfilePhotoImgUrl, realTimePhotoImgUrl),
-                    {
-                        pending: "Enviando el formulario, por favor espera",
-                        success: "Formulario enviado",
-                        error: "Error al enviar el formulario, intentalo de nuevo por favor",
-                    },
-                );
-                window.location.reload();
-                setFormState({
-                    loading: false,
-                    isValid: true,
-                });
+                } catch (e) {
+                    setFormState({
+                        loading: false,
+                        isValid: false,
+                    });
+                    window.location.reload();
+                }
             } else {
                 setFormState({
                     loading: false,
@@ -210,7 +218,10 @@ const MechanicRegistration = () => {
                         : ServiceReqState.NotSent
                 }
             />
-            <form className="form-sub-container | max-width-60">
+            <form
+                className="form-sub-container | max-width-60"
+                data-state={formState.loading ? "loading" : "loaded"}
+            >
                 <PersonalDataForm
                     personalData={personalData}
                     setPersonalData={setPersonalData}

@@ -11,11 +11,12 @@ import { PhotoField } from "../services/FormModels";
 import { Location } from "@/utils/map/Locator";
 import MapForm from "../form/MapForm";
 import {
+    deleteEnterpriseReq,
     getEnterpriseById,
     sendEditEnterpriseReq,
     sendEnterpriseReq,
 } from "@/utils/requests/EnterpriseRequester";
-import { Enterprise, ReqEditEnterprise } from "@/interfaces/Enterprise";
+import { Enterprise, EnterpriseType, ReqEditEnterprise } from "@/interfaces/Enterprise";
 import { nanoid } from "nanoid";
 import { GeoPoint } from "firebase/firestore";
 import { uploadImageBase64 } from "@/utils/requests/FileUploader";
@@ -24,6 +25,7 @@ import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
 import PageLoader from "../PageLoader";
+import TriangleExclamation from "@/icons/TriangleExclamation";
 
 interface FormData {
     name: {
@@ -48,6 +50,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
     const [formState, setFormState] = useState({
         isValid: true,
         loading: false,
+        loadingRev: false,
     });
     const [formData, setFormData] = useState<FormData>({
         name: {
@@ -68,75 +71,83 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
         },
     });
 
+    const [validToDelete, setValidToDelete] = useState<boolean>(false);
+
     const handleSummbit = async (e: FormEvent) => {
         e.preventDefault();
-        setFormState({
-            ...formState,
-            loading: true,
-        });
-        if (formData.coordinates.value === null) {
-            setFormData({
-                ...formData,
-                coordinates: {
-                    value: null,
-                    message: "Por favor selecciona la ubicacion de la Empresa de Grua",
-                },
+        if (!formState.loading) {
+            setFormState({
+                ...formState,
+                loading: true,
             });
-        } else if (!loadingUser && user.data && user.data.id) {
-            if (
-                formData.name.value &&
-                formData.logo.value &&
-                formData.coordinates.value &&
-                enterpriseData
-            ) {
-                var image = {
-                    url: formData.logo.value,
-                    ref: enterpriseData.logoImgUrl.ref,
-                };
-                if (isImageBase64(formData.logo.value)) {
-                    const imgWithRef = await toast.promise(
-                        uploadImageBase64(DirectoryPath.Enterprises, formData.logo.value),
-                        {
-                            pending: "Subiendo el logo, por favor espera",
-                            success: "Logo subido",
-                            error: "Error al subir el logo, intentalo de nuevo por favor",
-                        },
-                    );
-                    image = imgWithRef;
+            if (formData.coordinates.value === null) {
+                setFormData({
+                    ...formData,
+                    coordinates: {
+                        value: null,
+                        message:
+                            "Por favor selecciona la ubicacion de la Empresa de Grua",
+                    },
+                });
+            } else if (!loadingUser && user.data && user.data.id) {
+                if (
+                    formData.name.value &&
+                    formData.logo.value &&
+                    formData.coordinates.value &&
+                    enterpriseData
+                ) {
+                    var image = {
+                        url: formData.logo.value,
+                        ref: enterpriseData.logoImgUrl.ref,
+                    };
+                    if (isImageBase64(formData.logo.value)) {
+                        const imgWithRef = await toast.promise(
+                            uploadImageBase64(
+                                DirectoryPath.Enterprises,
+                                formData.logo.value,
+                            ),
+                            {
+                                pending: "Subiendo el logo, por favor espera",
+                                success: "Logo subido",
+                                error: "Error al subir el logo, intentalo de nuevo por favor",
+                            },
+                        );
+                        image = imgWithRef;
+                    }
+
+                    var reqId = nanoid(25);
+                    const enterprise: ReqEditEnterprise = {
+                        id: reqId,
+                        enterpriseId: id,
+                        type: type === "tow" ? "tow" : "mechanical",
+                        name: formData.name.value,
+                        logoImgUrl: image,
+                        coordinates: new GeoPoint(
+                            formData.coordinates.value.lat,
+                            formData.coordinates.value.lng,
+                        ),
+                        phone: isPhoneValid(formData.phone.value).isValid
+                            ? formData.phone.value
+                            : undefined,
+                        userId: user.data.id,
+                        aproved: false,
+                    };
+
+                    await toast.promise(sendEditEnterpriseReq(reqId, enterprise), {
+                        pending: "Enviando el formulario, por favor espera",
+                        success: "Formulario enviado",
+                        error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                    });
+
+                    setFormState({
+                        ...formState,
+                        loading: false,
+                    });
+                    toast.info("Tu solicitud sera revisada, por favor se paciente");
+                    router.push(`/enterprise/${type === "tow" ? "cranes" : "workshops"}`);
+                } else {
+                    console.log("error");
                 }
-
-                var reqId = nanoid(25);
-                const enterprise: ReqEditEnterprise = {
-                    id: reqId,
-                    enterpriseId: id,
-                    type: type === "tow" ? "tow" : "mechanical",
-                    name: formData.name.value,
-                    logoImgUrl: image,
-                    coordinates: new GeoPoint(
-                        formData.coordinates.value.lat,
-                        formData.coordinates.value.lng,
-                    ),
-                    phone: isPhoneValid(formData.phone.value).isValid
-                        ? formData.phone.value
-                        : undefined,
-                    userId: user.data.id,
-                    aproved: false,
-                };
-
-                await toast.promise(sendEditEnterpriseReq(reqId, enterprise), {
-                    pending: "Enviando el formulario, por favor espera",
-                    success: "Formulario enviado",
-                    error: "Error al enviar el formulario, intentalo de nuevo por favor",
-                });
-
-                setFormState({
-                    ...formState,
-                    loading: false,
-                });
-                toast.info("Tu solicitud sera revisada, por favor se paciente");
-                router.push(`/enterprise/${type === "tow" ? "cranes" : "workshops"}`);
-            } else {
-                console.log("error");
             }
         }
     };
@@ -227,6 +238,43 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
         });
     }, [formData]);
 
+    const deleteEnterprise = async () => {
+        if (!formState.loadingRev) {
+            if (enterpriseData && enterpriseData.id) {
+                setFormState({
+                    ...formState,
+                    loadingRev: true,
+                });
+                try {
+                    await toast.promise(deleteEnterpriseReq(enterpriseData.id), {
+                        pending: `Eliminando ${
+                            type === EnterpriseType.Mechanical
+                                ? "el Taller"
+                                : "la Empresa"
+                        }`,
+                        success: "Eliminado",
+                        error: `Error al eliminar ${
+                            type === EnterpriseType.Mechanical
+                                ? "el Taller"
+                                : "la Empresa"
+                        }, intentalo de nuevo por favor`,
+                    });
+                    router.push(`/enterprise/${type === "tow" ? "cranes" : "workshops"}`);
+                    setFormState({
+                        ...formState,
+                        loadingRev: false,
+                    });
+                } catch (e) {
+                    setFormState({
+                        ...formState,
+                        loadingRev: false,
+                    });
+                    window.location.reload();
+                }
+            }
+        }
+    };
+
     return enterpriseData ? (
         <section className="service-form-wrapper">
             <h1 className="text | big bolder">
@@ -239,11 +287,21 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                     ? "Necesitamos verificar que los nuevos datos de la Empresa sean validos antes de editarlo."
                     : "Necesitamos verificar que los nuevos datos del taller mecanico son validos antes de editarlo."}
             </p>
-            <form className="form-sub-container | margin-top-25" onSubmit={handleSummbit}>
+            <form
+                className="form-sub-container | margin-top-25"
+                onSubmit={handleSummbit}
+                data-state={
+                    formState.loading || formState.loadingRev ? "loading" : "loaded"
+                }
+            >
                 <fieldset className="form-section | max-width-60">
                     <input
                         type="text"
-                        placeholder="Nombre de la Empresa"
+                        placeholder={`Nombre ${
+                            type === EnterpriseType.Mechanical
+                                ? "del taller"
+                                : "de la empresa"
+                        }`}
                         className="form-section-input"
                         value={formData.name.value}
                         name="fullname"
@@ -302,7 +360,12 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                         <small>{formData.coordinates.message}</small>
                     )}
                 </fieldset>
-                <div className="row-wrapper | gap-20 | margin-top-25 max-width-60">
+                <div
+                    className="row-wrapper | gap-20 | margin-top-25 max-width-60 loading-section"
+                    data-state={
+                        formState.loading || formState.loadingRev ? "loading" : "loaded"
+                    }
+                >
                     <button
                         className="general-button | gray "
                         type="button"
@@ -315,7 +378,9 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                         Cancelar
                     </button>
                     <button
-                        className="general-button"
+                        className={`general-button ${
+                            formState.loading && "loading-section"
+                        }`}
                         title={
                             !formState.isValid
                                 ? "Por favor completa los campos con datos validos"
@@ -327,6 +392,60 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                             <span className="loader"></span>
                         ) : (
                             "Solicitar Edicion"
+                        )}
+                    </button>
+                </div>
+                <div
+                    className={`form-sub-container | margin-top-50 max-width-60 ${
+                        formState.loadingRev && "loading-section"
+                    }`}
+                    data-state={
+                        formState.loading || formState.loadingRev ? "loading" : "loaded"
+                    }
+                >
+                    <h2 className="text icon-wrapper | red red-icon medium-big bold">
+                        <TriangleExclamation />
+                        Zona Peligrosa
+                    </h2>
+                    <p>
+                        Esta accion no se puede revertir, aunque no se afectara los datos
+                        que estan relacionados con este. Por favor escribe el nombre{" "}
+                        {type === EnterpriseType.Mechanical
+                            ? "del taller"
+                            : "de la empresa"}{" "}
+                        para confirmar su eliminacion.
+                    </p>
+                    <fieldset className="form-section | max-width-60">
+                        <input
+                            type="text"
+                            placeholder={`Nombre ${
+                                type === EnterpriseType.Mechanical
+                                    ? "del taller"
+                                    : "de la empresa"
+                            }`}
+                            className="form-section-input"
+                            name="fullname"
+                            onChange={(e) =>
+                                setValidToDelete(e.target.value === enterpriseData.name)
+                            }
+                            autoComplete="off"
+                        />
+
+                        {formData.name.message && <small>{formData.name.message}</small>}
+                    </fieldset>
+                    <button
+                        type="button"
+                        onClick={deleteEnterprise}
+                        className={`general-button | red no-full ${
+                            formState.loadingRev && "loading-section"
+                        }`}
+                        disabled={!validToDelete}
+                    >
+                        {formState.loadingRev ? (
+                            <span className="loader"></span>
+                        ) : (
+                            `Eliminar 
+                        ${type === EnterpriseType.Mechanical ? "Taller" : "Empresa"}`
                         )}
                     </button>
                 </div>

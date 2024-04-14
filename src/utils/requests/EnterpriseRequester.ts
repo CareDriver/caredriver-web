@@ -17,6 +17,7 @@ import {
     getDocs,
     getCountFromServer,
     where,
+    deleteDoc,
 } from "firebase/firestore";
 import { Collections } from "@/firebase/CollecionNames";
 import { Enterprise, ReqEditEnterprise } from "@/interfaces/Enterprise";
@@ -30,6 +31,15 @@ export const sendEnterpriseReq = async (
     try {
         const enterpriseRef = doc(enterpriseCollection, id);
         await setDoc(enterpriseRef, enterpriseReq);
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const deleteEnterpriseReq = async (id: string): Promise<void> => {
+    try {
+        const enterpriseRef = doc(enterpriseCollection, id);
+        await deleteDoc(enterpriseRef);
     } catch (error) {
         throw error;
     }

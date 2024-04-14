@@ -56,7 +56,11 @@
     }
 }
 
-[data-state="loading"] {
+[data-state="loading"] > *:not(.loading-section) {
     opacity: 0.6;
     pointer-events: none;
+}
+
+.loading-section {
+    opacity: 1 !important;
 }
