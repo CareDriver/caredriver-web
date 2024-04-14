@@ -1,4 +1,4 @@
-export type InputValidator = (input: string) => InputState;
+export type InputValidator = (input: any) => InputState;
 
 export interface InputState {
     isValid: boolean;

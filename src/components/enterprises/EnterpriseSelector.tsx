@@ -104,6 +104,12 @@ const EnterpriseSelector = ({
                     ))}
                 </div>
 
+                {enterpriseFiled.message && (
+                    <small className="form-section-message | margin-top-15">
+                        {enterpriseFiled.message}
+                    </small>
+                )}
+
                 <button
                     className="icon-wrapper general-button | no-full gray | margin-top-25"
                     disabled={page === pages}

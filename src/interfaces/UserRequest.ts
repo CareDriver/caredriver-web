@@ -41,6 +41,19 @@ export interface UserRequest {
     vehicles?: Vehicle[];
 }
 
+export const emptyVehicleCar: Vehicle = {
+    type: {
+        type: VehicleType.CAR,
+        mode: VehicleTransmission.AUTOMATIC,
+    },
+    license: {
+        expiredDateLicense: Timestamp.fromDate(new Date()),
+        licenseNumber: "",
+        backImgUrl: emptyPhotoWithRef,
+        frontImgUrl: emptyPhotoWithRef,
+    },
+};
+
 export const licenseBuilder = (
     licenseNumber: string,
     expiredDateLicense: Date,
@@ -138,6 +151,7 @@ export const towReqBuilder = (
     realTimePhotoImgUrl: ImgWithRef,
     services: Services[],
     location: Locations,
+    vehicles: Vehicle[],
 ): UserRequest => {
     return {
         id,
@@ -150,5 +164,6 @@ export const towReqBuilder = (
         services: services,
         location,
         towEnterprite: towEnterprite,
+        vehicles,
     };
 };

@@ -40,6 +40,30 @@ const VehiclesForm = ({
         });
     };
 
+    const updateTypeModeVehicle = (index: number, type: string) => {
+        if (vehicles[index].type.type === VehicleType.CAR) {
+            var mode: VehicleTransmission = VehicleTransmission.AUTOMATIC;
+            if (type === VehicleTransmission.MECHANICAL) {
+                mode = VehicleTransmission.MECHANICAL;
+            }
+
+            setVehicles((prevVehicles) => {
+                return prevVehicles.map((vehicle, i) => {
+                    if (i === index) {
+                        return {
+                            ...vehicle,
+                            type: {
+                                ...vehicle.type,
+                                mode,
+                            },
+                        };
+                    }
+                    return vehicle;
+                });
+            });
+        }
+    };
+
     const updateNumberLicense = (index: number, number: string) => {
         const { isValid, message } = isValidLicenseNumber(number);
         setVehicles((prevVehicles) => {
@@ -195,6 +219,7 @@ const VehiclesForm = ({
                             <select
                                 defaultValue={vehicle.type.mode}
                                 className="form-section-input"
+                                onChange={(e) => updateTypeModeVehicle(i, e.target.value)}
                             >
                                 {carModes.map((carMode, i) => (
                                     <option key={`vehicleMod-${i}`} value={carMode}>
