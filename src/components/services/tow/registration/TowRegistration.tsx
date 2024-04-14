@@ -19,14 +19,8 @@ import {
     verifyNoEmptyData,
 } from "@/utils/validator/service_requests/TowValidator";
 import { AuthContext } from "@/context/AuthContext";
-import {
-    Vehicle,
-    driveReqBuilder,
-    emptyVehicleCar,
-    towReqBuilder,
-} from "@/interfaces/UserRequest";
+import { Vehicle, emptyVehicleCar, towReqBuilder } from "@/interfaces/UserRequest";
 import { Timestamp } from "firebase/firestore";
-import { saveDriveReq } from "@/utils/requests/services/DriveRequester";
 import { Locations } from "@/interfaces/Locations";
 import { emptyPhotoWithRef, ImgWithRef } from "@/interfaces/ImageInterface";
 import { toast } from "react-toastify";
@@ -40,6 +34,7 @@ import TowVehicle from "./TowVehicle";
 import EnterpriseSelector from "@/components/enterprises/EnterpriseSelector";
 import { EnterpriseType } from "@/interfaces/Enterprise";
 import { saveTowReq } from "@/utils/requests/services/TowRequester";
+import Building from "@/icons/Building";
 
 const TowRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -292,11 +287,18 @@ const TowRegistration = () => {
                 />
                 <TowVehicle vehicle={vehicle} setVehicle={setVehicle} />
 
-                <EnterpriseSelector
-                    type={EnterpriseType.Tow}
-                    enterpriseFiled={towEnterprise}
-                    setEnterprise={setTowEnterprise}
-                />
+                <div className="form-sub-container | margin-top-25">
+                    <h2 className="text icon-wrapper | medium-big bold">
+                        <Building />
+                        Empresa de Grua
+                    </h2>
+
+                    <EnterpriseSelector
+                        type={EnterpriseType.Tow}
+                        enterpriseFiled={towEnterprise}
+                        setEnterprise={setTowEnterprise}
+                    />
+                </div>
 
                 <SelfieConfirmer
                     image={userConfirmation}

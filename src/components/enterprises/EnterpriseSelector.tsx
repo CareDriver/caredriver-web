@@ -105,9 +105,11 @@ const EnterpriseSelector = ({
                 </div>
 
                 {enterpriseFiled.message && (
-                    <small className="form-section-message | margin-top-15">
-                        {enterpriseFiled.message}
-                    </small>
+                    <div className="margin-top-15">
+                        <small className="form-section-message">
+                            {enterpriseFiled.message}
+                        </small>
+                    </div>
                 )}
 
                 <button

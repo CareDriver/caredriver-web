@@ -34,21 +34,34 @@ const TowVehicle = ({
         }
     };
 
-    const handleLicenseInputChange = (
-        e: React.ChangeEvent<HTMLInputElement>,
-        data: any,
-        validationFunction: InputValidator,
-    ) => {
-        const value = data;
-        const { isValid, message } = validationFunction(value);
+    const updateNumberLicense = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        const { isValid, message } = isValidLicenseNumber(value);
 
         setVehicle((prev) => ({
             ...prev,
             license: {
                 ...prev.license,
-                [e.target.name]: {
+                number: {
                     value: value,
-                    errorMessage: isValid ? "" : message,
+                    message: isValid ? "" : message,
+                },
+            },
+        }));
+    };
+
+    const updateDateLicense = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const dateString = event.target.value;
+        const [year, month, day] = dateString.split("-").map(Number);
+        const selectedDate = new Date(year, month - 1, day);
+        const { isValid, message } = isValidLicenseDate(selectedDate);
+        setVehicle((prevVehicles) => ({
+            ...prevVehicles,
+            license: {
+                ...prevVehicles.license,
+                expirationDate: {
+                    value: selectedDate,
+                    message: isValid ? null : message,
                 },
             },
         }));
@@ -94,10 +107,9 @@ const TowVehicle = ({
                 <input
                     type="text"
                     placeholder="Numero"
+                    name="number"
                     value={vehicle.license.number.value}
-                    onChange={(e) =>
-                        handleLicenseInputChange(e, e.target.value, isValidLicenseNumber)
-                    }
+                    onChange={(e) => updateNumberLicense(e)}
                     className="form-section-input"
                 />
                 {vehicle.license.number.message && (
@@ -107,9 +119,8 @@ const TowVehicle = ({
             <fieldset className="form-section">
                 <input
                     type="date"
-                    onChange={(e) =>
-                        handleLicenseInputChange(e, toDate(e), isValidLicenseDate)
-                    }
+                    name="expirationDate"
+                    onChange={(e) => updateDateLicense(e)}
                     className="form-section-input"
                 />
                 {vehicle.license.expirationDate.message && (

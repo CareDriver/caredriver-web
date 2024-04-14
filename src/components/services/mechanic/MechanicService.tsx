@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthContext } from "@/context/AuthContext";
-import { ServiceReqState, Services } from "@/interfaces/Services";
+import { ServiceReqState } from "@/interfaces/Services";
 
 import { useContext, useEffect, useState } from "react";
 import MechanicPanel from "./MechanicPanel";

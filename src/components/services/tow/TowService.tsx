@@ -1,23 +1,39 @@
 "use client";
 
 import { AuthContext } from "@/context/AuthContext";
-import { Services } from "@/interfaces/Services";
+import { ServiceReqState } from "@/interfaces/Services";
 import { useContext, useEffect, useState } from "react";
 import TowPanel from "./TowPanel";
 import TowRegistration from "./registration/TowRegistration";
+import RequestInProgress from "../RequestInProgress";
+import PageLoader from "@/components/PageLoader";
 
 const TowService = () => {
-    /* const { user } = useContext(AuthContext);
-    const [isRegistered, setRegistered] = useState(false);
+    const { user, loadingUser } = useContext(AuthContext);
+    const [state, setState] = useState<ServiceReqState>(ServiceReqState.NotSent);
+
+    const getView = () => {
+        switch (state) {
+            case ServiceReqState.Approved:
+                return <TowPanel />;
+            case ServiceReqState.Reviewing:
+                return <RequestInProgress />;
+            default:
+                return <TowRegistration />;
+        }
+    };
 
     useEffect(() => {
-        if (user?.services.includes(Services.Driver)) {
-            setRegistered(true);
+        if (!loadingUser && user.data) {
+            if (user.data.serviceRequests.tow.state === ServiceReqState.Reviewing) {
+                setState(ServiceReqState.Reviewing);
+            } else if (user.data.serviceRequests.tow.state === ServiceReqState.Approved) {
+                setState(ServiceReqState.Approved);
+            }
         }
-    }, []);
+    }, [loadingUser]);
 
-    return isRegistered ? <TowPanel /> : <TowRegistration />; */
-    return <TowRegistration />;
+    return loadingUser ? <PageLoader /> : getView();
 };
 
 export default TowService;
