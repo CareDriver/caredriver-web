@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { createContext, useState, useEffect } from "react";
 import { getUserById } from "@/utils/requests/UserRequester";
 import { servicesData } from "@/interfaces/ServicesDataInterface";
+import { toast } from "react-toastify";
 
 interface UserInfo {
     data: UserInterface | null;
@@ -14,6 +15,7 @@ interface UserInfo {
 type authContextType = {
     user: UserInfo;
     loadingUser: boolean;
+    logout: () => void;
 };
 
 const authContextDefaultValues: authContextType = {
@@ -22,6 +24,7 @@ const authContextDefaultValues: authContextType = {
         hasPhoto: false,
     },
     loadingUser: true,
+    logout: () => {},
 };
 
 const buildUser = (id: string, userData: UserInterface | undefined): UserInterface => {
@@ -76,9 +79,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                 hasPhoto: userBuilt.photoUrl.trim().length > 0,
                             });
                             setLoadingUser(false);
-                            if (pathname === "/") {
-                                router.push("/services/drive");
-                            }
                         } else {
                             setUser({
                                 data: null,
@@ -101,8 +101,24 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
     }, []);
 
+    const logout = () => {
+        auth.signOut()
+            .then(() => {
+                setUser({
+                    data: null,
+                    hasPhoto: false,
+                });
+                toast.success("Sesion cerrada existosamente");
+                router.push("/");
+            })
+            .catch(() => {
+                toast.error("Algo salio mal");
+                router.push("/");
+            });
+    };
+
     return (
-        <AuthContext.Provider value={{ loadingUser, user }}>
+        <AuthContext.Provider value={{ loadingUser, user, logout }}>
             {children}
         </AuthContext.Provider>
     );

@@ -3,13 +3,12 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
 import {
     defaultLicense,
-    PersonalData,
+    EnterpriseField,
     PersonalDataFormField,
     VehicleForm,
 } from "../../FormModels";
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
 import PersonalDataForm from "../../../form/PersonalDataForm";
-import VehiclesForm from "./VehiclesForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
 import { defaultPhoto, PhotoField } from "../../FormModels";
@@ -18,11 +17,10 @@ import { DirectoryPath } from "@/firebase/StoragePaths";
 import {
     isValidForm,
     verifyNoEmptyData,
-} from "@/utils/validator/service_requests/DriveValidator";
+} from "@/utils/validator/service_requests/TowValidator";
 import { AuthContext } from "@/context/AuthContext";
-import { Vehicle, driveReqBuilder } from "@/interfaces/UserRequest";
+import { Vehicle, emptyVehicleCar, towReqBuilder } from "@/interfaces/UserRequest";
 import { Timestamp } from "firebase/firestore";
-import { saveDriveReq } from "@/utils/requests/services/DriveRequester";
 import { Locations } from "@/interfaces/Locations";
 import { emptyPhotoWithRef, ImgWithRef } from "@/interfaces/ImageInterface";
 import { toast } from "react-toastify";
@@ -32,8 +30,13 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import ServiceHeader from "../../ServiceHeader";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
+import TowVehicle from "./TowVehicle";
+import EnterpriseSelector from "@/components/enterprises/EnterpriseSelector";
+import { EnterpriseType } from "@/interfaces/Enterprise";
+import { saveTowReq } from "@/utils/requests/services/TowRequester";
+import Building from "@/icons/Building";
 
-const DriverRegistration = () => {
+const TowRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
         fullname: {
@@ -45,15 +48,19 @@ const DriverRegistration = () => {
             message: null,
         },
     });
-    const [vehicles, setVehicles] = useState<VehicleForm[]>([
-        {
-            type: {
-                type: VehicleType.CAR,
-                mode: VehicleTransmission.AUTOMATIC,
-            },
-            license: defaultLicense,
+    const [vehicle, setVehicle] = useState<VehicleForm>({
+        type: {
+            type: VehicleType.CAR,
+            mode: VehicleTransmission.AUTOMATIC,
         },
-    ]);
+        license: defaultLicense,
+    });
+
+    const [towEnterprise, setTowEnterprise] = useState<EnterpriseField>({
+        value: null,
+        message: null,
+    });
+
     const [userConfirmation, setUserConfirmation] = useState<PhotoField>(defaultPhoto);
     const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
     const [formState, setFormState] = useState({
@@ -62,7 +69,7 @@ const DriverRegistration = () => {
     });
 
     const uploadImages = async () => {
-        let vehiclesData: Vehicle[] = [];
+        let vehiclesData: Vehicle = emptyVehicleCar;
         var newProfilePhotoImgUrl: string | ImgWithRef = emptyPhotoWithRef;
         var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
 
@@ -83,37 +90,31 @@ const DriverRegistration = () => {
                 }
             }
 
-            for (let i = 0; i < vehicles.length; i++) {
-                var vehicle = vehicles[i];
-                if (
-                    vehicle.license.frontPhoto.value &&
-                    vehicle.license.behindPhoto.value
-                ) {
-                    try {
-                        const frontImgUrl = await uploadImageBase64(
-                            DirectoryPath.Licenses,
-                            vehicle.license.frontPhoto.value,
-                        );
-                        const behindImgUrl = await uploadImageBase64(
-                            DirectoryPath.Licenses,
-                            vehicle.license.behindPhoto.value,
-                        );
-                        if (vehicle.license.expirationDate.value) {
-                            vehiclesData.push({
-                                type: vehicle.type,
-                                license: {
-                                    licenseNumber: vehicle.license.number.value,
-                                    expiredDateLicense: Timestamp.fromDate(
-                                        vehicle.license.expirationDate.value,
-                                    ),
-                                    frontImgUrl: frontImgUrl,
-                                    backImgUrl: behindImgUrl,
-                                },
-                            });
-                        }
-                    } catch (e) {
-                        throw e;
+            if (vehicle.license.frontPhoto.value && vehicle.license.behindPhoto.value) {
+                try {
+                    const frontImgUrl = await uploadImageBase64(
+                        DirectoryPath.Licenses,
+                        vehicle.license.frontPhoto.value,
+                    );
+                    const behindImgUrl = await uploadImageBase64(
+                        DirectoryPath.Licenses,
+                        vehicle.license.behindPhoto.value,
+                    );
+                    if (vehicle.license.expirationDate.value) {
+                        vehiclesData = {
+                            type: vehicle.type,
+                            license: {
+                                licenseNumber: vehicle.license.number.value,
+                                expiredDateLicense: Timestamp.fromDate(
+                                    vehicle.license.expirationDate.value,
+                                ),
+                                frontImgUrl: frontImgUrl,
+                                backImgUrl: behindImgUrl,
+                            },
+                        };
                     }
+                } catch (e) {
+                    throw e;
                 }
             }
 
@@ -137,25 +138,26 @@ const DriverRegistration = () => {
     };
 
     const uploadForm = async (
-        vehiclesData: Vehicle[],
+        vehicleData: Vehicle,
         newProfilePhotoImgUrl: string | ImgWithRef,
         realTimePhotoImgUrl: ImgWithRef,
     ) => {
-        if (user.data) {
+        if (user.data && towEnterprise.value) {
             var formId = nanoid(30);
             try {
-                await saveDriveReq(
+                await saveTowReq(
                     formId,
-                    driveReqBuilder(
+                    towReqBuilder(
                         user.data.id === undefined ? "" : user.data.id,
                         personalData.fullname.value,
                         newProfilePhotoImgUrl,
-                        vehiclesData,
+                        towEnterprise.value,
                         realTimePhotoImgUrl,
                         user.data.services,
                         user.data.location === undefined
                             ? Locations.CochabambaBolivia
                             : user.data.location,
+                        [vehicleData],
                     ),
                 );
 
@@ -163,7 +165,7 @@ const DriverRegistration = () => {
                     var toUpdate: Partial<UserInterface> = {
                         serviceRequests: {
                             ...user.data.serviceRequests,
-                            drive: {
+                            tow: {
                                 id: formId,
                                 state: ServiceReqState.Reviewing,
                             },
@@ -187,18 +189,26 @@ const DriverRegistration = () => {
             ...formState,
             loading: true,
         });
+        if (!towEnterprise.value) {
+            setTowEnterprise({
+                ...towEnterprise,
+                message: "Por favor selecciona la Empresa de Grua en la que trabajas",
+            });
+        }
         var isValid = verifyNoEmptyData(
             personalData,
-            vehicles,
+            vehicle,
             userConfirmation,
             acceptedTerms,
+            towEnterprise,
         );
         if (isValid) {
             isValid = isValidForm(
                 personalData,
-                vehicles,
+                vehicle,
                 userConfirmation,
                 acceptedTerms,
+                towEnterprise,
             );
             if (isValid && user.data) {
                 try {
@@ -252,12 +262,13 @@ const DriverRegistration = () => {
                 ...formState,
                 isValid: isValidForm(
                     personalData,
-                    vehicles,
+                    vehicle,
                     userConfirmation,
                     acceptedTerms,
+                    towEnterprise,
                 ),
             }),
-        [personalData, vehicles, userConfirmation, acceptedTerms],
+        [personalData, vehicle, userConfirmation, acceptedTerms],
     );
 
     return (
@@ -289,7 +300,27 @@ const DriverRegistration = () => {
                     personalData={personalData}
                     setPersonalData={setPersonalData}
                 />
-                <VehiclesForm vehicles={vehicles} setVehicles={setVehicles} />
+                <TowVehicle vehicle={vehicle} setVehicle={setVehicle} />
+
+                <div className="form-sub-container | margin-top-25">
+                    <h2 className="text icon-wrapper | medium-big bold">
+                        <Building />
+                        Empresa de Grua
+                    </h2>
+
+                    <EnterpriseSelector
+                        type={EnterpriseType.Tow}
+                        enterpriseFiled={towEnterprise}
+                        setEnterprise={setTowEnterprise}
+                    />
+                    {towEnterprise.message && (
+                        <div className="margin-top-15">
+                            <small className="form-section-message">
+                                {towEnterprise.message}
+                            </small>
+                        </div>
+                    )}
+                </div>
 
                 <SelfieConfirmer
                     image={userConfirmation}
@@ -322,4 +353,4 @@ const DriverRegistration = () => {
     );
 };
 
-export default DriverRegistration;
+export default TowRegistration;

@@ -15,22 +15,12 @@ import Building from "@/icons/Building";
 import UserIcon from "@/icons/UserIcon";
 import LocationDot from "@/icons/LocationDot";
 import LogOutIcon from "@/icons/LogOutIcon";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
 
 const SideBar = () => {
-    const router = useRouter();
+    const { logout } = useContext(AuthContext);
     const pathname = usePathname();
-
-    const logout = () => {
-        auth.signOut()
-            .then(() => {
-                toast.success("Sesion cerrada existosamente");
-                router.push("/");
-            })
-            .catch(() => {
-                toast("Algo salio mal");
-                router.push("/");
-            });
-    };
 
     return (
         <nav className="sidebar-wrapper">

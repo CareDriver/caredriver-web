@@ -4,6 +4,7 @@ import { LicenseInterface } from "./PersonalDocumentsInterface";
 import { Services } from "./Services";
 import { VehicleTransmission, VehicleType } from "./VehicleInterface";
 import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
+import { Enterprise, SoftEnterprise } from "./Enterprise";
 
 export interface MotorcycleType {
     type: VehicleType.MOTORCYCLE;
@@ -33,12 +34,25 @@ export interface UserRequest {
     }[];
     realTimePhotoImgUrl: ImgWithRef;
     // the url of the real time user selfie for identification verification for the request
-    mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
-    towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
+    mechanicalWorkShop?: SoftEnterprise; // id of the mechanical user works for if is mechanic user
+    towEnterprite?: SoftEnterprise; // id of the tow enterprise user works for if is tow user
     services: Services[];
     location?: Locations; // just if user does not have a location registered yet.
-    vehicles: Vehicle[];
+    vehicles?: Vehicle[];
 }
+
+export const emptyVehicleCar: Vehicle = {
+    type: {
+        type: VehicleType.CAR,
+        mode: VehicleTransmission.AUTOMATIC,
+    },
+    license: {
+        expiredDateLicense: Timestamp.fromDate(new Date()),
+        licenseNumber: "",
+        backImgUrl: emptyPhotoWithRef,
+        frontImgUrl: emptyPhotoWithRef,
+    },
+};
 
 export const licenseBuilder = (
     licenseNumber: string,
@@ -53,14 +67,6 @@ export const licenseBuilder = (
         backImgUrl,
     };
 };
-
-/* export const reviewerBuilder = (adminId: string, date: Date, aproved: boolean) => {
-    return {
-        adminId,
-        dateTime: Timestamp.fromDate(date),
-        aproved,
-    };
-}; */
 
 export const driveReqBuilder = (
     id: string,
@@ -97,5 +103,67 @@ export const emptyDriveReq = (): UserRequest => {
         services: [],
         location: Locations.CochabambaBolivia,
         vehicles: [],
+    };
+};
+
+export const mechanicReqBuilder = (
+    id: string,
+    newFullName: string,
+    newProfilePhotoImgUrl: string | ImgWithRef,
+    realTimePhotoImgUrl: ImgWithRef,
+    services: Services[],
+    location: Locations,
+    mechanicalWorkShop: SoftEnterprise | null,
+): UserRequest => {
+    if (mechanicalWorkShop !== null) {
+        return {
+            id,
+            newFullName,
+            newProfilePhotoImgUrl,
+            aproved: false,
+            active: true,
+            reviewedByHistory: [],
+            realTimePhotoImgUrl,
+            services: services,
+            location,
+            mechanicalWorkShop,
+        };
+    } else {
+        return {
+            id,
+            newFullName,
+            newProfilePhotoImgUrl,
+            aproved: false,
+            active: true,
+            reviewedByHistory: [],
+            realTimePhotoImgUrl,
+            services: services,
+            location,
+        };
+    }
+};
+
+export const towReqBuilder = (
+    id: string,
+    newFullName: string,
+    newProfilePhotoImgUrl: string | ImgWithRef,
+    towEnterprite: SoftEnterprise,
+    realTimePhotoImgUrl: ImgWithRef,
+    services: Services[],
+    location: Locations,
+    vehicles: Vehicle[],
+): UserRequest => {
+    return {
+        id,
+        newFullName,
+        newProfilePhotoImgUrl,
+        aproved: false,
+        active: true,
+        reviewedByHistory: [],
+        realTimePhotoImgUrl,
+        services: services,
+        location,
+        towEnterprite: towEnterprite,
+        vehicles,
     };
 };

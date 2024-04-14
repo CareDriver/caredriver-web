@@ -75,6 +75,7 @@ const EnterpriseListForUsers = ({ type }: { type: string }) => {
                         <button
                             className="icon-wrapper circle-button touchable green-icon"
                             disabled={page === 1}
+                            onClick={handlePreviousClick}
                         >
                             <AngleLeft />
                         </button>

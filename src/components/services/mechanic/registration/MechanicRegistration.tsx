@@ -1,15 +1,8 @@
 "use client";
 
 import { FormEvent, useContext, useEffect, useState } from "react";
-import {
-    defaultLicense,
-    PersonalData,
-    PersonalDataFormField,
-    VehicleForm,
-} from "../../FormModels";
-import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
+import { EnterpriseField, PersonalDataFormField } from "../../FormModels";
 import PersonalDataForm from "../../../form/PersonalDataForm";
-import VehiclesForm from "./VehiclesForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
 import { defaultPhoto, PhotoField } from "../../FormModels";
@@ -18,10 +11,9 @@ import { DirectoryPath } from "@/firebase/StoragePaths";
 import {
     isValidForm,
     verifyNoEmptyData,
-} from "@/utils/validator/service_requests/DriveValidator";
+} from "@/utils/validator/service_requests/MechanicValidator";
 import { AuthContext } from "@/context/AuthContext";
-import { Vehicle, driveReqBuilder } from "@/interfaces/UserRequest";
-import { Timestamp } from "firebase/firestore";
+import { Vehicle, driveReqBuilder, mechanicReqBuilder } from "@/interfaces/UserRequest";
 import { saveDriveReq } from "@/utils/requests/services/DriveRequester";
 import { Locations } from "@/interfaces/Locations";
 import { emptyPhotoWithRef, ImgWithRef } from "@/interfaces/ImageInterface";
@@ -32,8 +24,12 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import ServiceHeader from "../../ServiceHeader";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
+import EnterpriseSelector from "../../../enterprises/EnterpriseSelector";
+import Warehouse from "@/icons/Warehouse";
+import { EnterpriseType } from "@/interfaces/Enterprise";
+import { saveMechanicReq } from "@/utils/requests/services/MechanicRequester";
 
-const DriverRegistration = () => {
+const MechanicRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
         fullname: {
@@ -45,15 +41,12 @@ const DriverRegistration = () => {
             message: null,
         },
     });
-    const [vehicles, setVehicles] = useState<VehicleForm[]>([
-        {
-            type: {
-                type: VehicleType.CAR,
-                mode: VehicleTransmission.AUTOMATIC,
-            },
-            license: defaultLicense,
-        },
-    ]);
+
+    const [mechanicWorkshop, setMechanicWorkshop] = useState<EnterpriseField>({
+        value: null,
+        message: null,
+    });
+
     const [userConfirmation, setUserConfirmation] = useState<PhotoField>(defaultPhoto);
     const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
     const [formState, setFormState] = useState({
@@ -62,7 +55,6 @@ const DriverRegistration = () => {
     });
 
     const uploadImages = async () => {
-        let vehiclesData: Vehicle[] = [];
         var newProfilePhotoImgUrl: string | ImgWithRef = emptyPhotoWithRef;
         var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
 
@@ -83,40 +75,6 @@ const DriverRegistration = () => {
                 }
             }
 
-            for (let i = 0; i < vehicles.length; i++) {
-                var vehicle = vehicles[i];
-                if (
-                    vehicle.license.frontPhoto.value &&
-                    vehicle.license.behindPhoto.value
-                ) {
-                    try {
-                        const frontImgUrl = await uploadImageBase64(
-                            DirectoryPath.Licenses,
-                            vehicle.license.frontPhoto.value,
-                        );
-                        const behindImgUrl = await uploadImageBase64(
-                            DirectoryPath.Licenses,
-                            vehicle.license.behindPhoto.value,
-                        );
-                        if (vehicle.license.expirationDate.value) {
-                            vehiclesData.push({
-                                type: vehicle.type,
-                                license: {
-                                    licenseNumber: vehicle.license.number.value,
-                                    expiredDateLicense: Timestamp.fromDate(
-                                        vehicle.license.expirationDate.value,
-                                    ),
-                                    frontImgUrl: frontImgUrl,
-                                    backImgUrl: behindImgUrl,
-                                },
-                            });
-                        }
-                    } catch (e) {
-                        throw e;
-                    }
-                }
-            }
-
             if (userConfirmation.value) {
                 try {
                     realTimePhotoImgUrl = await uploadImageBase64(
@@ -130,32 +88,30 @@ const DriverRegistration = () => {
         }
 
         return {
-            vehiclesData,
             newProfilePhotoImgUrl,
             realTimePhotoImgUrl,
         };
     };
 
     const uploadForm = async (
-        vehiclesData: Vehicle[],
         newProfilePhotoImgUrl: string | ImgWithRef,
         realTimePhotoImgUrl: ImgWithRef,
     ) => {
         if (user.data) {
             var formId = nanoid(30);
             try {
-                await saveDriveReq(
+                await saveMechanicReq(
                     formId,
-                    driveReqBuilder(
+                    mechanicReqBuilder(
                         user.data.id === undefined ? "" : user.data.id,
                         personalData.fullname.value,
                         newProfilePhotoImgUrl,
-                        vehiclesData,
                         realTimePhotoImgUrl,
                         user.data.services,
                         user.data.location === undefined
                             ? Locations.CochabambaBolivia
                             : user.data.location,
+                        mechanicWorkshop.value,
                     ),
                 );
 
@@ -163,7 +119,7 @@ const DriverRegistration = () => {
                     var toUpdate: Partial<UserInterface> = {
                         serviceRequests: {
                             ...user.data.serviceRequests,
-                            drive: {
+                            mechanic: {
                                 id: formId,
                                 state: ServiceReqState.Reviewing,
                             },
@@ -187,33 +143,19 @@ const DriverRegistration = () => {
             ...formState,
             loading: true,
         });
-        var isValid = verifyNoEmptyData(
-            personalData,
-            vehicles,
-            userConfirmation,
-            acceptedTerms,
-        );
+        var isValid = verifyNoEmptyData(personalData, userConfirmation, acceptedTerms);
         if (isValid) {
-            isValid = isValidForm(
-                personalData,
-                vehicles,
-                userConfirmation,
-                acceptedTerms,
-            );
+            isValid = isValidForm(personalData, userConfirmation, acceptedTerms);
             if (isValid && user.data) {
                 try {
-                    const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
+                    const { newProfilePhotoImgUrl, realTimePhotoImgUrl } =
                         await toast.promise(uploadImages(), {
                             pending: "Subiendo imagenes, por favor espera",
                             success: "Imagenes subidas",
                             error: "Error al subir imagenes, intentalo de nuevo por favor",
                         });
                     await toast.promise(
-                        uploadForm(
-                            vehiclesData,
-                            newProfilePhotoImgUrl,
-                            realTimePhotoImgUrl,
-                        ),
+                        uploadForm(newProfilePhotoImgUrl, realTimePhotoImgUrl),
                         {
                             pending: "Enviando el formulario, por favor espera",
                             success: "Formulario enviado",
@@ -250,14 +192,9 @@ const DriverRegistration = () => {
         () =>
             setFormState({
                 ...formState,
-                isValid: isValidForm(
-                    personalData,
-                    vehicles,
-                    userConfirmation,
-                    acceptedTerms,
-                ),
+                isValid: isValidForm(personalData, userConfirmation, acceptedTerms),
             }),
-        [personalData, vehicles, userConfirmation, acceptedTerms],
+        [personalData, userConfirmation, acceptedTerms],
     );
 
     return (
@@ -265,19 +202,19 @@ const DriverRegistration = () => {
             <ServiceHeader
                 title={
                     user.data &&
-                    user.data.serviceRequests.drive.state === ServiceReqState.Refused
+                    user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
                         ? "Tu solicitud fue Rechazada!"
-                        : "Solicita trabajar como Chofer con nosotros!"
+                        : "Trabaja con nosotros como Mecanico!"
                 }
                 description={
                     user.data &&
-                    user.data.serviceRequests.drive.state === ServiceReqState.Refused
+                    user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
                         ? "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud."
-                        : "Por favor llena este formulario con datos reales para que tu solicitud sea aprovada y puedas empezar a trabajar con nosotros."
+                        : "Necesitamos verificar que trabajas en un taller antes que empieces a trabajar con nosotros."
                 }
                 state={
                     user.data
-                        ? user.data.serviceRequests.drive.state
+                        ? user.data.serviceRequests.mechanic.state
                         : ServiceReqState.NotSent
                 }
             />
@@ -289,7 +226,26 @@ const DriverRegistration = () => {
                     personalData={personalData}
                     setPersonalData={setPersonalData}
                 />
-                <VehiclesForm vehicles={vehicles} setVehicles={setVehicles} />
+
+                <div className="form-sub-container | margin-top-25">
+                    <h2 className="text icon-wrapper | medium-big bold">
+                        <Warehouse />
+                        Taller mecanico {"(Opcional)"}
+                    </h2>
+
+                    <EnterpriseSelector
+                        type={EnterpriseType.Mechanical}
+                        enterpriseFiled={mechanicWorkshop}
+                        setEnterprise={setMechanicWorkshop}
+                    />
+                    {mechanicWorkshop.message && (
+                        <div className="margin-top-15">
+                            <small className="form-section-message">
+                                {mechanicWorkshop.message}
+                            </small>
+                        </div>
+                    )}
+                </div>
 
                 <SelfieConfirmer
                     image={userConfirmation}
@@ -322,4 +278,4 @@ const DriverRegistration = () => {
     );
 };
 
-export default DriverRegistration;
+export default MechanicRegistration;

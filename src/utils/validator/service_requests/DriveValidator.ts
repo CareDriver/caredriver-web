@@ -1,7 +1,4 @@
-import {
-    PersonalData,
-    VehicleForm,
-} from "@/components/services/drive/registration/FormModels";
+import { PersonalDataFormField, VehicleForm } from "@/components/services/FormModels";
 import { InputState } from "../InputValidator";
 import { PhotoField } from "@/components/services/FormModels";
 
@@ -23,7 +20,7 @@ export const isValidLicenseDate = (finalDate: Date): InputState => {
     const currentDate = new Date();
 
     if (
-        finalDate > currentDate ||
+        finalDate < currentDate ||
         finalDate.toDateString() === currentDate.toDateString()
     ) {
         return {
@@ -39,7 +36,7 @@ export const isValidLicenseDate = (finalDate: Date): InputState => {
 };
 
 export const isValidForm = (
-    personalData: PersonalData,
+    personalData: PersonalDataFormField,
     vehicles: VehicleForm[],
     userConfirmation: PhotoField,
     acceptedTerms: boolean,
@@ -68,7 +65,7 @@ export const isValidForm = (
 };
 
 export const verifyNoEmptyData = (
-    personalData: PersonalData,
+    personalData: PersonalDataFormField,
     vehicles: VehicleForm[],
     userConfirmation: PhotoField,
     acceptedTerms: boolean,

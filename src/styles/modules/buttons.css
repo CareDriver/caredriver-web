@@ -47,6 +47,12 @@
     max-width: 15%;
 }
 
+.general-button.red {
+    border: none;
+    background-color: var(--red);
+    color: var(--white);
+}
+
 .general-button.gray {
     border: 2px solid var(--gray-medium);
     background-color: var(--gray-lighter);
@@ -88,7 +94,7 @@
 
 .circle-button:disabled {
     border-color: var(--gray-dark);
-    opacity: .3;
+    opacity: 0.3;
 }
 
 .circle-button:disabled > svg {

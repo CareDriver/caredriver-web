@@ -13,6 +13,10 @@
     flex-direction: column;
 }
 
+.icon-wrapper.red-icon > svg {
+    fill: var(--red);
+}
+
 .icon-wrapper.white-icon > svg {
     fill: white;
 }
@@ -30,7 +34,7 @@
     width: 20px;
 }
 
-.icon-wrapper.lb > svg{
+.icon-wrapper.lb > svg {
     height: 25px;
     width: 25px;
 }

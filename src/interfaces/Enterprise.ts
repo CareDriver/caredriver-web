@@ -1,6 +1,11 @@
 import { GeoPoint } from "firebase/firestore";
 import { ImgWithRef } from "./ImageInterface";
 
+export enum EnterpriseType {
+    Mechanical = "mechanical",
+    Tow = "tow",
+}
+
 // Interface for crane companies
 export interface Enterprise {
     id?: string;
@@ -25,4 +30,13 @@ export interface ReqEditEnterprise {
     userId: string; // The user who created the enterprise
     aproved?: boolean; // If the enterprise was aproved or is in reviewing
     aprovedBy?: string;
+}
+
+export interface SoftEnterprise {
+    id: string;
+    type: "mechanical" | "tow";
+    name: string;
+    logoImgUrl: string;
+    coordinates?: GeoPoint;
+    phone?: string;
 }
