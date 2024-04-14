@@ -313,6 +313,13 @@ const TowRegistration = () => {
                         enterpriseFiled={towEnterprise}
                         setEnterprise={setTowEnterprise}
                     />
+                    {towEnterprise.message && (
+                        <div className="margin-top-15">
+                            <small className="form-section-message">
+                                {towEnterprise.message}
+                            </small>
+                        </div>
+                    )}
                 </div>
 
                 <SelfieConfirmer
@@ -325,7 +332,9 @@ const TowRegistration = () => {
                     setAcceptedTerms={setAcceptedTerms}
                 />
                 <button
-                    className="general-button | margin-top-25"
+                    className={`general-button | margin-top-25 ${
+                        formState.loading && "loading-section"
+                    }`}
                     title={
                         !formState.isValid
                             ? "Por favor completa los campos con datos validos"

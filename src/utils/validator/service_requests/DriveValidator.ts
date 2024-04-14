@@ -20,7 +20,7 @@ export const isValidLicenseDate = (finalDate: Date): InputState => {
     const currentDate = new Date();
 
     if (
-        finalDate > currentDate ||
+        finalDate < currentDate ||
         finalDate.toDateString() === currentDate.toDateString()
     ) {
         return {

@@ -99,8 +99,8 @@ const EnterpriseListForUsers = ({ type }: { type: string }) => {
                 <h2>
                     No tienes{" "}
                     {type === "tow"
-                        ? "ninguna empresa de grua fue creada"
-                        : "ningun taller mecanico fue creado"}
+                        ? "ninguna empresa de grua creada"
+                        : "ningun taller mecanico creado"}
                 </h2>
             </div>
         )

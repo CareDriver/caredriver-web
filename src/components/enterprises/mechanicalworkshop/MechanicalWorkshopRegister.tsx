@@ -236,7 +236,9 @@ const MechanicRegister = () => {
                     )}
                 </fieldset>
                 <button
-                    className="general-button | margin-top-25 max-width-60"
+                    className={`general-button | margin-top-25 max-width-60 ${
+                        formState.loading && "loading-section"
+                    }`}
                     title={
                         !formState.isValid
                             ? "Por favor completa los campos con datos validos"

@@ -104,14 +104,6 @@ const EnterpriseSelector = ({
                     ))}
                 </div>
 
-                {enterpriseFiled.message && (
-                    <div className="margin-top-15">
-                        <small className="form-section-message">
-                            {enterpriseFiled.message}
-                        </small>
-                    </div>
-                )}
-
                 <button
                     className="icon-wrapper general-button | no-full gray | margin-top-25"
                     disabled={page === pages}
@@ -122,11 +114,11 @@ const EnterpriseSelector = ({
                 </button>
             </div>
         ) : (
-            <div className="empty-wrapper | auto-height">
+            <div>
                 <h2>
                     {type === EnterpriseType.Mechanical
                         ? "Ningun taller mecanico fue creado"
-                        : "Ninguna empresa operadora de grua fue creado"}
+                        : "Ninguna empresa operadora de grua fue creada"}
                 </h2>
             </div>
         )

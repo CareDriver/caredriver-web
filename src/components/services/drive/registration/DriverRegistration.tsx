@@ -301,7 +301,9 @@ const DriverRegistration = () => {
                     setAcceptedTerms={setAcceptedTerms}
                 />
                 <button
-                    className="general-button | margin-top-25"
+                    className={`general-button | margin-top-25 ${
+                        formState.loading && "loading-section"
+                    }`}
                     title={
                         !formState.isValid
                             ? "Por favor completa los campos con datos validos"

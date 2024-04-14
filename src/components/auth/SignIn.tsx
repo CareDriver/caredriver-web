@@ -45,8 +45,8 @@ const SignIn = () => {
                     ...formState,
                     loading: false,
                 });
-                router.push("/services/drive");
-                toast("Inicio de sesion exitoso");
+                toast.success("Inicio de sesion exitoso");
+                window.location.replace("/services/drive");
             })
             .catch(() => {
                 setFormState({
