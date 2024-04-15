@@ -70,3 +70,7 @@
 .yellow {
     color: var(--yellow);
 }
+
+.green {
+    color: var(--main-light);
+}

@@ -84,6 +84,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                 data: null,
                                 hasPhoto: false,
                             });
+                            router.push("/");
                             setLoadingUser(false);
                         }
                     });
@@ -92,6 +93,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         data: null,
                         hasPhoto: false,
                     });
+                    router.push("/");
                     setLoadingUser(false);
                 }
             } else {
