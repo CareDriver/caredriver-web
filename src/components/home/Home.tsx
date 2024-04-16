@@ -44,7 +44,7 @@ const Home = () => {
         <main className="home-container">
             <span className="circles"></span>
             <img src="/images/logowithname.png" alt="" />
-            <Link href={"/auth/signin"} className="action-button">
+            <Link href={"/auth/signin"} className="action-button touchable">
                 Comenzar
             </Link>
             <span className="circles-right-bottom"></span>

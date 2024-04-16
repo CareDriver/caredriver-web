@@ -10,7 +10,7 @@ const CranesPanel = () => {
                 Empresas Operadoras de Gruas que registraste
             </h1>
             <Link
-                className="general-button icon-wrapper | max-20 less-padding no-full center white-icon"
+                className="general-button icon-wrapper | max-20 less-padding no-full center white-icon touchable"
                 href={"/enterprise/cranes/register"}
             >
                 <Plus />
