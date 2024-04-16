@@ -179,11 +179,17 @@ const MechanicRegistration = () => {
                     loading: false,
                     isValid: false,
                 });
+                toast.error("Por favor llena los campos con datos validos", {
+                    toastId: "toast-error-invalid-form",
+                });
             }
         } else {
             setFormState({
                 loading: false,
                 isValid: false,
+            });
+            toast.error("Por favor llena los campos que estan vacios", {
+                toastId: "toast-error-empty-form",
             });
         }
     };
@@ -257,7 +263,7 @@ const MechanicRegistration = () => {
                     setAcceptedTerms={setAcceptedTerms}
                 />
                 <button
-                    className={`general-button | margin-top-25 ${
+                    className={`general-button | margin-top-25 touchable ${
                         formState.loading && "loading-section"
                     }`}
                     title={

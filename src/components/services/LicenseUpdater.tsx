@@ -329,7 +329,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                     setImage={setUserConfirmation}
                 />
                 <button
-                    className={`general-button | margin-top-25 ${
+                    className={`general-button | margin-top-25 touchable ${
                         formState.loading && "loading-section"
                     }`}
                     title={

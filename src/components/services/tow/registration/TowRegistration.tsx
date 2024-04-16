@@ -247,11 +247,17 @@ const TowRegistration = () => {
                     loading: false,
                     isValid: false,
                 });
+                toast.error("Por favor llena los campos con datos validos", {
+                    toastId: "toast-error-invalid-form",
+                });
             }
         } else {
             setFormState({
                 loading: false,
                 isValid: false,
+            });
+            toast.error("Por favor llena los campos que estan vacios", {
+                toastId: "toast-error-empty-form",
             });
         }
     };
@@ -276,19 +282,19 @@ const TowRegistration = () => {
             <ServiceHeader
                 title={
                     user.data &&
-                    user.data.serviceRequests.drive.state === ServiceReqState.Refused
+                    user.data.serviceRequests.tow.state === ServiceReqState.Refused
                         ? "Tu solicitud fue Rechazada!"
                         : "Solicita trabajar como Chofer con nosotros!"
                 }
                 description={
                     user.data &&
-                    user.data.serviceRequests.drive.state === ServiceReqState.Refused
+                    user.data.serviceRequests.tow.state === ServiceReqState.Refused
                         ? "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud."
                         : "Por favor llena este formulario con datos reales para que tu solicitud sea aprovada y puedas empezar a trabajar con nosotros."
                 }
                 state={
                     user.data
-                        ? user.data.serviceRequests.drive.state
+                        ? user.data.serviceRequests.tow.state
                         : ServiceReqState.NotSent
                 }
             />
@@ -332,7 +338,7 @@ const TowRegistration = () => {
                     setAcceptedTerms={setAcceptedTerms}
                 />
                 <button
-                    className={`general-button | margin-top-25 ${
+                    className={`general-button | margin-top-25 touchable ${
                         formState.loading && "loading-section"
                     }`}
                     title={
