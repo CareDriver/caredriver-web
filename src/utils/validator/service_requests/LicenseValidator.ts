@@ -15,10 +15,11 @@ export const isValidForm = (
 };
 
 export const verifyNoEmptyData = (
-    license: LicenseForm,
+    license: LicenseForm | null,
     userConfirmation: PhotoField,
 ): boolean => {
     return (
+        license !== null &&
         license.number.value.trim().length > 0 &&
         license.expirationDate.value !== null &&
         license.behindPhoto.value !== null &&

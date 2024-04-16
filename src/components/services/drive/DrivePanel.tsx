@@ -61,7 +61,7 @@ const DrivePanel = () => {
                 Ve a nuestra Aplicacion Móvil y empieza a Ofrecer tu servicio!
             </p>
             {user.data.licenses && user.data.licenses.car && (
-                <div className="license-wrapper | margin-top-25">
+                <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
                         <AddressCar />
                         Licencia | Automovil
@@ -84,7 +84,7 @@ const DrivePanel = () => {
                 </div>
             )}
             {user.data.licenses && user.data.licenses.motorcycle && (
-                <div className="margin-top-25">
+                <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
                         <AddressCar />
                         Licencia | Motocicleta
@@ -107,7 +107,7 @@ const DrivePanel = () => {
                 </div>
             )}
             {(!user.data.licenses?.car || !user.data.licenses?.motorcycle) && (
-                <div className="license-wrapper | margin-top-50">
+                <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
                         <AddressCar />
                         {user.data.licenses && !user.data.licenses.motorcycle

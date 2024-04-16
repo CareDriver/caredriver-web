@@ -1,8 +1,11 @@
 "use client";
 
 import { AuthContext } from "@/context/AuthContext";
-import { LicenseInterface } from "@/interfaces/PersonalDocumentsInterface";
-import { useContext, useEffect, useState } from "react";
+import {
+    LicenseInterface,
+    LicenseUpdateReq,
+} from "@/interfaces/PersonalDocumentsInterface";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import PageLoader from "../PageLoader";
 import { useRouter } from "next/navigation";
 import ImageUploader from "../form/ImageUploader";
@@ -12,8 +15,17 @@ import {
     isValidLicenseNumber,
 } from "@/utils/validator/service_requests/DriveValidator";
 import SelfieConfirmer from "../form/SelfieConfirmer";
-import { isValidForm } from "@/utils/validator/service_requests/LicenseValidator";
+import {
+    isValidForm,
+    verifyNoEmptyData,
+} from "@/utils/validator/service_requests/LicenseValidator";
 import { toast } from "react-toastify";
+import { sendLicenseUpdateReq } from "@/utils/requests/LicenseUpdaterReq";
+import { emptyPhotoWithRef, ImgWithRef } from "@/interfaces/ImageInterface";
+import { DirectoryPath } from "@/firebase/StoragePaths";
+import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { nanoid } from "nanoid";
+import { Timestamp } from "firebase/firestore";
 
 const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
     const router = useRouter();
@@ -56,7 +68,152 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
         }
     };
 
-    const updateLicense = async () => {};
+    const uploadImages = async () => {
+        var frontImgUrl: ImgWithRef = emptyPhotoWithRef;
+        var behindImgUrl: ImgWithRef = emptyPhotoWithRef;
+        var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
+
+        if (user.data && license) {
+            if (license.frontPhoto.value && license.behindPhoto.value) {
+                try {
+                    frontImgUrl = await uploadImageBase64(
+                        DirectoryPath.Licenses,
+                        license.frontPhoto.value,
+                    );
+                    behindImgUrl = await uploadImageBase64(
+                        DirectoryPath.Licenses,
+                        license.behindPhoto.value,
+                    );
+                } catch (e) {
+                    throw e;
+                }
+            }
+
+            if (userConfirmation.value) {
+                try {
+                    realTimePhotoImgUrl = await uploadImageBase64(
+                        DirectoryPath.Selfies,
+                        userConfirmation.value,
+                    );
+                } catch (e) {
+                    throw e;
+                }
+            }
+        }
+
+        return {
+            frontImgUrl,
+            behindImgUrl,
+            realTimePhotoImgUrl,
+        };
+    };
+
+    const uploadForm = async (
+        vehiclesData: LicenseInterface,
+        realTimePhotoImgUrl: ImgWithRef,
+    ) => {
+        if (user.data && user.data.id) {
+            var formId = nanoid(30);
+            try {
+                var reqDoc: LicenseUpdateReq = {
+                    id: formId,
+                    userId: user.data.id,
+                    vehicleType: type,
+                    licenseNumber: vehiclesData.licenseNumber,
+                    expiredDateLicense: vehiclesData.expiredDateLicense,
+                    frontImgUrl: vehiclesData.frontImgUrl,
+                    backImgUrl: vehiclesData.backImgUrl,
+                    realTimePhotoImgUrl: realTimePhotoImgUrl,
+                };
+                await sendLicenseUpdateReq(formId, reqDoc);
+            } catch (e) {
+                throw e;
+            }
+        }
+    };
+
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
+        setFormState({
+            ...formState,
+            loading: true,
+        });
+        var isValid = verifyNoEmptyData(license, userConfirmation);
+        if (isValid) {
+            isValid = isValidForm(license, userConfirmation);
+            if (
+                isValid &&
+                user.data &&
+                license &&
+                license.number.value &&
+                license.expirationDate.value &&
+                license.frontPhoto.value &&
+                license.behindPhoto.value
+            ) {
+                try {
+                    const { frontImgUrl, behindImgUrl, realTimePhotoImgUrl } =
+                        await toast.promise(uploadImages(), {
+                            pending: "Subiendo imagenes, por favor espera",
+                            success: "Imagenes subidas",
+                            error: "Error al subir imagenes, intentalo de nuevo por favor",
+                        });
+                    await toast.promise(
+                        uploadForm(
+                            {
+                                licenseNumber: license.number.value,
+                                expiredDateLicense: Timestamp.fromDate(
+                                    license.expirationDate.value,
+                                ),
+                                frontImgUrl: frontImgUrl,
+                                backImgUrl: behindImgUrl,
+                            },
+                            realTimePhotoImgUrl,
+                        ),
+                        {
+                            pending: "Enviando el formulario, por favor espera",
+                            success: "Formulario enviado",
+                            error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                        },
+                    );
+                    toast.info(
+                        "Tu solicitud sera revisada por uno de nuestros administradores",
+                        {
+                            toastId: "toast-info-sent-form-succesful",
+                        },
+                    );
+                    router.push(
+                        `/services/${type === "tow" ? "tow" : "drive"}`,
+                    );
+                    setFormState({
+                        loading: false,
+                        isValid: true,
+                    });
+                } catch (e) {
+                    setFormState({
+                        loading: false,
+                        isValid: false,
+                    });
+                    window.location.reload();
+                }
+            } else {
+                setFormState({
+                    loading: false,
+                    isValid: false,
+                });
+                toast.error("Por favor llena los campos con datos validos", {
+                    toastId: "toast-error-invalid-form",
+                });
+            }
+        } else {
+            setFormState({
+                loading: false,
+                isValid: false,
+            });
+            toast.error("Por favor llena los campos que estan vacios", {
+                toastId: "toast-error-empty-form",
+            });
+        }
+    };
 
     useEffect(() => {
         if (!loadingUser && user.data && user.data.licenses) {
@@ -83,7 +240,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
             } else {
                 router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
                 toast.error("Licencia no encontrada", {
-                    toastId: "licence-no-found-error"
+                    toastId: "licence-no-found-error",
                 });
             }
         }
@@ -111,7 +268,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
             <form
                 data-state={formState.loading ? "loading" : "loaded"}
                 className="form-sub-container | max-width-60 margin-top-25"
-                onSubmit={updateLicense}
+                onSubmit={handleSubmit}
             >
                 <fieldset className="form-section">
                     <input
