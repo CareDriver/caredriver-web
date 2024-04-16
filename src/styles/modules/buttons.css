@@ -100,3 +100,26 @@
 .circle-button:disabled > svg {
     fill: var(--gray-dark) !important;
 }
+
+.small-general-button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 40px;
+
+    background-color: var(--main-light);
+    color: var(--white);
+    border: none;
+    border-radius: 15px;
+}
+
+.small-general-button.gray {
+    border: 2px solid var(--gray-dark);
+    background-color: var(--white);
+    color: var(--gray-dark);
+}
+
+.small-general-button.yellow {
+    background-color: var(--yellow);
+}

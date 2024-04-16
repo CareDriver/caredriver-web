@@ -159,15 +159,41 @@ const DriverRegistration = () => {
                     ),
                 );
 
+                var newReqState;
+                if (vehicles.length > 1) {
+                    newReqState = {
+                        ...user.data.serviceRequests,
+                        driveCar: {
+                            id: formId,
+                            state: ServiceReqState.Reviewing,
+                        },
+                        driveMotorcycle: {
+                            id: formId,
+                            state: ServiceReqState.Reviewing,
+                        },
+                    };
+                } else {
+                    newReqState =
+                        vehicles[0].type.type === VehicleType.CAR
+                            ? {
+                                  ...user.data.serviceRequests,
+                                  driveCar: {
+                                      id: formId,
+                                      state: ServiceReqState.Reviewing,
+                                  },
+                              }
+                            : {
+                                  ...user.data.serviceRequests,
+                                  driveMotorcycle: {
+                                      id: formId,
+                                      state: ServiceReqState.Reviewing,
+                                  },
+                              };
+                }
+
                 if (user.data.id) {
                     var toUpdate: Partial<UserInterface> = {
-                        serviceRequests: {
-                            ...user.data.serviceRequests,
-                            drive: {
-                                id: formId,
-                                state: ServiceReqState.Reviewing,
-                            },
-                        },
+                        serviceRequests: newReqState,
                     };
                     try {
                         await updateUser(user.data.id, toUpdate);
@@ -265,19 +291,28 @@ const DriverRegistration = () => {
             <ServiceHeader
                 title={
                     user.data &&
-                    user.data.serviceRequests.drive.state === ServiceReqState.Refused
+                    (user.data.serviceRequests.driveCar.state ===
+                        ServiceReqState.Refused ||
+                        user.data.serviceRequests.driveMotorcycle.state ===
+                            ServiceReqState.Refused)
                         ? "Tu solicitud fue Rechazada!"
                         : "Solicita trabajar como Chofer con nosotros!"
                 }
                 description={
                     user.data &&
-                    user.data.serviceRequests.drive.state === ServiceReqState.Refused
+                    (user.data.serviceRequests.driveCar.state ===
+                        ServiceReqState.Refused ||
+                        user.data.serviceRequests.driveMotorcycle.state ===
+                            ServiceReqState.Refused)
                         ? "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud."
                         : "Por favor llena este formulario con datos reales para que tu solicitud sea aprovada y puedas empezar a trabajar con nosotros."
                 }
                 state={
                     user.data
-                        ? user.data.serviceRequests.drive.state
+                        ? user.data.serviceRequests.driveCar.state ===
+                          ServiceReqState.NotSent
+                            ? user.data.serviceRequests.driveMotorcycle.state
+                            : user.data.serviceRequests.driveCar.state
                         : ServiceReqState.NotSent
                 }
             />

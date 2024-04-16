@@ -25,16 +25,17 @@ import { nanoid } from "nanoid";
 import { updateUser } from "@/utils/requests/UserRequester";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
-import ServiceHeader from "../../ServiceHeader";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
 import SingleVehicleForm from "./SingleVehicleForm";
 import {
     isValidForm,
     verifyNoEmptyData,
 } from "@/utils/validator/service_requests/NewVehicleValidator";
+import { useRouter } from "next/navigation";
 
 const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
     const { user, loadingUser } = useContext(AuthContext);
+    const router = useRouter();
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
         fullname: {
             value: "",
@@ -157,15 +158,25 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                     ),
                 );
 
+                var newReqState =
+                    type === "car"
+                        ? {
+                              ...user.data.serviceRequests,
+                              driveCar: {
+                                  id: formId,
+                                  state: ServiceReqState.Reviewing,
+                              },
+                          }
+                        : {
+                              ...user.data.serviceRequests,
+                              driveMotorcycle: {
+                                  id: formId,
+                                  state: ServiceReqState.Reviewing,
+                              },
+                          };
                 if (user.data.id) {
                     var toUpdate: Partial<UserInterface> = {
-                        serviceRequests: {
-                            ...user.data.serviceRequests,
-                            drive: {
-                                id: formId,
-                                state: ServiceReqState.Reviewing,
-                            },
-                        },
+                        serviceRequests: newReqState,
                     };
                     try {
                         await updateUser(user.data.id, toUpdate);
@@ -213,7 +224,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                             error: "Error al enviar el formulario, intentalo de nuevo por favor",
                         },
                     );
-                    window.location.reload();
+                    window.location.replace("/services/drive");
                     setFormState({
                         loading: false,
                         isValid: true,
@@ -252,6 +263,35 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
             }),
         [personalData, vehicle, userConfirmation, acceptedTerms],
     );
+
+    useEffect(() => {
+        if (!loadingUser) {
+            if (user.data && user.data.licenses) {
+                var isValid = user.data.licenses[type] !== undefined;
+                if (isValid) {
+                    router.push("/services/drive");
+                    toast.error("Ya registraste este vehiculo", {
+                        toastId: "vehicle-already-registered-message",
+                    });
+                }
+                isValid =
+                    type === "car"
+                        ? user.data.serviceRequests.driveCar.state ===
+                          ServiceReqState.Reviewing
+                        : user.data.serviceRequests.driveMotorcycle.state ===
+                          ServiceReqState.Reviewing;
+                if (isValid) {
+                    router.push("/services/drive");
+                    toast.error(
+                        "Tu peticion esta siendo revisada, no puedes enviar otra",
+                        {
+                            toastId: "vehicle-already-registered-like-req-message",
+                        },
+                    );
+                }
+            }
+        }
+    }, [loadingUser]);
 
     return (
         <div className="service-form-wrapper" onSubmit={(e) => handleSubmit(e)}>
