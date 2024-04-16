@@ -52,6 +52,7 @@ const buildUser = (id: string, userData: UserInterface | undefined): UserInterfa
                 ? defaultServiceReq
                 : userData.serviceRequests,
         location: userData?.location,
+        licenses: userData?.licenses
     };
 };
 

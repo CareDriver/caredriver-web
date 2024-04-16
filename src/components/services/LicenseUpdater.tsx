@@ -13,6 +13,7 @@ import {
 } from "@/utils/validator/service_requests/DriveValidator";
 import SelfieConfirmer from "../form/SelfieConfirmer";
 import { isValidForm } from "@/utils/validator/service_requests/LicenseValidator";
+import { toast } from "react-toastify";
 
 const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
     const router = useRouter();
@@ -80,11 +81,10 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                     },
                 });
             } else {
-                router.push(
-                    `/services/${
-                        type === "car" || type === "motorcycle" ? "drive" : "tow"
-                    }`,
-                );
+                router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
+                toast.error("Licencia no encontrada", {
+                    toastId: "licence-no-found-error"
+                });
             }
         }
     }, [loadingUser]);
@@ -99,10 +99,10 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
     return loadingUser ? (
         <PageLoader />
     ) : license ? (
-        <div>
-            <div>
+        <div className="service-form-wrapper">
+            <div className="max-width-60">
                 <h1 className="text | big bolder">Actualiza tu licencia de conducir</h1>
-                <p>
+                <p className="text | bold">
                     Necesitamos verificar que tu licencia sigue siendo valida para que
                     continues trabajando con nosotros. Las fotos de tu licencia de
                     conducir se eliminaran cuando se acepte o rechaze tu solicitud.
@@ -110,7 +110,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
             </div>
             <form
                 data-state={formState.loading ? "loading" : "loaded"}
-                className="form-sub-container | max-width-60"
+                className="form-sub-container | max-width-60 margin-top-25"
                 onSubmit={updateLicense}
             >
                 <fieldset className="form-section">
