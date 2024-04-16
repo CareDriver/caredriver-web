@@ -1,5 +1,12 @@
+import AddNewVehicle from "@/components/services/drive/registration/AddNewVehicle";
+import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+
 const AddNewDrivePage = ({ params }: { params: any }) => {
-    return <h2>{params.type}</h2>;
+    return (
+        <WrapperWithSideBar>
+            <AddNewVehicle type={params.type} />
+        </WrapperWithSideBar>
+    );
 };
 
 export default AddNewDrivePage;
