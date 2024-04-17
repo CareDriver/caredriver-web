@@ -194,6 +194,40 @@ const MechanicRegistration = () => {
         }
     };
 
+    const verifyRefusedReq = async () => {
+        if (!loadingUser && user.data) {
+            var changed = false;
+            var toUpdate = {
+                ...user.data.serviceRequests,
+            };
+            if (user.data.serviceRequests.mechanic.state === ServiceReqState.Refused) {
+                toUpdate = {
+                    ...toUpdate,
+                    mechanic: {
+                        id: "",
+                        state: ServiceReqState.NotSent,
+                    },
+                };
+                changed = true;
+            }
+
+            if (changed && user.data.id) {
+                var toUpdateDoc: Partial<UserInterface> = {
+                    serviceRequests: toUpdate,
+                };
+                try {
+                    await updateUser(user.data.id, toUpdateDoc);
+                } catch (e) {
+                    throw e;
+                }
+            }
+        }
+    };
+
+    useEffect(() => {
+        verifyRefusedReq();
+    }, [loadingUser]);
+
     useEffect(
         () =>
             setFormState({

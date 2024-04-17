@@ -262,6 +262,40 @@ const TowRegistration = () => {
         }
     };
 
+    const verifyRefusedReq = async () => {
+        if (!loadingUser && user.data) {
+            var changed = false;
+            var toUpdate = {
+                ...user.data.serviceRequests,
+            };
+            if (user.data.serviceRequests.tow.state === ServiceReqState.Refused) {
+                toUpdate = {
+                    ...toUpdate,
+                    tow: {
+                        id: "",
+                        state: ServiceReqState.NotSent,
+                    },
+                };
+                changed = true;
+            }
+
+            if (changed && user.data.id) {
+                var toUpdateDoc: Partial<UserInterface> = {
+                    serviceRequests: toUpdate,
+                };
+                try {
+                    await updateUser(user.data.id, toUpdateDoc);
+                } catch (e) {
+                    throw e;
+                }
+            }
+        }
+    };
+
+    useEffect(() => {
+        verifyRefusedReq();
+    }, [loadingUser]);
+
     useEffect(
         () =>
             setFormState({

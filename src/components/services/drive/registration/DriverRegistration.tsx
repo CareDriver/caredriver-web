@@ -292,6 +292,53 @@ const DriverRegistration = () => {
         [personalData, vehicles, userConfirmation, acceptedTerms],
     );
 
+    const verifyRefusedReq = async () => {
+        if (!loadingUser && user.data) {
+            var changed = false;
+            var toUpdate = {
+                ...user.data.serviceRequests,
+            };
+            if (user.data.serviceRequests.driveCar.state === ServiceReqState.Refused) {
+                toUpdate = {
+                    ...toUpdate,
+                    driveCar: {
+                        id: "",
+                        state: ServiceReqState.NotSent,
+                    },
+                };
+                changed = true;
+            }
+            if (
+                user.data.serviceRequests.driveMotorcycle.state ===
+                ServiceReqState.Refused
+            ) {
+                toUpdate = {
+                    ...toUpdate,
+                    driveMotorcycle: {
+                        id: "",
+                        state: ServiceReqState.NotSent,
+                    },
+                };
+                changed = true;
+            }
+
+            if (changed && user.data.id) {
+                var toUpdateDoc: Partial<UserInterface> = {
+                    serviceRequests: toUpdate,
+                };
+                try {
+                    await updateUser(user.data.id, toUpdateDoc);
+                } catch (e) {
+                    throw e;
+                }
+            }
+        }
+    };
+
+    useEffect(() => {
+        verifyRefusedReq();
+    }, [loadingUser]);
+
     return (
         <div className="service-form-wrapper" onSubmit={(e) => handleSubmit(e)}>
             <ServiceHeader
