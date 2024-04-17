@@ -6,7 +6,7 @@ import Plus from "@/icons/Plus";
 import SackDollar from "@/icons/SackDollar";
 import { ServiceReqState } from "@/interfaces/Services";
 import Link from "next/link";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 const DrivePanel = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -41,15 +41,6 @@ const DrivePanel = () => {
         if (difference <= 7) return "yellow";
         return "green";
     };
-
-    useEffect(() => {
-        if (user.data && user.data.licenses && user.data.licenses.car) {
-            console.log(user.data.licenses.car.expiredDateLicense.toDate().toISOString());
-            console.log(
-                differenceOnDays(user.data.licenses.car.expiredDateLicense.toDate()),
-            );
-        }
-    }, []);
 
     return loadingUser ? (
         <PageLoader />
