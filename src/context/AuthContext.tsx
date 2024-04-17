@@ -27,7 +27,7 @@ const authContextDefaultValues: authContextType = {
     logout: () => {},
 };
 
-const buildUser = (id: string, userData: UserInterface | undefined): UserInterface => {
+const buildUser = (id: string, userData: UserInterface | undefined): UserInterface => {    
     return {
         id: id,
         fullName: userData?.fullName === undefined ? "" : userData.fullName,
@@ -52,7 +52,10 @@ const buildUser = (id: string, userData: UserInterface | undefined): UserInterfa
                 ? defaultServiceReq
                 : userData.serviceRequests,
         location: userData?.location,
-        licenses: userData?.licenses
+        licenses: userData?.licenses,
+        currentDebtWithTheApp: userData?.currentDebtWithTheApp,
+        appPaymentHistory: userData?.appPaymentHistory,
+        disable: userData?.disable,
     };
 };
 
