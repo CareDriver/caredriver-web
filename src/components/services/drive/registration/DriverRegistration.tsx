@@ -159,15 +159,41 @@ const DriverRegistration = () => {
                     ),
                 );
 
+                var newReqState;
+                if (vehicles.length > 1) {
+                    newReqState = {
+                        ...user.data.serviceRequests,
+                        driveCar: {
+                            id: formId,
+                            state: ServiceReqState.Reviewing,
+                        },
+                        driveMotorcycle: {
+                            id: formId,
+                            state: ServiceReqState.Reviewing,
+                        },
+                    };
+                } else {
+                    newReqState =
+                        vehicles[0].type.type === VehicleType.CAR
+                            ? {
+                                  ...user.data.serviceRequests,
+                                  driveCar: {
+                                      id: formId,
+                                      state: ServiceReqState.Reviewing,
+                                  },
+                              }
+                            : {
+                                  ...user.data.serviceRequests,
+                                  driveMotorcycle: {
+                                      id: formId,
+                                      state: ServiceReqState.Reviewing,
+                                  },
+                              };
+                }
+
                 if (user.data.id) {
                     var toUpdate: Partial<UserInterface> = {
-                        serviceRequests: {
-                            ...user.data.serviceRequests,
-                            drive: {
-                                id: formId,
-                                state: ServiceReqState.Reviewing,
-                            },
-                        },
+                        serviceRequests: newReqState,
                     };
                     try {
                         await updateUser(user.data.id, toUpdate);
@@ -237,11 +263,17 @@ const DriverRegistration = () => {
                     loading: false,
                     isValid: false,
                 });
+                toast.error("Por favor llena los campos con datos validos", {
+                    toastId: "toast-error-invalid-form",
+                });
             }
         } else {
             setFormState({
                 loading: false,
                 isValid: false,
+            });
+            toast.error("Por favor llena los campos que estan vacios", {
+                toastId: "toast-error-empty-form",
             });
         }
     };
@@ -260,24 +292,80 @@ const DriverRegistration = () => {
         [personalData, vehicles, userConfirmation, acceptedTerms],
     );
 
+    const verifyRefusedReq = async () => {
+        if (!loadingUser && user.data) {
+            var changed = false;
+            var toUpdate = {
+                ...user.data.serviceRequests,
+            };
+            if (user.data.serviceRequests.driveCar.state === ServiceReqState.Refused) {
+                toUpdate = {
+                    ...toUpdate,
+                    driveCar: {
+                        id: "",
+                        state: ServiceReqState.NotSent,
+                    },
+                };
+                changed = true;
+            }
+            if (
+                user.data.serviceRequests.driveMotorcycle.state ===
+                ServiceReqState.Refused
+            ) {
+                toUpdate = {
+                    ...toUpdate,
+                    driveMotorcycle: {
+                        id: "",
+                        state: ServiceReqState.NotSent,
+                    },
+                };
+                changed = true;
+            }
+
+            if (changed && user.data.id) {
+                var toUpdateDoc: Partial<UserInterface> = {
+                    serviceRequests: toUpdate,
+                };
+                try {
+                    await updateUser(user.data.id, toUpdateDoc);
+                } catch (e) {
+                    throw e;
+                }
+            }
+        }
+    };
+
+    useEffect(() => {
+        verifyRefusedReq();
+    }, [loadingUser]);
+
     return (
         <div className="service-form-wrapper" onSubmit={(e) => handleSubmit(e)}>
             <ServiceHeader
                 title={
                     user.data &&
-                    user.data.serviceRequests.drive.state === ServiceReqState.Refused
+                    (user.data.serviceRequests.driveCar.state ===
+                        ServiceReqState.Refused ||
+                        user.data.serviceRequests.driveMotorcycle.state ===
+                            ServiceReqState.Refused)
                         ? "Tu solicitud fue Rechazada!"
                         : "Solicita trabajar como Chofer con nosotros!"
                 }
                 description={
                     user.data &&
-                    user.data.serviceRequests.drive.state === ServiceReqState.Refused
+                    (user.data.serviceRequests.driveCar.state ===
+                        ServiceReqState.Refused ||
+                        user.data.serviceRequests.driveMotorcycle.state ===
+                            ServiceReqState.Refused)
                         ? "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud."
                         : "Por favor llena este formulario con datos reales para que tu solicitud sea aprovada y puedas empezar a trabajar con nosotros."
                 }
                 state={
                     user.data
-                        ? user.data.serviceRequests.drive.state
+                        ? user.data.serviceRequests.driveCar.state ===
+                          ServiceReqState.NotSent
+                            ? user.data.serviceRequests.driveMotorcycle.state
+                            : user.data.serviceRequests.driveCar.state
                         : ServiceReqState.NotSent
                 }
             />
@@ -301,7 +389,7 @@ const DriverRegistration = () => {
                     setAcceptedTerms={setAcceptedTerms}
                 />
                 <button
-                    className={`general-button | margin-top-25 ${
+                    className={`general-button | margin-top-25 touchable ${
                         formState.loading && "loading-section"
                     }`}
                     title={

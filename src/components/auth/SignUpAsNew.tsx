@@ -213,7 +213,7 @@ const SignUpAsNew = () => {
             </fieldset>
 
             <button
-                className="general-button | touchable margin-top-25"
+                className="general-button | touchable margin-top-25 touchable"
                 data-theme="dark"
                 disabled={
                     credentials.fullName.errorMessage !== "" ||

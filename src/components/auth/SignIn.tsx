@@ -116,7 +116,7 @@ const SignIn = () => {
                         credentials.email.errorMessage !== "" ||
                         credentials.password.errorMessage !== ""
                     }
-                    className="general-button | touchable margin-top-25"
+                    className="general-button | touchable margin-top-25 touchable"
                     data-theme="dark"
                 >
                     {formState.loading ? (

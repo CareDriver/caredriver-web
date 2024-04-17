@@ -378,7 +378,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                         Cancelar
                     </button>
                     <button
-                        className={`general-button ${
+                        className={`general-button touchable ${
                             formState.loading && "loading-section"
                         }`}
                         title={
@@ -436,7 +436,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                     <button
                         type="button"
                         onClick={deleteEnterprise}
-                        className={`general-button | red no-full ${
+                        className={`general-button | red no-full touchable ${
                             formState.loadingRev && "loading-section"
                         }`}
                         disabled={!validToDelete}

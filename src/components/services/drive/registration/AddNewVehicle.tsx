@@ -1,12 +1,7 @@
 "use client";
 
 import { FormEvent, useContext, useEffect, useState } from "react";
-import {
-    defaultLicense,
-    EnterpriseField,
-    PersonalDataFormField,
-    VehicleForm,
-} from "../../FormModels";
+import { defaultLicense, PersonalDataFormField, VehicleForm } from "../../FormModels";
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
 import PersonalDataForm from "../../../form/PersonalDataForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
@@ -14,13 +9,15 @@ import TermsCheckForm from "@/components/form/TermsCheckForm";
 import { defaultPhoto, PhotoField } from "../../FormModels";
 import { uploadImageBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
-import {
-    isValidForm,
-    verifyNoEmptyData,
-} from "@/utils/validator/service_requests/TowValidator";
 import { AuthContext } from "@/context/AuthContext";
-import { Vehicle, emptyVehicleCar, towReqBuilder } from "@/interfaces/UserRequest";
+import {
+    CarType,
+    MotorcycleType,
+    Vehicle,
+    driveReqBuilder,
+} from "@/interfaces/UserRequest";
 import { Timestamp } from "firebase/firestore";
+import { saveDriveReq } from "@/utils/requests/services/DriveRequester";
 import { Locations } from "@/interfaces/Locations";
 import { emptyPhotoWithRef, ImgWithRef } from "@/interfaces/ImageInterface";
 import { toast } from "react-toastify";
@@ -28,16 +25,17 @@ import { nanoid } from "nanoid";
 import { updateUser } from "@/utils/requests/UserRequester";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
-import ServiceHeader from "../../ServiceHeader";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
-import TowVehicle from "./TowVehicle";
-import EnterpriseSelector from "@/components/enterprises/EnterpriseSelector";
-import { EnterpriseType } from "@/interfaces/Enterprise";
-import { saveTowReq } from "@/utils/requests/services/TowRequester";
-import Building from "@/icons/Building";
+import SingleVehicleForm from "./SingleVehicleForm";
+import {
+    isValidForm,
+    verifyNoEmptyData,
+} from "@/utils/validator/service_requests/NewVehicleValidator";
+import { useRouter } from "next/navigation";
 
-const TowRegistration = () => {
+const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
     const { user, loadingUser } = useContext(AuthContext);
+    const router = useRouter();
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
         fullname: {
             value: "",
@@ -48,19 +46,19 @@ const TowRegistration = () => {
             message: null,
         },
     });
+    const carVehicle: CarType = {
+        type: VehicleType.CAR,
+        mode: VehicleTransmission.AUTOMATIC,
+    };
+
+    const motorcycleVehicle: MotorcycleType = {
+        type: VehicleType.MOTORCYCLE,
+    };
+
     const [vehicle, setVehicle] = useState<VehicleForm>({
-        type: {
-            type: VehicleType.CAR,
-            mode: VehicleTransmission.AUTOMATIC,
-        },
+        type: type === "car" ? carVehicle : motorcycleVehicle,
         license: defaultLicense,
     });
-
-    const [towEnterprise, setTowEnterprise] = useState<EnterpriseField>({
-        value: null,
-        message: null,
-    });
-
     const [userConfirmation, setUserConfirmation] = useState<PhotoField>(defaultPhoto);
     const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
     const [formState, setFormState] = useState({
@@ -69,7 +67,7 @@ const TowRegistration = () => {
     });
 
     const uploadImages = async () => {
-        let vehiclesData: Vehicle = emptyVehicleCar;
+        let vehiclesData: Vehicle[] = [];
         var newProfilePhotoImgUrl: string | ImgWithRef = emptyPhotoWithRef;
         var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
 
@@ -101,7 +99,7 @@ const TowRegistration = () => {
                         vehicle.license.behindPhoto.value,
                     );
                     if (vehicle.license.expirationDate.value) {
-                        vehiclesData = {
+                        vehiclesData.push({
                             type: vehicle.type,
                             license: {
                                 licenseNumber: vehicle.license.number.value,
@@ -111,7 +109,7 @@ const TowRegistration = () => {
                                 frontImgUrl: frontImgUrl,
                                 backImgUrl: behindImgUrl,
                             },
-                        };
+                        });
                     }
                 } catch (e) {
                     throw e;
@@ -138,38 +136,47 @@ const TowRegistration = () => {
     };
 
     const uploadForm = async (
-        vehicleData: Vehicle,
+        vehiclesData: Vehicle[],
         newProfilePhotoImgUrl: string | ImgWithRef,
         realTimePhotoImgUrl: ImgWithRef,
     ) => {
-        if (user.data && towEnterprise.value) {
+        if (user.data) {
             var formId = nanoid(30);
             try {
-                await saveTowReq(
+                await saveDriveReq(
                     formId,
-                    towReqBuilder(
+                    driveReqBuilder(
                         user.data.id === undefined ? "" : user.data.id,
                         personalData.fullname.value,
                         newProfilePhotoImgUrl,
-                        towEnterprise.value,
+                        vehiclesData,
                         realTimePhotoImgUrl,
                         user.data.services,
                         user.data.location === undefined
                             ? Locations.CochabambaBolivia
                             : user.data.location,
-                        [vehicleData],
                     ),
                 );
 
+                var newReqState =
+                    type === "car"
+                        ? {
+                              ...user.data.serviceRequests,
+                              driveCar: {
+                                  id: formId,
+                                  state: ServiceReqState.Reviewing,
+                              },
+                          }
+                        : {
+                              ...user.data.serviceRequests,
+                              driveMotorcycle: {
+                                  id: formId,
+                                  state: ServiceReqState.Reviewing,
+                              },
+                          };
                 if (user.data.id) {
                     var toUpdate: Partial<UserInterface> = {
-                        serviceRequests: {
-                            ...user.data.serviceRequests,
-                            tow: {
-                                id: formId,
-                                state: ServiceReqState.Reviewing,
-                            },
-                        },
+                        serviceRequests: newReqState,
                     };
                     try {
                         await updateUser(user.data.id, toUpdate);
@@ -189,27 +196,14 @@ const TowRegistration = () => {
             ...formState,
             loading: true,
         });
-        if (!towEnterprise.value) {
-            setTowEnterprise({
-                ...towEnterprise,
-                message: "Por favor selecciona la Empresa de Grua en la que trabajas",
-            });
-        }
         var isValid = verifyNoEmptyData(
             personalData,
             vehicle,
             userConfirmation,
             acceptedTerms,
-            towEnterprise,
         );
         if (isValid) {
-            isValid = isValidForm(
-                personalData,
-                vehicle,
-                userConfirmation,
-                acceptedTerms,
-                towEnterprise,
-            );
+            isValid = isValidForm(personalData, vehicle, userConfirmation, acceptedTerms);
             if (isValid && user.data) {
                 try {
                     const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
@@ -230,7 +224,7 @@ const TowRegistration = () => {
                             error: "Error al enviar el formulario, intentalo de nuevo por favor",
                         },
                     );
-                    window.location.reload();
+                    window.location.replace("/services/drive");
                     setFormState({
                         loading: false,
                         isValid: true,
@@ -262,40 +256,6 @@ const TowRegistration = () => {
         }
     };
 
-    const verifyRefusedReq = async () => {
-        if (!loadingUser && user.data) {
-            var changed = false;
-            var toUpdate = {
-                ...user.data.serviceRequests,
-            };
-            if (user.data.serviceRequests.tow.state === ServiceReqState.Refused) {
-                toUpdate = {
-                    ...toUpdate,
-                    tow: {
-                        id: "",
-                        state: ServiceReqState.NotSent,
-                    },
-                };
-                changed = true;
-            }
-
-            if (changed && user.data.id) {
-                var toUpdateDoc: Partial<UserInterface> = {
-                    serviceRequests: toUpdate,
-                };
-                try {
-                    await updateUser(user.data.id, toUpdateDoc);
-                } catch (e) {
-                    throw e;
-                }
-            }
-        }
-    };
-
-    useEffect(() => {
-        verifyRefusedReq();
-    }, [loadingUser]);
-
     useEffect(
         () =>
             setFormState({
@@ -305,33 +265,49 @@ const TowRegistration = () => {
                     vehicle,
                     userConfirmation,
                     acceptedTerms,
-                    towEnterprise,
                 ),
             }),
         [personalData, vehicle, userConfirmation, acceptedTerms],
     );
 
+    useEffect(() => {
+        if (!loadingUser) {
+            if (user.data && user.data.licenses) {
+                var isValid = user.data.licenses[type] !== undefined;
+                if (isValid) {
+                    router.push("/services/drive");
+                    toast.error("Ya registraste este vehiculo", {
+                        toastId: "vehicle-already-registered-message",
+                    });
+                }
+                isValid =
+                    type === "car"
+                        ? user.data.serviceRequests.driveCar.state ===
+                          ServiceReqState.Reviewing
+                        : user.data.serviceRequests.driveMotorcycle.state ===
+                          ServiceReqState.Reviewing;
+                if (isValid) {
+                    router.push("/services/drive");
+                    toast.error(
+                        "Tu peticion esta siendo revisada, no puedes enviar otra",
+                        {
+                            toastId: "vehicle-already-registered-like-req-message",
+                        },
+                    );
+                }
+            }
+        }
+    }, [loadingUser]);
+
     return (
         <div className="service-form-wrapper" onSubmit={(e) => handleSubmit(e)}>
-            <ServiceHeader
-                title={
-                    user.data &&
-                    user.data.serviceRequests.tow.state === ServiceReqState.Refused
-                        ? "Tu solicitud fue Rechazada!"
-                        : "Solicita trabajar como Chofer con nosotros!"
-                }
-                description={
-                    user.data &&
-                    user.data.serviceRequests.tow.state === ServiceReqState.Refused
-                        ? "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud."
-                        : "Por favor llena este formulario con datos reales para que tu solicitud sea aprovada y puedas empezar a trabajar con nosotros."
-                }
-                state={
-                    user.data
-                        ? user.data.serviceRequests.tow.state
-                        : ServiceReqState.NotSent
-                }
-            />
+            <div>
+                <h1 className="text | big bolder">Agregar un nuevo Vehiculo</h1>
+                <p className="text | bold">
+                    Por favor llena este formulario con datos reales para que tu solicitud
+                    sea aprovada y puedas empezar a trabajar con este nuevo vehiculo.
+                </p>
+            </div>
             <form
                 className="form-sub-container | max-width-60"
                 data-state={formState.loading ? "loading" : "loaded"}
@@ -340,27 +316,7 @@ const TowRegistration = () => {
                     personalData={personalData}
                     setPersonalData={setPersonalData}
                 />
-                <TowVehicle vehicle={vehicle} setVehicle={setVehicle} />
-
-                <div className="form-sub-container | margin-top-25">
-                    <h2 className="text icon-wrapper | medium-big bold">
-                        <Building />
-                        Empresa de Grua
-                    </h2>
-
-                    <EnterpriseSelector
-                        type={EnterpriseType.Tow}
-                        enterpriseFiled={towEnterprise}
-                        setEnterprise={setTowEnterprise}
-                    />
-                    {towEnterprise.message && (
-                        <div className="margin-top-15">
-                            <small className="form-section-message">
-                                {towEnterprise.message}
-                            </small>
-                        </div>
-                    )}
-                </div>
+                <SingleVehicleForm vehicle={vehicle} setVehicle={setVehicle} />
 
                 <SelfieConfirmer
                     image={userConfirmation}
@@ -393,4 +349,4 @@ const TowRegistration = () => {
     );
 };
 
-export default TowRegistration;
+export default AddNewVehicle;

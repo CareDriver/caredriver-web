@@ -55,7 +55,11 @@ export interface UserInterface {
     };
 
     serviceRequests: {
-        drive: {
+        driveCar: {
+            id: string;
+            state: ServiceReqState;
+        };
+        driveMotorcycle: {
             id: string;
             state: ServiceReqState;
         };
@@ -71,7 +75,11 @@ export interface UserInterface {
 }
 
 export const defaultServiceReq = {
-    drive: {
+    driveCar: {
+        id: "",
+        state: ServiceReqState.NotSent,
+    },
+    driveMotorcycle: {
         id: "",
         state: ServiceReqState.NotSent,
     },

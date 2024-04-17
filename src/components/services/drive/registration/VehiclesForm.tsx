@@ -292,7 +292,7 @@ const VehiclesForm = ({
                 <button
                     type="button"
                     onClick={addNewVehicle}
-                    className="icon-wrapper general-button | no-full gray"
+                    className="icon-wrapper general-button | no-full gray touchable"
                 >
                     <Plus />
                     Agregar Otro Vehiculo

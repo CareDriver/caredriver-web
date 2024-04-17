@@ -1,8 +1,6 @@
 "use client";
 
-import { auth } from "@/firebase/FirebaseConfig";
-import { usePathname, useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { usePathname } from "next/navigation";
 
 import Link from "next/link";
 import "@/styles/components/sidebar.css";
@@ -34,7 +32,10 @@ const SideBar = () => {
                 <Link
                     href={"/services/drive"}
                     className={`sidebar-option ${
-                        pathname.includes("drive") && "selected"
+                        (pathname.includes("drive") ||
+                            pathname.includes("car") ||
+                            pathname.includes("motorcycle")) &&
+                        "selected"
                     }`}
                 >
                     <Car />

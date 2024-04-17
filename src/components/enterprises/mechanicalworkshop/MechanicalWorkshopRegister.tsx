@@ -2,7 +2,11 @@
 import "react-international-phone/style.css";
 
 import { AuthContext } from "@/context/AuthContext";
-import { isValidWorkshopName } from "@/utils/validator/enterprises/EnterpriseValidator";
+import {
+    isValidForm,
+    isValidWorkshopName,
+    verifyNoEmptyData,
+} from "@/utils/validator/enterprises/EnterpriseValidator";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import PhoneForm from "../../form/PhoneForm";
 import { isPhoneValid } from "@/utils/validator/auth/CredentialsValidator";
@@ -67,63 +71,74 @@ const MechanicRegister = () => {
             ...formState,
             loading: true,
         });
-        if (formData.coordinates.value === null) {
-            setFormData({
-                ...formData,
-                coordinates: {
-                    value: null,
-                    message: "Por favor selecciona la ubicacion del Taller mecanico",
-                },
-            });
-        } else if (!loadingUser && user.data && user.data.id) {
+        if (!loadingUser && user.data && user.data.id) {
             if (
                 formData.name.value &&
                 formData.logo.value &&
                 formData.phone.value &&
                 formData.coordinates.value
             ) {
-                try {
-                    const imgWithRef = await toast.promise(
-                        uploadImageBase64(DirectoryPath.Enterprises, formData.logo.value),
-                        {
-                            pending: "Subiendo el logo, por favor espera",
-                            success: "Logo subido",
-                            error: "Error al subir el logo, intentalo de nuevo por favor",
-                        },
-                    );
+                if (isValidForm(formData)) {
+                    try {
+                        const imgWithRef = await toast.promise(
+                            uploadImageBase64(
+                                DirectoryPath.Enterprises,
+                                formData.logo.value,
+                            ),
+                            {
+                                pending: "Subiendo el logo, por favor espera",
+                                success: "Logo subido",
+                                error: "Error al subir el logo, intentalo de nuevo por favor",
+                            },
+                        );
 
-                    var id = nanoid(25);
-                    const enterprise: Enterprise = {
-                        id,
-                        type: "mechanical",
-                        name: formData.name.value,
-                        logoImgUrl: imgWithRef,
-                        coordinates: new GeoPoint(
-                            formData.coordinates.value.lat,
-                            formData.coordinates.value.lng,
-                        ),
-                        phone: formData.phone.value,
-                        userId: user.data.id,
-                        aproved: false,
-                    };
+                        var id = nanoid(25);
+                        const enterprise: Enterprise = {
+                            id,
+                            type: "mechanical",
+                            name: formData.name.value,
+                            logoImgUrl: imgWithRef,
+                            coordinates: new GeoPoint(
+                                formData.coordinates.value.lat,
+                                formData.coordinates.value.lng,
+                            ),
+                            phone: formData.phone.value,
+                            userId: user.data.id,
+                            aproved: false,
+                        };
 
-                    await toast.promise(sendEnterpriseReq(id, enterprise), {
-                        pending: "Enviando el formulario, por favor espera",
-                        success: "Formulario enviado",
-                        error: "Error al enviar el formulario, intentalo de nuevo por favor",
-                    });
+                        await toast.promise(sendEnterpriseReq(id, enterprise), {
+                            pending: "Enviando el formulario, por favor espera",
+                            success: "Formulario enviado",
+                            error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                        });
 
+                        setFormState({
+                            ...formState,
+                            loading: false,
+                        });
+                        toast.info("Tu solicitud sera revisada, por favor se paciente");
+                        router.push("/enterprise/workshops");
+                    } catch (e) {
+                        window.location.reload();
+                    }
+                } else {
                     setFormState({
                         ...formState,
                         loading: false,
                     });
-                    toast.info("Tu solicitud sera revisada, por favor se paciente");
-                    router.push("/enterprise/workshops");
-                } catch (e) {
-                    window.location.reload();
+                    toast.error("Por favor llena los campos con datos validos", {
+                        toastId: "toast-error-invalid-form",
+                    });
                 }
             } else {
-                console.log("error");
+                setFormState({
+                    ...formState,
+                    loading: false,
+                });
+                toast.error("Por favor llena los campos que estan vacios", {
+                    toastId: "toast-error-empty-form",
+                });
             }
         }
     };
@@ -155,15 +170,7 @@ const MechanicRegister = () => {
     useEffect(() => {
         setFormState({
             ...formState,
-            isValid:
-                !formData.name.message &&
-                !formData.phone.message &&
-                !formData.logo.message &&
-                !formData.coordinates.message &&
-                formData.name.value !== null &&
-                formData.logo.value !== null &&
-                formData.phone.value !== null &&
-                formData.coordinates.value !== null,
+            isValid: verifyNoEmptyData(formData) && isValidForm(formData),
         });
     }, [formData]);
 
@@ -236,7 +243,7 @@ const MechanicRegister = () => {
                     )}
                 </fieldset>
                 <button
-                    className={`general-button | margin-top-25 max-width-60 ${
+                    className={`general-button | touchable margin-top-25 max-width-60 ${
                         formState.loading && "loading-section"
                     }`}
                     title={

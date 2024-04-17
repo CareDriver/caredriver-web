@@ -8,7 +8,7 @@ const MechanicalworkshopPanel = () => {
         <section className="enterprise-main-wrapper">
             <h1 className="text | big bolder">Talleres mecanicos que registraste</h1>
             <Link
-                className="general-button icon-wrapper | max-20 less-padding no-full center white-icon"
+                className="general-button icon-wrapper | max-20 less-padding no-full center white-icon touchable"
                 href={"/enterprise/workshops/register"}
             >
                 <Plus />

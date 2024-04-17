@@ -20,7 +20,7 @@
 }
 
 .text.small {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .text.smaller {
@@ -69,4 +69,8 @@
 
 .yellow {
     color: var(--yellow);
+}
+
+.green {
+    color: var(--main-light);
 }

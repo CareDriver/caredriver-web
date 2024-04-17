@@ -25,10 +25,22 @@ const DriveService = () => {
 
     useEffect(() => {
         if (!loadingUser && user.data) {
-            if (user.data.serviceRequests.drive.state === ServiceReqState.Reviewing) {
+            if (
+                (user.data.serviceRequests.driveCar.state === ServiceReqState.Reviewing &&
+                    user.data.serviceRequests.driveMotorcycle.state ===
+                        ServiceReqState.Reviewing) ||
+                (user.data.serviceRequests.driveCar.state === ServiceReqState.Reviewing &&
+                    user.data.serviceRequests.driveMotorcycle.state ===
+                        ServiceReqState.NotSent) ||
+                (user.data.serviceRequests.driveCar.state === ServiceReqState.NotSent &&
+                    user.data.serviceRequests.driveMotorcycle.state ===
+                        ServiceReqState.Reviewing)
+            ) {
                 setState(ServiceReqState.Reviewing);
             } else if (
-                user.data.serviceRequests.drive.state === ServiceReqState.Approved
+                user.data.serviceRequests.driveCar.state === ServiceReqState.Approved ||
+                user.data.serviceRequests.driveMotorcycle.state ===
+                    ServiceReqState.Approved
             ) {
                 setState(ServiceReqState.Approved);
             }

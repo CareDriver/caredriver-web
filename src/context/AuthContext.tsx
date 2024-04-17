@@ -52,6 +52,7 @@ const buildUser = (id: string, userData: UserInterface | undefined): UserInterfa
                 ? defaultServiceReq
                 : userData.serviceRequests,
         location: userData?.location,
+        licenses: userData?.licenses
     };
 };
 
@@ -84,6 +85,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                 data: null,
                                 hasPhoto: false,
                             });
+                            router.push("/");
                             setLoadingUser(false);
                         }
                     });
@@ -92,6 +94,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         data: null,
                         hasPhoto: false,
                     });
+                    router.push("/");
                     setLoadingUser(false);
                 }
             } else {

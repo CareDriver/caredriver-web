@@ -1,4 +1,6 @@
+import { PhotoField } from "@/components/services/FormModels";
 import { InputState } from "../InputValidator";
+import { Location } from "@/utils/map/Locator";
 
 export const isValidWorkshopName = (name: string): InputState => {
     const nameRegex: RegExp = /^[a-zA-Z\d\s]+$/;
@@ -19,4 +21,50 @@ export const isValidWorkshopName = (name: string): InputState => {
             message: "Nombre valido",
         };
     }
+};
+
+export const isValidForm = (formData: {
+    name: {
+        value: string;
+        message: string | null;
+    };
+    phone: {
+        value: string;
+        message: string | null;
+    };
+    logo: PhotoField;
+    coordinates: {
+        value: Location | null;
+        message: string | null;
+    };
+}): boolean => {
+    return (
+        !formData.name.message &&
+        !formData.phone.message &&
+        !formData.logo.message &&
+        !formData.coordinates.message
+    );
+};
+
+export const verifyNoEmptyData = (formData: {
+    name: {
+        value: string;
+        message: string | null;
+    };
+    phone: {
+        value: string;
+        message: string | null;
+    };
+    logo: PhotoField;
+    coordinates: {
+        value: Location | null;
+        message: string | null;
+    };
+}): boolean => {
+    return (
+        formData.name.value !== null &&
+        formData.logo.value !== null &&
+        formData.phone.value !== null &&
+        formData.coordinates.value !== null
+    );
 };
