@@ -29,8 +29,6 @@ interface FormData {
     phone: {
         value: string;
         errorMessage: null | string;
-        code: string | null;
-        verifierCode: string;
     };
     email: {
         value: string;
@@ -38,6 +36,11 @@ interface FormData {
     };
     password: {
         value: string;
+        errorMessage: null | string;
+    };
+    code: {
+        sent: string;
+        toVerify: string;
         errorMessage: null | string;
     };
     location: Locations;
@@ -58,8 +61,6 @@ const SignUpAsNew = () => {
         phone: {
             value: "",
             errorMessage: null,
-            code: "",
-            verifierCode: "",
         },
         email: {
             value: "",
@@ -67,6 +68,11 @@ const SignUpAsNew = () => {
         },
         password: {
             value: "",
+            errorMessage: null,
+        },
+        code: {
+            sent: "",
+            toVerify: "",
             errorMessage: null,
         },
         location: Locations.CochabambaBolivia,
@@ -91,56 +97,74 @@ const SignUpAsNew = () => {
                 !credentials.email.errorMessage &&
                 !credentials.password.errorMessage
             ) {
-                createUserWithEmailAndPassword(
-                    auth,
-                    credentials.email.value,
-                    credentials.password.value,
-                )
-                    .then((res) => {
-                        const emptyUserData: UserInterface = {
-                            id: res.user.uid,
-                            fullName: credentials.fullName.value,
-                            phoneNumber: credentials.phone.value,
-                            photoUrl: "",
+                if (
+                    credentials.code.sent.trim().length > 0 &&
+                    credentials.code.sent === credentials.code.toVerify
+                ) {
+                    createUserWithEmailAndPassword(
+                        auth,
+                        credentials.email.value,
+                        credentials.password.value,
+                    )
+                        .then((res) => {
+                            const emptyUserData: UserInterface = {
+                                id: res.user.uid,
+                                fullName: credentials.fullName.value,
+                                phoneNumber: credentials.phone.value,
+                                photoUrl: "",
 
-                            comments: [],
-                            vehicles: [],
-                            services: [Services.Normal],
+                                comments: [],
+                                vehicles: [],
+                                services: [Services.Normal],
 
-                            servicesData: servicesData,
-                            pickUpLocationsHistory: [],
-                            deliveryLocationsHistory: [],
+                                servicesData: servicesData,
+                                pickUpLocationsHistory: [],
+                                deliveryLocationsHistory: [],
 
-                            location: credentials.location,
-                            email: credentials.email.value.toLowerCase(),
+                                location: credentials.location,
+                                email: credentials.email.value.toLowerCase(),
 
-                            serviceRequests: defaultServiceReq,
-                        };
+                                serviceRequests: defaultServiceReq,
+                            };
 
-                        saveUser(res.user.uid, emptyUserData)
-                            .then(() => {
-                                setFormState({
-                                    ...formState,
-                                    loading: false,
+                            saveUser(res.user.uid, emptyUserData)
+                                .then(() => {
+                                    setFormState({
+                                        ...formState,
+                                        loading: false,
+                                    });
+                                    toast.success("Registro exitoso");
+                                    router.push("/services/drive");
+                                })
+                                .catch(() => {
+                                    setFormState({
+                                        ...formState,
+                                        loading: false,
+                                    });
                                 });
-                                toast.success("Registro exitoso");
-                                router.push("/services/drive");
-                            })
-                            .catch(() => {
-                                setFormState({
-                                    ...formState,
-                                    loading: false,
-                                });
+                        })
+                        .catch((e) => {
+                            setFormState({
+                                ...formState,
+                                isValid: false,
+                                loading: false,
                             });
-                    })
-                    .catch((e) => {
-                        setFormState({
-                            ...formState,
-                            isValid: false,
-                            loading: false,
+                            toast.error("Algo fallo, intentalo de nuevo por favor");
                         });
-                        toast.error("Algo fallo, intentalo de nuevo por favor");
+                } else {
+                    setFormState({
+                        ...formState,
+                        isValid: false,
+                        loading: false,
                     });
+                    setCredentials({
+                        ...credentials,
+                        code: {
+                            ...credentials.code,
+                            errorMessage: "Codigo invalido, vuelve a intentarlo"
+                        }
+                    })
+                }
             } else {
                 setFormState({
                     ...formState,
@@ -210,7 +234,7 @@ const SignUpAsNew = () => {
         });
     }, [credentials]);
 
-    const verifyCode = (e: FormEvent) => {
+    const verifyCode = async (e: FormEvent) => {
         e.preventDefault();
         setFormState({
             ...formState,
@@ -229,27 +253,52 @@ const SignUpAsNew = () => {
                 !credentials.email.errorMessage &&
                 !credentials.password.errorMessage
             ) {
-                var code: string =
-                    "" +
-                    generateVerificationCode({
-                        length: 6,
-                        type: "string",
+                try {
+                    var codeToSent: string =
+                        "" +
+                        generateVerificationCode({
+                            length: 6,
+                            type: "string",
+                        });
+                    await fetch("/api/sms", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            code: codeToSent,
+                            toPhone: credentials.phone.value,
+                        }),
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                        },
                     });
-                setCredentials({
-                    ...credentials,
-                    phone: {
-                        ...credentials.phone,
-                        code,
-                    },
-                });
-                console.log(code);
-                toast.success("Codigo de verificacion enviado a tu numero de celular");
+                    setCredentials({
+                        ...credentials,
+                        code: {
+                            ...credentials.code,
+                            sent: codeToSent,
+                        },
+                    });
 
-                setFormState({
-                    ...formState,
-                    isVerifyingCode: true,
-                    loading: false,
-                });
+                    toast.success(
+                        "Codigo de verificacion enviado a tu numero de celular",
+                    );
+
+                    setFormState({
+                        ...formState,
+                        isVerifyingCode: true,
+                        loading: false,
+                    });
+                } catch (e) {
+                    setFormState({
+                        ...formState,
+                        isValid: false,
+                        isVerifyingCode: false,
+                        loading: false,
+                    });
+                    toast.error(
+                        "Error al enviar el codigo, intentalo de nuevo por favor",
+                    );
+                }
             } else {
                 setFormState({
                     ...formState,
@@ -276,18 +325,21 @@ const SignUpAsNew = () => {
                         <input
                             type="text"
                             placeholder="000000"
-                            value={credentials.phone.verifierCode}
+                            value={credentials.code.toVerify}
                             onChange={(e) =>
                                 setCredentials({
                                     ...credentials,
-                                    phone: {
-                                        ...credentials.phone,
-                                        verifierCode: e.target.value,
+                                    code: {
+                                        ...credentials.code,
+                                        toVerify: e.target.value,
                                     },
                                 })
                             }
                             className="form-section-input"
                         />
+                        {credentials.code.errorMessage && (
+                            <small>{credentials.code.errorMessage}</small>
+                        )}
                     </fieldset>
                     <button className="general-button | touchable margin-top-25">
                         {formState.loading ? (

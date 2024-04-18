@@ -27,7 +27,7 @@ const authContextDefaultValues: authContextType = {
     logout: () => {},
 };
 
-const buildUser = (id: string, userData: UserInterface | undefined): UserInterface => {    
+const buildUser = (id: string, userData: UserInterface | undefined): UserInterface => {
     return {
         id: id,
         fullName: userData?.fullName === undefined ? "" : userData.fullName,
@@ -88,8 +88,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                 data: null,
                                 hasPhoto: false,
                             });
-                            router.push("/");
                             setLoadingUser(false);
+                            if (!pathname.includes("auth")) {
+                                router.push("/");
+                            }
                         }
                     });
                 } catch (e) {
