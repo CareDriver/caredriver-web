@@ -43,18 +43,21 @@ export interface UserInterface {
     mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
     towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
 
-    serviceVehicles?: { // vehicles that the user registered
-        car?: Vehicle;
-        motorcycle?: Vehicle;
-        tow?: Vehicle;
-    };
+    serviceVehicles?: ServiceVehicles; // vehicles that the user registered
 
-    serviceRequests: { // status of the services that the user made a request
+    serviceRequests: {
+        // status of the services that the user made a request
         driveCar: ServiceStateRequest;
         driveMotorcycle: ServiceStateRequest;
         mechanic: ServiceStateRequest;
         tow: ServiceStateRequest;
     };
+}
+
+export interface ServiceVehicles {
+    car?: Vehicle;
+    motorcycle?: Vehicle;
+    tow?: Vehicle;
 }
 
 export const defaultServiceReq = {

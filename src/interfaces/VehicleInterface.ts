@@ -52,6 +52,11 @@ export const vehicleModeRender = {
     mechanical: "Mecánico",
 };
 
+export const vehicleModeRenderV2 = {
+    automatic: "Automática",
+    mechanical: "Mecánica",
+};
+
 // Vehicle types to render
 export const vehicleTypes: VehicleTypeOption[] = [
     { value: VehicleType.CAR, title: "Auto", icon: "car" },

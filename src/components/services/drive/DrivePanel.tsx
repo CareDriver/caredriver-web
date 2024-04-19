@@ -5,11 +5,20 @@ import AddressCar from "@/icons/AddressCar";
 import Plus from "@/icons/Plus";
 import SackDollar from "@/icons/SackDollar";
 import { ServiceReqState } from "@/interfaces/Services";
+import { ServiceVehicles, UserInterface } from "@/interfaces/UserInterface";
+import {
+    vehicleModeRender,
+    vehicleModeRenderV2,
+    VehicleTransmission,
+} from "@/interfaces/VehicleInterface";
+import { updateUser } from "@/utils/requests/UserRequester";
 import Link from "next/link";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { toast } from "react-toastify";
 
 const DrivePanel = () => {
     const { user, loadingUser } = useContext(AuthContext);
+    const [addingNew, setAddingNew] = useState(false);
 
     const getFormatDate = (fecha: Date): string => {
         const day: number = fecha.getDate();
@@ -42,6 +51,73 @@ const DrivePanel = () => {
         return "green";
     };
 
+    const getModes = (modes: VehicleTransmission[]): string[] => {
+        return modes.map((mode) => vehicleModeRenderV2[mode]);
+    };
+
+    const addNewTransmition = async (serviceVehicles: ServiceVehicles) => {
+        if (!addingNew && user.data && user.data.id) {
+            setAddingNew(true);
+            var userToUpdate: Partial<UserInterface> = {
+                serviceVehicles,
+            };
+            try {
+                await toast.promise(updateUser(user.data?.id, userToUpdate), {
+                    pending: "Agregando nueva transmisión, por favor espera",
+                    success: "Transmisión agregada",
+                    error: "Error al agregar la nueva transmisión, intentalo de nuevo por favor",
+                });
+                setAddingNew(false);
+                window.location.reload();
+            } catch (e) {
+                setAddingNew(false);
+                window.location.reload();
+            }
+        }
+    };
+
+    const addNewCarTransmition = async () => {
+        if (user.data?.serviceVehicles && user.data?.serviceVehicles.car) {
+            addNewTransmition({
+                ...user.data.serviceVehicles,
+                car: {
+                    ...user.data.serviceVehicles.car,
+                    type: {
+                        ...user.data.serviceVehicles.car.type,
+                        mode: [
+                            ...user.data.serviceVehicles.car.type.mode,
+                            getMissMode(user.data.serviceVehicles.car.type.mode),
+                        ],
+                    },
+                },
+            });
+        }
+    };
+
+    const addNewMotocycleTransmition = async () => {
+        if (user.data?.serviceVehicles && user.data?.serviceVehicles.motorcycle) {
+            addNewTransmition({
+                ...user.data.serviceVehicles,
+                motorcycle: {
+                    ...user.data.serviceVehicles.motorcycle,
+                    type: {
+                        ...user.data.serviceVehicles.motorcycle.type,
+                        mode: [
+                            ...user.data.serviceVehicles.motorcycle.type.mode,
+                            getMissMode(user.data.serviceVehicles.motorcycle.type.mode),
+                        ],
+                    },
+                },
+            });
+        }
+    };
+
+    const getMissMode = (modes: VehicleTransmission[]): VehicleTransmission => {
+        return modes[0] === VehicleTransmission.AUTOMATIC
+            ? VehicleTransmission.MECHANICAL
+            : VehicleTransmission.AUTOMATIC;
+    };
+
     return loadingUser ? (
         <PageLoader />
     ) : user.data ? (
@@ -55,7 +131,7 @@ const DrivePanel = () => {
                 <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
                         <AddressCar />
-                        Licencia | Automovil
+                        Automovil
                     </h2>
                     <h3 className="text | gray gray-dark bold margin-top-5">
                         Valido hasta el{" "}
@@ -63,15 +139,42 @@ const DrivePanel = () => {
                             user.data.serviceVehicles.car.license.expiredDateLicense.toDate(),
                         )}
                     </h3>
-                    <Link
-                        className={`small-general-button text | medium bolder margin-top-25 touchable 
+                    <h3 className="text | gray gray-dark bold margin-top-5">
+                        Transmisión{" "}
+                        {getModes(user.data.serviceVehicles.car.type.mode)
+                            .toString()
+                            .replaceAll(",", " | ")}
+                    </h3>
+                    <div
+                        className="row-wrapper | gap-20"
+                        data-state={addingNew && "loading"}
+                    >
+                        {user.data.serviceVehicles.car.type.mode.length === 1 && (
+                            <button
+                                className="icon-wrapper small-general-button text | gray gray-icon medium bolder lb margin-top-25 touchable"
+                                onClick={addNewCarTransmition}
+                            >
+                                <Plus />
+                                Agregar transmisión{" "}
+                                {
+                                    vehicleModeRenderV2[
+                                        getMissMode(
+                                            user.data.serviceVehicles.car.type.mode,
+                                        )
+                                    ]
+                                }
+                            </button>
+                        )}
+                        <Link
+                            className={`small-general-button text | medium bolder margin-top-25 touchable 
                         ${getColorButtonLicense(
                             user.data.serviceVehicles.car.license.expiredDateLicense.toDate(),
                         )}`}
-                        href={`/services/license/update/car`}
-                    >
-                        Actualizar Licencia
-                    </Link>
+                            href={`/services/license/update/car`}
+                        >
+                            Actualizar Licencia
+                        </Link>
+                    </div>
                 </div>
             )}
             {user.data.serviceVehicles && user.data.serviceVehicles.motorcycle && (
@@ -86,15 +189,37 @@ const DrivePanel = () => {
                             user.data.serviceVehicles.motorcycle.license.expiredDateLicense.toDate(),
                         )}
                     </h3>
-                    <Link
-                        className={`small-general-button text | medium bolder margin-top-25 touchable 
+                    <div
+                        className="row-wrapper | gap-20"
+                        data-state={addingNew && "loading"}
+                    >
+                        {user.data.serviceVehicles.motorcycle.type.mode.length === 1 && (
+                            <button
+                                className="icon-wrapper small-general-button text | gray gray-icon medium bolder lb margin-top-25 touchable"
+                                onClick={addNewMotocycleTransmition}
+                            >
+                                <Plus />
+                                Agregar transmisión{" "}
+                                {
+                                    vehicleModeRenderV2[
+                                        getMissMode(
+                                            user.data.serviceVehicles.motorcycle.type
+                                                .mode,
+                                        )
+                                    ]
+                                }
+                            </button>
+                        )}
+                        <Link
+                            className={`small-general-button text | medium bolder margin-top-25 touchable 
                         ${getColorButtonLicense(
                             user.data.serviceVehicles.motorcycle.license.expiredDateLicense.toDate(),
                         )}`}
-                        href={`/services/license/update/motorcycle`}
-                    >
-                        Actualizar Licencia
-                    </Link>
+                            href={`/services/license/update/motorcycle`}
+                        >
+                            Actualizar Licencia
+                        </Link>
+                    </div>
                 </div>
             )}
             {(!user.data.serviceVehicles?.car ||
@@ -121,7 +246,7 @@ const DrivePanel = () => {
                             </h4>
                         </>
                     ) : (
-                        <>
+                        <div data-state={addingNew && "loading"}>
                             <h3 className="text | gray gray-dark bold margin-top-5">
                                 Agrega este vehiculo para poder ofrecer tu servicio usando
                                 este vehiculo.
@@ -138,7 +263,7 @@ const DrivePanel = () => {
                                 <Plus />
                                 Agregar Vehiculo
                             </Link>
-                        </>
+                        </div>
                     )}
                 </div>
             )}

@@ -92,7 +92,7 @@ const SideBar = () => {
                     <span>Mi Perfil</span>
                 </Link>
                 <Link
-                    href={"/user/location"}
+                    href={"/user/update/location"}
                     className={`sidebar-option ${
                         pathname.includes("location") && "selected"
                     }`}
