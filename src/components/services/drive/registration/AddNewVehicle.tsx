@@ -42,7 +42,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
         },
     });
     const vehicleTypeAndMode: VehicleTypeAndMode = {
-        type: VehicleType.CAR,
+        type: type === "car" ? VehicleType.CAR : VehicleType.MOTORCYCLE,
         mode: [VehicleTransmission.AUTOMATIC],
     };
 
@@ -280,7 +280,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                 if (isValid) {
                     router.push("/services/drive");
                     toast.error(
-                        "Tu peticion esta siendo revisada, no puedes enviar otra",
+                        "Tu peticion esta siendo revisada",
                         {
                             toastId: "vehicle-already-registered-like-req-message",
                         },
@@ -300,7 +300,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                 </p>
             </div>
             <form
-                className="form-sub-container | max-width-60"
+                className="form-sub-container"
                 data-state={formState.loading ? "loading" : "loaded"}
             >
                 <PersonalDataForm
@@ -319,7 +319,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                     setAcceptedTerms={setAcceptedTerms}
                 />
                 <button
-                    className={`general-button | margin-top-25 touchable ${
+                    className={`general-button | margin-top-25 touchable max-width-60 ${
                         formState.loading && "loading-section"
                     }`}
                     title={

@@ -2,6 +2,8 @@
 import PageLoader from "@/components/PageLoader";
 import { AuthContext } from "@/context/AuthContext";
 import AddressCar from "@/icons/AddressCar";
+import CarSide from "@/icons/CarSide";
+import Motorcycle from "@/icons/Motorcycle";
 import Plus from "@/icons/Plus";
 import SackDollar from "@/icons/SackDollar";
 import { ServiceReqState } from "@/interfaces/Services";
@@ -130,7 +132,7 @@ const DrivePanel = () => {
             {user.data.serviceVehicles && user.data.serviceVehicles.car && (
                 <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
-                        <AddressCar />
+                        <CarSide />
                         Automovil
                     </h2>
                     <h3 className="text | gray gray-dark bold margin-top-5">
@@ -180,8 +182,8 @@ const DrivePanel = () => {
             {user.data.serviceVehicles && user.data.serviceVehicles.motorcycle && (
                 <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
-                        <AddressCar />
-                        Licencia | Motocicleta
+                        <Motorcycle />
+                        Motocicleta
                     </h2>
                     <h3 className="text | gray gray-dark bold margin-top-5">
                         Valido hasta el{" "}
@@ -226,7 +228,12 @@ const DrivePanel = () => {
                 !user.data.serviceVehicles?.motorcycle) && (
                 <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
-                        <AddressCar />
+                        {user.data.serviceVehicles &&
+                        !user.data.serviceVehicles.motorcycle ? (
+                            <Motorcycle />
+                        ) : (
+                            <CarSide />
+                        )}
                         {user.data.serviceVehicles &&
                         !user.data.serviceVehicles.motorcycle
                             ? "Motocicleta"
