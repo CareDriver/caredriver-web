@@ -1,9 +1,10 @@
+import ChangePhotoReq from "@/components/user/ChangePhotoReq";
 import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
 
 const UpdateUserPhoto = () => {
     return (
         <WrapperWithSideBar>
-            <div>req to update</div>
+            <ChangePhotoReq />
         </WrapperWithSideBar>
     );
 };
