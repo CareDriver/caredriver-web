@@ -62,7 +62,7 @@ const PersonalDataForm = ({
     }, [loadingUser]);
 
     return (
-        <div className="form-sub-container | margin-top-25">
+        <div className="form-sub-container | margin-top-25 max-width-60">
             <h2 className="text icon-wrapper | medium-big bold">
                 <UserIcon />
                 Datos Personales

@@ -3,7 +3,12 @@ import { vehiclesModes, PhotoField, VehicleForm } from "@/components/services/Fo
 import AddressCar from "@/icons/AddressCar";
 import Car from "@/icons/Car";
 import Plus from "@/icons/Plus";
-import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
+import {
+    vehicleModeRender,
+    VehicleTransmission,
+    VehicleType,
+    vehicleTypeRender,
+} from "@/interfaces/VehicleInterface";
 import {
     isValidLicenseDate,
     isValidLicenseNumber,
@@ -91,7 +96,7 @@ const TowVehicle = ({
     };
 
     return (
-        <div className="form-sub-container">
+        <div className="form-sub-container | max-width-60">
             <h2 className="text icon-wrapper | medium-big bold">
                 <Car /> Tipo de Transmision de su Vehiculo
             </h2>
@@ -104,7 +109,7 @@ const TowVehicle = ({
                     >
                         {vehiclesModes.map((mode, i) => (
                             <option key={`vehicleMod-${i}`} value={mode}>
-                                {mode}
+                                {vehicleModeRender[mode]}
                             </option>
                         ))}
                     </select>
@@ -117,7 +122,7 @@ const TowVehicle = ({
                             className="form-section"
                         >
                             <input
-                                value={mode}
+                                value={vehicleModeRender[mode]}
                                 className="form-section-input"
                                 onChange={() => {}}
                             />
@@ -131,7 +136,7 @@ const TowVehicle = ({
                     <button
                         type="button"
                         onClick={addNewTransmision}
-                        className="icon-wrapper small-general-button | gray touchable"
+                        className="icon-wrapper small-general-button text | gray-icon gray bold touchable"
                     >
                         <Plus />
                         Agregar otra Transmisión

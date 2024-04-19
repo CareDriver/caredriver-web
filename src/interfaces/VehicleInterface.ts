@@ -2,12 +2,12 @@ import { Timestamp } from "firebase/firestore";
 
 export enum VehicleType {
     CAR = "car",
-    MOTORCYCLE = "motorcycle"
+    MOTORCYCLE = "motorcycle",
 }
 
 export enum VehicleTransmission {
     AUTOMATIC = "automatic",
-    MECHANICAL = "mechanical"
+    MECHANICAL = "mechanical",
 }
 
 export interface VehicleInterface {
@@ -40,6 +40,16 @@ type VehicleTypeOption = {
 type VehicleTransmissionOption = {
     value: VehicleTransmission;
     title: string;
+};
+
+export const vehicleTypeRender = {
+    car: "Auto",
+    motorcycle: "Moto",
+};
+
+export const vehicleModeRender = {
+    automatic: "Automático",
+    mechanical: "Mecánico",
 };
 
 // Vehicle types to render

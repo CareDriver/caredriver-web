@@ -333,7 +333,7 @@ const TowRegistration = () => {
                 }
             />
             <form
-                className="form-sub-container | max-width-60"
+                className="form-sub-container"
                 data-state={formState.loading ? "loading" : "loaded"}
             >
                 <PersonalDataForm
@@ -372,7 +372,7 @@ const TowRegistration = () => {
                     setAcceptedTerms={setAcceptedTerms}
                 />
                 <button
-                    className={`general-button | margin-top-25 touchable ${
+                    className={`general-button | margin-top-25 touchable max-width-60 ${
                         formState.loading && "loading-section"
                     }`}
                     title={

@@ -1,4 +1,4 @@
-import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
+import { vehicleModeRender, VehicleTransmission, VehicleType, vehicleTypeRender } from "@/interfaces/VehicleInterface";
 import { vehiclesModes, VehicleForm } from "../../FormModels";
 import ImageUploader from "@/components/form/ImageUploader";
 import { Dispatch, SetStateAction } from "react";
@@ -128,7 +128,7 @@ const SingleVehicleForm = ({
                             >
                                 {vehiclesModes.map((mode, i) => (
                                     <option key={`vehicleMod-${i}`} value={mode}>
-                                        {mode}
+                                        {vehicleModeRender[mode]}
                                     </option>
                                 ))}
                             </select>
@@ -141,7 +141,7 @@ const SingleVehicleForm = ({
                                     className="form-section"
                                 >
                                     <input
-                                        value={mode}
+                                        value={vehicleModeRender[mode]}
                                         className="form-section-input"
                                         onChange={() => {}}
                                     />
@@ -155,7 +155,7 @@ const SingleVehicleForm = ({
                             <button
                                 type="button"
                                 onClick={addNewTransmision}
-                                className="icon-wrapper small-general-button | gray touchable"
+                                className="icon-wrapper small-general-button text | gray-icon gray bold touchable"
                             >
                                 <Plus />
                                 Agregar otra Transmisión

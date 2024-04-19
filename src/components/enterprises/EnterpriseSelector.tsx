@@ -19,7 +19,7 @@ const EnterpriseSelector = ({
     enterpriseFiled: EnterpriseField;
     setEnterprise: (enterprise: EnterpriseField) => void;
 }) => {
-    const numPerPage = 1;
+    const numPerPage = 4;
     const [data, setData] = useState<Enterprise[] | null>(null);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
     const [pages, setPages] = useState<number | null>(null);
@@ -81,7 +81,7 @@ const EnterpriseSelector = ({
 
     return data ? (
         data.length > 0 ? (
-            <div>
+            <div className="max-width-90">
                 <div className="enterprise-list">
                     {data.map((enterprise, i) => (
                         <div
@@ -103,15 +103,16 @@ const EnterpriseSelector = ({
                         </div>
                     ))}
                 </div>
-
-                <button
-                    className="icon-wrapper general-button | no-full gray | margin-top-25"
-                    disabled={page === pages}
-                    onClick={handleNextClick}
-                >
-                    <Plus />
-                    Mostrar mas
-                </button>
+                <div>
+                    <button
+                        className="icon-wrapper small-general-button text | bold gray-icon gray | margin-top-25"
+                        disabled={page === pages}
+                        onClick={handleNextClick}
+                    >
+                        <Plus />
+                        Mostrar mas
+                    </button>
+                </div>
             </div>
         ) : (
             <div>

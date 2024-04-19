@@ -1,4 +1,9 @@
-import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
+import {
+    vehicleModeRender,
+    VehicleTransmission,
+    VehicleType,
+    vehicleTypeRender,
+} from "@/interfaces/VehicleInterface";
 import {
     vehiclesModes,
     defaultLicense,
@@ -209,7 +214,7 @@ const VehiclesForm = ({
     };
 
     return (
-        <div className="form-sub-container | margin-top-25">
+        <div className="form-sub-container | margin-top-25 max-width-60">
             {vehicles.map((vehicle, i) => (
                 <div className="form-sub-container" key={`vehicle-${i}`}>
                     <h2 className="text icon-wrapper | medium-big bold">
@@ -224,7 +229,9 @@ const VehiclesForm = ({
                             }}
                             className="form-section-input"
                         >
-                            <option value={vehicle.type.type}>{vehicle.type.type}</option>
+                            <option value={vehicle.type.type}>
+                                {vehicleTypeRender[vehicle.type.type]}
+                            </option>
                             {vehiclesTypes.map((vehicleType, i) => {
                                 if (!getChosenVehicles(vehicles).includes(vehicleType)) {
                                     return (
@@ -232,7 +239,7 @@ const VehiclesForm = ({
                                             key={`vehicleType-${i}`}
                                             value={vehicleType}
                                         >
-                                            {vehicleType}
+                                            {vehicleTypeRender[vehicleType]}
                                         </option>
                                     );
                                 }
@@ -248,7 +255,7 @@ const VehiclesForm = ({
                             >
                                 {vehiclesModes.map((mode, i) => (
                                     <option key={`vehicleMod-${i}`} value={mode}>
-                                        {mode}
+                                        {vehicleModeRender[mode]}
                                     </option>
                                 ))}
                             </select>
@@ -261,7 +268,7 @@ const VehiclesForm = ({
                                     className="form-section"
                                 >
                                     <input
-                                        value={mode}
+                                        value={vehicleModeRender[mode]}
                                         className="form-section-input"
                                         onChange={() => {}}
                                     />
@@ -275,7 +282,7 @@ const VehiclesForm = ({
                             <button
                                 type="button"
                                 onClick={() => addNewTransmision(i)}
-                                className="icon-wrapper small-general-button | gray touchable"
+                                className="icon-wrapper small-general-button text | gray-icon gray bold touchable"
                             >
                                 <Plus />
                                 Agregar otra Transmisión
@@ -347,7 +354,7 @@ const VehiclesForm = ({
                     <button
                         type="button"
                         onClick={addNewVehicle}
-                        className="icon-wrapper small-general-button | gray touchable"
+                        className="icon-wrapper small-general-button text | gray-icon gray bold touchable"
                     >
                         <Plus />
                         Agregar otro Vehiculo

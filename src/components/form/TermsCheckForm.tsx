@@ -10,7 +10,7 @@ const TermsCheckForm = ({
     return (
         <div
             onClick={() => setAcceptedTerms(!isAcceptedTerms)}
-            className="form-sub-container | row | margin-top-25"
+            className="form-sub-container | row | margin-top-25 max-width-60"
         >
             <input type="checkbox" checked={isAcceptedTerms} onChange={() => {}} />
             <p>
