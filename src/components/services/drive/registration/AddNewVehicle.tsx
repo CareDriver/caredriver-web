@@ -10,12 +10,7 @@ import { defaultPhoto, PhotoField } from "../../FormModels";
 import { uploadImageBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { AuthContext } from "@/context/AuthContext";
-import {
-    CarType,
-    MotorcycleType,
-    Vehicle,
-    driveReqBuilder,
-} from "@/interfaces/UserRequest";
+import { VehicleTypeAndMode, Vehicle, driveReqBuilder } from "@/interfaces/UserRequest";
 import { Timestamp } from "firebase/firestore";
 import { saveDriveReq } from "@/utils/requests/services/DriveRequester";
 import { Locations } from "@/interfaces/Locations";
@@ -46,17 +41,13 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
             message: null,
         },
     });
-    const carVehicle: CarType = {
+    const vehicleTypeAndMode: VehicleTypeAndMode = {
         type: VehicleType.CAR,
-        mode: VehicleTransmission.AUTOMATIC,
-    };
-
-    const motorcycleVehicle: MotorcycleType = {
-        type: VehicleType.MOTORCYCLE,
+        mode: [VehicleTransmission.AUTOMATIC],
     };
 
     const [vehicle, setVehicle] = useState<VehicleForm>({
-        type: type === "car" ? carVehicle : motorcycleVehicle,
+        type: vehicleTypeAndMode,
         license: defaultLicense,
     });
     const [userConfirmation, setUserConfirmation] = useState<PhotoField>(defaultPhoto);

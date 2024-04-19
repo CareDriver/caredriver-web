@@ -1,5 +1,5 @@
 import { SoftEnterprise } from "@/interfaces/Enterprise";
-import { CarType, MotorcycleType } from "@/interfaces/UserRequest";
+import { VehicleTypeAndMode } from "@/interfaces/UserRequest";
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
 
 export interface PersonalData {
@@ -39,11 +39,11 @@ export interface LicenseForm {
 }
 
 export interface VehicleForm {
-    type: CarType | MotorcycleType;
+    type: VehicleTypeAndMode;
     license: LicenseForm;
 }
 
-export const carModes = [VehicleTransmission.AUTOMATIC, VehicleTransmission.MECHANICAL];
+export const vehiclesModes = [VehicleTransmission.AUTOMATIC, VehicleTransmission.MECHANICAL];
 
 export const vehiclesTypes = [VehicleType.CAR, VehicleType.MOTORCYCLE];
 

@@ -1,5 +1,5 @@
 import ImageUploader from "@/components/form/ImageUploader";
-import { carModes, PhotoField, VehicleForm } from "@/components/services/FormModels";
+import { vehiclesModes, PhotoField, VehicleForm } from "@/components/services/FormModels";
 import AddressCar from "@/icons/AddressCar";
 import Car from "@/icons/Car";
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
@@ -85,7 +85,7 @@ const TowVehicle = ({
                         className="form-section-input"
                         onChange={(e) => updateTypeModeVehicle(e.target.value)}
                     >
-                        {carModes.map((carMode, i) => (
+                        {vehiclesModes.map((carMode, i) => (
                             <option key={`vehicleMod-${i}`} value={carMode}>
                                 {carMode}
                             </option>

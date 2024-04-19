@@ -6,17 +6,13 @@ import { VehicleTransmission, VehicleType } from "./VehicleInterface";
 import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
 import { Enterprise, SoftEnterprise } from "./Enterprise";
 
-export interface MotorcycleType {
-    type: VehicleType.MOTORCYCLE;
-}
-
-export interface CarType {
-    type: VehicleType.CAR;
-    mode: VehicleTransmission;
+export interface VehicleTypeAndMode {
+    type: VehicleType;
+    mode: VehicleTransmission[];
 }
 
 export interface Vehicle {
-    type: CarType | MotorcycleType;
+    type: VehicleTypeAndMode;
     license: LicenseInterface;
 }
 
@@ -44,7 +40,7 @@ export interface UserRequest {
 export const emptyVehicleCar: Vehicle = {
     type: {
         type: VehicleType.CAR,
-        mode: VehicleTransmission.AUTOMATIC,
+        mode: [VehicleTransmission.AUTOMATIC],
     },
     license: {
         expiredDateLicense: Timestamp.fromDate(new Date()),

@@ -1,5 +1,5 @@
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
-import { carModes, VehicleForm } from "../../FormModels";
+import { vehiclesModes, VehicleForm } from "../../FormModels";
 import ImageUploader from "@/components/form/ImageUploader";
 import { Dispatch, SetStateAction } from "react";
 import Car from "@/icons/Car";
@@ -108,7 +108,7 @@ const SingleVehicleForm = ({
                                 className="form-section-input"
                                 onChange={(e) => updateTypeModeVehicle(e.target.value)}
                             >
-                                {carModes.map((carMode, i) => (
+                                {vehiclesModes.map((carMode, i) => (
                                     <option key={`vehicleMod-${i}`} value={carMode}>
                                         {carMode}
                                     </option>

@@ -1,5 +1,10 @@
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
-import { carModes, defaultLicense, VehicleForm, vehiclesTypes } from "../../FormModels";
+import {
+    vehiclesModes,
+    defaultLicense,
+    VehicleForm,
+    vehiclesTypes,
+} from "../../FormModels";
 import ImageUploader from "@/components/form/ImageUploader";
 import { Dispatch, SetStateAction } from "react";
 import Car from "@/icons/Car";
@@ -28,10 +33,11 @@ const VehiclesForm = ({
                             type === VehicleType.CAR
                                 ? {
                                       type: VehicleType.CAR,
-                                      mode: VehicleTransmission.AUTOMATIC,
+                                      mode: [VehicleTransmission.AUTOMATIC],
                                   }
                                 : {
                                       type: VehicleType.MOTORCYCLE,
+                                      mode: [VehicleTransmission.AUTOMATIC],
                                   },
                     };
                 }
@@ -42,21 +48,23 @@ const VehiclesForm = ({
 
     const updateTypeModeVehicle = (index: number, type: string) => {
         if (vehicles[index].type.type === VehicleType.CAR) {
-            var mode: VehicleTransmission = VehicleTransmission.AUTOMATIC;
+            var newMode: VehicleTransmission = VehicleTransmission.AUTOMATIC;
             if (type === VehicleTransmission.MECHANICAL) {
-                mode = VehicleTransmission.MECHANICAL;
+                newMode = VehicleTransmission.MECHANICAL;
             }
 
             setVehicles((prevVehicles) => {
                 return prevVehicles.map((vehicle, i) => {
                     if (i === index) {
-                        return {
-                            ...vehicle,
-                            type: {
-                                ...vehicle.type,
-                                mode,
-                            },
-                        };
+                        if (!vehicle.type.mode.includes(newMode)) {
+                            return {
+                                ...vehicle,
+                                type: {
+                                    ...vehicle.type,
+                                    mode: [newMode],
+                                },
+                            };
+                        }
                     }
                     return vehicle;
                 });
@@ -150,23 +158,13 @@ const VehiclesForm = ({
         var free = getFreeVehicles(vehicles);
         if (free.length > 0) {
             var availableType = free[0];
-            var vehicleType: VehicleForm;
-            if (availableType == VehicleType.MOTORCYCLE) {
-                vehicleType = {
-                    type: {
-                        type: availableType,
-                    },
-                    license: defaultLicense,
-                };
-            } else {
-                vehicleType = {
-                    type: {
-                        type: availableType,
-                        mode: VehicleTransmission.AUTOMATIC,
-                    },
-                    license: defaultLicense,
-                };
-            }
+            var vehicleType: VehicleForm = {
+                type: {
+                    type: availableType,
+                    mode: [VehicleTransmission.AUTOMATIC],
+                },
+                license: defaultLicense,
+            };
             setVehicles([...vehicles, vehicleType]);
         }
     };
@@ -182,6 +180,32 @@ const VehiclesForm = ({
 
     const getChosenVehicles = (vehicles: VehicleForm[]) => {
         return vehicles.map((vehicle) => vehicle.type.type);
+    };
+
+    const addNewTransmision = (index: number) => {
+        if (vehicles[index].type.mode.length < 2) {
+            var newMode =
+                vehicles[index].type.mode[0] === VehicleTransmission.AUTOMATIC
+                    ? VehicleTransmission.MECHANICAL
+                    : VehicleTransmission.AUTOMATIC;
+
+            setVehicles((prevVehicles) => {
+                return prevVehicles.map((vehicle, i) => {
+                    if (i === index) {
+                        if (!vehicle.type.mode.includes(newMode)) {
+                            return {
+                                ...vehicle,
+                                type: {
+                                    ...vehicle.type,
+                                    mode: [...vehicle.type.mode, newMode],
+                                },
+                            };
+                        }
+                    }
+                    return vehicle;
+                });
+            });
+        }
     };
 
     return (
@@ -214,21 +238,47 @@ const VehiclesForm = ({
                             })}
                         </select>
                     </fieldset>
-                    {vehicle.type.type === VehicleType.CAR && (
+                    {vehicle.type.mode.length == 1 ? (
                         <fieldset className="form-section">
                             <select
-                                defaultValue={vehicle.type.mode}
+                                defaultValue={vehicle.type.mode[0]}
                                 className="form-section-input"
                                 onChange={(e) => updateTypeModeVehicle(i, e.target.value)}
                             >
-                                {carModes.map((carMode, i) => (
-                                    <option key={`vehicleMod-${i}`} value={carMode}>
-                                        {carMode}
+                                {vehiclesModes.map((mode, i) => (
+                                    <option key={`vehicleMod-${i}`} value={mode}>
+                                        {mode}
                                     </option>
                                 ))}
                             </select>
                         </fieldset>
+                    ) : (
+                        <>
+                            {vehicle.type.mode.map((mode) => (
+                                <fieldset className="form-section">
+                                    <input
+                                        value={mode}
+                                        className="form-section-input"
+                                        onChange={() => {}}
+                                    />
+                                </fieldset>
+                            ))}
+                        </>
                     )}
+
+                    {vehicle.type.mode.length == 1 && (
+                        <div>
+                            <button
+                                type="button"
+                                onClick={() => addNewTransmision(i)}
+                                className="icon-wrapper small-general-button | gray touchable"
+                            >
+                                <Plus />
+                                Agregar otra Transmisión
+                            </button>
+                        </div>
+                    )}
+
                     <div>
                         <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
                             <AddressCar /> Licencia
@@ -289,14 +339,16 @@ const VehiclesForm = ({
                 </div>
             ))}
             {vehicles.length < vehiclesTypes.length && (
-                <button
-                    type="button"
-                    onClick={addNewVehicle}
-                    className="icon-wrapper general-button | no-full gray touchable"
-                >
-                    <Plus />
-                    Agregar Otro Vehiculo
-                </button>
+                <div>
+                    <button
+                        type="button"
+                        onClick={addNewVehicle}
+                        className="icon-wrapper small-general-button | gray touchable"
+                    >
+                        <Plus />
+                        Agregar otro Vehiculo
+                    </button>
+                </div>
             )}
         </div>
     );

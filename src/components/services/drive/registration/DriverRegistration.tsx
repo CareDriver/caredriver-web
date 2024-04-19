@@ -49,7 +49,7 @@ const DriverRegistration = () => {
         {
             type: {
                 type: VehicleType.CAR,
-                mode: VehicleTransmission.AUTOMATIC,
+                mode: [VehicleTransmission.AUTOMATIC],
             },
             license: defaultLicense,
         },
