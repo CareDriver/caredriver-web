@@ -181,9 +181,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                             toastId: "toast-info-sent-form-succesful",
                         },
                     );
-                    router.push(
-                        `/services/${type === "tow" ? "tow" : "drive"}`,
-                    );
+                    router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
                     setFormState({
                         loading: false,
                         isValid: true,
@@ -216,33 +214,47 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
     };
 
     useEffect(() => {
-        if (!loadingUser && user.data && user.data.licenses) {
-            if (user.data.licenses[type] !== undefined) {
-                var license: LicenseInterface = user.data.licenses[type];
-                setLicense({
-                    number: {
-                        value: license.licenseNumber,
-                        message: null,
-                    },
-                    expirationDate: {
-                        value: null,
-                        message: null,
-                    },
-                    frontPhoto: {
-                        value: null,
-                        message: null,
-                    },
-                    behindPhoto: {
-                        value: null,
-                        message: null,
-                    },
-                });
-            } else {
-                router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
-                toast.error("Licencia no encontrada", {
-                    toastId: "licence-no-found-error",
-                });
+        if (!loadingUser && user && user.data && user.data.serviceVehicles) {
+            switch (type) {
+                case "car":
+                case "motorcycle":
+                case "tow":
+                    var vehicle = user.data.serviceVehicles[type];
+                    if (vehicle) {
+                        var license: LicenseInterface = vehicle.license;
+                        setLicense({
+                            number: {
+                                value: license.licenseNumber,
+                                message: null,
+                            },
+                            expirationDate: {
+                                value: null,
+                                message: null,
+                            },
+                            frontPhoto: {
+                                value: null,
+                                message: null,
+                            },
+                            behindPhoto: {
+                                value: null,
+                                message: null,
+                            },
+                        });
+                    }
+                    break;
+                default:
+                    // Si type no coincide con ninguna de las opciones conocidas
+                    router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
+                    toast.error("Licencia no encontrada", {
+                        toastId: "licence-no-found-error",
+                    });
+                    break;
             }
+        } else {
+            router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
+            toast.error("Licencia no encontrada", {
+                toastId: "licence-no-found-error",
+            });
         }
     }, [loadingUser]);
 

@@ -52,10 +52,10 @@ const buildUser = (id: string, userData: UserInterface | undefined): UserInterfa
                 ? defaultServiceReq
                 : userData.serviceRequests,
         location: userData?.location,
-        licenses: userData?.licenses,
         currentDebtWithTheApp: userData?.currentDebtWithTheApp,
         appPaymentHistory: userData?.appPaymentHistory,
         disable: userData?.disable,
+        serviceVehicles: userData?.serviceVehicles
     };
 };
 

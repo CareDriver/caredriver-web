@@ -2,8 +2,8 @@ import ImageUploader from "@/components/form/ImageUploader";
 import { vehiclesModes, PhotoField, VehicleForm } from "@/components/services/FormModels";
 import AddressCar from "@/icons/AddressCar";
 import Car from "@/icons/Car";
+import Plus from "@/icons/Plus";
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
-import { InputValidator } from "@/utils/validator/InputValidator";
 import {
     isValidLicenseDate,
     isValidLicenseNumber,
@@ -19,16 +19,16 @@ const TowVehicle = ({
 }) => {
     const updateTypeModeVehicle = (type: string) => {
         if (vehicle.type.type === VehicleType.CAR) {
-            var mode: VehicleTransmission = VehicleTransmission.AUTOMATIC;
+            var newMode: VehicleTransmission = VehicleTransmission.AUTOMATIC;
             if (type === VehicleTransmission.MECHANICAL) {
-                mode = VehicleTransmission.MECHANICAL;
+                newMode = VehicleTransmission.MECHANICAL;
             }
 
             setVehicle((prev) => ({
                 ...prev,
                 type: {
                     ...prev.type,
-                    mode,
+                    mode: [newMode],
                 },
             }));
         }
@@ -73,25 +73,70 @@ const TowVehicle = ({
         return new Date(year, month - 1, day);
     };
 
+    const addNewTransmision = () => {
+        if (vehicle.type.mode.length < 2) {
+            var newMode =
+                vehicle.type.mode[0] === VehicleTransmission.AUTOMATIC
+                    ? VehicleTransmission.MECHANICAL
+                    : VehicleTransmission.AUTOMATIC;
+
+            setVehicle((prevVehicles) => ({
+                ...prevVehicles,
+                type: {
+                    ...vehicle.type,
+                    mode: [...vehicle.type.mode, newMode],
+                },
+            }));
+        }
+    };
+
     return (
         <div className="form-sub-container">
             <h2 className="text icon-wrapper | medium-big bold">
                 <Car /> Tipo de Transmision de su Vehiculo
             </h2>
-            {vehicle.type.type === VehicleType.CAR && (
+            {vehicle.type.mode.length == 1 ? (
                 <fieldset className="form-section">
                     <select
-                        defaultValue={vehicle.type.mode}
+                        defaultValue={vehicle.type.mode[0]}
                         className="form-section-input"
                         onChange={(e) => updateTypeModeVehicle(e.target.value)}
                     >
-                        {vehiclesModes.map((carMode, i) => (
-                            <option key={`vehicleMod-${i}`} value={carMode}>
-                                {carMode}
+                        {vehiclesModes.map((mode, i) => (
+                            <option key={`vehicleMod-${i}`} value={mode}>
+                                {mode}
                             </option>
                         ))}
                     </select>
                 </fieldset>
+            ) : (
+                <>
+                    {vehicle.type.mode.map((mode, i) => (
+                        <fieldset
+                            key={`vehicle-mode-selected-${i}`}
+                            className="form-section"
+                        >
+                            <input
+                                value={mode}
+                                className="form-section-input"
+                                onChange={() => {}}
+                            />
+                        </fieldset>
+                    ))}
+                </>
+            )}
+
+            {vehicle.type.mode.length == 1 && (
+                <div>
+                    <button
+                        type="button"
+                        onClick={addNewTransmision}
+                        className="icon-wrapper small-general-button | gray touchable"
+                    >
+                        <Plus />
+                        Agregar otra Transmisión
+                    </button>
+                </div>
             )}
 
             <div>

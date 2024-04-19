@@ -50,7 +50,7 @@ const TowPanel = () => {
                 <SackDollar />
                 Ve a nuestra Aplicacion Móvil y empieza a Ofrecer tu servicio!
             </p>
-            {user.data.licenses && user.data.licenses.tow && (
+            {user.data.serviceVehicles && user.data.serviceVehicles.tow && (
                 <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
                         <AddressCar />
@@ -59,13 +59,13 @@ const TowPanel = () => {
                     <h3 className="text | gray gray-dark bold margin-top-5">
                         Valido hasta el{" "}
                         {getFormatDate(
-                            user.data.licenses.tow.expiredDateLicense.toDate(),
+                            user.data.serviceVehicles.tow.license.expiredDateLicense.toDate(),
                         )}
                     </h3>
                     <Link
                         className={`small-general-button text | medium bolder margin-top-25 touchable 
                         ${getColorButtonLicense(
-                            user.data.licenses.tow.expiredDateLicense.toDate(),
+                            user.data.serviceVehicles.tow.license.expiredDateLicense.toDate(),
                         )}`}
                         href={`/services/license/update/tow`}
                     >

@@ -1,10 +1,10 @@
 import { GeoPoint } from "firebase/firestore";
-import { VehicleInterface, VehicleTransmission, VehicleType } from "./VehicleInterface";
+import { VehicleInterface } from "./VehicleInterface";
 import { ServiceReqState, Services } from "./Services";
 import { ServicesData } from "./ServicesDataInterface";
-import { LicenseInterface } from "./PersonalDocumentsInterface";
 import { Payment, Price } from "./Payment";
 import { Locations } from "./Locations";
+import { ServiceStateRequest, Vehicle } from "./UserRequest";
 
 export interface HistoryLocationInterface {
     locationName: string;
@@ -35,12 +35,6 @@ export interface UserInterface {
     pickUpLocationsHistory: HistoryLocationInterface[]; // Array of historical pickup locations
     deliveryLocationsHistory: HistoryLocationInterface[]; // Array of historical delivery locations
 
-    // Attributes just for services user:
-    licenses?: {
-        car?: LicenseInterface;
-        motorcycle?: LicenseInterface;
-        tow?: LicenseInterface;
-    }; // Driver's license (just for drivers users), if drives all, it will have data of all licenses
     email?: string; // User's email
     currentDebtWithTheApp?: Price; // current debt of a server user towards the application, will contain the money that the user owes to the application following the services made and last time he/she paid
     appPaymentHistory?: Payment[]; // Array of the payments made by the service user to the app.
@@ -48,29 +42,18 @@ export interface UserInterface {
     disable?: boolean; // true when user did not paid to the app and was disabled.
     mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
     towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
-    drivenVehicle?: {
-        // The vehicle driver can drive
-        type: VehicleType[]; // Type of the vehicle, either 'car' or 'motorcycle'
-        transmission?: VehicleTransmission[]; // Type of transmission, either 'automatic' or 'mechanical'
+
+    serviceVehicles?: { // vehicles that the user registered
+        car?: Vehicle;
+        motorcycle?: Vehicle;
+        tow?: Vehicle;
     };
 
-    serviceRequests: {
-        driveCar: {
-            id: string;
-            state: ServiceReqState;
-        };
-        driveMotorcycle: {
-            id: string;
-            state: ServiceReqState;
-        };
-        mechanic: {
-            id: string;
-            state: ServiceReqState;
-        };
-        tow: {
-            id: string;
-            state: ServiceReqState;
-        };
+    serviceRequests: { // status of the services that the user made a request
+        driveCar: ServiceStateRequest;
+        driveMotorcycle: ServiceStateRequest;
+        mechanic: ServiceStateRequest;
+        tow: ServiceStateRequest;
     };
 }
 

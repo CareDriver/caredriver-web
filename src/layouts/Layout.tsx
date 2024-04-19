@@ -5,14 +5,15 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { ToastContainer } from "react-toastify";
 import AuthProvider from "@/context/AuthContext";
+import Head from "next/head";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     return (
         <html lang="en">
-            <head>
+            <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>Document</title>
-            </head>
+            </Head>
             <body>
                 <AuthProvider>{children}</AuthProvider>
                 <ToastContainer

@@ -51,7 +51,7 @@ const DrivePanel = () => {
                 <SackDollar />
                 Ve a nuestra Aplicacion Móvil y empieza a Ofrecer tu servicio!
             </p>
-            {user.data.licenses && user.data.licenses.car && (
+            {user.data.serviceVehicles && user.data.serviceVehicles.car && (
                 <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
                         <AddressCar />
@@ -60,13 +60,13 @@ const DrivePanel = () => {
                     <h3 className="text | gray gray-dark bold margin-top-5">
                         Valido hasta el{" "}
                         {getFormatDate(
-                            user.data.licenses.car.expiredDateLicense.toDate(),
+                            user.data.serviceVehicles.car.license.expiredDateLicense.toDate(),
                         )}
                     </h3>
                     <Link
                         className={`small-general-button text | medium bolder margin-top-25 touchable 
                         ${getColorButtonLicense(
-                            user.data.licenses.car.expiredDateLicense.toDate(),
+                            user.data.serviceVehicles.car.license.expiredDateLicense.toDate(),
                         )}`}
                         href={`/services/license/update/car`}
                     >
@@ -74,7 +74,7 @@ const DrivePanel = () => {
                     </Link>
                 </div>
             )}
-            {user.data.licenses && user.data.licenses.motorcycle && (
+            {user.data.serviceVehicles && user.data.serviceVehicles.motorcycle && (
                 <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
                         <AddressCar />
@@ -83,13 +83,13 @@ const DrivePanel = () => {
                     <h3 className="text | gray gray-dark bold margin-top-5">
                         Valido hasta el{" "}
                         {getFormatDate(
-                            user.data.licenses.motorcycle.expiredDateLicense.toDate(),
+                            user.data.serviceVehicles.motorcycle.license.expiredDateLicense.toDate(),
                         )}
                     </h3>
                     <Link
                         className={`small-general-button text | medium bolder margin-top-25 touchable 
                         ${getColorButtonLicense(
-                            user.data.licenses.motorcycle.expiredDateLicense.toDate(),
+                            user.data.serviceVehicles.motorcycle.license.expiredDateLicense.toDate(),
                         )}`}
                         href={`/services/license/update/motorcycle`}
                     >
@@ -97,11 +97,13 @@ const DrivePanel = () => {
                     </Link>
                 </div>
             )}
-            {(!user.data.licenses?.car || !user.data.licenses?.motorcycle) && (
+            {(!user.data.serviceVehicles?.car ||
+                !user.data.serviceVehicles?.motorcycle) && (
                 <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
                         <AddressCar />
-                        {user.data.licenses && !user.data.licenses.motorcycle
+                        {user.data.serviceVehicles &&
+                        !user.data.serviceVehicles.motorcycle
                             ? "Motocicleta"
                             : "Automovil"}
                     </h2>
@@ -127,7 +129,8 @@ const DrivePanel = () => {
                             <Link
                                 className="icon-wrapper small-general-button text | gray gray-icon medium bolder lb margin-top-25 touchable"
                                 href={`/services/drive/addnew/${
-                                    user.data.licenses && !user.data.licenses.motorcycle
+                                    user.data.serviceVehicles &&
+                                    !user.data.serviceVehicles.motorcycle
                                         ? "motorcycle"
                                         : "car"
                                 }`}

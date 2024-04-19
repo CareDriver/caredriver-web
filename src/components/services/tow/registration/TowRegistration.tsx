@@ -51,7 +51,7 @@ const TowRegistration = () => {
     const [vehicle, setVehicle] = useState<VehicleForm>({
         type: {
             type: VehicleType.CAR,
-            mode: VehicleTransmission.AUTOMATIC,
+            mode: [VehicleTransmission.AUTOMATIC],
         },
         license: defaultLicense,
     });

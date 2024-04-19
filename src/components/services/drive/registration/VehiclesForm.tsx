@@ -217,6 +217,7 @@ const VehiclesForm = ({
                     </h2>
                     <fieldset className="form-section">
                         <select
+                            key={"form-section-vehicle-types"}
                             defaultValue={vehicle.type.type}
                             onChange={(option) => {
                                 updateTypeVehicle(i, option.target.value);
@@ -254,8 +255,11 @@ const VehiclesForm = ({
                         </fieldset>
                     ) : (
                         <>
-                            {vehicle.type.mode.map((mode) => (
-                                <fieldset className="form-section">
+                            {vehicle.type.mode.map((mode, i) => (
+                                <fieldset
+                                    key={`vehicle-mode-selected-${i}`}
+                                    className="form-section"
+                                >
                                     <input
                                         value={mode}
                                         className="form-section-input"

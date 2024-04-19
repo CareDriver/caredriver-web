@@ -263,8 +263,8 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
 
     useEffect(() => {
         if (!loadingUser) {
-            if (user.data && user.data.licenses) {
-                var isValid = user.data.licenses[type] !== undefined;
+            if (user.data && user.data.serviceVehicles) {
+                var isValid = user.data.serviceVehicles[type] !== undefined;
                 if (isValid) {
                     router.push("/services/drive");
                     toast.error("Ya registraste este vehiculo", {
