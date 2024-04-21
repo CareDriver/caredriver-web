@@ -32,6 +32,44 @@ const UserProfile = () => {
         }
     };
 
+    const getGreeting = () => {
+        var hour = new Date().getHours();
+        var greeting;
+
+        if (hour < 12) {
+            greeting = "Buenos días;";
+        } else if (hour < 18) {
+            greeting = "Buenas tardes;";
+        } else {
+            greeting = "Buenas noches;";
+        }
+
+        return greeting;
+    };
+
+    const sendMessageToPay = () => {
+        if (
+            user.data &&
+            user.data.currentDebtWithTheApp &&
+            user.data.currentDebtWithTheApp.amount > 0
+        ) {
+            const currency = user.data.currentDebtWithTheApp.currency;
+            const number = "+59164868951";
+            const message = `${getGreeting()}\n\nSoy el usuario servidor ${
+                user.data?.fullName
+            }, **quiero pagar ${
+                user.data.currentDebtWithTheApp.amount
+            } ${currency} de mi deuda ${
+                user.data.currentDebtWithTheApp.amount
+            } ${currency} **. Es decir **${user.data.currentDebtWithTheApp.amount}/${
+                user.data.currentDebtWithTheApp.amount
+            }**`;
+            var enlaceWhatsApp = "https://wa.me/" + number + "?text=" + message;
+
+            window.open(enlaceWhatsApp, "_blank");
+        }
+    };
+
     return loadingUser ? (
         <PageLoader />
     ) : user.data ? (
@@ -90,12 +128,13 @@ const UserProfile = () => {
                 <p className="text | gray-dark">
                     {user.data.currentDebtWithTheApp &&
                     user.data.currentDebtWithTheApp.amount > 0
-                        ? "Tienes que pagar tu deuda, sino no podras seguir usando nuestra aplicacion para ofrecer tus servicios."
+                        ? "Tienes que pagar tu deuda, sino no podras seguir usando nuestra aplicacion para ofrecer tus servicios. Haz click para enviar un mensaje a nuestro administrador para pagar tu deuda."
                         : "Aqui se mostrara la deuda actual que tienes que pagar a medida que usas nuestra aplicacion"}
                 </p>
                 {
                     <div className="margin-top-15">
                         <button
+                            onClick={sendMessageToPay}
                             disabled={validToDisable()}
                             className="small-general-button text | medium bold touchable 
     yellow"
