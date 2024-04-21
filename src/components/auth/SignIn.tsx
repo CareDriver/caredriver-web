@@ -54,13 +54,13 @@ const SignIn = () => {
                     credentials.email.value,
                     credentials.password.value,
                 )
-                    .then(() => {
+                    .then((res) => {
                         setFormState({
                             ...formState,
                             loading: false,
                         });
-                        toast.success("Inicio de sesion exitoso");
-                        window.location.replace("/services/drive");
+
+                        window.location.replace("/redirector");
                     })
                     .catch(() => {
                         setFormState({
