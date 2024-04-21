@@ -1,4 +1,4 @@
-import { firestore } from "../../firebase/FirebaseConfig";
+import { auth, firestore } from "../../firebase/FirebaseConfig";
 import {
     collection,
     addDoc,
@@ -9,6 +9,7 @@ import {
     updateDoc,
 } from "firebase/firestore";
 import { UserInterface } from "../../interfaces/UserInterface";
+import { fetchSignInMethodsForEmail } from "firebase/auth";
 
 const usersCollection = collection(firestore, "users");
 
@@ -71,4 +72,16 @@ const updateUser = async (
     }
 };
 
-export { saveUser, getUserById, updateUser };
+const checkEmailExists = async (email: string): Promise<boolean> => {
+    try {
+        const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+        console.log(signInMethods);
+        
+        return signInMethods.length === 0;
+    } catch (error) {
+        console.error("Error al verificar el correo electrónico:", error);
+        throw error;
+    }
+};
+
+export { saveUser, getUserById, updateUser, checkEmailExists };

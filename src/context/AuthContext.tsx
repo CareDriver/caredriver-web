@@ -1,6 +1,6 @@
 import { auth } from "@/firebase/FirebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
-import { defaultServiceReq, UserInterface } from "@/interfaces/UserInterface";
+import { defaultServiceReq, UserInterface, UserRole } from "@/interfaces/UserInterface";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useState, useEffect } from "react";
 import { getUserById } from "@/utils/requests/UserRequester";
@@ -55,7 +55,8 @@ const buildUser = (id: string, userData: UserInterface | undefined): UserInterfa
         currentDebtWithTheApp: userData?.currentDebtWithTheApp,
         appPaymentHistory: userData?.appPaymentHistory,
         disable: userData?.disable,
-        serviceVehicles: userData?.serviceVehicles
+        serviceVehicles: userData?.serviceVehicles,
+        role: userData?.role === undefined ? UserRole.User : userData.role,
     };
 };
 

@@ -14,6 +14,11 @@ export const isValidName = (name: string): InputState => {
             isValid: false,
             message: "Tu nombre solo puede contender letras del alfabeto",
         };
+    } else if (name.length > 100) {
+        return {
+            isValid: false,
+            message: "No puedes ingresar mas de 100 caracteres para tu nombre",
+        };
     } else {
         return {
             isValid: true,
@@ -36,6 +41,11 @@ export const isValidEmail = (email: string): InputState => {
             message:
                 'Por favor ingresa un correo con el formato "example@example.example"',
         };
+    } else if (email.length > 320) {
+        return {
+            isValid: false,
+            message: "No puedes ingresar mas de 320 caracteres para tu correo",
+        };
     } else {
         return { isValid: true, message: "Campo valido" };
     }
@@ -52,6 +62,11 @@ export const isValidPassword = (password: string): InputState => {
             isValid: false,
             message: "Tu contraseña deberia tener al menos 6 caracteres",
         };
+    } else if (password.length > 150) {
+        return {
+            isValid: false,
+            message: "No puedes ingresar mas de 150 caracteres para tu contraseña",
+        };
     } else {
         return {
             isValid: true,
@@ -67,12 +82,12 @@ export const isPhoneValid = (phone: string): InputState => {
         var isValid = phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(phone));
         return {
             isValid: isValid,
-            message: isValid ? "Numero valido" : "Numero invalido",
+            message: isValid ? "Numero valido" : "Por favor ingresa un numero valido",
         };
     } catch (error) {
         return {
             isValid: false,
-            message: "Numero invalido",
+            message: "Por favor ingresa un numero valido",
         };
     }
 };

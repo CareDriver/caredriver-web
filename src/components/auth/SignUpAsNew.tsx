@@ -17,7 +17,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { locationList, Locations } from "@/interfaces/Locations";
 import PhoneForm from "../form/PhoneForm";
-import { defaultServiceReq, UserInterface } from "@/interfaces/UserInterface";
+import { defaultServiceReq, UserInterface, UserRole } from "@/interfaces/UserInterface";
 import { Services } from "@/interfaces/Services";
 import { generateVerificationCode } from "generate-verification-code";
 
@@ -109,6 +109,7 @@ const SignUpAsNew = () => {
                         .then((res) => {
                             const emptyUserData: UserInterface = {
                                 id: res.user.uid,
+                                role: UserRole.User,
                                 fullName: credentials.fullName.value,
                                 phoneNumber: credentials.phone.value,
                                 photoUrl: "",
@@ -143,13 +144,35 @@ const SignUpAsNew = () => {
                                     });
                                 });
                         })
-                        .catch((e) => {
-                            setFormState({
-                                ...formState,
-                                isValid: false,
-                                loading: false,
-                            });
-                            toast.error("Algo fallo, intentalo de nuevo por favor");
+                        .catch((error) => {
+                            var errorCode = error.code;
+                            var errorMessage = error.message;
+                            if (errorCode === "auth/email-already-in-use") {
+                                toast.error("El correo electrónico ya está en uso");
+                                setCredentials({
+                                    ...credentials,
+                                    email: {
+                                        ...credentials.email,
+                                        errorMessage:
+                                            "El correo electrónico ya está en uso",
+                                    },
+                                });
+                                setFormState({
+                                    ...formState,
+                                    isValid: false,
+                                    loading: false,
+                                    isVerifyingCode: false,
+                                });
+                            } else {
+                                toast.error("Algo fallo, intentalo de nuevo por favor");
+                                console.log(errorMessage);
+                                setFormState({
+                                    ...formState,
+                                    isValid: false,
+                                    loading: false,
+                                    isVerifyingCode: false,
+                                });
+                            }
                         });
                 } else {
                     setFormState({
@@ -161,9 +184,9 @@ const SignUpAsNew = () => {
                         ...credentials,
                         code: {
                             ...credentials.code,
-                            errorMessage: "Codigo invalido, vuelve a intentarlo"
-                        }
-                    })
+                            errorMessage: "Codigo invalido, vuelve a intentarlo",
+                        },
+                    });
                 }
             } else {
                 setFormState({
@@ -260,34 +283,47 @@ const SignUpAsNew = () => {
                             length: 6,
                             type: "string",
                         });
-                    await fetch("/api/sms", {
-                        method: "POST",
-                        body: JSON.stringify({
-                            code: codeToSent,
-                            toPhone: credentials.phone.value,
-                        }),
-                        headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
-                        },
-                    });
-                    setCredentials({
-                        ...credentials,
-                        code: {
-                            ...credentials.code,
-                            sent: codeToSent,
-                        },
-                    });
+                    try {
+                        await toast.promise(
+                            fetch("/api/sms", {
+                                method: "POST",
+                                body: JSON.stringify({
+                                    code: codeToSent,
+                                    toPhone: credentials.phone.value,
+                                }),
+                                headers: {
+                                    Accept: "application/json",
+                                    "Content-Type": "application/json",
+                                },
+                            }),
+                            {
+                                pending: "Enviando codigo de verificacion a tu celular",
+                                success: "Codigo enviado",
+                                error: "Error al enviar el codigo, intentalo de nuevo por favor",
+                            },
+                        );
+                        setCredentials({
+                            ...credentials,
+                            code: {
+                                ...credentials.code,
+                                sent: codeToSent,
+                            },
+                        });
+                        console.log(codeToSent);
 
-                    toast.success(
-                        "Codigo de verificacion enviado a tu numero de celular",
-                    );
-
-                    setFormState({
-                        ...formState,
-                        isVerifyingCode: true,
-                        loading: false,
-                    });
+                        setFormState({
+                            ...formState,
+                            isVerifyingCode: true,
+                            loading: false,
+                        });
+                    } catch (e) {
+                        setFormState({
+                            ...formState,
+                            isValid: false,
+                            isVerifyingCode: false,
+                            loading: false,
+                        });
+                    }
                 } catch (e) {
                     setFormState({
                         ...formState,
@@ -356,6 +392,7 @@ const SignUpAsNew = () => {
                             type="email"
                             name="email"
                             placeholder="Correo Electronico"
+                            value={credentials.email.value}
                             onChange={(e) => handleInputChange(e, isValidEmail)}
                             className="form-section-input"
                         />
@@ -368,6 +405,7 @@ const SignUpAsNew = () => {
                             type="text"
                             name="password"
                             placeholder="Contraseña"
+                            value={credentials.password.value}
                             onChange={(e) => handleInputChange(e, isValidPassword)}
                             className="form-section-input"
                         />
@@ -380,6 +418,7 @@ const SignUpAsNew = () => {
                             type="text"
                             name="fullName"
                             placeholder="Nombre Completo"
+                            value={credentials.fullName.value}
                             onChange={(e) => handleInputChange(e, isValidName)}
                             className="form-section-input"
                         />

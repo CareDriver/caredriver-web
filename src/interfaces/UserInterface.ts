@@ -21,8 +21,15 @@ export interface HistoryReadLocationInterface {
     }; // Geographical coordinates for a location
 }
 
+export enum UserRole {
+    User = "User",
+    Admin = "Admin",
+    Support = "Support",
+}
+
 export interface UserInterface {
     id?: string; // Unique identifier for the user
+    role?: UserRole; // the role that the user has in the application
     fullName: string; // Full name of the user
     phoneNumber: string; // Phone number of the user (includes country code, ej: +591 76543218)
     photoUrl: string; // URL of the user's photo
