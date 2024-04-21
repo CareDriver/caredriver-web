@@ -15,6 +15,38 @@ export const isValidWorkshopName = (name: string): InputState => {
             isValid: false,
             message: "El nombre solo puede contener letras del alfabeto y numeros",
         };
+    } else if (name.length > 150) {
+        return {
+            isValid: false,
+            message: "No puedes ingresar mas de 150 caracteres para el nombre del taller",
+        };
+    } else {
+        return {
+            isValid: true,
+            message: "Nombre valido",
+        };
+    }
+};
+
+export const isValidCraneName = (name: string): InputState => {
+    const nameRegex: RegExp = /^[a-zA-Z\d\s]+$/;
+
+    if (name.trim() === "") {
+        return {
+            isValid: false,
+            message: "Tienes que ingresar el nombre de la Empresa",
+        };
+    } else if (!nameRegex.test(name)) {
+        return {
+            isValid: false,
+            message: "El nombre solo puede contener letras del alfabeto y numeros",
+        };
+    } else if (name.length > 150) {
+        return {
+            isValid: false,
+            message:
+                "No puedes ingresar mas de 150 caracteres para el nombre de la Empresa",
+        };
     } else {
         return {
             isValid: true,

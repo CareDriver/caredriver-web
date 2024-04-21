@@ -4,7 +4,7 @@ import ImageUploader from "@/components/form/ImageUploader";
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import UserIcon from "@/icons/UserIcon";
 import { PersonalDataFormField, PhotoField } from "../services/FormModels";
-import { validateFullName } from "@/utils/validator/service_requests/RequestValidator";
+import { isValidName } from "@/utils/validator/auth/CredentialsValidator";
 import { AuthContext } from "@/context/AuthContext";
 const PersonalDataForm = ({
     personalData,
@@ -18,7 +18,7 @@ const PersonalDataForm = ({
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        const { isValid, message } = validateFullName(value);
+        const { isValid, message } = isValidName(value);
 
         setPersonalData({
             ...personalData,
@@ -62,7 +62,7 @@ const PersonalDataForm = ({
     }, [loadingUser]);
 
     return (
-        <div className="form-sub-container | margin-top-25">
+        <div className="form-sub-container | margin-top-25 max-width-60">
             <h2 className="text icon-wrapper | medium-big bold">
                 <UserIcon />
                 Datos Personales

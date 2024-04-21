@@ -13,6 +13,14 @@
     padding: 50px 20px;
 }
 
+.user-page-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    padding: 80px 50px;
+}
+
 .row-wrapper {
     display: flex;
     align-items: center;
@@ -39,6 +47,14 @@
 
     width: 100%;
     height: auto;
+}
+
+.max-width-40 {
+    max-width: 40%;
+}
+
+.max-width-50 {
+    max-width: 50%;
 }
 
 .max-width-60 {

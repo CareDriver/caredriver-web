@@ -84,14 +84,15 @@ const SideBar = () => {
                 <Link
                     href={"/user/profile"}
                     className={`sidebar-option ${
-                        pathname.includes("profile") && "selected"
+                        (pathname.includes("profile") || pathname.includes("photo")) &&
+                        "selected"
                     }`}
                 >
                     <UserIcon />
                     <span>Mi Perfil</span>
                 </Link>
                 <Link
-                    href={"/user/location"}
+                    href={"/user/update/location"}
                     className={`sidebar-option ${
                         pathname.includes("location") && "selected"
                     }`}

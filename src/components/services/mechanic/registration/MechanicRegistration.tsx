@@ -259,7 +259,7 @@ const MechanicRegistration = () => {
                 }
             />
             <form
-                className="form-sub-container | max-width-60"
+                className="form-sub-container"
                 data-state={formState.loading ? "loading" : "loaded"}
             >
                 <PersonalDataForm
@@ -267,7 +267,7 @@ const MechanicRegistration = () => {
                     setPersonalData={setPersonalData}
                 />
 
-                <div className="form-sub-container | margin-top-25">
+                <div className="form-sub-container | margin-top-25 max-width-90">
                     <h2 className="text icon-wrapper | medium-big bold">
                         <Warehouse />
                         Taller mecanico {"(Opcional)"}
@@ -297,7 +297,7 @@ const MechanicRegistration = () => {
                     setAcceptedTerms={setAcceptedTerms}
                 />
                 <button
-                    className={`general-button | margin-top-25 touchable ${
+                    className={`general-button | margin-top-25 touchable max-width-60 ${
                         formState.loading && "loading-section"
                     }`}
                     title={

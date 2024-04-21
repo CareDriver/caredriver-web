@@ -3,16 +3,17 @@
     flex-direction: column;
     gap: 25px;
 
-    width: 100%;
+    width: 70%;
+
     padding: 50px 20px;
 }
 
 .enterprise-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 15%));
-    grid-auto-rows: 1fr;
-
+    grid-template-columns: repeat(auto-fill, 300px);
     gap: 15px;
+
+    width: 100%;
 }
 
 .enterprise-item {

@@ -17,6 +17,7 @@
     "@mui/material": "^5.15.14",
     "@react-google-maps/api": "^2.19.3",
     "firebase": "^10.9.0",
+    "generate-verification-code": "^1.0.2",
     "google-libphonenumber": "^3.2.34",
     "mapbox-gl": "^3.3.0",
     "nanoid": "^5.0.7",
@@ -25,6 +26,7 @@
     "react-dom": "^18",
     "react-international-phone": "^4.2.6",
     "react-toastify": "^10.0.5",
+    "twilio": "^5.0.4",
     "uniqid": "^5.4.0",
     "uuid-v4": "^0.1.0",
     "uuidv4": "^6.2.13"

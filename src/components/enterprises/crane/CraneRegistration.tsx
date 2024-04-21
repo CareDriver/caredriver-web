@@ -3,8 +3,8 @@ import "react-international-phone/style.css";
 
 import { AuthContext } from "@/context/AuthContext";
 import {
+    isValidCraneName,
     isValidForm,
-    isValidWorkshopName,
     verifyNoEmptyData,
 } from "@/utils/validator/enterprises/EnterpriseValidator";
 import { FormEvent, useContext, useEffect, useState } from "react";
@@ -145,7 +145,7 @@ const CraneRegistration = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        const { isValid, message } = isValidWorkshopName(value);
+        const { isValid, message } = isValidCraneName(value);
 
         setFormData({
             ...formData,

@@ -1,0 +1,50 @@
+.profile-wrapper {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.profile-info-wrapper {
+    display: inline-flex;
+    display: -ms-inline-flexbox;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-fullname {
+    font-size: 60px;
+    font-weight: 900;
+
+    text-transform: capitalize;
+}
+
+.profile-email {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.profile-photo {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+
+    object-fit: cover;
+
+    background-color: #fcfffe;
+    box-shadow: 0 0 40px var(--gray-light);
+}
+
+.profile-subtitle {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+
+
+.location-field {
+    padding: 20px 25px;
+    border-radius: 15px;
+    font-size: 20px;
+
+    border: 3px solid var(--main-light);
+}

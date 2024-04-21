@@ -1,9 +1,9 @@
+import UserProfile from "@/components/user/UserProfile";
 import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
-
 const UserProfilePage = () => {
     return (
         <WrapperWithSideBar>
-            <div>perfil del usuario</div>
+            <UserProfile />
         </WrapperWithSideBar>
     );
 };

@@ -1,22 +1,23 @@
 import { Timestamp } from "firebase/firestore";
 import { Locations } from "./Locations";
 import { LicenseInterface } from "./PersonalDocumentsInterface";
-import { Services } from "./Services";
+import { ServiceReqState, Services } from "./Services";
 import { VehicleTransmission, VehicleType } from "./VehicleInterface";
 import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
-import { Enterprise, SoftEnterprise } from "./Enterprise";
+import { SoftEnterprise } from "./Enterprise";
 
-export interface MotorcycleType {
-    type: VehicleType.MOTORCYCLE;
+export interface VehicleTypeAndMode {
+    type: VehicleType;
+    mode: VehicleTransmission[];
 }
 
-export interface CarType {
-    type: VehicleType.CAR;
-    mode: VehicleTransmission;
+export interface ServiceStateRequest {
+    id: string;
+    state: ServiceReqState;
 }
 
 export interface Vehicle {
-    type: CarType | MotorcycleType;
+    type: VehicleTypeAndMode;
     license: LicenseInterface;
 }
 
@@ -38,13 +39,13 @@ export interface UserRequest {
     towEnterprite?: SoftEnterprise; // id of the tow enterprise user works for if is tow user
     services: Services[];
     location?: Locations; // just if user does not have a location registered yet.
-    vehicles?: Vehicle[];
+    vehicles?: Vehicle[]; // vehicles that are in the request
 }
 
 export const emptyVehicleCar: Vehicle = {
     type: {
         type: VehicleType.CAR,
-        mode: VehicleTransmission.AUTOMATIC,
+        mode: [VehicleTransmission.AUTOMATIC],
     },
     license: {
         expiredDateLicense: Timestamp.fromDate(new Date()),

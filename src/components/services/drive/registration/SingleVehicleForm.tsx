@@ -1,5 +1,5 @@
-import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
-import { carModes, VehicleForm } from "../../FormModels";
+import { vehicleModeRender, VehicleTransmission, VehicleType, vehicleTypeRender } from "@/interfaces/VehicleInterface";
+import { vehiclesModes, VehicleForm } from "../../FormModels";
 import ImageUploader from "@/components/form/ImageUploader";
 import { Dispatch, SetStateAction } from "react";
 import Car from "@/icons/Car";
@@ -9,6 +9,7 @@ import {
     isValidLicenseNumber,
     isValidLicenseDate,
 } from "@/utils/validator/service_requests/DriveValidator";
+import Plus from "@/icons/Plus";
 
 const SingleVehicleForm = ({
     vehicle,
@@ -19,16 +20,16 @@ const SingleVehicleForm = ({
 }) => {
     const updateTypeModeVehicle = (type: string) => {
         if (vehicle.type.type === VehicleType.CAR) {
-            var mode: VehicleTransmission = VehicleTransmission.AUTOMATIC;
+            var newMode: VehicleTransmission = VehicleTransmission.AUTOMATIC;
             if (type === VehicleTransmission.MECHANICAL) {
-                mode = VehicleTransmission.MECHANICAL;
+                newMode = VehicleTransmission.MECHANICAL;
             }
 
             setVehicle((prevVehicles) => ({
                 ...prevVehicles,
                 type: {
                     ...vehicle.type,
-                    mode,
+                    mode: [newMode],
                 },
             }));
         }
@@ -85,8 +86,25 @@ const SingleVehicleForm = ({
         }));
     };
 
+    const addNewTransmision = () => {
+        if (vehicle.type.mode.length < 2) {
+            var newMode =
+                vehicle.type.mode[0] === VehicleTransmission.AUTOMATIC
+                    ? VehicleTransmission.MECHANICAL
+                    : VehicleTransmission.AUTOMATIC;
+
+            setVehicle((prevVehicles) => ({
+                ...prevVehicles,
+                type: {
+                    ...vehicle.type,
+                    mode: [...vehicle.type.mode, newMode],
+                },
+            }));
+        }
+    };
+
     return (
-        <div className="form-sub-container | margin-top-25">
+        <div className="form-sub-container | margin-top-25 max-width-60">
             {
                 <div className="form-sub-container">
                     <h2 className="text icon-wrapper | medium-big bold">
@@ -96,26 +114,55 @@ const SingleVehicleForm = ({
                         <input
                             type="text"
                             placeholder="Numero"
-                            value={vehicle.type.type}
+                            value={vehicleTypeRender[vehicle.type.type]}
                             onChange={() => {}}
                             className="form-section-input"
                         />
                     </fieldset>
-                    {vehicle.type.type === VehicleType.CAR && (
+                    {vehicle.type.mode.length == 1 ? (
                         <fieldset className="form-section">
                             <select
-                                defaultValue={vehicle.type.mode}
+                                defaultValue={vehicle.type.mode[0]}
                                 className="form-section-input"
                                 onChange={(e) => updateTypeModeVehicle(e.target.value)}
                             >
-                                {carModes.map((carMode, i) => (
-                                    <option key={`vehicleMod-${i}`} value={carMode}>
-                                        {carMode}
+                                {vehiclesModes.map((mode, i) => (
+                                    <option key={`vehicleMod-${i}`} value={mode}>
+                                        {vehicleModeRender[mode]}
                                     </option>
                                 ))}
                             </select>
                         </fieldset>
+                    ) : (
+                        <>
+                            {vehicle.type.mode.map((mode, i) => (
+                                <fieldset
+                                    key={`vehicle-mode-selected-${i}`}
+                                    className="form-section"
+                                >
+                                    <input
+                                        value={vehicleModeRender[mode]}
+                                        className="form-section-input"
+                                        onChange={() => {}}
+                                    />
+                                </fieldset>
+                            ))}
+                        </>
                     )}
+
+                    {vehicle.type.mode.length == 1 && (
+                        <div>
+                            <button
+                                type="button"
+                                onClick={addNewTransmision}
+                                className="icon-wrapper small-general-button text | gray-icon gray bold touchable"
+                            >
+                                <Plus />
+                                Agregar otra Transmisión
+                            </button>
+                        </div>
+                    )}
+
                     <div>
                         <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
                             <AddressCar /> Licencia

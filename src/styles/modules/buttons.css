@@ -106,7 +106,7 @@
     align-items: center;
     justify-content: center;
 
-    padding: 10px 40px;
+    padding: 10px 60px;
 
     background-color: var(--main-light);
     color: var(--white);
@@ -122,4 +122,5 @@
 
 .small-general-button.yellow {
     background-color: var(--yellow);
+    color: var(--second-dark);
 }

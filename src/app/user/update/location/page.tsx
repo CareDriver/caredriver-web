@@ -1,9 +1,10 @@
+import ChangeLocationReq from "@/components/user/ChangeLocationReq";
 import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
 
 const UserLocationPage = () => {
     return (
         <WrapperWithSideBar>
-            <div>cambiar localizacion del usuario</div>
+            <ChangeLocationReq />
         </WrapperWithSideBar>
     );
 };

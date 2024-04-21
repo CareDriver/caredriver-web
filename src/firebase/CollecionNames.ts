@@ -10,4 +10,5 @@ export enum Collections {
     MechanicRequests = "mechanic-requests", // solicitud para ser usuario servidor mecánico
     TowRequests = "tow-requests", // solicitud para ser usuario servidor operador de grúa
     LicenseUpdateReq = "license-update-requests",
+    ChangePhotoRequests = "change-photo-requests",
 }

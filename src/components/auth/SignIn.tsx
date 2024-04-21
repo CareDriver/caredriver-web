@@ -8,26 +8,35 @@ import {
 } from "@/utils/validator/auth/CredentialsValidator";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+
+interface FormData {
+    email: {
+        value: string;
+        errorMessage: null | string;
+    };
+    password: {
+        value: string;
+        errorMessage: null | string;
+    };
+}
 
 const SignIn = () => {
     const [formState, setFormState] = useState({
         loading: false,
-        errorMessage: "",
+        isValid: true,
     });
-    const [credentials, setCredentials] = useState({
+    const [credentials, setCredentials] = useState<FormData>({
         email: {
             value: "",
-            errorMessage: "",
+            errorMessage: null,
         },
         password: {
             value: "",
-            errorMessage: "",
+            errorMessage: null,
         },
     });
-    const router = useRouter();
 
     const login = (e: FormEvent) => {
         e.preventDefault();
@@ -35,25 +44,48 @@ const SignIn = () => {
             ...formState,
             loading: true,
         });
-        signInWithEmailAndPassword(
-            auth,
-            credentials.email.value,
-            credentials.password.value,
-        )
-            .then(() => {
+        if (
+            credentials.email.value.trim().length > 0 &&
+            credentials.password.value.trim().length > 0
+        ) {
+            if (!credentials.email.errorMessage && !credentials.password.errorMessage) {
+                signInWithEmailAndPassword(
+                    auth,
+                    credentials.email.value,
+                    credentials.password.value,
+                )
+                    .then(() => {
+                        setFormState({
+                            ...formState,
+                            loading: false,
+                        });
+                        toast.success("Inicio de sesion exitoso");
+                        window.location.replace("/services/drive");
+                    })
+                    .catch(() => {
+                        setFormState({
+                            ...formState,
+                            isValid: false,
+                            loading: false,
+                        });
+                        toast.error("Algo fallo, intentalo de nuevo por favor");
+                    });
+            } else {
                 setFormState({
                     ...formState,
+                    isValid: false,
                     loading: false,
                 });
-                toast.success("Inicio de sesion exitoso");
-                window.location.replace("/services/drive");
-            })
-            .catch(() => {
-                setFormState({
-                    loading: false,
-                    errorMessage: "Correo o contraseña incorrecta.",
-                });
+                toast.error("Por favor completa los campos con datos validos");
+            }
+        } else {
+            setFormState({
+                ...formState,
+                isValid: false,
+                loading: false,
             });
+            toast.error("Por favor completa los campos");
+        }
     };
 
     const handleInputChange = (
@@ -72,6 +104,14 @@ const SignIn = () => {
         });
     };
 
+    useEffect(() => {
+        setFormState({
+            ...formState,
+            isValid:
+                !credentials.email.errorMessage && !credentials.password.errorMessage,
+        });
+    }, [credentials]);
+
     return (
         <section className="form-container | center">
             <h1 className="text | bigger bold | margin-bottom-50">Iniciar Sesion</h1>
@@ -85,7 +125,7 @@ const SignIn = () => {
                         onChange={(e) => handleInputChange(e, isValidEmail)}
                         className="form-section-input"
                     />
-                    {credentials.email.errorMessage.length > 0 && (
+                    {credentials.email.errorMessage && (
                         <small className="form-section-message">
                             {credentials.email.errorMessage}
                         </small>
@@ -100,22 +140,15 @@ const SignIn = () => {
                         onChange={(e) => handleInputChange(e, isValidPassword)}
                         className="form-section-input"
                     />
-                    {credentials.password.errorMessage.length > 0 && (
+                    {credentials.password.errorMessage && (
                         <small className="form-section-message">
                             {credentials.password.errorMessage}
                         </small>
                     )}
                 </fieldset>
 
-                {formState.errorMessage.length > 0 && (
-                    <span>{formState.errorMessage}</span>
-                )}
-
                 <button
-                    disabled={
-                        credentials.email.errorMessage !== "" ||
-                        credentials.password.errorMessage !== ""
-                    }
+                    disabled={!formState.isValid}
                     className="general-button | touchable margin-top-25 touchable"
                     data-theme="dark"
                 >

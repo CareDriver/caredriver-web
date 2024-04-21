@@ -181,9 +181,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                             toastId: "toast-info-sent-form-succesful",
                         },
                     );
-                    router.push(
-                        `/services/${type === "tow" ? "tow" : "drive"}`,
-                    );
+                    router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
                     setFormState({
                         loading: false,
                         isValid: true,
@@ -216,33 +214,47 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
     };
 
     useEffect(() => {
-        if (!loadingUser && user.data && user.data.licenses) {
-            if (user.data.licenses[type] !== undefined) {
-                var license: LicenseInterface = user.data.licenses[type];
-                setLicense({
-                    number: {
-                        value: license.licenseNumber,
-                        message: null,
-                    },
-                    expirationDate: {
-                        value: null,
-                        message: null,
-                    },
-                    frontPhoto: {
-                        value: null,
-                        message: null,
-                    },
-                    behindPhoto: {
-                        value: null,
-                        message: null,
-                    },
-                });
-            } else {
-                router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
-                toast.error("Licencia no encontrada", {
-                    toastId: "licence-no-found-error",
-                });
+        if (!loadingUser && user && user.data && user.data.serviceVehicles) {
+            switch (type) {
+                case "car":
+                case "motorcycle":
+                case "tow":
+                    var vehicle = user.data.serviceVehicles[type];
+                    if (vehicle) {
+                        var license: LicenseInterface = vehicle.license;
+                        setLicense({
+                            number: {
+                                value: license.licenseNumber,
+                                message: null,
+                            },
+                            expirationDate: {
+                                value: null,
+                                message: null,
+                            },
+                            frontPhoto: {
+                                value: null,
+                                message: null,
+                            },
+                            behindPhoto: {
+                                value: null,
+                                message: null,
+                            },
+                        });
+                    }
+                    break;
+                default:
+                    // Si type no coincide con ninguna de las opciones conocidas
+                    router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
+                    toast.error("Licencia no encontrada", {
+                        toastId: "licence-no-found-error",
+                    });
+                    break;
             }
+        } else {
+            router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
+            toast.error("Licencia no encontrada", {
+                toastId: "licence-no-found-error",
+            });
         }
     }, [loadingUser]);
 
@@ -267,10 +279,10 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
             </div>
             <form
                 data-state={formState.loading ? "loading" : "loaded"}
-                className="form-sub-container | max-width-60 margin-top-25"
+                className="form-sub-container | margin-top-25"
                 onSubmit={handleSubmit}
             >
-                <fieldset className="form-section">
+                <fieldset className="form-section | max-width-60">
                     <input
                         type="text"
                         placeholder="Numero"
@@ -281,7 +293,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                     />
                     {license.number.message && <small>{license.number.message}</small>}
                 </fieldset>
-                <fieldset className="form-section">
+                <fieldset className="form-section | max-width-60">
                     <input
                         type="date"
                         name="expirationDate"
@@ -292,44 +304,48 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                         <small>{license.expirationDate.message}</small>
                     )}
                 </fieldset>
-                <ImageUploader
-                    uploader={{
-                        image: license.frontPhoto,
-                        setImage: (image: PhotoField) => {
-                            setLicense({
-                                ...license,
-                                frontPhoto: image,
-                            });
-                        },
-                    }}
-                    content={{
-                        indicator: "Parte Frontal de la Licencia",
-                        isCircle: false,
-                        id: "tow-license-front-photo",
-                    }}
-                />
-                <ImageUploader
-                    uploader={{
-                        image: license.behindPhoto,
-                        setImage: (image: PhotoField) => {
-                            setLicense({
-                                ...license,
-                                behindPhoto: image,
-                            });
-                        },
-                    }}
-                    content={{
-                        indicator: "Parte Posterior de la Licencia",
-                        isCircle: false,
-                        id: "tow-license-behind-photo",
-                    }}
-                />
+                <div className="max-width-60">
+                    <ImageUploader
+                        uploader={{
+                            image: license.frontPhoto,
+                            setImage: (image: PhotoField) => {
+                                setLicense({
+                                    ...license,
+                                    frontPhoto: image,
+                                });
+                            },
+                        }}
+                        content={{
+                            indicator: "Parte Frontal de la Licencia",
+                            isCircle: false,
+                            id: "tow-license-front-photo",
+                        }}
+                    />
+                </div>
+                <div className="max-width-60">
+                    <ImageUploader
+                        uploader={{
+                            image: license.behindPhoto,
+                            setImage: (image: PhotoField) => {
+                                setLicense({
+                                    ...license,
+                                    behindPhoto: image,
+                                });
+                            },
+                        }}
+                        content={{
+                            indicator: "Parte Posterior de la Licencia",
+                            isCircle: false,
+                            id: "tow-license-behind-photo",
+                        }}
+                    />
+                </div>
                 <SelfieConfirmer
                     image={userConfirmation}
                     setImage={setUserConfirmation}
                 />
                 <button
-                    className={`general-button | margin-top-25 touchable ${
+                    className={`general-button | margin-top-25 max-width-60 touchable ${
                         formState.loading && "loading-section"
                     }`}
                     title={

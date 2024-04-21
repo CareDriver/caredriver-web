@@ -10,7 +10,7 @@ const SelfieConfirmer = ({
     setImage: (image: PhotoField) => void;
 }) => {
     return (
-        <div className="form-sub-container | margin-top-25">
+        <div className="form-sub-container | margin-top-25 max-width-60">
             <div>
                 <h2 className="text icon-wrapper | lb medium-big bold">
                     <PersonQuestion /> Confirmacion del Usuario

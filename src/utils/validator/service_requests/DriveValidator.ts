@@ -2,11 +2,22 @@ import { PersonalDataFormField, VehicleForm } from "@/components/services/FormMo
 import { InputState } from "../InputValidator";
 import { PhotoField } from "@/components/services/FormModels";
 
-export const isValidLicenseNumber = (finalDate: string): InputState => {
-    if (finalDate.trim().length === 0) {
+export const isValidLicenseNumber = (licenseNumber: string): InputState => {
+    const regex: RegExp = /^[a-zA-Z\s]+$/;
+    if (licenseNumber.trim().length === 0) {
         return {
             isValid: false,
             message: "Tienes que ingresar el numero de tu licencia",
+        };
+    } else if (!regex.test(licenseNumber)) {
+        return {
+            isValid: false,
+            message: "El numero de licencia no puede contener caracteres especiales",
+        };
+    } else if (licenseNumber.length > 50) {
+        return {
+            isValid: false,
+            message: "No puedes ingresar mas de 50 caracteres para el numero de licensia",
         };
     } else {
         return {

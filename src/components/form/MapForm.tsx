@@ -12,8 +12,7 @@ const MapForm = ({
     setLocation: (location: Location) => void;
 }) => {
     const mapRef = useRef<HTMLDivElement>(null);
-    const [lastMarker, setLastMarker] =
-        useState<google.maps.marker.AdvancedMarkerElement | null>(null);
+    var lastMarker: google.maps.marker.AdvancedMarkerElement | null = null;
 
     useEffect(() => {
         const initMap = async () => {
@@ -48,12 +47,10 @@ const MapForm = ({
             // Configure the click listener.
 
             if (location) {
-                setLastMarker(
-                    new AdvancedMarkerElement({
-                        map,
-                        position: location,
-                    }),
-                );
+                lastMarker = new AdvancedMarkerElement({
+                    map,
+                    position: location,
+                });
             }
 
             map.addListener("click", (mapsMouseEvent: any) => {
@@ -62,15 +59,13 @@ const MapForm = ({
                     lng: mapsMouseEvent.latLng.toJSON().lng,
                 };
 
-                if (lastMarker) {
+                if (lastMarker !== null) {
                     lastMarker.position = newPosition;
                 } else {
-                    setLastMarker(
-                        new AdvancedMarkerElement({
-                            map,
-                            position: newPosition,
-                        }),
-                    );
+                    lastMarker = new AdvancedMarkerElement({
+                        map,
+                        position: newPosition,
+                    });
                 }
 
                 setLocation(newPosition);
