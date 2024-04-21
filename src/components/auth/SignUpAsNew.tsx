@@ -309,7 +309,6 @@ const SignUpAsNew = () => {
                                 sent: codeToSent,
                             },
                         });
-                        console.log(codeToSent);
 
                         setFormState({
                             ...formState,

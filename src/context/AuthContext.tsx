@@ -71,6 +71,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         hasPhoto: false,
     });
 
+    const refirectToHome = () => {
+        if (!pathname.includes("auth")) {
+            router.push("/");
+        }
+    };
+
     useEffect(() => {
         onAuthStateChanged(auth, (res) => {
             if (res) {
@@ -90,9 +96,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                 hasPhoto: false,
                             });
                             setLoadingUser(false);
-                            if (!pathname.includes("auth")) {
-                                router.push("/");
-                            }
+                            refirectToHome();
                         }
                     });
                 } catch (e) {
@@ -100,12 +104,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         data: null,
                         hasPhoto: false,
                     });
-                    router.push("/");
                     setLoadingUser(false);
+                    refirectToHome();
                 }
             } else {
-                router.push("/");
                 setLoadingUser(false);
+                refirectToHome();
             }
         });
     }, []);
