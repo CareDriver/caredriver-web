@@ -269,7 +269,10 @@ const TowRegistration = () => {
             var toUpdate = {
                 ...user.data.serviceRequests,
             };
-            if (user.data.serviceRequests.tow.state === ServiceReqState.Refused) {
+            if (
+                user.data.serviceRequests.tow &&
+                user.data.serviceRequests.tow.state === ServiceReqState.Refused
+            ) {
                 toUpdate = {
                     ...toUpdate,
                     tow: {
@@ -317,18 +320,20 @@ const TowRegistration = () => {
             <ServiceHeader
                 title={
                     user.data &&
+                    user.data.serviceRequests.tow &&
                     user.data.serviceRequests.tow.state === ServiceReqState.Refused
                         ? "Tu solicitud fue Rechazada!"
                         : "Solicita trabajar como Chofer con nosotros!"
                 }
                 description={
                     user.data &&
+                    user.data.serviceRequests.tow &&
                     user.data.serviceRequests.tow.state === ServiceReqState.Refused
                         ? "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud."
                         : "Por favor llena este formulario con datos reales para que tu solicitud sea aprovada y puedas empezar a trabajar con nosotros."
                 }
                 state={
-                    user.data
+                    user.data && user.data.serviceRequests.tow
                         ? user.data.serviceRequests.tow.state
                         : ServiceReqState.NotSent
                 }

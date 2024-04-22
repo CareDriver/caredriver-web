@@ -26,9 +26,13 @@ const MechanicService = () => {
 
     useEffect(() => {
         if (!loadingUser && user.data) {
-            if (user.data.serviceRequests.mechanic.state === ServiceReqState.Reviewing) {
+            if (
+                user.data.serviceRequests.mechanic &&
+                user.data.serviceRequests.mechanic.state === ServiceReqState.Reviewing
+            ) {
                 setState(ServiceReqState.Reviewing);
             } else if (
+                user.data.serviceRequests.mechanic &&
                 user.data.serviceRequests.mechanic.state === ServiceReqState.Approved
             ) {
                 setState(ServiceReqState.Approved);

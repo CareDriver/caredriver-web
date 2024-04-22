@@ -19,11 +19,13 @@ const Redirector = () => {
                 if (user.data.serviceRequests) {
                     var pageRedirection;
                     if (
+                        user.data.serviceRequests.mechanic &&
                         user.data.serviceRequests.mechanic.state ===
                         ServiceReqState.Approved
                     ) {
                         pageRedirection = "/services/mechanic";
                     } else if (
+                        user.data.serviceRequests.tow &&
                         user.data.serviceRequests.tow.state === ServiceReqState.Approved
                     ) {
                         pageRedirection = "/services/tow";

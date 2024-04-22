@@ -12,11 +12,15 @@ import {
     orderBy,
     query,
     startAfter,
+    updateDoc,
     where,
 } from "firebase/firestore";
 import { driveReqCollection } from "./DriveRequester";
 import { mechanicReqCollection } from "./MechanicRequester";
 import { towReqCollection } from "./TowRequester";
+import { isUrl } from "@/utils/validator/ImageValidator";
+import { deleteFile } from "../FileUploader";
+import { toast } from "react-toastify";
 
 export const MIN_NUM_OF_APPROVALS = 1;
 
@@ -101,4 +105,55 @@ export const getServiceCollection = (type: "driver" | "mechanic" | "tow") => {
         : type === "mechanic"
         ? mechanicReqCollection
         : towReqCollection;
+};
+
+export const deleteImages = async (serviceReq: UserRequest) => {
+    try {
+        if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
+            await deleteFile(serviceReq.newProfilePhotoImgUrl.ref);
+        }
+        await deleteFile(serviceReq.realTimePhotoImgUrl.ref);
+        if (serviceReq.vehicles) {
+            serviceReq.vehicles.forEach(async (vehicle) => {
+                if (vehicle.license.frontImgUrl) {
+                    await deleteFile(vehicle.license.frontImgUrl?.ref);
+                }
+                if (vehicle.license.backImgUrl) {
+                    await deleteFile(vehicle.license.backImgUrl?.ref);
+                }
+            });
+        }
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+export const deleteImagesIfLimitOfApproves = async (serviceReq: UserRequest) => {
+    if (
+        serviceReq.reviewedByHistory &&
+        serviceReq.reviewedByHistory?.length + 1 === MIN_NUM_OF_APPROVALS
+    ) {
+        try {
+            await toast.promise(deleteImages(serviceReq), {
+                pending: "Eliminando imagenes, por favor espera",
+                success: "Images eliminadas",
+                error: "Error al eliminar imagenes, intentalo de nuevo por favor",
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+};
+
+export const updateService = async (
+    id: string,
+    newData: Partial<UserRequest>,
+    collection: CollectionReference,
+): Promise<void> => {
+    try {
+        const userRef = doc(collection, id);
+        await updateDoc(userRef, newData);
+    } catch (error) {
+        throw error;
+    }
 };

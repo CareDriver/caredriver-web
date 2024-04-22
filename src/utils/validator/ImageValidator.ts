@@ -5,6 +5,10 @@ export const isImageBase64 = (str: string): boolean => {
     return regex.test(str);
 };
 
-export const getUrl = (photo: string | ImgWithRef) => {
-    return typeof photo === "string" ? photo : photo.url;
+export const getUrl = (image: string | ImgWithRef) => {
+    return typeof image === "string" ? image : image.url;
+};
+
+export const isUrl = (image: string | ImgWithRef) => {
+    return typeof image === "string";
 };

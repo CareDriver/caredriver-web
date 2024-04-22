@@ -24,7 +24,12 @@ const DriveService = () => {
     };
 
     useEffect(() => {
-        if (!loadingUser && user.data) {
+        if (
+            !loadingUser &&
+            user.data &&
+            user.data.serviceRequests.driveCar &&
+            user.data.serviceRequests.driveMotorcycle
+        ) {
             if (
                 (user.data.serviceRequests.driveCar.state === ServiceReqState.Reviewing &&
                     user.data.serviceRequests.driveMotorcycle.state ===

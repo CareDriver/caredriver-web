@@ -299,7 +299,10 @@ const DriverRegistration = () => {
             var toUpdate = {
                 ...user.data.serviceRequests,
             };
-            if (user.data.serviceRequests.driveCar.state === ServiceReqState.Refused) {
+            if (
+                user.data.serviceRequests.driveCar &&
+                user.data.serviceRequests.driveCar.state === ServiceReqState.Refused
+            ) {
                 toUpdate = {
                     ...toUpdate,
                     driveCar: {
@@ -310,8 +313,9 @@ const DriverRegistration = () => {
                 changed = true;
             }
             if (
+                user.data.serviceRequests.driveMotorcycle &&
                 user.data.serviceRequests.driveMotorcycle.state ===
-                ServiceReqState.Refused
+                    ServiceReqState.Refused
             ) {
                 toUpdate = {
                     ...toUpdate,
@@ -345,24 +349,30 @@ const DriverRegistration = () => {
             <ServiceHeader
                 title={
                     user.data &&
-                    (user.data.serviceRequests.driveCar.state ===
-                        ServiceReqState.Refused ||
-                        user.data.serviceRequests.driveMotorcycle.state ===
-                            ServiceReqState.Refused)
+                    ((user.data.serviceRequests.driveCar &&
+                        user.data.serviceRequests.driveCar.state ===
+                            ServiceReqState.Refused) ||
+                        (user.data.serviceRequests.driveMotorcycle &&
+                            user.data.serviceRequests.driveMotorcycle.state ===
+                                ServiceReqState.Refused))
                         ? "Tu solicitud fue Rechazada!"
                         : "Solicita trabajar como Chofer con nosotros!"
                 }
                 description={
                     user.data &&
-                    (user.data.serviceRequests.driveCar.state ===
-                        ServiceReqState.Refused ||
-                        user.data.serviceRequests.driveMotorcycle.state ===
-                            ServiceReqState.Refused)
+                    ((user.data.serviceRequests.driveCar &&
+                        user.data.serviceRequests.driveCar.state ===
+                            ServiceReqState.Refused) ||
+                        (user.data.serviceRequests.driveMotorcycle &&
+                            user.data.serviceRequests.driveMotorcycle.state ===
+                                ServiceReqState.Refused))
                         ? "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud."
                         : "Por favor llena este formulario con datos reales para que tu solicitud sea aprovada y puedas empezar a trabajar con nosotros."
                 }
                 state={
-                    user.data
+                    user.data &&
+                    user.data.serviceRequests.driveCar &&
+                    user.data.serviceRequests.driveMotorcycle
                         ? user.data.serviceRequests.driveCar.state ===
                           ServiceReqState.NotSent
                             ? user.data.serviceRequests.driveMotorcycle.state

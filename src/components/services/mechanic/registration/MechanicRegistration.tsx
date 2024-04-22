@@ -201,7 +201,10 @@ const MechanicRegistration = () => {
             var toUpdate = {
                 ...user.data.serviceRequests,
             };
-            if (user.data.serviceRequests.mechanic.state === ServiceReqState.Refused) {
+            if (
+                user.data.serviceRequests.mechanic &&
+                user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
+            ) {
                 toUpdate = {
                     ...toUpdate,
                     mechanic: {
@@ -243,18 +246,20 @@ const MechanicRegistration = () => {
             <ServiceHeader
                 title={
                     user.data &&
+                    user.data.serviceRequests.mechanic &&
                     user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
                         ? "Tu solicitud fue Rechazada!"
                         : "Trabaja con nosotros como Mecanico!"
                 }
                 description={
                     user.data &&
+                    user.data.serviceRequests.mechanic &&
                     user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
                         ? "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud."
                         : "Necesitamos verificar que trabajas en un taller antes que empieces a trabajar con nosotros."
                 }
                 state={
-                    user.data
+                    user.data && user.data.serviceRequests.mechanic
                         ? user.data.serviceRequests.mechanic.state
                         : ServiceReqState.NotSent
                 }
