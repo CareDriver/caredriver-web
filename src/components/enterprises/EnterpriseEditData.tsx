@@ -367,7 +367,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                     }
                 >
                     <button
-                        className="general-button | gray "
+                        className="general-button touchable | gray "
                         type="button"
                         onClick={() =>
                             router.push(

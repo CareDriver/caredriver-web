@@ -1,4 +1,4 @@
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadString } from "firebase/storage";
 
 import { storage } from "@/firebase/FirebaseConfig";
 import { nanoid } from "nanoid";
@@ -17,4 +17,13 @@ export const uploadImageBase64 = async (
         ref: refLocation,
         url: url,
     };
+};
+
+export const deleteFile = async (refLocation: string) => {
+    try {
+        const mountainsRef = ref(storage, refLocation);
+        await deleteObject(mountainsRef);
+    } catch (e) {
+        console.log(e);
+    }
 };

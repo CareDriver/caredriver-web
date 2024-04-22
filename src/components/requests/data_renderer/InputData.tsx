@@ -3,7 +3,7 @@ const InputData = ({
     placeholder,
 }: {
     content: string | undefined;
-    placeholder: string;
+    placeholder: string | undefined;
 }) => {
     return content && <span className="form-section-input">{content}</span>;
 };

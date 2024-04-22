@@ -12,7 +12,10 @@ import { CollectionReference } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import PersonalData from "../data_renderer/PersonalData";
+import PersonalData from "../data_renderer/personal_data/PersonalData";
+import SelfieRenderer from "../data_renderer/personal_data/SelfieRenderer";
+import VehiclesRenderer from "../data_renderer/vehicle/VehiclesRenderer";
+import ReqButtonRes from "../data_renderer/ReqButtonRes";
 
 const SingleServiceReq = ({
     reqId,
@@ -28,6 +31,10 @@ const SingleServiceReq = ({
     });
     const collection: CollectionReference = getServiceCollection(type);
     const router = useRouter();
+
+    const approve = () => {};
+
+    const decline = () => {};
 
     useEffect(() => {
         getServiceReqById(reqId, collection)
@@ -58,6 +65,16 @@ const SingleServiceReq = ({
                     location={serviceReq.location}
                     name={serviceReq.newFullName}
                     photo={serviceReq.newProfilePhotoImgUrl}
+                />
+                <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+                {serviceReq.vehicles && (
+                    <VehiclesRenderer vehicles={serviceReq.vehicles} />
+                )}
+
+                <ReqButtonRes
+                    onApprove={approve}
+                    onDecline={decline}
+                    loading={reviewState.loading}
                 />
             </div>
         </section>

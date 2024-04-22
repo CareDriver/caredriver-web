@@ -4,7 +4,7 @@ const ImageRenderer = ({
     isCircle,
 }: {
     url: string;
-    placeholder: string;
+    placeholder: string | undefined;
     isCircle: boolean;
 }) => {
     return (

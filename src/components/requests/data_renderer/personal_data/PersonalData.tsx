@@ -1,7 +1,8 @@
 import UserIcon from "@/icons/UserIcon";
-import InputData from "./InputData";
-import ImageRenderer from "./ImageRenderer";
+import InputData from "../InputData";
+import ImageRenderer from "../ImageRenderer";
 import { ImgWithRef } from "@/interfaces/ImageInterface";
+import { getUrl } from "@/utils/validator/ImageValidator";
 
 const PersonalData = ({
     name,
@@ -13,7 +14,7 @@ const PersonalData = ({
     location: string | undefined;
 }) => {
     return (
-        <div className="form-sub-container | margin-top-25 max-width-60">
+        <div className="form-sub-container | margin-top-25">
             <h2 className="text icon-wrapper | medium-big bold">
                 <UserIcon />
                 Datos Personales
@@ -27,7 +28,7 @@ const PersonalData = ({
                     <InputData content={location} placeholder="Localizacion" />
                 </fieldset>
                 <ImageRenderer
-                    url={typeof photo === "string" ? photo : photo.url}
+                    url={getUrl(photo)}
                     placeholder="Foto de Perfil"
                     isCircle={true}
                 />
