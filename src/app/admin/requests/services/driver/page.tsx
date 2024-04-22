@@ -1,11 +1,12 @@
+import ServiceReqsRenderer from "@/components/requests/services/ServiceReqsRenderer";
 import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
-const ReqsDriveService = () => {
+const ReqsDriveServicePage = () => {
     return (
         <AdminWrapperWithSideBar>
-            <div>reqs for drivers</div>
+            <ServiceReqsRenderer type="driver" />
         </AdminWrapperWithSideBar>
     );
 };
 
-export default ReqsDriveService;
+export default ReqsDriveServicePage;

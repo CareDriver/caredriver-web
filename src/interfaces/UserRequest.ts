@@ -21,8 +21,15 @@ export interface Vehicle {
     license: LicenseInterface;
 }
 
+export const userReqTypes = {
+    driver: "Chofer",
+    mechanic: "Mecanico",
+    tow: "Operador de Grua",
+};
+
 export interface UserRequest {
-    id?: string; // same identifier of the user
+    id: string;
+    userId: string; // same identifier of the user
     newFullName: string;
     newProfilePhotoImgUrl: string | ImgWithRef; // if changing the name
     aproved?: boolean; // if the request was aproved, false when rejected or not reviewed yet
@@ -71,6 +78,7 @@ export const licenseBuilder = (
 
 export const driveReqBuilder = (
     id: string,
+    userId: string,
     newFullName: string,
     newProfilePhotoImgUrl: string | ImgWithRef,
     vehicles: Vehicle[],
@@ -80,6 +88,7 @@ export const driveReqBuilder = (
 ): UserRequest => {
     return {
         id,
+        userId,
         newFullName,
         newProfilePhotoImgUrl,
         aproved: false,
@@ -95,6 +104,7 @@ export const driveReqBuilder = (
 export const emptyDriveReq = (): UserRequest => {
     return {
         id: "",
+        userId: "",
         newFullName: "",
         newProfilePhotoImgUrl: emptyPhotoWithRef,
         aproved: false,
@@ -109,6 +119,7 @@ export const emptyDriveReq = (): UserRequest => {
 
 export const mechanicReqBuilder = (
     id: string,
+    userId: string,
     newFullName: string,
     newProfilePhotoImgUrl: string | ImgWithRef,
     realTimePhotoImgUrl: ImgWithRef,
@@ -119,6 +130,7 @@ export const mechanicReqBuilder = (
     if (mechanicalWorkShop !== null) {
         return {
             id,
+            userId,
             newFullName,
             newProfilePhotoImgUrl,
             aproved: false,
@@ -132,6 +144,7 @@ export const mechanicReqBuilder = (
     } else {
         return {
             id,
+            userId,
             newFullName,
             newProfilePhotoImgUrl,
             aproved: false,
@@ -146,6 +159,7 @@ export const mechanicReqBuilder = (
 
 export const towReqBuilder = (
     id: string,
+    userId: string,
     newFullName: string,
     newProfilePhotoImgUrl: string | ImgWithRef,
     towEnterprite: SoftEnterprise,
@@ -156,6 +170,7 @@ export const towReqBuilder = (
 ): UserRequest => {
     return {
         id,
+        userId,
         newFullName,
         newProfilePhotoImgUrl,
         aproved: false,

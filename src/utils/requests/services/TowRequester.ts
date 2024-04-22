@@ -3,7 +3,7 @@ import { collection, doc, DocumentReference, setDoc } from "firebase/firestore";
 import { UserRequest } from "@/interfaces/UserRequest";
 import { Collections } from "@/firebase/CollecionNames";
 
-const towReqCollection = collection(firestore, Collections.TowRequests);
+export const towReqCollection = collection(firestore, Collections.TowRequests);
 
 export const saveTowReq = async (
     id: string,
