@@ -1,7 +1,6 @@
 import PersonQuestion from "@/icons/PersonQuestion";
 import ImageRenderer from "../ImageRenderer";
 import { ImgWithRef } from "@/interfaces/ImageInterface";
-import { getUrl } from "@/utils/validator/ImageValidator";
 
 const SelfieRenderer = ({ image }: { image: string | ImgWithRef }) => {
     return (
@@ -11,7 +10,7 @@ const SelfieRenderer = ({ image }: { image: string | ImgWithRef }) => {
                     <PersonQuestion /> Confirmacion del Usuario
                 </h2>
             </div>
-            <ImageRenderer url={getUrl(image)} placeholder="Selfie" isCircle={true} />
+            <ImageRenderer url={image} placeholder="Selfie" isCircle={true} />
         </div>
     );
 };

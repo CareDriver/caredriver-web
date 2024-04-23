@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import DriveServiceReq from "./drive/DriveServiceReq";
+import MechanicServiceReq from "./mechanic/MechanicServiceReq";
 
 const SingleServiceReq = ({
     reqId,
@@ -47,6 +48,8 @@ const SingleServiceReq = ({
             switch (type) {
                 case "driver":
                     return <DriveServiceReq serviceReq={serviceReq} />;
+                case "mechanic":
+                    return <MechanicServiceReq serviceReq={serviceReq} />;
             }
         }
     };

@@ -2,7 +2,6 @@ import UserIcon from "@/icons/UserIcon";
 import InputData from "../InputData";
 import ImageRenderer from "../ImageRenderer";
 import { ImgWithRef } from "@/interfaces/ImageInterface";
-import { getUrl } from "@/utils/validator/ImageValidator";
 
 const PersonalData = ({
     name,
@@ -28,7 +27,7 @@ const PersonalData = ({
                     <InputData content={location} placeholder="Localizacion" />
                 </fieldset>
                 <ImageRenderer
-                    url={getUrl(photo)}
+                    url={photo}
                     placeholder="Foto de Perfil"
                     isCircle={true}
                 />
