@@ -1,24 +1,22 @@
 import { ServiceReqState } from "@/interfaces/Services";
 
-const ServiceHeader = ({
-    title,
-    description,
-    state,
-}: {
+interface Data {
     title: string;
     description: string;
     state: ServiceReqState;
-}) => {
+}
+
+const ServiceHeader = ({ data }: { data: Data }) => {
     return (
         <>
             <h1
                 className={`text | big bolder ${
-                    state === ServiceReqState.Refused && "red"
+                    data.state === ServiceReqState.Refused && "red"
                 }`}
             >
-                {title}
+                {data.title}
             </h1>
-            <p>{description}</p>
+            <p>{data.description}</p>
         </>
     );
 };

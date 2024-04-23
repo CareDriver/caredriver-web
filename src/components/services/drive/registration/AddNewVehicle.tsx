@@ -274,10 +274,12 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                 }
                 isValid =
                     type === "car"
-                        ? user.data.serviceRequests.driveCar !== undefined &&
+                        ? user.data.serviceRequests !== undefined &&
+                          user.data.serviceRequests.driveCar !== undefined &&
                           user.data.serviceRequests.driveCar.state ===
                               ServiceReqState.Reviewing
-                        : user.data.serviceRequests.driveMotorcycle !== undefined &&
+                        : user.data.serviceRequests !== undefined &&
+                          user.data.serviceRequests.driveMotorcycle !== undefined &&
                           user.data.serviceRequests.driveMotorcycle.state ===
                               ServiceReqState.Reviewing;
                 if (isValid) {

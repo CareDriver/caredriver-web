@@ -4,7 +4,6 @@ import { LicenseInterface } from "./PersonalDocumentsInterface";
 import { ServiceReqState, Services } from "./Services";
 import { VehicleTransmission, VehicleType } from "./VehicleInterface";
 import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
-import { SoftEnterprise } from "./Enterprise";
 
 export interface VehicleTypeAndMode {
     type: VehicleType;
@@ -42,8 +41,8 @@ export interface UserRequest {
     }[];
     realTimePhotoImgUrl: ImgWithRef;
     // the url of the real time user selfie for identification verification for the request
-    mechanicalWorkShop?: SoftEnterprise; // id of the mechanical user works for if is mechanic user
-    towEnterprite?: SoftEnterprise; // id of the tow enterprise user works for if is tow user
+    mechanicalWorkShop?: string; // id of the mechanical user works for if is mechanic user
+    towEnterprite?: string; // id of the tow enterprise user works for if is tow user
     services: Services[];
     location?: Locations; // just if user does not have a location registered yet.
     vehicles?: Vehicle[]; // vehicles that are in the request
@@ -125,7 +124,7 @@ export const mechanicReqBuilder = (
     realTimePhotoImgUrl: ImgWithRef,
     services: Services[],
     location: Locations,
-    mechanicalWorkShop: SoftEnterprise | null,
+    mechanicalWorkShop: string | null,
 ): UserRequest => {
     if (mechanicalWorkShop !== null) {
         return {
@@ -162,7 +161,7 @@ export const towReqBuilder = (
     userId: string,
     newFullName: string,
     newProfilePhotoImgUrl: string | ImgWithRef,
-    towEnterprite: SoftEnterprise,
+    towEnterprite: string,
     realTimePhotoImgUrl: ImgWithRef,
     services: Services[],
     location: Locations,

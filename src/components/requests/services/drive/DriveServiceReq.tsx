@@ -124,7 +124,6 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             serviceRequests: newReqState,
                         };
                     }
-                    console.log(userToUpdate);
                     await updateUser(serviceReq.userId, userToUpdate);
                 }
             }
@@ -182,7 +181,11 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 <h1>Solicitud para ser Chofer</h1>
                 <h5>
                     <PersonCircleCheck />
-                    {numOfApprovals(serviceReq)}/{MIN_NUM_OF_APPROVALS} Aprobaciones
+                    {reviewState.reviewed
+                        ? "Revisado"
+                        : `${numOfApprovals(
+                              serviceReq,
+                          )}/${MIN_NUM_OF_APPROVALS} Aprobaciones`}
                 </h5>
 
                 <PersonalData
@@ -190,16 +193,20 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     name={serviceReq.newFullName}
                     photo={serviceReq.newProfilePhotoImgUrl}
                 />
-                <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                {serviceReq.vehicles && (
-                    <VehiclesRenderer vehicles={serviceReq.vehicles} />
-                )}
+                {!reviewState.reviewed && (
+                    <>
+                        <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+                        {serviceReq.vehicles && (
+                            <VehiclesRenderer vehicles={serviceReq.vehicles} />
+                        )}
 
-                <ReqButtonRes
-                    onApprove={approve}
-                    onDecline={decline}
-                    loading={reviewState.loading}
-                />
+                        <ReqButtonRes
+                            onApprove={approve}
+                            onDecline={decline}
+                            loading={reviewState.loading}
+                        />
+                    </>
+                )}
             </div>
         </section>
     );

@@ -202,6 +202,7 @@ const MechanicRegistration = () => {
                 ...user.data.serviceRequests,
             };
             if (
+                user.data.serviceRequests &&
                 user.data.serviceRequests.mechanic &&
                 user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
             ) {
@@ -246,6 +247,7 @@ const MechanicRegistration = () => {
             <ServiceHeader
                 title={
                     user.data &&
+                    user.data.serviceRequests &&
                     user.data.serviceRequests.mechanic &&
                     user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
                         ? "Tu solicitud fue Rechazada!"
@@ -253,13 +255,16 @@ const MechanicRegistration = () => {
                 }
                 description={
                     user.data &&
+                    user.data.serviceRequests &&
                     user.data.serviceRequests.mechanic &&
                     user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
                         ? "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud."
                         : "Necesitamos verificar que trabajas en un taller antes que empieces a trabajar con nosotros."
                 }
                 state={
-                    user.data && user.data.serviceRequests.mechanic
+                    user.data &&
+                    user.data.serviceRequests &&
+                    user.data.serviceRequests.mechanic
                         ? user.data.serviceRequests.mechanic.state
                         : ServiceReqState.NotSent
                 }

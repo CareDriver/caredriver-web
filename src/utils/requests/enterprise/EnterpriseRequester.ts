@@ -1,8 +1,6 @@
-import { firestore } from "../../firebase/FirebaseConfig";
+import { firestore } from "../../../firebase/FirebaseConfig";
 import {
     collection,
-    addDoc,
-    DocumentReference,
     getDoc,
     doc,
     setDoc,
@@ -17,10 +15,9 @@ import {
     getDocs,
     getCountFromServer,
     where,
-    deleteDoc,
 } from "firebase/firestore";
 import { Collections } from "@/firebase/CollecionNames";
-import { Enterprise, ReqEditEnterprise } from "@/interfaces/Enterprise";
+import { Enterprise } from "@/interfaces/Enterprise";
 
 const enterpriseCollection = collection(firestore, Collections.Enterprises);
 
@@ -37,12 +34,24 @@ export const sendEnterpriseReq = async (
 };
 
 export const deleteEnterpriseReq = async (id: string): Promise<void> => {
-    try {
-        const enterpriseRef = doc(enterpriseCollection, id);
-        await deleteDoc(enterpriseRef);
-    } catch (error) {
-        throw error;
-    }
+    var newData: Partial<Enterprise> = {
+        deleted: true,
+    };
+    await updateEnterprise(id, newData);
+};
+
+export const disableEnterprise = async (id: string): Promise<void> => {
+    var newData: Partial<Enterprise> = {
+        active: false,
+    };
+    await updateEnterprise(id, newData);
+};
+
+export const enableEnterprise = async (id: string): Promise<void> => {
+    var newData: Partial<Enterprise> = {
+        active: true,
+    };
+    await updateEnterprise(id, newData);
 };
 
 export const aproveEnterpriseReq = async (
@@ -53,22 +62,16 @@ export const aproveEnterpriseReq = async (
         aproved: true,
         aprovedBy: adminId,
     };
-    try {
-        const userRef = doc(enterpriseCollection, enterPriseId);
-        await updateDoc(userRef, newData);
-    } catch (error) {
-        throw error;
-    }
+    await updateEnterprise(enterPriseId, newData);
 };
 
-export const sendEditEnterpriseReq = async (
+export const updateEnterprise = async (
     id: string,
-    enterpriseReq: ReqEditEnterprise,
+    newData: Partial<Enterprise>,
 ): Promise<void> => {
     try {
-        const collectionEdit = collection(firestore, Collections.EditEnterprises);
-        const enterpriseRef = doc(collectionEdit, id);
-        await setDoc(enterpriseRef, enterpriseReq);
+        const enterpriseRef = doc(enterpriseCollection, id);
+        await updateDoc(enterpriseRef, newData);
     } catch (error) {
         throw error;
     }
@@ -100,6 +103,7 @@ export const getPaginatedData = async (
         limit(numPerPage),
         where("userId", "==", userId),
         where("aproved", "==", true),
+        where("deleted", "==", false),
         where("type", "==", type),
     );
 
@@ -113,6 +117,7 @@ export const getPaginatedData = async (
             limitToLast(numPerPage),
             where("userId", "==", userId),
             where("aproved", "==", true),
+            where("deleted", "==", false),
             where("type", "==", "tow"),
         );
     }
@@ -137,6 +142,7 @@ export const getNumPages = async (
             enterpriseCollection,
             where("userId", "==", userId),
             where("aproved", "==", true),
+            where("deleted", "==", false),
             where("type", "==", type),
         ),
     );
@@ -156,6 +162,8 @@ export const getAllPaginatedData = async (
         orderBy("name"),
         limit(numPerPage),
         where("aproved", "==", true),
+        where("deleted", "==", false),
+        where("active", "==", true),
         where("type", "==", type),
     );
 
@@ -168,7 +176,9 @@ export const getAllPaginatedData = async (
             endBefore(endBeforeDoc),
             limitToLast(numPerPage),
             where("aproved", "==", true),
-            where("type", "==", "tow"),
+            where("deleted", "==", false),
+            where("active", "==", true),
+            where("type", "==", type),
         );
     }
 
@@ -190,6 +200,8 @@ export const getAllNumPages = async (
         query(
             enterpriseCollection,
             where("aproved", "==", true),
+            where("deleted", "==", false),
+            where("active", "==", true),
             where("type", "==", type),
         ),
     );

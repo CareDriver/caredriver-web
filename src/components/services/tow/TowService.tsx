@@ -26,11 +26,13 @@ const TowService = () => {
     useEffect(() => {
         if (!loadingUser && user.data) {
             if (
+                user.data.serviceRequests &&
                 user.data.serviceRequests.tow &&
                 user.data.serviceRequests.tow.state === ServiceReqState.Reviewing
             ) {
                 setState(ServiceReqState.Reviewing);
             } else if (
+                user.data.serviceRequests &&
                 user.data.serviceRequests.tow &&
                 user.data.serviceRequests.tow.state === ServiceReqState.Approved
             ) {

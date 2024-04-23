@@ -13,9 +13,8 @@ import MapForm from "../form/MapForm";
 import {
     deleteEnterpriseReq,
     getEnterpriseById,
-    sendEditEnterpriseReq,
     sendEnterpriseReq,
-} from "@/utils/requests/EnterpriseRequester";
+} from "@/utils/requests/enterprise/EnterpriseRequester";
 import { Enterprise, EnterpriseType, ReqEditEnterprise } from "@/interfaces/Enterprise";
 import { nanoid } from "nanoid";
 import { GeoPoint } from "firebase/firestore";
@@ -26,6 +25,7 @@ import { useRouter } from "next/navigation";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
 import PageLoader from "../PageLoader";
 import TriangleExclamation from "@/icons/TriangleExclamation";
+import { sendEditEnterpriseReq } from "@/utils/requests/enterprise/EditEnterpriseReq";
 
 interface FormData {
     name: {
@@ -131,6 +131,8 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                             : undefined,
                         userId: user.data.id,
                         aproved: false,
+                        deleted: false,
+                        active: false,
                     };
 
                     await toast.promise(sendEditEnterpriseReq(reqId, enterprise), {

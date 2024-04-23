@@ -239,10 +239,12 @@ const DrivePanel = () => {
                             ? "Motocicleta"
                             : "Automovil"}
                     </h2>
-                    {(user.data.serviceRequests.driveCar &&
+                    {(user.data.serviceRequests &&
+                        user.data.serviceRequests.driveCar &&
                         user.data.serviceRequests.driveCar.state ===
                             ServiceReqState.Reviewing) ||
-                    (user.data.serviceRequests.driveMotorcycle &&
+                    (user.data.serviceRequests &&
+                        user.data.serviceRequests.driveMotorcycle &&
                         user.data.serviceRequests.driveMotorcycle.state ===
                             ServiceReqState.Reviewing) ? (
                         <>

@@ -52,29 +52,27 @@ const VehiclesForm = ({
     };
 
     const updateTypeModeVehicle = (index: number, type: string) => {
-        if (vehicles[index].type.type === VehicleType.CAR) {
-            var newMode: VehicleTransmission = VehicleTransmission.AUTOMATIC;
-            if (type === VehicleTransmission.MECHANICAL) {
-                newMode = VehicleTransmission.MECHANICAL;
-            }
-
-            setVehicles((prevVehicles) => {
-                return prevVehicles.map((vehicle, i) => {
-                    if (i === index) {
-                        if (!vehicle.type.mode.includes(newMode)) {
-                            return {
-                                ...vehicle,
-                                type: {
-                                    ...vehicle.type,
-                                    mode: [newMode],
-                                },
-                            };
-                        }
-                    }
-                    return vehicle;
-                });
-            });
+        var newMode: VehicleTransmission = VehicleTransmission.AUTOMATIC;
+        if (type === VehicleTransmission.MECHANICAL) {
+            newMode = VehicleTransmission.MECHANICAL;
         }
+
+        setVehicles((prevVehicles) => {
+            return prevVehicles.map((vehicle, i) => {
+                if (i === index) {
+                    if (!vehicle.type.mode.includes(newMode)) {
+                        return {
+                            ...vehicle,
+                            type: {
+                                ...vehicle.type,
+                                mode: [newMode],
+                            },
+                        };
+                    }
+                }
+                return vehicle;
+            });
+        });
     };
 
     const updateNumberLicense = (index: number, number: string) => {

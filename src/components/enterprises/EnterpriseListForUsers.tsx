@@ -3,7 +3,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DocumentSnapshot } from "firebase/firestore";
 import { Enterprise } from "@/interfaces/Enterprise";
-import { getNumPages, getPaginatedData } from "@/utils/requests/EnterpriseRequester";
+import {
+    getNumPages,
+    getPaginatedData,
+} from "@/utils/requests/enterprise/EnterpriseRequester";
 import { AuthContext } from "@/context/AuthContext";
 import EnterpriseItem from "./EnterpriseItem";
 import AngleLeft from "@/icons/AngleLeft";

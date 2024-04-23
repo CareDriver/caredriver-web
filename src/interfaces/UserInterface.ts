@@ -51,7 +51,7 @@ export interface UserInterface {
     towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
 
     serviceVehicles?: ServiceVehicles; // vehicles that the user registered
-    serviceRequests: ServiceRequestsInterface // status of the services that the user made a request
+    serviceRequests?: ServiceRequestsInterface // status of the services that the user made a request
 }
 
 export interface ServiceRequestsInterface {

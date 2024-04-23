@@ -1,9 +1,9 @@
 "use client";
-import { Enterprise, EnterpriseType, SoftEnterprise } from "@/interfaces/Enterprise";
+import { Enterprise, EnterpriseType } from "@/interfaces/Enterprise";
 import {
     getAllNumPages,
     getAllPaginatedData,
-} from "@/utils/requests/EnterpriseRequester";
+} from "@/utils/requests/enterprise/EnterpriseRequester";
 import { DocumentSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import "@/styles/components/enterprise.css";
@@ -51,7 +51,7 @@ const EnterpriseSelector = ({
 
     const selectEnterprise = (enterprise: Enterprise) => {
         if (data) {
-            if (enterpriseFiled.value && enterpriseFiled.value.id === enterprise.id) {
+            if (enterpriseFiled.value && enterpriseFiled.value === enterprise.id) {
                 setEnterprise({
                     value: null,
                     message:
@@ -61,17 +61,8 @@ const EnterpriseSelector = ({
                 });
             } else {
                 if (enterprise.id) {
-                    var softEnterprise: SoftEnterprise = {
-                        id: enterprise.id,
-                        logoImgUrl: enterprise.logoImgUrl.url,
-                        name: enterprise.name,
-                        type: enterprise.type,
-                        coordinates: enterprise.coordinates,
-                        phone: enterprise.phone,
-                    };
-
                     setEnterprise({
-                        value: softEnterprise,
+                        value: enterprise.id,
                         message: null,
                     });
                 }
@@ -88,7 +79,7 @@ const EnterpriseSelector = ({
                             className="enterprise-item"
                             data-state={
                                 enterpriseFiled.value &&
-                                enterpriseFiled.value.id === enterprise.id &&
+                                enterpriseFiled.value === enterprise.id &&
                                 "selected"
                             }
                             key={i}
@@ -107,6 +98,7 @@ const EnterpriseSelector = ({
                     <button
                         className="icon-wrapper small-general-button text | bold gray-icon gray | margin-top-25"
                         disabled={page === pages}
+                        type="button"
                         onClick={handleNextClick}
                     >
                         <Plus />
