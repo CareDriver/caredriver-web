@@ -5,7 +5,7 @@ const InpurDate = ({ date }: { date: Date }) => {
             name=""
             className="form-section-input"
             id=""
-            value={date.toISOString()}
+            value={date.toISOString().split("T")[0]}
             onChange={() => {}}
         />
     );

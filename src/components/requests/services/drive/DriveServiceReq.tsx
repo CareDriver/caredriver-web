@@ -15,7 +15,7 @@ import { useContext, useState } from "react";
 import { driveReqCollection } from "@/utils/requests/services/DriveRequester";
 import { AuthContext } from "@/context/AuthContext";
 import { Timestamp } from "firebase/firestore";
-import { updateUser } from "@/utils/requests/UserRequester";
+import { getUserById, updateUser } from "@/utils/requests/UserRequester";
 import {
     ServiceRequestsInterface,
     ServiceVehicles,
@@ -57,74 +57,89 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 );
 
                 if (isLimitToReviews) {
-                    var vehicles: Partial<ServiceVehicles> | null = null;
-                    var newReqState: Partial<ServiceRequestsInterface> = {};
                     var car = getVehicle(VehicleType.CAR);
                     var motorcycle = getVehicle(VehicleType.MOTORCYCLE);
+                    const userData = await getUserById(serviceReq.userId);
+                    if (userData) {
+                        var vehicles: ServiceVehicles =
+                            userData.serviceVehicles !== undefined
+                                ? { ...userData.serviceVehicles }
+                                : {};
+                        var newReqState: ServiceRequestsInterface =
+                            userData.serviceRequests !== undefined
+                                ? { ...userData.serviceRequests }
+                                : {};
 
-                    const serviceReqState = {
-                        id: serviceReq.id,
-                        state: wasApproved
-                            ? ServiceReqState.Approved
-                            : ServiceReqState.Refused,
-                    };
-
-                    if (car) {
-                        car = {
-                            ...car,
-                            license: {
-                                expiredDateLicense: car.license.expiredDateLicense,
-                                licenseNumber: car.license.licenseNumber,
-                            },
+                        const serviceReqState = {
+                            id: serviceReq.id,
+                            state: wasApproved
+                                ? ServiceReqState.Approved
+                                : ServiceReqState.Refused,
                         };
-                    }
-                    if (motorcycle) {
-                        motorcycle = {
-                            ...motorcycle,
-                            license: {
-                                expiredDateLicense: motorcycle.license.expiredDateLicense,
-                                licenseNumber: motorcycle.license.licenseNumber,
-                            },
-                        };
-                    }
 
-                    if (wasApproved) {
-                        if (car && motorcycle) {
-                            vehicles = { car, motorcycle };
-                        } else if (car && !motorcycle) {
-                            vehicles = { car };
-                        } else if (!car && motorcycle) {
-                            vehicles = { motorcycle };
+                        if (car) {
+                            car = {
+                                ...car,
+                                license: {
+                                    expiredDateLicense: car.license.expiredDateLicense,
+                                    licenseNumber: car.license.licenseNumber,
+                                },
+                            };
                         }
-                    }
+                        if (motorcycle) {
+                            motorcycle = {
+                                ...motorcycle,
+                                license: {
+                                    expiredDateLicense:
+                                        motorcycle.license.expiredDateLicense,
+                                    licenseNumber: motorcycle.license.licenseNumber,
+                                },
+                            };
+                        }
 
-                    if (car && motorcycle) {
-                        newReqState = {
-                            driveCar: serviceReqState,
-                            driveMotorcycle: serviceReqState,
-                        };
-                    } else if (car && !motorcycle) {
-                        newReqState = {
-                            driveCar: serviceReqState,
-                        };
-                    } else if (!car && motorcycle) {
-                        newReqState = {
-                            driveMotorcycle: serviceReqState,
-                        };
-                    }
+                        if (wasApproved) {
+                            if (car && motorcycle) {
+                                vehicles = { ...vehicles, car, motorcycle };
+                            } else if (car && !motorcycle) {
+                                vehicles = { ...vehicles, car };
+                            } else if (!car && motorcycle) {
+                                vehicles = { ...vehicles, motorcycle };
+                            }
+                        }
 
-                    var userToUpdate: Partial<UserInterface>;
-                    if (vehicles && newReqState) {
-                        userToUpdate = {
-                            serviceVehicles: vehicles,
-                            serviceRequests: newReqState,
-                        };
+                        if (car && motorcycle) {
+                            newReqState = {
+                                ...newReqState,
+                                driveCar: serviceReqState,
+                                driveMotorcycle: serviceReqState,
+                            };
+                        } else if (car && !motorcycle) {
+                            newReqState = {
+                                ...newReqState,
+                                driveCar: serviceReqState,
+                            };
+                        } else if (!car && motorcycle) {
+                            newReqState = {
+                                ...newReqState,
+                                driveMotorcycle: serviceReqState,
+                            };
+                        }
+
+                        var userToUpdate: Partial<UserInterface>;
+                        if (vehicles && newReqState) {
+                            userToUpdate = {
+                                serviceVehicles: vehicles,
+                                serviceRequests: newReqState,
+                            };
+                        } else {
+                            userToUpdate = {
+                                serviceRequests: newReqState,
+                            };
+                        }                        
+                        await updateUser(serviceReq.userId, userToUpdate);
                     } else {
-                        userToUpdate = {
-                            serviceRequests: newReqState,
-                        };
+                        toast.error("El usuario no fue encontrado");
                     }
-                    await updateUser(serviceReq.userId, userToUpdate);
                 }
             }
         } catch (e) {
