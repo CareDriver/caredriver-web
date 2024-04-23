@@ -1,6 +1,6 @@
 "use client";
 import PersonCircleCheck from "@/icons/PersonCircleCheck";
-import { ServiceStateRequest, UserRequest, Vehicle } from "@/interfaces/UserRequest";
+import { UserRequest, Vehicle } from "@/interfaces/UserRequest";
 import {
     deleteImagesIfLimitOfApproves,
     MIN_NUM_OF_APPROVALS,
@@ -61,12 +61,32 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     var newReqState: Partial<ServiceRequestsInterface> = {};
                     var car = getVehicle(VehicleType.CAR);
                     var motorcycle = getVehicle(VehicleType.MOTORCYCLE);
+
                     const serviceReqState = {
                         id: serviceReq.id,
                         state: wasApproved
                             ? ServiceReqState.Approved
                             : ServiceReqState.Refused,
                     };
+
+                    if (car) {
+                        car = {
+                            ...car,
+                            license: {
+                                expiredDateLicense: car.license.expiredDateLicense,
+                                licenseNumber: car.license.licenseNumber,
+                            },
+                        };
+                    }
+                    if (motorcycle) {
+                        motorcycle = {
+                            ...motorcycle,
+                            license: {
+                                expiredDateLicense: motorcycle.license.expiredDateLicense,
+                                licenseNumber: motorcycle.license.licenseNumber,
+                            },
+                        };
+                    }
 
                     if (wasApproved) {
                         if (car && motorcycle) {
@@ -104,6 +124,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             serviceRequests: newReqState,
                         };
                     }
+                    console.log(userToUpdate);
                     await updateUser(serviceReq.userId, userToUpdate);
                 }
             }
@@ -114,11 +135,10 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
     const getVehicle = (type: VehicleType): Vehicle | null => {
         if (serviceReq.vehicles) {
-            serviceReq.vehicles.forEach((veh) => {
-                if (veh.type.type === type) {
-                    return veh;
-                }
-            });
+            const vehicles = serviceReq.vehicles.filter((veh) => veh.type.type === type);
+            if (vehicles.length > 0) {
+                return vehicles[0];
+            }
         }
 
         return null;
@@ -153,7 +173,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     };
 
     const decline = async () => {
-        await review(true);
+        await review(false);
     };
 
     return (
