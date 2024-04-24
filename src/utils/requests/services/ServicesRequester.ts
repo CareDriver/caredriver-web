@@ -88,7 +88,7 @@ export const getServiceReqById = async (
     }
 };
 
-export const numOfApprovals = (req: UserRequest): number => {
+export const numOfApprovals = (req: UserRequest): number => {  
     var approvals = 0;
     req.reviewedByHistory?.forEach((history) => {
         if (history.aproved) {

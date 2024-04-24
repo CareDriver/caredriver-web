@@ -46,15 +46,43 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 var newReviewServiceHistory = serviceReq.reviewedByHistory
                     ? [...serviceReq.reviewedByHistory, serviceReview]
                     : [serviceReview];
-                await updateService(
-                    serviceReq.id,
-                    {
-                        reviewedByHistory: newReviewServiceHistory,
-                        active: isLimitToReviews ? false : true,
-                        aproved: isLimitToReviews ? wasApproved : serviceReq.aproved,
-                    },
-                    driveReqCollection,
-                );
+                var toUpdateReq: Partial<UserRequest> = {
+                    reviewedByHistory: newReviewServiceHistory,
+                    active: isLimitToReviews ? false : true,
+                    aproved: isLimitToReviews ? wasApproved : serviceReq.aproved,
+                };
+                if (isLimitToReviews && serviceReq.vehicles) {
+                    const imgDeleted = {
+                        ref: "deleted",
+                        url: "",
+                    };
+
+                    var vehiclesWithoutImages = serviceReq.vehicles.map((vehicle) => {
+                        return {
+                            ...vehicle,
+                            license: {
+                                ...vehicle.license,
+                                backImgUrl: imgDeleted,
+                                frontImgUrl: imgDeleted,
+                            },
+                        };
+                    });
+
+                    toUpdateReq = {
+                        ...toUpdateReq,
+                        realTimePhotoImgUrl: imgDeleted,
+                        vehicles: vehiclesWithoutImages,
+                    };
+
+                    if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
+                        toUpdateReq = {
+                            ...toUpdateReq,
+                            newProfilePhotoImgUrl: imgDeleted,
+                        };
+                    }
+                }
+
+                await updateService(serviceReq.id, toUpdateReq, driveReqCollection);
 
                 if (isLimitToReviews) {
                     var car = getVehicle(VehicleType.CAR);
@@ -135,7 +163,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             userToUpdate = {
                                 serviceRequests: newReqState,
                             };
-                        }                        
+                        }
                         await updateUser(serviceReq.userId, userToUpdate);
                     } else {
                         toast.error("El usuario no fue encontrado");
@@ -196,7 +224,9 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 <h1>Solicitud para ser Chofer</h1>
                 <h5>
                     <PersonCircleCheck />
-                    {reviewState.reviewed
+                    {!serviceReq.active && !serviceReq.aproved
+                        ? "Rechazado"
+                        : reviewState.reviewed
                         ? "Revisado"
                         : `${numOfApprovals(
                               serviceReq,

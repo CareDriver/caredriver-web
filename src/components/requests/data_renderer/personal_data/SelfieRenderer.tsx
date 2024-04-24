@@ -10,7 +10,12 @@ const SelfieRenderer = ({ image }: { image: string | ImgWithRef }) => {
                     <PersonQuestion /> Confirmacion del Usuario
                 </h2>
             </div>
-            <ImageRenderer url={image} placeholder="Selfie" isCircle={true} />
+            <ImageRenderer
+                url={image}
+                placeholder="Selfie"
+                isCircle={true}
+                noFoundDescr={undefined}
+            />
         </div>
     );
 };

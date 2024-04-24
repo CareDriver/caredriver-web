@@ -26,6 +26,7 @@ const LicenseRenderer = ({ license }: { license: LicenseInterface }) => {
                         url={getUrl(license.frontImgUrl.url)}
                         isCircle={false}
                         placeholder={undefined}
+                        noFoundDescr={undefined}
                     />
                 )}
                 {license.backImgUrl && (
@@ -33,6 +34,7 @@ const LicenseRenderer = ({ license }: { license: LicenseInterface }) => {
                         url={getUrl(license.backImgUrl.url)}
                         isCircle={false}
                         placeholder={undefined}
+                        noFoundDescr={undefined}
                     />
                 )}
             </div>

@@ -30,6 +30,7 @@ const PersonalData = ({
                     url={photo}
                     placeholder="Foto de Perfil"
                     isCircle={true}
+                    noFoundDescr={undefined}
                 />
             </div>
         </div>
