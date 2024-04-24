@@ -10,7 +10,7 @@ import {
 import PersonalData from "../../data_renderer/personal_data/PersonalData";
 import SelfieRenderer from "../../data_renderer/personal_data/SelfieRenderer";
 import VehiclesRenderer from "../../data_renderer/vehicle/VehiclesRenderer";
-import ReqButtonRes from "../../data_renderer/ReqButtonRes";
+import ReqButtonRes from "../../data_renderer/form/ReqButtonRes";
 import { useContext, useState } from "react";
 import { driveReqCollection } from "@/utils/requests/services/DriveRequester";
 import { AuthContext } from "@/context/AuthContext";
@@ -24,6 +24,7 @@ import {
 import { VehicleType } from "@/interfaces/VehicleInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import { toast } from "react-toastify";
+import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
 
 const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -222,16 +223,10 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         <section>
             <div>
                 <h1>Solicitud para ser Chofer</h1>
-                <h5>
-                    <PersonCircleCheck />
-                    {!serviceReq.active && !serviceReq.aproved
-                        ? "Rechazado"
-                        : reviewState.reviewed
-                        ? "Revisado"
-                        : `${numOfApprovals(
-                              serviceReq,
-                          )}/${MIN_NUM_OF_APPROVALS} Aprobaciones`}
-                </h5>
+                <ApprovalsRenderer
+                    serviceReq={serviceReq}
+                    reviewed={reviewState.reviewed}
+                />
 
                 <PersonalData
                     location={serviceReq.location}

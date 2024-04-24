@@ -1,6 +1,6 @@
 import Car from "@/icons/Car";
 import { Vehicle } from "@/interfaces/UserRequest";
-import InputData from "../InputData";
+import InputData from "../form/InputData";
 import LicenseRenderer from "./LicenseRenderer";
 
 const VehicleRenderer = ({ vehicle }: { vehicle: Vehicle }) => {

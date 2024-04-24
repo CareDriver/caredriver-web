@@ -242,33 +242,32 @@ const MechanicRegistration = () => {
         [personalData, userConfirmation, acceptedTerms],
     );
 
+    const getState = () => {
+        if (
+            user.data &&
+            user.data.serviceRequests &&
+            user.data.serviceRequests.mechanic &&
+            user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
+        ) {
+            return {
+                title: "Tu solicitud fue Rechazada!",
+                description:
+                    "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud.",
+                state: ServiceReqState.Refused,
+            };
+        }
+
+        return {
+            title: "Solicita trabajar como Mecanico con nosotros!",
+            description:
+                "Necesitamos verificar que trabajas en un taller antes que empieces a trabajar con nosotros.",
+            state: ServiceReqState.NotSent,
+        };
+    };
+
     return (
         <div className="service-form-wrapper" onSubmit={(e) => handleSubmit(e)}>
-            <ServiceHeader
-                title={
-                    user.data &&
-                    user.data.serviceRequests &&
-                    user.data.serviceRequests.mechanic &&
-                    user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
-                        ? "Tu solicitud fue Rechazada!"
-                        : "Trabaja con nosotros como Mecanico!"
-                }
-                description={
-                    user.data &&
-                    user.data.serviceRequests &&
-                    user.data.serviceRequests.mechanic &&
-                    user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
-                        ? "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud."
-                        : "Necesitamos verificar que trabajas en un taller antes que empieces a trabajar con nosotros."
-                }
-                state={
-                    user.data &&
-                    user.data.serviceRequests &&
-                    user.data.serviceRequests.mechanic
-                        ? user.data.serviceRequests.mechanic.state
-                        : ServiceReqState.NotSent
-                }
-            />
+            <ServiceHeader data={getState()} />
             <form
                 className="form-sub-container"
                 data-state={formState.loading ? "loading" : "loaded"}

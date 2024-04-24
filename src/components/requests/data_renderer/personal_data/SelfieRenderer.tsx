@@ -1,5 +1,5 @@
 import PersonQuestion from "@/icons/PersonQuestion";
-import ImageRenderer from "../ImageRenderer";
+import ImageRenderer from "../form/ImageRenderer";
 import { ImgWithRef } from "@/interfaces/ImageInterface";
 
 const SelfieRenderer = ({ image }: { image: string | ImgWithRef }) => {

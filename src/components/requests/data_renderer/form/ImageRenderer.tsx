@@ -3,6 +3,7 @@ import TriangleExclamation from "@/icons/TriangleExclamation";
 import { ImgWithRef } from "@/interfaces/ImageInterface";
 import { getUrl } from "@/utils/validator/ImageValidator";
 import { useEffect, useState } from "react";
+import FieldDeleted from "./FieldDeleted";
 const ImageRenderer = ({
     url,
     placeholder,
@@ -16,11 +17,11 @@ const ImageRenderer = ({
 }) => {
     const NO_FOUND_DESCR =
         noFoundDescr === undefined
-            ? "Esta imagen fue eliminada despues de ser revisada por las politicas de la aplicacion"
+            ? "Esta imagen fue eliminada despues de ser revisada"
             : noFoundDescr;
     const imageUrl = getUrl(url);
 
-    const imageExists = imageUrl !== ""
+    const imageExists = imageUrl !== "";
 
     return imageExists ? (
         <div className={`form-section-uploaded ${isCircle && "circle"}`}>
@@ -31,10 +32,7 @@ const ImageRenderer = ({
             />
         </div>
     ) : (
-        <div className="icon-wrapper | lb">
-            <TriangleExclamation />
-            <p>{NO_FOUND_DESCR}</p>
-        </div>
+        <FieldDeleted description={NO_FOUND_DESCR} />
     );
 };
 

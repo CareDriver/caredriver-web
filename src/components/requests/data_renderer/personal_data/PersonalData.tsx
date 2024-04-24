@@ -1,6 +1,6 @@
 import UserIcon from "@/icons/UserIcon";
-import InputData from "../InputData";
-import ImageRenderer from "../ImageRenderer";
+import InputData from "../form/InputData";
+import ImageRenderer from "../form/ImageRenderer";
 import { ImgWithRef } from "@/interfaces/ImageInterface";
 
 const PersonalData = ({

@@ -1,29 +1,27 @@
 "use client";
-import PersonCircleCheck from "@/icons/PersonCircleCheck";
-import { UserRequest, Vehicle } from "@/interfaces/UserRequest";
+import { UserRequest } from "@/interfaces/UserRequest";
 import {
     deleteImagesIfLimitOfApproves,
     MIN_NUM_OF_APPROVALS,
-    numOfApprovals,
     updateService,
 } from "@/utils/requests/services/ServicesRequester";
 import PersonalData from "../../data_renderer/personal_data/PersonalData";
 import SelfieRenderer from "../../data_renderer/personal_data/SelfieRenderer";
-import VehiclesRenderer from "../../data_renderer/vehicle/VehiclesRenderer";
-import ReqButtonRes from "../../data_renderer/ReqButtonRes";
-import { useContext, useState } from "react";
+import ReqButtonRes from "../../data_renderer/form/ReqButtonRes";
+import { useContext, useEffect, useState } from "react";
 import { driveReqCollection } from "@/utils/requests/services/DriveRequester";
 import { AuthContext } from "@/context/AuthContext";
 import { Timestamp } from "firebase/firestore";
-import { updateUser } from "@/utils/requests/UserRequester";
-import {
-    ServiceRequestsInterface,
-    ServiceVehicles,
-    UserInterface,
-} from "@/interfaces/UserInterface";
-import { VehicleType } from "@/interfaces/VehicleInterface";
+import { getUserById, updateUser } from "@/utils/requests/UserRequester";
+import { ServiceRequestsInterface, UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import { toast } from "react-toastify";
+import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
+import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
+import { Enterprise } from "@/interfaces/Enterprise";
+import FieldDeleted from "../../data_renderer/form/FieldDeleted";
+import WorkshopRenderer from "../../data_renderer/enterprise/WorkshopRenderer";
+import { mechanicReqCollection } from "@/utils/requests/services/MechanicRequester";
 
 const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -31,6 +29,7 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         loading: false,
         reviewed: false,
     });
+    const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(null);
 
     const saveReviewHistory = async (wasApproved: boolean) => {
         try {
@@ -46,102 +45,68 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 var newReviewServiceHistory = serviceReq.reviewedByHistory
                     ? [...serviceReq.reviewedByHistory, serviceReview]
                     : [serviceReview];
-                await updateService(
-                    serviceReq.id,
-                    {
-                        reviewedByHistory: newReviewServiceHistory,
-                        active: isLimitToReviews ? false : true,
-                        aproved: isLimitToReviews ? wasApproved : serviceReq.aproved,
-                    },
-                    driveReqCollection,
-                );
-
+                var toUpdateReq: Partial<UserRequest> = {
+                    reviewedByHistory: newReviewServiceHistory,
+                    active: isLimitToReviews ? false : true,
+                    aproved: isLimitToReviews ? wasApproved : serviceReq.aproved,
+                };
                 if (isLimitToReviews) {
-                    var vehicles: Partial<ServiceVehicles> | null = null;
-                    var newReqState: Partial<ServiceRequestsInterface> = {};
-                    var car = getVehicle(VehicleType.CAR);
-                    var motorcycle = getVehicle(VehicleType.MOTORCYCLE);
-
-                    const serviceReqState = {
-                        id: serviceReq.id,
-                        state: wasApproved
-                            ? ServiceReqState.Approved
-                            : ServiceReqState.Refused,
+                    const imgDeleted = {
+                        ref: "deleted",
+                        url: "",
                     };
 
-                    if (car) {
-                        car = {
-                            ...car,
-                            license: {
-                                expiredDateLicense: car.license.expiredDateLicense,
-                                licenseNumber: car.license.licenseNumber,
-                            },
-                        };
-                    }
-                    if (motorcycle) {
-                        motorcycle = {
-                            ...motorcycle,
-                            license: {
-                                expiredDateLicense: motorcycle.license.expiredDateLicense,
-                                licenseNumber: motorcycle.license.licenseNumber,
-                            },
-                        };
-                    }
+                    toUpdateReq = {
+                        ...toUpdateReq,
+                        realTimePhotoImgUrl: imgDeleted,
+                    };
 
-                    if (wasApproved) {
-                        if (car && motorcycle) {
-                            vehicles = { car, motorcycle };
-                        } else if (car && !motorcycle) {
-                            vehicles = { car };
-                        } else if (!car && motorcycle) {
-                            vehicles = { motorcycle };
+                    if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
+                        toUpdateReq = {
+                            ...toUpdateReq,
+                            newProfilePhotoImgUrl: imgDeleted,
+                        };
+                    }
+                }
+
+                await updateService(serviceReq.id, toUpdateReq, mechanicReqCollection);
+
+                if (isLimitToReviews) {
+                    const userData = await getUserById(serviceReq.userId);
+                    if (userData) {
+                        const serviceReqState = {
+                            id: serviceReq.id,
+                            state: wasApproved
+                                ? ServiceReqState.Approved
+                                : ServiceReqState.Refused,
+                        };
+
+                        var newReqState: ServiceRequestsInterface =
+                            userData.serviceRequests !== undefined
+                                ? {
+                                      ...userData.serviceRequests,
+                                      mechanic: serviceReqState,
+                                  }
+                                : { mechanic: serviceReqState };
+
+                        var userToUpdate: Partial<UserInterface> = {
+                            serviceRequests: newReqState,
+                        };
+                        if (wasApproved && serviceReq.mechanicalWorkShop) {
+                            userToUpdate = {
+                                ...userToUpdate,
+                                mechanicalWorkShopId: serviceReq.mechanicalWorkShop,
+                            };
                         }
-                    }
-
-                    if (car && motorcycle) {
-                        newReqState = {
-                            driveCar: serviceReqState,
-                            driveMotorcycle: serviceReqState,
-                        };
-                    } else if (car && !motorcycle) {
-                        newReqState = {
-                            driveCar: serviceReqState,
-                        };
-                    } else if (!car && motorcycle) {
-                        newReqState = {
-                            driveMotorcycle: serviceReqState,
-                        };
-                    }
-
-                    var userToUpdate: Partial<UserInterface>;
-                    if (vehicles && newReqState) {
-                        userToUpdate = {
-                            serviceVehicles: vehicles,
-                            serviceRequests: newReqState,
-                        };
+                        await updateUser(serviceReq.userId, userToUpdate);
                     } else {
-                        userToUpdate = {
-                            serviceRequests: newReqState,
-                        };
+                        toast.error("El usuario no fue encontrado");
                     }
-                    console.log(userToUpdate);
-                    await updateUser(serviceReq.userId, userToUpdate);
                 }
             }
         } catch (e) {
             console.log(e);
         }
-    };
-
-    const getVehicle = (type: VehicleType): Vehicle | null => {
-        if (serviceReq.vehicles) {
-            const vehicles = serviceReq.vehicles.filter((veh) => veh.type.type === type);
-            if (vehicles.length > 0) {
-                return vehicles[0];
-            }
-        }
-
-        return null;
     };
 
     const review = async (wasApproved: boolean) => {
@@ -176,30 +141,55 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         await review(false);
     };
 
+    const fetchWorkshop = async () => {
+        if (serviceReq.mechanicalWorkShop) {
+            try {
+                const data = await getEnterpriseById(serviceReq.mechanicalWorkShop);
+                setEnterpise(data);
+            } catch (e) {
+                setEnterpise(undefined);
+                console.log(e);
+            }
+        } else {
+            setEnterpise(undefined);
+        }
+    };
+
+    useEffect(() => {
+        fetchWorkshop();
+    }, []);
+
     return (
         <section>
             <div>
-                <h1>Solicitud para ser Mecanico</h1>
-                <h5>
-                    <PersonCircleCheck />
-                    {numOfApprovals(serviceReq)}/{MIN_NUM_OF_APPROVALS} Aprobaciones
-                </h5>
+                <h1>Solicitud para ser Chofer</h1>
+                <ApprovalsRenderer
+                    serviceReq={serviceReq}
+                    reviewed={reviewState.reviewed}
+                />
 
                 <PersonalData
                     location={serviceReq.location}
                     name={serviceReq.newFullName}
                     photo={serviceReq.newProfilePhotoImgUrl}
                 />
-                <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                {serviceReq.vehicles && (
-                    <VehiclesRenderer vehicles={serviceReq.vehicles} />
+                {!reviewState.reviewed && (
+                    <>
+                        <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+                        {enterprise === null ? (
+                            <span className="loader-green"></span>
+                        ) : enterprise === undefined ? (
+                            <FieldDeleted description="No se selecciono el taller mecanico (El campo era opcional)" />
+                        ) : (
+                            <WorkshopRenderer workshop={enterprise} />
+                        )}
+                        <ReqButtonRes
+                            onApprove={approve}
+                            onDecline={decline}
+                            loading={reviewState.loading}
+                        />
+                    </>
                 )}
-
-                <ReqButtonRes
-                    onApprove={approve}
-                    onDecline={decline}
-                    loading={reviewState.loading}
-                />
             </div>
         </section>
     );

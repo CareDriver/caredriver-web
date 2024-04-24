@@ -24,3 +24,8 @@ export interface Enterprise {
 export interface ReqEditEnterprise extends Enterprise {
     enterpriseId: string;
 }
+
+export const EnterpriseTypeRender = {
+    mechanical: "taller mecanico",
+    tow: "empresa operadora de grua",
+};

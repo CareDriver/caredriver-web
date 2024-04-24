@@ -1,7 +1,6 @@
 import Warehouse from "@/icons/Warehouse";
 import { Enterprise } from "@/interfaces/Enterprise";
-import InputData from "../InputData";
-import ImageRenderer from "../ImageRenderer";
+import EnterpriseRenderer from "./EnterpriseRenderer";
 
 const WorkshopRenderer = ({ workshop }: { workshop: Enterprise }) => {
     return (
@@ -10,9 +9,7 @@ const WorkshopRenderer = ({ workshop }: { workshop: Enterprise }) => {
                 <Warehouse />
                 Taller mecanico
             </h2>
-            <InputData content={workshop.name} placeholder={"Nombre del Taller"} />
-            <InputData content={workshop.phone} placeholder={"Numero de Telefono"} />
-            <ImageRenderer isCircle={true} placeholder="Logo" url={workshop.logoImgUrl} />
+            <EnterpriseRenderer enterprise={workshop} />
         </div>
     );
 };
