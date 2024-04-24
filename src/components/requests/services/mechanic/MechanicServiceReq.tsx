@@ -9,12 +9,11 @@ import PersonalData from "../../data_renderer/personal_data/PersonalData";
 import SelfieRenderer from "../../data_renderer/personal_data/SelfieRenderer";
 import ReqButtonRes from "../../data_renderer/form/ReqButtonRes";
 import { useContext, useEffect, useState } from "react";
-import { driveReqCollection } from "@/utils/requests/services/DriveRequester";
 import { AuthContext } from "@/context/AuthContext";
 import { Timestamp } from "firebase/firestore";
 import { getUserById, updateUser } from "@/utils/requests/UserRequester";
 import { ServiceRequestsInterface, UserInterface } from "@/interfaces/UserInterface";
-import { ServiceReqState } from "@/interfaces/Services";
+import { ServiceReqState, Services } from "@/interfaces/Services";
 import { toast } from "react-toastify";
 import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
 import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
@@ -92,10 +91,12 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         var userToUpdate: Partial<UserInterface> = {
                             serviceRequests: newReqState,
                         };
+
                         if (wasApproved && serviceReq.mechanicalWorkShop) {
                             userToUpdate = {
                                 ...userToUpdate,
                                 mechanicalWorkShopId: serviceReq.mechanicalWorkShop,
+                                services: [...userData.services, Services.Mechanic],
                             };
                         }
                         await updateUser(serviceReq.userId, userToUpdate);

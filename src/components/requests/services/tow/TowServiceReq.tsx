@@ -1,18 +1,15 @@
 "use client";
-import PersonCircleCheck from "@/icons/PersonCircleCheck";
 import { UserRequest, Vehicle } from "@/interfaces/UserRequest";
 import {
     deleteImagesIfLimitOfApproves,
     MIN_NUM_OF_APPROVALS,
-    numOfApprovals,
     updateService,
 } from "@/utils/requests/services/ServicesRequester";
 import PersonalData from "../../data_renderer/personal_data/PersonalData";
 import SelfieRenderer from "../../data_renderer/personal_data/SelfieRenderer";
 import VehiclesRenderer from "../../data_renderer/vehicle/VehiclesRenderer";
 import ReqButtonRes from "../../data_renderer/form/ReqButtonRes";
-import { useContext, useState } from "react";
-import { driveReqCollection } from "@/utils/requests/services/DriveRequester";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { Timestamp } from "firebase/firestore";
 import { getUserById, updateUser } from "@/utils/requests/UserRequester";
@@ -25,13 +22,19 @@ import { VehicleType } from "@/interfaces/VehicleInterface";
 import { ServiceReqState, Services } from "@/interfaces/Services";
 import { toast } from "react-toastify";
 import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
+import { towReqCollection } from "@/utils/requests/services/TowRequester";
+import { Enterprise } from "@/interfaces/Enterprise";
+import FieldDeleted from "../../data_renderer/form/FieldDeleted";
+import WorkshopRenderer from "../../data_renderer/enterprise/WorkshopRenderer";
+import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
 
-const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
+const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
     const [reviewState, setReviewState] = useState({
         loading: false,
         reviewed: false,
     });
+    const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(null);
 
     const saveReviewHistory = async (wasApproved: boolean) => {
         try {
@@ -83,11 +86,10 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     }
                 }
 
-                await updateService(serviceReq.id, toUpdateReq, driveReqCollection);
+                await updateService(serviceReq.id, toUpdateReq, towReqCollection);
 
                 if (isLimitToReviews) {
-                    var car = getVehicle(VehicleType.CAR);
-                    var motorcycle = getVehicle(VehicleType.MOTORCYCLE);
+                    var tow = getVehicle(VehicleType.CAR);
                     const userData = await getUserById(serviceReq.userId);
                     if (userData) {
                         var vehicles: ServiceVehicles =
@@ -106,61 +108,28 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 : ServiceReqState.Refused,
                         };
 
-                        if (car) {
-                            car = {
-                                ...car,
+                        if (tow) {
+                            tow = {
+                                ...tow,
                                 license: {
-                                    expiredDateLicense: car.license.expiredDateLicense,
-                                    licenseNumber: car.license.licenseNumber,
-                                },
-                            };
-                        }
-                        if (motorcycle) {
-                            motorcycle = {
-                                ...motorcycle,
-                                license: {
-                                    expiredDateLicense:
-                                        motorcycle.license.expiredDateLicense,
-                                    licenseNumber: motorcycle.license.licenseNumber,
+                                    expiredDateLicense: tow.license.expiredDateLicense,
+                                    licenseNumber: tow.license.licenseNumber,
                                 },
                             };
                         }
 
-                        if (wasApproved) {
-                            if (car && motorcycle) {
-                                vehicles = { ...vehicles, car, motorcycle };
-                            } else if (car && !motorcycle) {
-                                vehicles = { ...vehicles, car };
-                            } else if (!car && motorcycle) {
-                                vehicles = { ...vehicles, motorcycle };
-                            }
+                        if (wasApproved && tow) {
+                            vehicles = { ...vehicles, tow };
                         }
 
-                        if (car && motorcycle) {
+                        if (tow) {
                             newReqState = {
                                 ...newReqState,
-                                driveCar: serviceReqState,
-                                driveMotorcycle: serviceReqState,
-                            };
-                        } else if (car && !motorcycle) {
-                            newReqState = {
-                                ...newReqState,
-                                driveCar: serviceReqState,
-                            };
-                        } else if (!car && motorcycle) {
-                            newReqState = {
-                                ...newReqState,
-                                driveMotorcycle: serviceReqState,
+                                tow: serviceReqState,
                             };
                         }
 
                         var userToUpdate: Partial<UserInterface> = {};
-                        if (wasApproved) {
-                            userToUpdate = {
-                                ...userToUpdate,
-                                services: [...userData.services, Services.Driver],
-                            };
-                        }
 
                         if (vehicles && newReqState) {
                             userToUpdate = {
@@ -172,6 +141,14 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             userToUpdate = {
                                 ...userToUpdate,
                                 serviceRequests: newReqState,
+                            };
+                        }
+
+                        if (wasApproved && serviceReq.towEnterprite) {
+                            userToUpdate = {
+                                ...userToUpdate,
+                                services: [...userData.services, Services.Tow],
+                                towEnterpriteId: serviceReq.towEnterprite,
                             };
                         }
                         await updateUser(serviceReq.userId, userToUpdate);
@@ -228,10 +205,28 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         await review(false);
     };
 
+    const fetchWorkshop = async () => {
+        if (serviceReq.towEnterprite) {
+            try {
+                const data = await getEnterpriseById(serviceReq.towEnterprite);
+                setEnterpise(data);
+            } catch (e) {
+                setEnterpise(undefined);
+                console.log(e);
+            }
+        } else {
+            setEnterpise(undefined);
+        }
+    };
+
+    useEffect(() => {
+        fetchWorkshop();
+    }, []);
+
     return (
         <section>
             <div>
-                <h1>Solicitud para ser Chofer</h1>
+                <h1>Solicitud para ser Operador de Grua</h1>
                 <ApprovalsRenderer
                     serviceReq={serviceReq}
                     reviewed={reviewState.reviewed}
@@ -248,6 +243,13 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         {serviceReq.vehicles && (
                             <VehiclesRenderer vehicles={serviceReq.vehicles} />
                         )}
+                        {enterprise === null ? (
+                            <span className="loader-green"></span>
+                        ) : enterprise === undefined ? (
+                            <FieldDeleted description="No se encontro la Empresa Operadora de Grua, es posible que fue eliminada" />
+                        ) : (
+                            <WorkshopRenderer workshop={enterprise} />
+                        )}
 
                         <ReqButtonRes
                             onApprove={approve}
@@ -261,4 +263,4 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     );
 };
 
-export default DriveServiceReq;
+export default TowServiceReq;

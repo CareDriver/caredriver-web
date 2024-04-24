@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import DriveServiceReq from "./drive/DriveServiceReq";
 import MechanicServiceReq from "./mechanic/MechanicServiceReq";
+import TowServiceReq from "./tow/TowServiceReq";
 
 const SingleServiceReq = ({
     reqId,
@@ -20,10 +21,6 @@ const SingleServiceReq = ({
     type: "driver" | "mechanic" | "tow";
 }) => {
     const [serviceReq, setServiceReq] = useState<UserRequest | null>(null);
-    const [reviewState, setReviewState] = useState({
-        loading: false,
-        reviewed: false,
-    });
     const collection: CollectionReference = getServiceCollection(type);
     const router = useRouter();
 
@@ -50,6 +47,8 @@ const SingleServiceReq = ({
                     return <DriveServiceReq serviceReq={serviceReq} />;
                 case "mechanic":
                     return <MechanicServiceReq serviceReq={serviceReq} />;
+                case "tow":
+                    return <TowServiceReq serviceReq={serviceReq} />;
             }
         }
     };
