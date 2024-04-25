@@ -1,5 +1,12 @@
+import EnterpriseReqsRender from "@/components/requests/enterprises/EnterpriseReqsRender";
+import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+
 const ListOfCraneReqToCreate = () => {
-    return <div>crane requests</div>;
+    return (
+        <AdminWrapperWithSideBar>
+            <EnterpriseReqsRender type="tow" />
+        </AdminWrapperWithSideBar>
+    );
 };
 
 export default ListOfCraneReqToCreate;

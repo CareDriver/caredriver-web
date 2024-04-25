@@ -65,6 +65,25 @@ export const aproveEnterpriseReq = async (
     await updateEnterprise(enterPriseId, newData);
 };
 
+export const declineEnterpriseReq = async (
+    enterprise: Enterprise,
+    adminId: string,
+): Promise<void> => {
+    if (enterprise.id) {
+        var newData: Partial<Enterprise> = {
+            logoImgUrl: {
+                ref: "deleted",
+                url: "",
+            },
+            aproved: false,
+            aprovedBy: adminId,
+            deleted: true,
+            active: false,
+        };
+        await updateEnterprise(enterprise.id, newData);
+    }
+};
+
 export const updateEnterprise = async (
     id: string,
     newData: Partial<Enterprise>,
@@ -88,6 +107,8 @@ export const getEnterpriseById = async (id: string): Promise<Enterprise | undefi
         throw error;
     }
 };
+
+// PAGINATE ENTERPRISE DATA JUST FOR A USER
 
 export const getPaginatedData = async (
     type: string,
@@ -118,7 +139,7 @@ export const getPaginatedData = async (
             where("userId", "==", userId),
             where("aproved", "==", true),
             where("deleted", "==", false),
-            where("type", "==", "tow"),
+            where("type", "==", type),
         );
     }
 
@@ -149,6 +170,8 @@ export const getNumPages = async (
     const numPages = Math.ceil(count.data().count / numPerPages);
     return numPages;
 };
+
+// PAGINATE ENTERPRISE DATA FOR ALL USERS, USED FOR MECHANIC AND TOW REQS
 
 export const getAllPaginatedData = async (
     type: string,
@@ -200,6 +223,67 @@ export const getAllNumPages = async (
         query(
             enterpriseCollection,
             where("aproved", "==", true),
+            where("deleted", "==", false),
+            where("active", "==", true),
+            where("type", "==", type),
+        ),
+    );
+    const numPages = Math.ceil(count.data().count / numPerPages);
+    return numPages;
+};
+
+// PAGINATE ENTERPRISE REQS
+
+export const getEnterpriseReqs = async (
+    type: string,
+    direction: "next" | "prev" | undefined,
+    startAfterDoc?: DocumentSnapshot,
+    endBeforeDoc?: DocumentSnapshot,
+    numPerPage: number = 12,
+) => {
+    let dataQuery = query(
+        enterpriseCollection,
+        orderBy("name"),
+        limit(numPerPage),
+        where("aproved", "==", false),
+        where("deleted", "==", false),
+        where("active", "==", true),
+        where("type", "==", type),
+    );
+
+    if (direction === "next" && startAfterDoc) {
+        dataQuery = query(dataQuery, startAfter(startAfterDoc));
+    } else if (direction === "prev" && endBeforeDoc) {
+        dataQuery = query(
+            enterpriseCollection,
+            orderBy("name"),
+            endBefore(endBeforeDoc),
+            limitToLast(numPerPage),
+            where("aproved", "==", false),
+            where("deleted", "==", false),
+            where("active", "==", true),
+            where("type", "==", type),
+        );
+    }
+
+    const productsSnapshot = await getDocs(dataQuery);
+    const products = productsSnapshot.docs.map((doc) => doc.data());
+
+    return {
+        result: products as Enterprise[],
+        lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
+        firstDoc: productsSnapshot.docs[0],
+    };
+};
+
+export const getEnterpriseReqsNumPages = async (
+    numPerPages: number,
+    type: string,
+): Promise<number> => {
+    const count = await getCountFromServer(
+        query(
+            enterpriseCollection,
+            where("aproved", "==", false),
             where("deleted", "==", false),
             where("active", "==", true),
             where("type", "==", type),

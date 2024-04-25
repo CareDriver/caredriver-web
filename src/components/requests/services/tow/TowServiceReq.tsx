@@ -28,6 +28,7 @@ import FieldDeleted from "../../data_renderer/form/FieldDeleted";
 import WorkshopRenderer from "../../data_renderer/enterprise/WorkshopRenderer";
 import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
+import TowRenderer from "../../data_renderer/enterprise/TowRenderer";
 
 const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -260,7 +261,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         ) : enterprise === undefined ? (
                             <FieldDeleted description="No se encontro la Empresa Operadora de Grua, es posible que fue eliminada" />
                         ) : (
-                            <WorkshopRenderer workshop={enterprise} />
+                            <TowRenderer tow={enterprise} />
                         )}
 
                         <ReqButtonRes

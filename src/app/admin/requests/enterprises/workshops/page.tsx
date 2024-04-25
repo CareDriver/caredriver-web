@@ -1,5 +1,12 @@
+import EnterpriseReqsRender from "@/components/requests/enterprises/EnterpriseReqsRender";
+import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+
 const ListOfWorkhopReqToCreate = () => {
-    return <div>workshop requets</div>;
+    return (
+        <AdminWrapperWithSideBar>
+            <EnterpriseReqsRender type="mechanical" />
+        </AdminWrapperWithSideBar>
+    );
 };
 
 export default ListOfWorkhopReqToCreate;
