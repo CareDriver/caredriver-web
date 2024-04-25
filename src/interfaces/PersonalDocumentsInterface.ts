@@ -12,10 +12,13 @@ export interface LicenseInterface {
 export interface LicenseUpdateReq {
     id: string;
     userId: string;
+    userName: string;
     vehicleType: "car" | "motorcycle" | "tow";
     licenseNumber: string; // Driver's license number
     expiredDateLicense: Timestamp; // The date the license is going to expire
     frontImgUrl?: ImgWithRef; // The url of the front image of the license
     backImgUrl?: ImgWithRef;
     realTimePhotoImgUrl: ImgWithRef;
+    aproved: boolean;
+    active: boolean;
 }

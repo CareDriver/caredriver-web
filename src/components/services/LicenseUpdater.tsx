@@ -118,12 +118,15 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                 var reqDoc: LicenseUpdateReq = {
                     id: formId,
                     userId: user.data.id,
+                    userName: user.data.fullName,
                     vehicleType: type,
                     licenseNumber: vehiclesData.licenseNumber,
                     expiredDateLicense: vehiclesData.expiredDateLicense,
                     frontImgUrl: vehiclesData.frontImgUrl,
                     backImgUrl: vehiclesData.backImgUrl,
                     realTimePhotoImgUrl: realTimePhotoImgUrl,
+                    aproved: false,
+                    active: true
                 };
                 await sendLicenseUpdateReq(formId, reqDoc);
             } catch (e) {
