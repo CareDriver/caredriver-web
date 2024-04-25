@@ -27,6 +27,7 @@ import { Enterprise } from "@/interfaces/Enterprise";
 import FieldDeleted from "../../data_renderer/form/FieldDeleted";
 import WorkshopRenderer from "../../data_renderer/enterprise/WorkshopRenderer";
 import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
+import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 
 const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -35,6 +36,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         reviewed: false,
     });
     const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(null);
+    const [userData, setUserData] = useState<UserInterface | null>(null);
 
     const saveReviewHistory = async (wasApproved: boolean) => {
         try {
@@ -92,6 +94,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     var tow = getVehicle(VehicleType.CAR);
                     const userData = await getUserById(serviceReq.userId);
                     if (userData) {
+                        setUserData(userData);
                         var vehicles: ServiceVehicles =
                             userData.serviceVehicles !== undefined
                                 ? { ...userData.serviceVehicles }
@@ -237,7 +240,16 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     name={serviceReq.newFullName}
                     photo={serviceReq.newProfilePhotoImgUrl}
                 />
-                {!reviewState.reviewed && (
+                {!reviewState.reviewed ? (
+                    userData && user.data ? (
+                        <ContactReviewedUser
+                            user={userData}
+                            transmitter={user.data.fullName}
+                        />
+                    ) : (
+                        <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
+                    )
+                ) : (
                     <>
                         <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
                         {serviceReq.vehicles && (

@@ -13,6 +13,8 @@ import { uploadImageBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { toast } from "react-toastify";
 import { locationList, Locations } from "@/interfaces/Locations";
+import { getGreeting } from "@/utils/contact/Content";
+import { sendWhatsapp } from "@/utils/contact/Sender";
 
 const ChangeLocationReq = () => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -41,21 +43,6 @@ const ChangeLocationReq = () => {
         }
     }, [loadingUser]);
 
-    const getGreeting = () => {
-        var hour = new Date().getHours();
-        var greeting;
-
-        if (hour < 12) {
-            greeting = "Buenos días;";
-        } else if (hour < 18) {
-            greeting = "Buenas tardes;";
-        } else {
-            greeting = "Buenas noches;";
-        }
-
-        return greeting;
-    };
-
     const sendMessage = () => {
         const number = "+59164868951";
         const message = `${getGreeting()}\n\nSoy el usuario servidor ${
@@ -63,9 +50,7 @@ const ChangeLocationReq = () => {
         }, quiero pedirle cambiarme de grupo porque **acabo de cambiar mi localizacion de ${
             location.default
         } a ${location.value}**`;
-        var enlaceWhatsApp = "https://wa.me/" + number + "?text=" + message;
-
-        window.open(enlaceWhatsApp, "_blank");
+        sendWhatsapp(number, message);
     };
 
     const submit = async (e: FormEvent) => {

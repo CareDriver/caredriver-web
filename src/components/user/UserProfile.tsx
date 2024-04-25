@@ -8,6 +8,8 @@ import Link from "next/link";
 import PenToSquare from "@/icons/PenToSquare";
 import LocationDot from "@/icons/LocationDot";
 import MoneyBillWave from "@/icons/MoneyBillWave";
+import { getGreeting } from "@/utils/contact/Content";
+import { sendWhatsapp } from "@/utils/contact/Sender";
 
 const UserProfile = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -32,21 +34,6 @@ const UserProfile = () => {
         }
     };
 
-    const getGreeting = () => {
-        var hour = new Date().getHours();
-        var greeting;
-
-        if (hour < 12) {
-            greeting = "Buenos días;";
-        } else if (hour < 18) {
-            greeting = "Buenas tardes;";
-        } else {
-            greeting = "Buenas noches;";
-        }
-
-        return greeting;
-    };
-
     const sendMessageToPay = () => {
         if (
             user.data &&
@@ -64,9 +51,8 @@ const UserProfile = () => {
             } ${currency} **. Es decir **${user.data.currentDebtWithTheApp.amount}/${
                 user.data.currentDebtWithTheApp.amount
             }**`;
-            var enlaceWhatsApp = "https://wa.me/" + number + "?text=" + message;
 
-            window.open(enlaceWhatsApp, "_blank");
+            sendWhatsapp(number, message);
         }
     };
 

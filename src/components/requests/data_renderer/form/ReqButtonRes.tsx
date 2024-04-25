@@ -37,17 +37,21 @@ const ReqButtonRes = ({
                 name="button_1"
                 onClick={execute}
             >
-                <CircleXmark />
-                Rechazar
+                <>
+                    <CircleXmark />
+                    Rechazar
+                </>
             </button>
             <button
-                className={`icon-wrapper general-button | green-icon touchable lb`}
+                className={`icon-wrapper general-button | white-icon touchable lb`}
                 type="button"
                 name="button_2"
                 onClick={execute}
             >
-                <CircleCheck />
-                Aceptar
+                <>
+                    <CircleCheck />
+                    Aceptar
+                </>
             </button>
         </div>
     );

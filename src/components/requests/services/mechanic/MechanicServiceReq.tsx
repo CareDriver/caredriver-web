@@ -21,6 +21,7 @@ import { Enterprise } from "@/interfaces/Enterprise";
 import FieldDeleted from "../../data_renderer/form/FieldDeleted";
 import WorkshopRenderer from "../../data_renderer/enterprise/WorkshopRenderer";
 import { mechanicReqCollection } from "@/utils/requests/services/MechanicRequester";
+import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 
 const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -29,6 +30,7 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         reviewed: false,
     });
     const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(null);
+    const [userData, setUserData] = useState<UserInterface | null>(null);
 
     const saveReviewHistory = async (wasApproved: boolean) => {
         try {
@@ -73,6 +75,7 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 if (isLimitToReviews) {
                     const userData = await getUserById(serviceReq.userId);
                     if (userData) {
+                        setUserData(userData);
                         const serviceReqState = {
                             id: serviceReq.id,
                             state: wasApproved
@@ -174,7 +177,16 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     name={serviceReq.newFullName}
                     photo={serviceReq.newProfilePhotoImgUrl}
                 />
-                {!reviewState.reviewed && (
+                {reviewState.reviewed ? (
+                    userData && user.data ? (
+                        <ContactReviewedUser
+                            user={userData}
+                            transmitter={user.data.fullName}
+                        />
+                    ) : (
+                        <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
+                    )
+                ) : (
                     <>
                         <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
                         {enterprise === null ? (

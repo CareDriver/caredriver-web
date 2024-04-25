@@ -11,7 +11,7 @@ import PersonalData from "../../data_renderer/personal_data/PersonalData";
 import SelfieRenderer from "../../data_renderer/personal_data/SelfieRenderer";
 import VehiclesRenderer from "../../data_renderer/vehicle/VehiclesRenderer";
 import ReqButtonRes from "../../data_renderer/form/ReqButtonRes";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { driveReqCollection } from "@/utils/requests/services/DriveRequester";
 import { AuthContext } from "@/context/AuthContext";
 import { Timestamp } from "firebase/firestore";
@@ -25,6 +25,8 @@ import { VehicleType } from "@/interfaces/VehicleInterface";
 import { ServiceReqState, Services } from "@/interfaces/Services";
 import { toast } from "react-toastify";
 import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
+import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
+import FieldDeleted from "../../data_renderer/form/FieldDeleted";
 
 const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -32,6 +34,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         loading: false,
         reviewed: false,
     });
+    const [userData, setUserData] = useState<UserInterface | null>(null);
 
     const saveReviewHistory = async (wasApproved: boolean) => {
         try {
@@ -90,6 +93,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     var motorcycle = getVehicle(VehicleType.MOTORCYCLE);
                     const userData = await getUserById(serviceReq.userId);
                     if (userData) {
+                        setUserData(userData);
                         var vehicles: ServiceVehicles =
                             userData.serviceVehicles !== undefined
                                 ? { ...userData.serviceVehicles }
@@ -242,7 +246,16 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     name={serviceReq.newFullName}
                     photo={serviceReq.newProfilePhotoImgUrl}
                 />
-                {!reviewState.reviewed && (
+                {!reviewState.reviewed ? (
+                    userData && user.data ? (
+                        <ContactReviewedUser
+                            user={userData}
+                            transmitter={user.data.fullName}
+                        />
+                    ) : (
+                        <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
+                    )
+                ) : (
                     <>
                         <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
                         {serviceReq.vehicles && (
