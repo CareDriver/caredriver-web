@@ -95,7 +95,10 @@ const EnterpriseReqRender = ({ enterprise }: { enterprise: Enterprise }) => {
 
     return (
         <section>
-            <h1>Solicitud para crear una Empresa de Grua</h1>
+            <h1>
+                Solicitud para crear {enterprise.type === "tow" ? "una" : "un"}{" "}
+                {EnterpriseTypeRender[enterprise.type]}
+            </h1>
             <EnterpriseRenderer enterprise={enterprise} />
             <ReqButtonRes
                 onApprove={approve}
