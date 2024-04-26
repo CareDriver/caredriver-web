@@ -1,4 +1,4 @@
-import LicenseReqsRenderer from "@/components/requests/userinfo/LicenseReqsRenderer";
+import LicenseReqsRenderer from "@/components/requests/userinfo/licenses/LicenseReqsRenderer";
 import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const ListOfLicensesReqToUpdatePage = () => {
