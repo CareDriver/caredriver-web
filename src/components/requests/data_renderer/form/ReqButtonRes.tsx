@@ -14,15 +14,23 @@ const ReqButtonRes = ({
     const execute = async (e: SyntheticEvent) => {
         e.preventDefault();
         var button = e.target as HTMLButtonElement;
-        const content = button.innerHTML;
+        const icon = button.children[0];
+        const text = button.innerHTML;
+        button.removeChild(icon);
+        button.innerHTML = "";
         button.classList.add("loading-section");
-        button.innerHTML = '<span className="loader"></span>';
+        var loader = document.createElement("span");
+        loader.classList.add("loader");
+        button.appendChild(loader);
         if (button.name === "button_1") {
+            loader.classList.add("loader-gray");
             await onDecline();
         } else {
             await onApprove();
         }
-        button.innerHTML = content;
+        button.removeChild(loader);
+        button.appendChild(icon);
+        button.innerHTML = text;
         button.classList.remove("loading-section");
     };
 
@@ -37,10 +45,8 @@ const ReqButtonRes = ({
                 name="button_1"
                 onClick={execute}
             >
-                <>
-                    <CircleXmark />
-                    Rechazar
-                </>
+                <CircleXmark />
+                Rechazar
             </button>
             <button
                 className={`icon-wrapper general-button | white-icon touchable lb`}
@@ -48,10 +54,8 @@ const ReqButtonRes = ({
                 name="button_2"
                 onClick={execute}
             >
-                <>
-                    <CircleCheck />
-                    Aceptar
-                </>
+                <CircleCheck />
+                Aceptar
             </button>
         </div>
     );

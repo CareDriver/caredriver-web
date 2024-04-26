@@ -7,6 +7,7 @@ import {
     DocumentSnapshot,
     endBefore,
     getCountFromServer,
+    getDoc,
     getDocs,
     limit,
     limitToLast,
@@ -26,6 +27,20 @@ export const sendLicenseUpdateReq = async (
     try {
         const reqRef = doc(licenseUpdateReqCollection, id);
         await setDoc(reqRef, licenseUpdateReq);
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getLicenceUpdateReqById = async (
+    reqId: string,
+): Promise<LicenseUpdateReq | undefined> => {
+    try {
+        const reqDoc = await getDoc(doc(licenseUpdateReqCollection, reqId));
+        if (reqDoc.exists()) {
+            return reqDoc.data() as LicenseUpdateReq;
+        }
+        return undefined;
     } catch (error) {
         throw error;
     }

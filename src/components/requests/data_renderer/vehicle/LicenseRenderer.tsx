@@ -1,11 +1,11 @@
 import AddressCar from "@/icons/AddressCar";
-import { LicenseInterface } from "@/interfaces/PersonalDocumentsInterface";
+import { LicenseInterface, LicenseUpdateReq } from "@/interfaces/PersonalDocumentsInterface";
 import InputData from "../form/InputData";
 import InpurDate from "../form/InpurDate";
 import ImageRenderer from "../form/ImageRenderer";
 import { getUrl } from "@/utils/validator/ImageValidator";
 
-const LicenseRenderer = ({ license }: { license: LicenseInterface }) => {
+const LicenseRenderer = ({ license }: { license: LicenseInterface | LicenseUpdateReq }) => {
     return (
         <div>
             <div>
