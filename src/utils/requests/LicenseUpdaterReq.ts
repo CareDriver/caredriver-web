@@ -1,5 +1,6 @@
 import { Collections } from "@/firebase/CollecionNames";
 import { firestore } from "@/firebase/FirebaseConfig";
+import { IMG_DELETED } from "@/interfaces/ImageInterface";
 import { LicenseUpdateReq } from "@/interfaces/PersonalDocumentsInterface";
 import {
     collection,
@@ -15,6 +16,7 @@ import {
     query,
     setDoc,
     startAfter,
+    updateDoc,
     where,
 } from "firebase/firestore";
 
@@ -44,6 +46,29 @@ export const getLicenceUpdateReqById = async (
     } catch (error) {
         throw error;
     }
+};
+
+export const updateLicenseUpReq = async (
+    id: string,
+    newData: Partial<LicenseUpdateReq>,
+): Promise<void> => {
+    try {
+        const ref = doc(licenseUpdateReqCollection, id);
+        await updateDoc(ref, newData);
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const setReviewLicenseReq = async (id: string, wasAprprove: boolean) => {
+    var toUpdate: Partial<LicenseUpdateReq> = {
+        active: false,
+        aproved: wasAprprove,
+        frontImgUrl: IMG_DELETED,
+        backImgUrl: IMG_DELETED,
+        realTimePhotoImgUrl: IMG_DELETED,
+    };
+    await updateLicenseUpReq(id, toUpdate);
 };
 
 export const getLicencesToUpdatePaginated = async (

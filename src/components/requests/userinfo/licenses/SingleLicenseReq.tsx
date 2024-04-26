@@ -7,12 +7,16 @@ import PageLoader from "@/components/PageLoader";
 import SelfieRenderer from "../../data_renderer/personal_data/SelfieRenderer";
 import { UserInterface } from "@/interfaces/UserInterface";
 import PersonalDataV2 from "../../data_renderer/personal_data/PersonalDataV2";
-import { getLicenceUpdateReqById } from "@/utils/requests/LicenseUpdaterReq";
-import { getUserById } from "@/utils/requests/UserRequester";
+import {
+    getLicenceUpdateReqById,
+    setReviewLicenseReq,
+} from "@/utils/requests/LicenseUpdaterReq";
+import { getUserById, updateUser } from "@/utils/requests/UserRequester";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import VehicleCategoryRender from "../../data_renderer/vehicle/VehicleCategoryRender";
 import ReqButtonRes from "../../data_renderer/form/ReqButtonRes";
+import { deleteFile } from "@/utils/requests/FileUploader";
 
 const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
     const { user } = useContext(AuthContext);
@@ -23,8 +27,8 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
     const [userReq, setUserReq] = useState<UserInterface | null>(null);
     const router = useRouter();
 
-    const faildRedirect = () => {
-        toast.error("Peticion no encontrada");
+    const faildRedirect = (reason: string) => {
+        toast.error(reason);
         router.push("/admin/requests/userinfo/license");
     };
 
@@ -34,10 +38,10 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
             if (reqRes) {
                 setReq(reqRes);
             } else {
-                faildRedirect();
+                faildRedirect("Peticion no encontrada");
             }
         } catch (e) {
-            faildRedirect();
+            faildRedirect("Peticion no encontrada");
         }
     };
 
@@ -45,13 +49,17 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
         if (req) {
             try {
                 const userRes = await getUserById(req.userId);
-                if (userRes) {
+                if (
+                    userRes &&
+                    userRes.serviceVehicles &&
+                    userRes.serviceVehicles[req.vehicleType]
+                ) {
                     setUserReq(userRes);
                 } else {
-                    faildRedirect();
+                    faildRedirect("El usuario no tiene ese vehiculo");
                 }
             } catch (e) {
-                faildRedirect();
+                faildRedirect("Peticion no encontrada");
             }
         }
     };
@@ -64,32 +72,82 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
         fetchUserReq();
     }, [req]);
 
-    const sleep = (milliseconds: number | undefined) => {
-        return new Promise((resolve) => setTimeout(resolve, milliseconds));
+    const deleteImages = async () => {
+        if (req) {
+            if (req.backImgUrl) {
+                await deleteFile(req.backImgUrl.ref);
+            }
+            if (req.frontImgUrl) {
+                await deleteFile(req.frontImgUrl.ref);
+            }
+            await deleteFile(req.realTimePhotoImgUrl.ref);
+        }
+    };
+
+    const saveReview = async (wasApproved: boolean) => {
+        if (
+            req &&
+            userReq &&
+            userReq.id &&
+            userReq.serviceVehicles &&
+            userReq.serviceVehicles[req.vehicleType]
+        ) {
+            await setReviewLicenseReq(req.id, wasApproved);
+            if (wasApproved) {
+                const toUpdateUser: Partial<UserInterface> = {
+                    serviceVehicles: {
+                        ...userReq.serviceVehicles,
+                        [req.vehicleType]: {
+                            ...userReq.serviceVehicles[req.vehicleType],
+                            license: {
+                                licenseNumber: req.licenseNumber,
+                                expiredDateLicense: req.expiredDateLicense,
+                            },
+                        },
+                    },
+                };
+                await updateUser(userReq.id, toUpdateUser);
+            }
+        }
+    };
+
+    const review = async (wasApproved: boolean) => {
+        if (user.data && req && userReq) {
+            setReviewState({
+                ...reviewState,
+                loading: true,
+            });
+            try {
+                await toast.promise(deleteImages, {
+                    pending: "Eliminando imagenes",
+                    success: "Imagenes eliminadas",
+                    error: "Error al eliminar imagenes, intentalo de nuevo por favor",
+                });
+                await toast.promise(saveReview(wasApproved), {
+                    pending: "Guardando revision",
+                    success: "Revision guardada",
+                    error: "Error al guardar, intentalo de nuevo por favor",
+                });
+                setReviewState({
+                    ...reviewState,
+                    loading: false,
+                });
+                router.push("/admin/requests/userinfo/license");
+            } catch (e) {
+                setReviewState({
+                    ...reviewState,
+                    loading: false,
+                });
+            }
+        }
     };
 
     const approve = async () => {
-        setReviewState({
-            ...reviewState,
-            loading: true,
-        });
-        await sleep(5000);
-        setReviewState({
-            ...reviewState,
-            loading: false,
-        });
+        await review(true);
     };
 
     const decline = async () => {
-        setReviewState({
-            ...reviewState,
-            loading: true,
-        });
-        await sleep(5000);
-        setReviewState({
-            ...reviewState,
-            loading: false,
-        });
+        await review(false);
     };
 
     return req ? (
