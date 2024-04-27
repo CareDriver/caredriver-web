@@ -92,7 +92,7 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
             userReq.serviceVehicles &&
             userReq.serviceVehicles[req.vehicleType]
         ) {
-            await setReviewLicenseReq(req.id, wasApproved);
+            await setReviewLicenseReq(req.id);
             if (wasApproved) {
                 const toUpdateUser: Partial<UserInterface> = {
                     serviceVehicles: {

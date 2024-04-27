@@ -19,6 +19,7 @@ import {
     updateDoc,
     where,
 } from "firebase/firestore";
+import { deleteDocument } from "./FileUploader";
 
 const licenseUpdateReqCollection = collection(firestore, Collections.LicenseUpdateReq);
 
@@ -60,15 +61,8 @@ export const updateLicenseUpReq = async (
     }
 };
 
-export const setReviewLicenseReq = async (id: string, wasAprprove: boolean) => {
-    var toUpdate: Partial<LicenseUpdateReq> = {
-        active: false,
-        aproved: wasAprprove,
-        frontImgUrl: IMG_DELETED,
-        backImgUrl: IMG_DELETED,
-        realTimePhotoImgUrl: IMG_DELETED,
-    };
-    await updateLicenseUpReq(id, toUpdate);
+export const setReviewLicenseReq = async (id: string) => {
+    await deleteDocument(Collections.LicenseUpdateReq, id);
 };
 
 export const getLicencesToUpdatePaginated = async (
