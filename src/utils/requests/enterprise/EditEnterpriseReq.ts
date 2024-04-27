@@ -1,7 +1,22 @@
 import { Collections } from "@/firebase/CollecionNames";
 import { firestore } from "@/firebase/FirebaseConfig";
 import { ReqEditEnterprise } from "@/interfaces/Enterprise";
-import { collection, doc, setDoc } from "firebase/firestore";
+import {
+    collection,
+    doc,
+    DocumentSnapshot,
+    endBefore,
+    getCountFromServer,
+    getDoc,
+    getDocs,
+    limit,
+    limitToLast,
+    orderBy,
+    query,
+    setDoc,
+    startAfter,
+    where,
+} from "firebase/firestore";
 
 const EditEnterpriseCollection = collection(firestore, Collections.EditEnterprises);
 
@@ -15,4 +30,71 @@ export const sendEditEnterpriseReq = async (
     } catch (error) {
         throw error;
     }
+};
+
+export const getEditEnterpriseReqById = async (
+    id: string,
+): Promise<ReqEditEnterprise | undefined> => {
+    try {
+        const enterpriseDoc = await getDoc(doc(EditEnterpriseCollection, id));
+        if (enterpriseDoc.exists()) {
+            return enterpriseDoc.data() as ReqEditEnterprise;
+        }
+        return undefined;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getEditEnterpriseReqs = async (
+    type: string,
+    direction: "next" | "prev" | undefined,
+    startAfterDoc?: DocumentSnapshot,
+    endBeforeDoc?: DocumentSnapshot,
+    numPerPage: number = 12,
+) => {
+    let dataQuery = query(
+        EditEnterpriseCollection,
+        orderBy("name"),
+        limit(numPerPage),
+        where("active", "==", true),
+        where("type", "==", type),
+    );
+
+    if (direction === "next" && startAfterDoc) {
+        dataQuery = query(dataQuery, startAfter(startAfterDoc));
+    } else if (direction === "prev" && endBeforeDoc) {
+        dataQuery = query(
+            EditEnterpriseCollection,
+            orderBy("name"),
+            endBefore(endBeforeDoc),
+            limitToLast(numPerPage),
+            where("active", "==", true),
+            where("type", "==", type),
+        );
+    }
+
+    const productsSnapshot = await getDocs(dataQuery);
+    const products = productsSnapshot.docs.map((doc) => doc.data());
+
+    return {
+        result: products as ReqEditEnterprise[],
+        lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
+        firstDoc: productsSnapshot.docs[0],
+    };
+};
+
+export const getEditEnterpriseReqsNumPages = async (
+    numPerPages: number,
+    type: string,
+): Promise<number> => {
+    const count = await getCountFromServer(
+        query(
+            EditEnterpriseCollection,
+            where("active", "==", true),
+            where("type", "==", type),
+        ),
+    );
+    const numPages = Math.ceil(count.data().count / numPerPages);
+    return numPages;
 };

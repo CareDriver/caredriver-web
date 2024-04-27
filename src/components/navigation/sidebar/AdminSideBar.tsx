@@ -82,6 +82,18 @@ const AdminSideBar = () => {
                                 <span>Talleres</span>
                             </Link>
                             <Link
+                                href={"/admin/requests/enterprises/editworkshops"}
+                                className={`sidebar-option lb-icon ${
+                                    pathname.includes(
+                                        "requests/enterprises/editworkshops",
+                                    ) && "selected"
+                                }`}
+                            >
+                                <MechanicReq />
+                                <span>Editar Talleres</span>
+                            </Link>
+
+                            <Link
                                 href={"/admin/requests/enterprises/cranes"}
                                 className={`sidebar-option ${
                                     pathname.includes("/requests/enterprises/cranes") &&
@@ -90,6 +102,17 @@ const AdminSideBar = () => {
                             >
                                 <TowReq />
                                 <span>Empresas de Grua</span>
+                            </Link>
+                            <Link
+                                href={"/admin/requests/enterprises/editcranes"}
+                                className={`sidebar-option lb-icon ${
+                                    pathname.includes(
+                                        "requests/enterprises/editcranes",
+                                    ) && "selected"
+                                }`}
+                            >
+                                <TowReq />
+                                <span>Editar Empresas de Grua</span>
                             </Link>
                             <Link
                                 href={"/admin/requests/userinfo/photo"}

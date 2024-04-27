@@ -1,31 +1,31 @@
 "use client";
 
 import PageLoader from "@/components/PageLoader";
-import { Enterprise } from "@/interfaces/Enterprise";
-import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
+import { ReqEditEnterprise } from "@/interfaces/Enterprise";
+import { getEditEnterpriseReqById } from "@/utils/requests/enterprise/EditEnterpriseReq";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import EnterpriseReqRender from "./EnterpriseReqRender";
+import EnterpriseUpReqRender from "./EnterpriseUpReqRender";
 
-const SingleEnterpriseReq = ({
+const SingleEnterpiseUpReq = ({
     reqId,
     type,
 }: {
     reqId: string;
     type: "mechanical" | "tow";
 }) => {
-    const [serviceReq, setServiceReq] = useState<Enterprise | null>(null);
+    const [serviceReq, setServiceReq] = useState<ReqEditEnterprise | null>(null);
     const router = useRouter();
 
     useEffect(() => {
-        getEnterpriseById(reqId)
+        getEditEnterpriseReqById(reqId)
             .then((data) => {
                 if (data) {
                     setServiceReq(data);
                 } else {
                     router.push(
-                        `/admin/requests/enterprises/${
+                        `/admin/requests/enterprises/edit${
                             type === "tow" ? "cranes" : "workshops"
                         }`,
                     );
@@ -34,7 +34,7 @@ const SingleEnterpriseReq = ({
             })
             .catch((e) => {
                 router.push(
-                    `/admin/requests/enterprises/${
+                    `/admin/requests/enterprises/edit${
                         type === "tow" ? "cranes" : "workshops"
                     }`,
                 );
@@ -42,7 +42,11 @@ const SingleEnterpriseReq = ({
             });
     }, []);
 
-    return serviceReq ? <EnterpriseReqRender enterprise={serviceReq} /> : <PageLoader />;
+    return serviceReq ? (
+        <EnterpriseUpReqRender enterprise={serviceReq} />
+    ) : (
+        <PageLoader />
+    );
 };
 
-export default SingleEnterpriseReq;
+export default SingleEnterpiseUpReq;

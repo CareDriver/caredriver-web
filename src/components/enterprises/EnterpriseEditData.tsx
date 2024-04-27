@@ -132,7 +132,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                         userId: user.data.id,
                         aproved: false,
                         deleted: false,
-                        active: false,
+                        active: true,
                     };
 
                     await toast.promise(sendEditEnterpriseReq(reqId, enterprise), {

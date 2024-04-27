@@ -1,9 +1,9 @@
-import { Enterprise, EnterpriseTypeRender } from "@/interfaces/Enterprise";
+import { Enterprise, EnterpriseTypeRender, ReqEditEnterprise } from "@/interfaces/Enterprise";
 import ImageRenderer from "../form/ImageRenderer";
 import InputData from "../form/InputData";
 import MarkRenderer from "../map/MarkRenderer";
 
-const EnterpriseRenderer = ({ enterprise }: { enterprise: Enterprise }) => {
+const EnterpriseRenderer = ({ enterprise }: { enterprise: Enterprise | ReqEditEnterprise }) => {
     const title = (enterprise.type === "tow" ? "de la" : "del").concat(
         EnterpriseTypeRender[enterprise.type],
     );
