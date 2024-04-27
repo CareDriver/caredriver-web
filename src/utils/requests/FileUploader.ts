@@ -1,6 +1,6 @@
 import { deleteObject, getDownloadURL, ref, uploadString } from "firebase/storage";
 
-import { storage } from "@/firebase/FirebaseConfig";
+import { firestore, storage } from "@/firebase/FirebaseConfig";
 import { nanoid } from "nanoid";
 import { ImgWithRef } from "@/interfaces/ImageInterface";
 
@@ -26,4 +26,10 @@ export const deleteFile = async (refLocation: string) => {
     } catch (e) {
         console.log(e);
     }
+};
+
+import { doc, deleteDoc } from "firebase/firestore";
+
+export const deleteDocument = async (collection: string, id: string) => {
+    await deleteDoc(doc(firestore, collection, id));
 };

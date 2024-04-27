@@ -6,7 +6,6 @@ import { defaultPhoto, PhotoField } from "../services/FormModels";
 import { AuthContext } from "@/context/AuthContext";
 import PageLoader from "../PageLoader";
 import { useRouter } from "next/navigation";
-import { updateUser } from "@/utils/requests/UserRequester";
 import { saveChangePhotoReq } from "@/utils/requests/ChangePhotoRequester";
 import { nanoid } from "nanoid";
 import { uploadImageBase64 } from "@/utils/requests/FileUploader";
@@ -45,6 +44,8 @@ const ChangePhotoReq = () => {
                                 id,
                                 newPhoto: imgWithRef,
                                 userId: user.data.id,
+                                userName: user.data.fullName,
+                                active: true
                             }),
                             {
                                 pending: "Enviando la peticion, por favor espera",

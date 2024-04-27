@@ -1,7 +1,25 @@
 import { firestore } from "../../firebase/FirebaseConfig";
-import { collection, DocumentReference, doc, setDoc } from "firebase/firestore";
+import {
+    collection,
+    DocumentReference,
+    doc,
+    setDoc,
+    getDoc,
+    updateDoc,
+    DocumentSnapshot,
+    query,
+    orderBy,
+    where,
+    limit,
+    startAfter,
+    endBefore,
+    limitToLast,
+    getDocs,
+    getCountFromServer,
+} from "firebase/firestore";
 import { Collections } from "@/firebase/CollecionNames";
 import { ChangePhotoReqInterface } from "@/interfaces/ChangePhotoReq";
+import { deleteDocument } from "./FileUploader";
 
 const changePhotoReqCollection = collection(firestore, Collections.ChangePhotoRequests);
 
@@ -24,4 +42,77 @@ export const saveChangePhotoReq = async (
     } catch (error) {
         throw error;
     }
+};
+
+export const getUpPhotoReqById = async (
+    reqId: string,
+): Promise<ChangePhotoReqInterface | undefined> => {
+    try {
+        const reqDoc = await getDoc(doc(changePhotoReqCollection, reqId));
+        if (reqDoc.exists()) {
+            return reqDoc.data() as ChangePhotoReqInterface;
+        }
+        return undefined;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const updateLicenseUpReq = async (
+    id: string,
+    newData: Partial<ChangePhotoReqInterface>,
+): Promise<void> => {
+    try {
+        const ref = doc(changePhotoReqCollection, id);
+        await updateDoc(ref, newData);
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const deleteChangePhotoReq = async (id: string) => {
+    await deleteDocument(Collections.ChangePhotoRequests, id);
+};
+
+export const getChangePhotoReqPaginated = async (
+    direction: "next" | "prev" | undefined,
+    startAfterDoc?: DocumentSnapshot,
+    endBeforeDoc?: DocumentSnapshot,
+    numPerPage: number = 8,
+) => {
+    let dataQuery = query(
+        changePhotoReqCollection,
+        orderBy("userName"),
+        limit(numPerPage),
+        where("active", "==", true),
+    );
+
+    if (direction === "next" && startAfterDoc) {
+        dataQuery = query(dataQuery, startAfter(startAfterDoc));
+    } else if (direction === "prev" && endBeforeDoc) {
+        dataQuery = query(
+            changePhotoReqCollection,
+            orderBy("userName"),
+            endBefore(endBeforeDoc),
+            limit(numPerPage),
+            where("active", "==", true),
+        );
+    }
+
+    const productsSnapshot = await getDocs(dataQuery);
+    const products = productsSnapshot.docs.map((doc) => doc.data());
+
+    return {
+        result: products as ChangePhotoReqInterface[],
+        lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
+        firstDoc: productsSnapshot.docs[0],
+    };
+};
+
+export const getChangePhotoReqNumPages = async (numPerPages: number): Promise<number> => {
+    const count = await getCountFromServer(
+        query(changePhotoReqCollection, where("active", "==", true)),
+    );
+    const numPages = Math.ceil(count.data().count / numPerPages);
+    return numPages;
 };
