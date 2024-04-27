@@ -246,7 +246,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     name={serviceReq.newFullName}
                     photo={serviceReq.newProfilePhotoImgUrl}
                 />
-                {!reviewState.reviewed ? (
+                {reviewState.reviewed ? (
                     userData && user.data ? (
                         <ContactReviewedUser
                             user={userData}

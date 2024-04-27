@@ -25,7 +25,6 @@ import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
 import { towReqCollection } from "@/utils/requests/services/TowRequester";
 import { Enterprise } from "@/interfaces/Enterprise";
 import FieldDeleted from "../../data_renderer/form/FieldDeleted";
-import WorkshopRenderer from "../../data_renderer/enterprise/WorkshopRenderer";
 import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import TowRenderer from "../../data_renderer/enterprise/TowRenderer";
@@ -241,7 +240,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     name={serviceReq.newFullName}
                     photo={serviceReq.newProfilePhotoImgUrl}
                 />
-                {!reviewState.reviewed ? (
+                {reviewState.reviewed ? (
                     userData && user.data ? (
                         <ContactReviewedUser
                             user={userData}
