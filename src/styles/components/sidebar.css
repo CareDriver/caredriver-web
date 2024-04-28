@@ -5,6 +5,7 @@
     display: inline-flex;
     flex-direction: column;
     gap: 5px;
+    overflow-y: auto;
 
     height: 100vh;
     min-width: 320px;
@@ -36,6 +37,11 @@
     padding: 13px 20px;
 
     border: none;
+}
+
+.sidebar-option.lb-icon > svg {
+    width: 26px;
+    height: 26px;
 }
 
 .sidebar-option > svg {

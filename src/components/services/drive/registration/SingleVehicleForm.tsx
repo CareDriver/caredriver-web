@@ -1,4 +1,9 @@
-import { vehicleModeRender, VehicleTransmission, VehicleType, vehicleTypeRender } from "@/interfaces/VehicleInterface";
+import {
+    vehicleModeRender,
+    VehicleTransmission,
+    VehicleType,
+    vehicleTypeRender,
+} from "@/interfaces/VehicleInterface";
 import { vehiclesModes, VehicleForm } from "../../FormModels";
 import ImageUploader from "@/components/form/ImageUploader";
 import { Dispatch, SetStateAction } from "react";
@@ -19,20 +24,18 @@ const SingleVehicleForm = ({
     setVehicle: Dispatch<SetStateAction<VehicleForm>>;
 }) => {
     const updateTypeModeVehicle = (type: string) => {
-        if (vehicle.type.type === VehicleType.CAR) {
-            var newMode: VehicleTransmission = VehicleTransmission.AUTOMATIC;
-            if (type === VehicleTransmission.MECHANICAL) {
-                newMode = VehicleTransmission.MECHANICAL;
-            }
-
-            setVehicle((prevVehicles) => ({
-                ...prevVehicles,
-                type: {
-                    ...vehicle.type,
-                    mode: [newMode],
-                },
-            }));
+        var newMode: VehicleTransmission = VehicleTransmission.AUTOMATIC;
+        if (type === VehicleTransmission.MECHANICAL) {
+            newMode = VehicleTransmission.MECHANICAL;
         }
+
+        setVehicle((prevVehicles) => ({
+            ...prevVehicles,
+            type: {
+                ...vehicle.type,
+                mode: [newMode],
+            },
+        }));
     };
 
     const updateNumberLicense = (number: string) => {

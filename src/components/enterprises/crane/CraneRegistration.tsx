@@ -14,7 +14,7 @@ import ImageUploader from "../../form/ImageUploader";
 import { PhotoField } from "../../services/FormModels";
 import { Location } from "@/utils/map/Locator";
 import MapForm from "../../form/MapForm";
-import { sendEnterpriseReq } from "@/utils/requests/EnterpriseRequester";
+import { sendEnterpriseReq } from "@/utils/requests/enterprise/EnterpriseRequester";
 import { Enterprise } from "@/interfaces/Enterprise";
 import { nanoid } from "nanoid";
 import { GeoPoint } from "firebase/firestore";
@@ -105,6 +105,8 @@ const CraneRegistration = () => {
                             phone: formData.phone.value,
                             userId: user.data.id,
                             aproved: false,
+                            deleted: false,
+                            active: true,
                         };
 
                         await toast.promise(sendEnterpriseReq(id, enterprise), {

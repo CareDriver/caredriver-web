@@ -2,7 +2,7 @@ import { firestore } from "@/firebase/FirebaseConfig";
 import { collection, doc, DocumentReference, setDoc } from "firebase/firestore";
 import { UserRequest } from "@/interfaces/UserRequest";
 
-const driveReqCollection = collection(firestore, "driver-requests");
+export const driveReqCollection = collection(firestore, "driver-requests");
 
 export const saveDriveReq = async (
     id: string,

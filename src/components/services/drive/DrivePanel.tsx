@@ -239,10 +239,14 @@ const DrivePanel = () => {
                             ? "Motocicleta"
                             : "Automovil"}
                     </h2>
-                    {user.data.serviceRequests.driveCar.state ===
-                        ServiceReqState.Reviewing ||
-                    user.data.serviceRequests.driveMotorcycle.state ===
-                        ServiceReqState.Reviewing ? (
+                    {(user.data.serviceRequests &&
+                        user.data.serviceRequests.driveCar &&
+                        user.data.serviceRequests.driveCar.state ===
+                            ServiceReqState.Reviewing) ||
+                    (user.data.serviceRequests &&
+                        user.data.serviceRequests.driveMotorcycle &&
+                        user.data.serviceRequests.driveMotorcycle.state ===
+                            ServiceReqState.Reviewing) ? (
                         <>
                             <h3 className="text | medium-big gray gray-dark bold margin-top-5">
                                 Tu solicitud esta siendo revisada

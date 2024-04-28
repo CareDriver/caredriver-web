@@ -148,6 +148,7 @@ const TowRegistration = () => {
                 await saveTowReq(
                     formId,
                     towReqBuilder(
+                        formId,
                         user.data.id === undefined ? "" : user.data.id,
                         personalData.fullname.value,
                         newProfilePhotoImgUrl,
@@ -268,7 +269,11 @@ const TowRegistration = () => {
             var toUpdate = {
                 ...user.data.serviceRequests,
             };
-            if (user.data.serviceRequests.tow.state === ServiceReqState.Refused) {
+            if (
+                user.data.serviceRequests &&
+                user.data.serviceRequests.tow &&
+                user.data.serviceRequests.tow.state === ServiceReqState.Refused
+            ) {
                 toUpdate = {
                     ...toUpdate,
                     tow: {
@@ -311,27 +316,32 @@ const TowRegistration = () => {
         [personalData, vehicle, userConfirmation, acceptedTerms],
     );
 
+    const getState = () => {
+        if (
+            user.data &&
+            user.data.serviceRequests &&
+            user.data.serviceRequests.tow &&
+            user.data.serviceRequests.tow.state === ServiceReqState.Refused
+        ) {
+            return {
+                title: "Tu solicitud fue Rechazada!",
+                description:
+                    "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud.",
+                state: ServiceReqState.Refused,
+            };
+        }
+
+        return {
+            title: "Solicita trabajar como Operador de Grua con nosotros!",
+            description:
+                "Por favor llena este formulario con datos reales para que tu solicitud sea aprovada y puedas empezar a trabajar con nosotros.",
+            state: ServiceReqState.NotSent,
+        };
+    };
+
     return (
         <div className="service-form-wrapper" onSubmit={(e) => handleSubmit(e)}>
-            <ServiceHeader
-                title={
-                    user.data &&
-                    user.data.serviceRequests.tow.state === ServiceReqState.Refused
-                        ? "Tu solicitud fue Rechazada!"
-                        : "Solicita trabajar como Chofer con nosotros!"
-                }
-                description={
-                    user.data &&
-                    user.data.serviceRequests.tow.state === ServiceReqState.Refused
-                        ? "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud."
-                        : "Por favor llena este formulario con datos reales para que tu solicitud sea aprovada y puedas empezar a trabajar con nosotros."
-                }
-                state={
-                    user.data
-                        ? user.data.serviceRequests.tow.state
-                        : ServiceReqState.NotSent
-                }
-            />
+            <ServiceHeader data={getState()} />
             <form
                 className="form-sub-container"
                 data-state={formState.loading ? "loading" : "loaded"}

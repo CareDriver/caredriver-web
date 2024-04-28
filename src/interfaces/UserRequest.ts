@@ -4,7 +4,6 @@ import { LicenseInterface } from "./PersonalDocumentsInterface";
 import { ServiceReqState, Services } from "./Services";
 import { VehicleTransmission, VehicleType } from "./VehicleInterface";
 import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
-import { SoftEnterprise } from "./Enterprise";
 
 export interface VehicleTypeAndMode {
     type: VehicleType;
@@ -21,8 +20,15 @@ export interface Vehicle {
     license: LicenseInterface;
 }
 
+export const userReqTypes = {
+    driver: "Chofer",
+    mechanic: "Mecanico",
+    tow: "Operador de Grua",
+};
+
 export interface UserRequest {
-    id?: string; // same identifier of the user
+    id: string;
+    userId: string; // same identifier of the user
     newFullName: string;
     newProfilePhotoImgUrl: string | ImgWithRef; // if changing the name
     aproved?: boolean; // if the request was aproved, false when rejected or not reviewed yet
@@ -35,8 +41,8 @@ export interface UserRequest {
     }[];
     realTimePhotoImgUrl: ImgWithRef;
     // the url of the real time user selfie for identification verification for the request
-    mechanicalWorkShop?: SoftEnterprise; // id of the mechanical user works for if is mechanic user
-    towEnterprite?: SoftEnterprise; // id of the tow enterprise user works for if is tow user
+    mechanicalWorkShop?: string; // id of the mechanical user works for if is mechanic user
+    towEnterprite?: string; // id of the tow enterprise user works for if is tow user
     services: Services[];
     location?: Locations; // just if user does not have a location registered yet.
     vehicles?: Vehicle[]; // vehicles that are in the request
@@ -71,6 +77,7 @@ export const licenseBuilder = (
 
 export const driveReqBuilder = (
     id: string,
+    userId: string,
     newFullName: string,
     newProfilePhotoImgUrl: string | ImgWithRef,
     vehicles: Vehicle[],
@@ -80,6 +87,7 @@ export const driveReqBuilder = (
 ): UserRequest => {
     return {
         id,
+        userId,
         newFullName,
         newProfilePhotoImgUrl,
         aproved: false,
@@ -95,6 +103,7 @@ export const driveReqBuilder = (
 export const emptyDriveReq = (): UserRequest => {
     return {
         id: "",
+        userId: "",
         newFullName: "",
         newProfilePhotoImgUrl: emptyPhotoWithRef,
         aproved: false,
@@ -109,16 +118,18 @@ export const emptyDriveReq = (): UserRequest => {
 
 export const mechanicReqBuilder = (
     id: string,
+    userId: string,
     newFullName: string,
     newProfilePhotoImgUrl: string | ImgWithRef,
     realTimePhotoImgUrl: ImgWithRef,
     services: Services[],
     location: Locations,
-    mechanicalWorkShop: SoftEnterprise | null,
+    mechanicalWorkShop: string | null,
 ): UserRequest => {
     if (mechanicalWorkShop !== null) {
         return {
             id,
+            userId,
             newFullName,
             newProfilePhotoImgUrl,
             aproved: false,
@@ -132,6 +143,7 @@ export const mechanicReqBuilder = (
     } else {
         return {
             id,
+            userId,
             newFullName,
             newProfilePhotoImgUrl,
             aproved: false,
@@ -146,9 +158,10 @@ export const mechanicReqBuilder = (
 
 export const towReqBuilder = (
     id: string,
+    userId: string,
     newFullName: string,
     newProfilePhotoImgUrl: string | ImgWithRef,
-    towEnterprite: SoftEnterprise,
+    towEnterprite: string,
     realTimePhotoImgUrl: ImgWithRef,
     services: Services[],
     location: Locations,
@@ -156,6 +169,7 @@ export const towReqBuilder = (
 ): UserRequest => {
     return {
         id,
+        userId,
         newFullName,
         newProfilePhotoImgUrl,
         aproved: false,

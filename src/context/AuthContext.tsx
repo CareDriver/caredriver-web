@@ -122,11 +122,11 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     hasPhoto: false,
                 });
                 toast.success("Sesion cerrada existosamente");
-                router.push("/");
+                window.location.replace("/");
             })
             .catch(() => {
                 toast.error("Algo salio mal");
-                router.push("/");
+                window.location.replace("/");
             });
     };
 

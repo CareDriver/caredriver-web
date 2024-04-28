@@ -1,0 +1,168 @@
+"use client";
+
+import { EnterpriseTypeRender, ReqEditEnterprise } from "@/interfaces/Enterprise";
+import EnterpriseRenderer from "../../data_renderer/enterprise/EnterpriseRenderer";
+import ReqButtonRes from "../../data_renderer/form/ReqButtonRes";
+import { useContext, useState } from "react";
+import {
+    getEnterpriseById,
+    updateEnterprise,
+} from "@/utils/requests/enterprise/EnterpriseRequester";
+import { AuthContext } from "@/context/AuthContext";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { deleteDocument, deleteFile } from "@/utils/requests/FileUploader";
+import { Collections } from "@/firebase/CollecionNames";
+
+const EnterpriseUpReqRender = ({ enterprise }: { enterprise: ReqEditEnterprise }) => {
+    const { user } = useContext(AuthContext);
+    const [reviewState, setReviewState] = useState({
+        loading: false,
+        reviewed: false,
+    });
+    const router = useRouter();
+
+    const updating = async () => {
+        await updateEnterprise(enterprise.enterpriseId, {
+            name: enterprise.name,
+            logoImgUrl: enterprise.logoImgUrl,
+            coordinates: enterprise.coordinates,
+            phone: enterprise.phone,
+            userId: enterprise.userId,
+        });
+
+        if (enterprise.id) {
+            await deleteDocument(Collections.EditEnterprises, enterprise.id);
+        }
+    };
+
+    const approve = async () => {
+        if (user.data && user.data.id && enterprise.id) {
+            setReviewState({
+                ...reviewState,
+                loading: true,
+            });
+            try {
+                const oldEnterprise = await getEnterpriseById(enterprise.enterpriseId);
+                if (oldEnterprise) {
+                    const logoChanged: boolean =
+                        oldEnterprise.logoImgUrl.ref !== enterprise.logoImgUrl.ref &&
+                        oldEnterprise.logoImgUrl.url !== enterprise.logoImgUrl.url;
+
+                    if (logoChanged) {
+                        await toast.promise(deleteFile(oldEnterprise.logoImgUrl.ref), {
+                            pending: "Remplazando el logo",
+                            success: "Logo remplazado",
+                            error: "Error al remplazar el logo, intentalo de nuevo por favor",
+                        });
+                    }
+                    await toast.promise(updating(), {
+                        pending: `Editando ${enterprise.type === "tow" ? "la" : "el"} ${
+                            EnterpriseTypeRender[enterprise.type]
+                        }`,
+                        success: "Editado",
+                        error: "Error al editar, intentalo de nuevo por favor",
+                    });
+                    router.push(
+                        `/admin/requests/enterprises/edit${
+                            enterprise.type === "tow" ? "cranes" : "workshops"
+                        }`,
+                    );
+                } else {
+                    toast.error(
+                        `${
+                            EnterpriseTypeRender[enterprise.type]
+                        } para editar no encontrado`,
+                    );
+                }
+                setReviewState({
+                    ...reviewState,
+                    loading: false,
+                });
+            } catch (e) {
+                console.log(e);
+                setReviewState({
+                    ...reviewState,
+                    loading: false,
+                });
+            }
+        }
+    };
+
+    const decline = async () => {
+        if (user.data && user.data.id && enterprise.id) {
+            setReviewState({
+                ...reviewState,
+                loading: true,
+            });
+            try {
+                const oldEnterprise = await getEnterpriseById(enterprise.enterpriseId);
+                if (oldEnterprise) {
+                    const logoChanged: boolean =
+                        oldEnterprise.logoImgUrl.ref !== enterprise.logoImgUrl.ref &&
+                        oldEnterprise.logoImgUrl.url !== enterprise.logoImgUrl.url;
+
+                    await toast.promise(
+                        deleteDocument(Collections.EditEnterprises, enterprise.id),
+                        {
+                            pending: `Rechazando la edicion ${
+                                enterprise.type === "tow" ? "de la" : "del"
+                            } ${EnterpriseTypeRender[enterprise.type]}`,
+                            success: "Rechazado",
+                            error: `Error al rechazar ${
+                                enterprise.type === "tow" ? "la" : "el"
+                            } ${EnterpriseTypeRender[enterprise.type]}`,
+                        },
+                    );
+                    if (logoChanged) {
+                        await toast.promise(deleteFile(enterprise.logoImgUrl.ref), {
+                            pending: "Eliminado el logo",
+                            success: "Logo eliminado",
+                            error: "Error al eliminar el logo, intentalo de nuevo por favor",
+                        });
+                    }
+
+                    router.push(
+                        `/admin/requests/enterprises/edit${
+                            enterprise.type === "tow" ? "cranes" : "workshops"
+                        }`,
+                    );
+                } else {
+                    toast.error(
+                        `${
+                            EnterpriseTypeRender[enterprise.type]
+                        } para editar no encontrado`,
+                    );
+                }
+
+                setReviewState({
+                    ...reviewState,
+                    loading: false,
+                });
+            } catch (e) {
+                console.log(e);
+                setReviewState({
+                    ...reviewState,
+                    loading: false,
+                });
+            }
+        }
+    };
+
+    return (
+        <section>
+            <h1>
+                Solicitud para editar {enterprise.type === "tow" ? "una" : "un"}{" "}
+                {EnterpriseTypeRender[enterprise.type]}
+            </h1>
+            <EnterpriseRenderer enterprise={enterprise} />
+            <ReqButtonRes
+                onApprove={approve}
+                onDecline={decline}
+                loading={reviewState.loading}
+            />
+        </section>
+    );
+};
+
+export default EnterpriseUpReqRender;

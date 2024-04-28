@@ -2,7 +2,7 @@ import { firestore } from "@/firebase/FirebaseConfig";
 import { collection, doc, DocumentReference, setDoc } from "firebase/firestore";
 import { UserRequest } from "@/interfaces/UserRequest";
 
-const mechanicReqCollection = collection(firestore, "mechanic-requests");
+export const mechanicReqCollection = collection(firestore, "mechanic-requests");
 
 export const saveMechanicReq = async (
     id: string,

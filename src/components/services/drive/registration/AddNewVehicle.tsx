@@ -137,6 +137,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                 await saveDriveReq(
                     formId,
                     driveReqBuilder(
+                        formId,
                         user.data.id === undefined ? "" : user.data.id,
                         personalData.fullname.value,
                         newProfilePhotoImgUrl,
@@ -273,18 +274,19 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                 }
                 isValid =
                     type === "car"
-                        ? user.data.serviceRequests.driveCar.state ===
-                          ServiceReqState.Reviewing
-                        : user.data.serviceRequests.driveMotorcycle.state ===
-                          ServiceReqState.Reviewing;
+                        ? user.data.serviceRequests !== undefined &&
+                          user.data.serviceRequests.driveCar !== undefined &&
+                          user.data.serviceRequests.driveCar.state ===
+                              ServiceReqState.Reviewing
+                        : user.data.serviceRequests !== undefined &&
+                          user.data.serviceRequests.driveMotorcycle !== undefined &&
+                          user.data.serviceRequests.driveMotorcycle.state ===
+                              ServiceReqState.Reviewing;
                 if (isValid) {
                     router.push("/services/drive");
-                    toast.error(
-                        "Tu peticion esta siendo revisada",
-                        {
-                            toastId: "vehicle-already-registered-like-req-message",
-                        },
-                    );
+                    toast.error("Tu peticion esta siendo revisada", {
+                        toastId: "vehicle-already-registered-like-req-message",
+                    });
                 }
             }
         }

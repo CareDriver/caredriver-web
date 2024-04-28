@@ -3,7 +3,7 @@ import { InputState } from "../InputValidator";
 import { PhotoField } from "@/components/services/FormModels";
 
 export const isValidLicenseNumber = (licenseNumber: string): InputState => {
-    const regex: RegExp = /^[a-zA-Z\s]+$/;
+    const regex: RegExp = /^[a-zA-Z0-9\s]+$/;
     if (licenseNumber.trim().length === 0) {
         return {
             isValid: false,
