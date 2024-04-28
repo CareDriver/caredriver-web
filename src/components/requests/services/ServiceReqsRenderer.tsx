@@ -1,8 +1,6 @@
 "use client";
 
 import PageLoader from "@/components/PageLoader";
-import AngleLeft from "@/icons/AngleLeft";
-import AngleRight from "@/icons/AngleRight";
 import { userReqTypes, UserRequest } from "@/interfaces/UserRequest";
 import {
     getNumPages,
@@ -13,6 +11,7 @@ import { CollectionReference, DocumentSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import "@/styles/components/pagination.css";
 import ServiceItemReq from "./ServiceItemReq";
+import PageChanger from "../data_renderer/form/PageChanger";
 
 const ServiceReqsRenderer = ({ type }: { type: "driver" | "mechanic" | "tow" }) => {
     const numPerPage = 10;
@@ -23,75 +22,62 @@ const ServiceReqsRenderer = ({ type }: { type: "driver" | "mechanic" | "tow" }) 
     const [page, setPage] = useState<number>(1);
     const [direction, setDirection] = useState<"prev" | "next" | undefined>(undefined);
     const collection: CollectionReference = getServiceCollection(type);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        getNumPages(numPerPage, collection).then((pages) => setPages(pages));
+        setLoading(true);
+
+        getNumPages(numPerPage, collection)
+            .then((pages) => {
+                setPages(pages);
+                setLoading(false);
+            })
+            .catch(() => {
+                setLoading(false);
+            });
     }, []);
 
     useEffect(() => {
+        setLoading(true);
+
         const startAfterDoc = direction === "next" ? lastDoc : undefined;
         const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
-        getPaginatedData(
-            direction,
-            collection,
-            startAfterDoc,
-            endBeforeDoc,
-            numPerPage,
-        ).then((data) => {
-            setData(data.result);
-            setFirstDoc(data.firstDoc);
-            setLastDoc(data.lastDoc);
-        });
+        getPaginatedData(direction, collection, startAfterDoc, endBeforeDoc, numPerPage)
+            .then((data) => {
+                setData(data.result);
+                setFirstDoc(data.firstDoc);
+                setLastDoc(data.lastDoc);
+                setLoading(false);
+            })
+            .catch(() => {
+                setLoading(false);
+            });
     }, [page]);
-
-    const handlePreviousClick = () => {
-        if (page === 1) return;
-        setDirection("prev");
-        setPage((prev) => prev - 1);
-    };
-
-    const handleNextClick = () => {
-        if (page === pages) return;
-        setDirection("next");
-        setPage((prev) => prev + 1);
-    };
 
     return data ? (
         data.length > 0 ? (
             <div>
-                <div className="enterprise-list">
-                    {data.map((req, i) => (
-                        <ServiceItemReq
-                            req={req}
-                            key={`service-req-item-${i}`}
-                            type={type}
-                        />
-                    ))}
-                </div>
-
-                {pages && pages > 1 && (
-                    <div className="pagination-wrapper">
-                        <button
-                            className="icon-wrapper circle-button touchable green-icon"
-                            disabled={page === 1}
-                            onClick={handlePreviousClick}
-                        >
-                            <AngleLeft />
-                        </button>
-
-                        <span className="pagination-indicator">
-                            Pagina {page} de {pages}
-                        </span>
-
-                        <button
-                            className="icon-wrapper circle-button touchable green-icon"
-                            disabled={page === pages}
-                            onClick={handleNextClick}
-                        >
-                            <AngleRight />
-                        </button>
+                {loading ? (
+                    <span className="loader-green | big-loader"></span>
+                ) : (
+                    <div className="enterprise-list">
+                        {data.map((req, i) => (
+                            <ServiceItemReq
+                                req={req}
+                                key={`service-req-item-${i}`}
+                                type={type}
+                            />
+                        ))}
                     </div>
                 )}
+
+                <PageChanger
+                    page={page}
+                    pages={pages}
+                    loading={loading}
+                    setPage={setPage}
+                    setDirection={setDirection}
+                />
             </div>
         ) : (
             <div className="empty-wrapper | auto-height">

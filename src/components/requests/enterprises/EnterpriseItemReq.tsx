@@ -14,6 +14,11 @@ const EnterpriseItemReq = ({
                 type === "tow" ? "cranes" : "workshops"
             }/${enterprise.id}`}
             className="enterprise-item"
+            style={{
+                height: "20vh",
+                minHeight: "20vh",
+                maxHeight: "20vh"
+            }}
         >
             <h3 className="enterprise-item-title">{enterprise.name}</h3>
             <img
