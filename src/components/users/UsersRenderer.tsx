@@ -8,6 +8,8 @@ import PageChanger from "@/components/requests/data_renderer/form/PageChanger";
 import {
     getAllUsersNumPages,
     getAllUsersPaginated,
+    getSearchUsersNumPages,
+    getSearchUsersPaginated,
 } from "@/utils/requests/UserRequester";
 import { UserInterface } from "@/interfaces/UserInterface";
 
@@ -21,23 +23,68 @@ const UsersRenderer = () => {
     const [direction, setDirection] = useState<"prev" | "next" | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
 
-    useEffect(() => {
+    const [searchState, setSearchState] = useState({
+        value: "",
+        isSearching: false,
+        wereThereResults: true,
+    });
+
+    const calculateSearchPages = () => {
         setLoading(true);
 
+        if (searchState.isSearching) {
+            getSearchUsersNumPages(numPerPage, searchState.value)
+                .then((pages) => {
+                    setPages(pages);
+                    setLoading(false);
+                })
+                .catch((e) => {
+                    console.log(e);
+                    setLoading(false);
+                });
+        }
+    };
+
+    const calculateNormalNumPages = () => {
+        setLoading(true);
         getAllUsersNumPages(numPerPage)
             .then((pages) => {
                 setPages(pages);
                 setLoading(false);
             })
             .catch((e) => {
-                console.log(e);                
+                console.log(e);
                 setLoading(false);
             });
-    }, []);
+    };
 
     useEffect(() => {
-        setLoading(true);
+        calculateNormalNumPages();
+    }, []);
 
+    const getSearchData = () => {
+        const startAfterDoc = direction === "next" ? lastDoc : undefined;
+        const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
+        getSearchUsersPaginated(
+            searchState.value,
+            direction,
+            startAfterDoc,
+            endBeforeDoc,
+            numPerPage,
+        )
+            .then((data) => {
+                setData(data.result);
+                setFirstDoc(data.firstDoc);
+                setLastDoc(data.lastDoc);
+                setLoading(false);
+            })
+            .catch((e) => {
+                console.log(e);
+                setLoading(false);
+            });
+    };
+
+    const getAllUsersData = () => {
         const startAfterDoc = direction === "next" ? lastDoc : undefined;
         const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
         getAllUsersPaginated(direction, startAfterDoc, endBeforeDoc, numPerPage)
@@ -51,49 +98,116 @@ const UsersRenderer = () => {
                 console.log(e);
                 setLoading(false);
             });
+    };
+
+    useEffect(() => {
+        setLoading(true);
+
+        if (searchState.isSearching) {
+            getSearchData();
+        } else {
+            getAllUsersData();
+        }
     }, [page]);
 
-    return data ? (
-        data.length > 0 ? (
-            <div>
-                {loading ? (
-                    <span className="loader-green | big-loader"></span>
-                ) : (
-                    <div className="enterprise-list">
-                        {data.map((req, i) => (
-                            // <ServiceItemReq
-                            //     req={req}
-                            //     key={`service-req-item-${i}`}
-                            //     type={type}
-                            // />
-                            <div key={`user-item-${i}`}>
-                                <img src={req.photoUrl} alt="" />
-                                <div>
-                                    <h2>{req.fullName}</h2>
-                                    <h4>{req.email}</h4>
-                                    <h4>{req.phoneNumber}</h4>
-                                    <h4>
-                                        {req.services.toString().replaceAll(",", " | ")}
-                                    </h4>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
+    useEffect(() => {
+        if (searchState.isSearching && data && data.length <= 0) {
+            setSearchState({
+                ...searchState,
+                wereThereResults: false,
+            });
+        }
+    }, [data]);
 
-                <PageChanger
-                    page={page}
-                    pages={pages}
-                    loading={loading}
-                    setPage={setPage}
-                    setDirection={setDirection}
-                />
+    const search = () => {
+        setFirstDoc(undefined);
+        setLastDoc(undefined);
+        setDirection(undefined);
+        if (searchState.value.trim().length == 0) {
+            setSearchState({
+                ...searchState,
+                isSearching: false,
+            });
+            calculateNormalNumPages();
+            getAllUsersData();
+        } else {
+            setSearchState({
+                ...searchState,
+                isSearching: true,
+            });
+            calculateSearchPages();
+            getSearchData();
+        }
+    };
+
+    return data ? (
+        <div>
+            <div>
+                <fieldset>
+                    <input
+                        type="text"
+                        placeholder="Buscar por nombre, email, telefono"
+                        value={searchState.value}
+                        onChange={(e) => {
+                            setSearchState({
+                                ...searchState,
+                                value: e.target.value,
+                                wereThereResults: true,
+                            });
+                        }}
+                    />
+                    <button onClick={search} disabled={!searchState.wereThereResults}>
+                        Buscar
+                    </button>
+                </fieldset>
             </div>
-        ) : (
-            <div className="empty-wrapper | auto-height">
-                <h2>No hay usuarios registrados en la aplicacion</h2>
-            </div>
-        )
+            {data.length > 0 ? (
+                <div>
+                    {loading ? (
+                        <span className="loader-green | big-loader"></span>
+                    ) : (
+                        <div className="enterprise-list">
+                            {data.map((req, i) => (
+                                // <ServiceItemReq
+                                //     req={req}
+                                //     key={`service-req-item-${i}`}
+                                //     type={type}
+                                // />
+                                <div key={`user-item-${i}`}>
+                                    <img src={req.photoUrl} alt="" />
+                                    <div>
+                                        <h2>{req.fullName}</h2>
+                                        <h4>{req.email}</h4>
+                                        <h4>{req.phoneNumber}</h4>
+                                        <h4>
+                                            {req.services
+                                                .toString()
+                                                .replaceAll(",", " | ")}
+                                        </h4>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    <PageChanger
+                        page={page}
+                        pages={pages}
+                        loading={loading}
+                        setPage={setPage}
+                        setDirection={setDirection}
+                    />
+                </div>
+            ) : (
+                <div className="empty-wrapper | auto-height">
+                    <h2>
+                        {searchState.isSearching
+                            ? "Ningun usuario fue encontrado"
+                            : "No hay usuarios registrados en la aplicacion"}
+                    </h2>
+                </div>
+            )}
+        </div>
     ) : (
         <PageLoader />
     );
