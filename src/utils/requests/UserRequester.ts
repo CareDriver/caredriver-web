@@ -7,6 +7,9 @@ import {
     doc,
     setDoc,
     updateDoc,
+    where,
+    query,
+    getDocs,
 } from "firebase/firestore";
 import { UserInterface } from "../../interfaces/UserInterface";
 import { fetchSignInMethodsForEmail } from "firebase/auth";
@@ -72,14 +75,22 @@ const updateUser = async (
     }
 };
 
-const checkEmailExists = async (email: string): Promise<boolean> => {
+const checkEmailExists = async (email: string): Promise<number> => {
     try {
-        const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-        console.log(signInMethods);
-        
-        return signInMethods.length === 0;
+        const q = query(
+            usersCollection,
+            where("email", "==", email),
+            where("deleted", "==", false),
+        );
+
+        const docs = await getDocs(q);
+        var size = 0;
+        docs.forEach(() => {
+            size++;
+        });
+
+        return size;
     } catch (error) {
-        console.error("Error al verificar el correo electrónico:", error);
         throw error;
     }
 };

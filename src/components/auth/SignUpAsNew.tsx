@@ -3,7 +3,7 @@
 import "react-international-phone/style.css";
 import { auth } from "@/firebase/FirebaseConfig";
 import { servicesData } from "@/interfaces/ServicesDataInterface";
-import { saveUser } from "@/utils/requests/UserRequester";
+import { checkEmailExists, saveUser } from "@/utils/requests/UserRequester";
 import { InputValidator } from "@/utils/validator/InputValidator";
 import {
     isPhoneValid,
@@ -280,51 +280,70 @@ const SignUpAsNew = () => {
                 !credentials.password.errorMessage
             ) {
                 try {
-                    var codeToSent: string =
-                        "" +
-                        generateVerificationCode({
-                            length: 6,
-                            type: "string",
-                        });
-                    try {
-                        await toast.promise(
-                            fetch("/api/sms", {
-                                method: "POST",
-                                body: JSON.stringify({
-                                    code: codeToSent,
-                                    toPhone: credentials.phone.value,
-                                }),
-                                headers: {
-                                    Accept: "application/json",
-                                    "Content-Type": "application/json",
-                                },
-                            }),
-                            {
-                                pending: "Enviando codigo de verificacion a tu celular",
-                                success: "Codigo enviado",
-                                error: "Error al enviar el codigo, intentalo de nuevo por favor",
-                            },
-                        );
-                        setCredentials({
-                            ...credentials,
-                            code: {
-                                ...credentials.code,
-                                sent: codeToSent,
-                            },
-                        });
-
-                        setFormState({
-                            ...formState,
-                            isVerifyingCode: true,
-                            loading: false,
-                        });
-                    } catch (e) {
+                    const amountOfUsers = await checkEmailExists(credentials.email.value);
+                    if (amountOfUsers > 0) {
                         setFormState({
                             ...formState,
                             isValid: false,
                             isVerifyingCode: false,
                             loading: false,
                         });
+                        setCredentials({
+                            ...credentials,
+                            email: {
+                                ...credentials.email,
+                                errorMessage: "El correo ya fue registrado",
+                            },
+                        });
+                        toast.error("El correo ya fue registrado, inicia sesion");
+                    } else {
+                        var codeToSent: string =
+                            "" +
+                            generateVerificationCode({
+                                length: 6,
+                                type: "string",
+                            });
+                        try {
+                            await toast.promise(
+                                fetch("/api/sms", {
+                                    method: "POST",
+                                    body: JSON.stringify({
+                                        code: codeToSent,
+                                        toPhone: credentials.phone.value,
+                                    }),
+                                    headers: {
+                                        Accept: "application/json",
+                                        "Content-Type": "application/json",
+                                    },
+                                }),
+                                {
+                                    pending:
+                                        "Enviando codigo de verificacion a tu celular",
+                                    success: "Codigo enviado",
+                                    error: "Error al enviar el codigo, intentalo de nuevo por favor",
+                                },
+                            );
+                            setCredentials({
+                                ...credentials,
+                                code: {
+                                    ...credentials.code,
+                                    sent: codeToSent,
+                                },
+                            });
+
+                            setFormState({
+                                ...formState,
+                                isVerifyingCode: true,
+                                loading: false,
+                            });
+                        } catch (e) {
+                            setFormState({
+                                ...formState,
+                                isValid: false,
+                                isVerifyingCode: false,
+                                loading: false,
+                            });
+                        }
                     }
                 } catch (e) {
                     setFormState({
@@ -333,9 +352,7 @@ const SignUpAsNew = () => {
                         isVerifyingCode: false,
                         loading: false,
                     });
-                    toast.error(
-                        "Error al enviar el codigo, intentalo de nuevo por favor",
-                    );
+                    toast.error("Ocurrio un error, intentalo de nuevo por favor");
                 }
             } else {
                 setFormState({

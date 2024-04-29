@@ -104,7 +104,6 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                     userBuilt !== null &&
                                     userBuilt.photoUrl.trim().length > 0,
                             });
-
                             setLoadingUser(false);
                         } else {
                             setUser({
@@ -129,6 +128,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
         });
     }, []);
+
+    useEffect(() => {
+        if (user.data && (user.data.deleted || user.data.disable)) {
+            refirectToHome();
+        }
+    }, [user]);
 
     const logout = () => {
         auth.signOut()
