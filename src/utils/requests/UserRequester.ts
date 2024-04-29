@@ -1,7 +1,6 @@
-import { auth, firestore } from "../../firebase/FirebaseConfig";
+import { firestore } from "../../firebase/FirebaseConfig";
 import {
     collection,
-    addDoc,
     DocumentReference,
     getDoc,
     doc,
@@ -10,9 +9,15 @@ import {
     where,
     query,
     getDocs,
+    DocumentSnapshot,
+    orderBy,
+    limit,
+    startAfter,
+    endBefore,
+    limitToLast,
+    getCountFromServer,
 } from "firebase/firestore";
 import { UserInterface } from "../../interfaces/UserInterface";
-import { fetchSignInMethodsForEmail } from "firebase/auth";
 
 const usersCollection = collection(firestore, "users");
 
@@ -93,6 +98,49 @@ const checkEmailExists = async (email: string): Promise<number> => {
     } catch (error) {
         throw error;
     }
+};
+
+export const getAllUsersPaginated = async (
+    direction: "next" | "prev" | undefined,
+    startAfterDoc?: DocumentSnapshot,
+    endBeforeDoc?: DocumentSnapshot,
+    numPerPage: number = 8,
+) => {
+    let dataQuery = query(
+        usersCollection,
+        orderBy("fullName"),
+        limit(numPerPage),
+        where("deleted", "==", false),
+    );
+
+    if (direction === "next" && startAfterDoc) {
+        dataQuery = query(dataQuery, startAfter(startAfterDoc));
+    } else if (direction === "prev" && endBeforeDoc) {
+        dataQuery = query(
+            usersCollection,
+            orderBy("fullName"),
+            endBefore(endBeforeDoc),
+            limitToLast(numPerPage),
+            where("deleted", "==", false),
+        );
+    }
+
+    const productsSnapshot = await getDocs(dataQuery);
+    const products = productsSnapshot.docs.map((doc) => doc.data());
+
+    return {
+        result: products as UserInterface[],
+        lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
+        firstDoc: productsSnapshot.docs[0],
+    };
+};
+
+export const getAllUsersNumPages = async (numPerPages: number): Promise<number> => {
+    const count = await getCountFromServer(
+        query(usersCollection, where("deleted", "==", false)),
+    );
+    const numPages = Math.ceil(count.data().count / numPerPages);
+    return numPages;
 };
 
 export { saveUser, getUserById, updateUser, checkEmailExists };
