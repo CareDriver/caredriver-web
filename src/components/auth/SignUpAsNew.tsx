@@ -126,6 +126,9 @@ const SignUpAsNew = () => {
                                 email: credentials.email.value.toLowerCase(),
 
                                 serviceRequests: defaultServiceReq,
+
+                                disable: false,
+                                deleted: false,
                             };
 
                             saveUser(res.user.uid, emptyUserData)

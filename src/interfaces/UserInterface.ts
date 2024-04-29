@@ -47,6 +47,7 @@ export interface UserInterface {
     appPaymentHistory?: Payment[]; // Array of the payments made by the service user to the app.
     location?: Locations; // Location user begins
     disable?: boolean; // true when user did not paid to the app and was disabled.
+    deleted: boolean; // used for soft delete
     mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
     towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
 
