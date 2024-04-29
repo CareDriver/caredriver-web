@@ -75,9 +75,9 @@ const SingleUpPhotoReq = ({ reqId }: { reqId: string }) => {
             try {
                 if (wasApproved) {
                     await updateUser(userReq.id, {
-                        photoUrl: req.newPhoto.url,
+                        photoUrl: req.newPhoto,
                     });
-                } else {
+                } else if (req.newPhoto.ref !== "") {
                     await deleteFile(req.newPhoto.ref);
                 }
                 await deleteChangePhotoReq(req.id);

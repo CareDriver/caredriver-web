@@ -30,7 +30,7 @@ const ChangePhotoReq = () => {
                         var id = nanoid(30);
                         const imgWithRef = await toast.promise(
                             uploadImageBase64(
-                                DirectoryPath.TempProfilePhotos,
+                                DirectoryPath.Users,
                                 newPhoto.value,
                             ),
                             {

@@ -20,6 +20,7 @@ import PhoneForm from "../form/PhoneForm";
 import { defaultServiceReq, UserInterface, UserRole } from "@/interfaces/UserInterface";
 import { Services } from "@/interfaces/Services";
 import { generateVerificationCode } from "generate-verification-code";
+import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
 
 interface FormData {
     fullName: {
@@ -112,7 +113,7 @@ const SignUpAsNew = () => {
                                 role: UserRole.User,
                                 fullName: credentials.fullName.value,
                                 phoneNumber: credentials.phone.value,
-                                photoUrl: "",
+                                photoUrl: emptyPhotoWithRef,
 
                                 comments: [],
                                 vehicles: [],

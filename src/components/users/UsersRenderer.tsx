@@ -174,7 +174,7 @@ const UsersRenderer = () => {
                                 //     type={type}
                                 // />
                                 <div key={`user-item-${i}`}>
-                                    <img src={req.photoUrl} alt="" />
+                                    <img src={req.photoUrl.url} alt="" />
                                     <div>
                                         <h2>{req.fullName}</h2>
                                         <h4>{req.email}</h4>

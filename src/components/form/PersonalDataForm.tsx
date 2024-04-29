@@ -6,6 +6,7 @@ import UserIcon from "@/icons/UserIcon";
 import { PersonalDataFormField, PhotoField } from "../services/FormModels";
 import { isValidName } from "@/utils/validator/auth/CredentialsValidator";
 import { AuthContext } from "@/context/AuthContext";
+import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
 const PersonalDataForm = ({
     personalData,
     setPersonalData,
@@ -38,7 +39,7 @@ const PersonalDataForm = ({
                         message: null,
                     },
                     photo: {
-                        value: user.hasPhoto ? user.data.photoUrl : null,
+                        value: user.hasPhoto ? user.data.photoUrl.url : null,
                         message: user.hasPhoto
                             ? null
                             : "No tienes foto de perfil, por favor sube una foto de perfil",

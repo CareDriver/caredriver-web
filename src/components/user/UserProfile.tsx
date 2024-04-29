@@ -62,7 +62,7 @@ const UserProfile = () => {
         <section className="user-page-wrapper">
             <section className="profile-wrapper">
                 <img
-                    src={user.data.photoUrl === "" ? DEFAULT_PHOTO : user.data.photoUrl}
+                    src={user.data.photoUrl.url === "" ? DEFAULT_PHOTO : user.data.photoUrl.url}
                     className="profile-photo"
                     alt=""
                 />

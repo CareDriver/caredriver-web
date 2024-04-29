@@ -6,6 +6,7 @@ import { createContext, useState, useEffect } from "react";
 import { getUserById } from "@/utils/requests/UserRequester";
 import { servicesData } from "@/interfaces/ServicesDataInterface";
 import { toast } from "react-toastify";
+import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
 
 interface UserInfo {
     data: UserInterface | null;
@@ -36,7 +37,7 @@ const buildUser = (
             id: id,
             fullName: userData?.fullName === undefined ? "" : userData.fullName,
             phoneNumber: userData?.phoneNumber === undefined ? "" : userData.phoneNumber,
-            photoUrl: userData?.photoUrl === undefined ? "" : userData.photoUrl,
+            photoUrl: userData?.photoUrl === undefined ? emptyPhotoWithRef : userData.photoUrl,
             comments: userData?.comments === undefined ? [] : userData.comments,
             vehicles: userData?.vehicles === undefined ? [] : userData.vehicles,
             services: userData?.services === undefined ? [] : userData.services,
@@ -102,7 +103,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                 data: userBuilt,
                                 hasPhoto:
                                     userBuilt !== null &&
-                                    userBuilt.photoUrl.trim().length > 0,
+                                    userBuilt.photoUrl.url.trim().length > 0,
                             });
                             setLoadingUser(false);
                         } else {
