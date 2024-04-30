@@ -64,6 +64,12 @@
     fill: var(--gray-dark);
 }
 
+.general-button.yellow {
+    border: none;
+    background-color: var(--yellow);
+    color: var(--second-dark);
+}
+
 .option-button {
     font-weight: bold;
     font-size: 18px;

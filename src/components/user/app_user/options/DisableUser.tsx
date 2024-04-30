@@ -21,7 +21,7 @@ const DisableUser = ({
         button.innerHTML = "";
         button.classList.add("loading-section");
         var loader = document.createElement("span");
-        loader.classList.add("loader");
+        loader.classList.add("loader-black");
         button.appendChild(loader);
 
         await onAction();
@@ -36,7 +36,7 @@ const DisableUser = ({
             className={`form-sub-container | margin-top-50 max-width-60`}
             data-state={loading ? "loading" : "loaded"}
         >
-            <h2 className="text icon-wrapper | red red-icon medium-big bold">
+            <h2 className="text icon-wrapper | yellow yellow-icon medium-big bold">
                 <TriangleExclamation />
                 Zona Peligrosa
             </h2>
@@ -57,8 +57,8 @@ const DisableUser = ({
             <button
                 type="button"
                 onClick={execute}
-                className={`general-button | red no-full touchable ${
-                    loading && "loading-section"
+                className={`general-button | yellow no-full touchable ${
+                    loading && validToDelete && "loading-section"
                 }`}
                 disabled={!validToDelete}
             >

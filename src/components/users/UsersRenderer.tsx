@@ -30,75 +30,86 @@ const UsersRenderer = () => {
         wereThereResults: true,
     });
 
-    const calculateSearchPages = () => {
+    const calculateSearchPages = async () => {
         setLoading(true);
 
         if (searchState.isSearching) {
-            getSearchUsersNumPages(numPerPage, searchState.value)
-                .then((pages) => {
-                    setPages(pages);
-                    setLoading(false);
-                })
-                .catch((e) => {
-                    console.log(e);
-                    setLoading(false);
-                });
+            try {
+                var pags = await getSearchUsersNumPages(numPerPage, searchState.value);
+                setPages(pags);
+                setLoading(false);
+            } catch (e) {
+                console.log(e);
+                setLoading(false);
+            }
         }
     };
 
-    const calculateNormalNumPages = () => {
+    const calculateNormalNumPages = async () => {
         setLoading(true);
-        getAllUsersNumPages(numPerPage)
-            .then((pages) => {
-                setPages(pages);
-                setLoading(false);
-            })
-            .catch((e) => {
-                console.log(e);
-                setLoading(false);
-            });
+        try {
+            var pags = await getAllUsersNumPages(numPerPage);
+            setPages(pags);
+            setLoading(false);
+        } catch (e) {
+            console.log(e);
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
         calculateNormalNumPages();
     }, []);
 
-    const getSearchData = () => {
-        const startAfterDoc = direction === "next" ? lastDoc : undefined;
-        const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
-        getSearchUsersPaginated(
-            searchState.value,
-            direction,
-            startAfterDoc,
-            endBeforeDoc,
-            numPerPage,
-        )
-            .then((data) => {
-                setData(data.result);
-                setFirstDoc(data.firstDoc);
-                setLastDoc(data.lastDoc);
-                setLoading(false);
-            })
-            .catch((e) => {
-                console.log(e);
-                setLoading(false);
-            });
+    useEffect(() => {
+        if (!pages) {
+            if (searchState.isSearching) {
+                calculateSearchPages();
+            } else {
+                calculateNormalNumPages();
+            }
+        }
+    }, [pages]);
+
+    const getSearchData = async () => {
+        try {
+            const startAfterDoc = direction === "next" ? lastDoc : undefined;
+            const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
+            var dat = await getSearchUsersPaginated(
+                searchState.value,
+                direction,
+                startAfterDoc,
+                endBeforeDoc,
+                numPerPage,
+            );
+            setData(dat.result);
+            setFirstDoc(dat.firstDoc);
+            setLastDoc(dat.lastDoc);
+            setLoading(false);
+        } catch (e) {
+            console.log(e);
+            setLoading(false);
+        }
     };
 
-    const getAllUsersData = () => {
-        const startAfterDoc = direction === "next" ? lastDoc : undefined;
-        const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
-        getAllUsersPaginated(direction, startAfterDoc, endBeforeDoc, numPerPage)
-            .then((data) => {
-                setData(data.result);
-                setFirstDoc(data.firstDoc);
-                setLastDoc(data.lastDoc);
-                setLoading(false);
-            })
-            .catch((e) => {
-                console.log(e);
-                setLoading(false);
-            });
+    const getAllUsersData = async () => {
+        try {
+            const startAfterDoc = direction === "next" ? lastDoc : undefined;
+            const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
+            var dat = await getAllUsersPaginated(
+                direction,
+                startAfterDoc,
+                endBeforeDoc,
+                numPerPage,
+            );
+            setData(dat.result);
+            setFirstDoc(dat.firstDoc);
+            setLastDoc(dat.lastDoc);
+            setLoading(false);
+        } catch (e) {
+            console.log(e);
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -120,7 +131,7 @@ const UsersRenderer = () => {
         }
     }, [data]);
 
-    const search = () => {
+    const search = async () => {
         setFirstDoc(undefined);
         setLastDoc(undefined);
         setDirection(undefined);
@@ -129,16 +140,16 @@ const UsersRenderer = () => {
                 ...searchState,
                 isSearching: false,
             });
-            calculateNormalNumPages();
-            getAllUsersData();
+            await getAllUsersData();
         } else {
             setSearchState({
                 ...searchState,
                 isSearching: true,
             });
-            calculateSearchPages();
-            getSearchData();
+            await getSearchData();
         }
+        setPages(null);
+        setPage(1);
     };
 
     return data ? (

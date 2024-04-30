@@ -29,6 +29,10 @@
     fill: var(--main-light);
 }
 
+.icon-wrapper.yellow-icon > svg {
+    fill: var(--yellow);
+}
+
 .icon-wrapper > svg {
     height: 20px;
     width: 20px;

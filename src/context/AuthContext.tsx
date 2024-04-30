@@ -96,13 +96,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 try {
                     getUserById(userId).then((userData) => {
                         if (userData) {
-                            if (userData.disable) {
-                                logoutWithReason(
-                                    "Fuiste desabilitado, comunicate con uno de nuestro adminstradores",
-                                );
-                            } else if (userData.deleted) {
+                            if (userData.deleted) {
                                 logoutWithReason(
                                     "Tu cuenta fue borrada, comunicate con uno de nuestro adminstradores",
+                                );
+                            } else if (userData.disable) {
+                                logoutWithReason(
+                                    "Fuiste desabilitado, comunicate con uno de nuestro adminstradores",
                                 );
                             } else {
                                 var userBuilt: UserInterface | null = buildUser(

@@ -84,11 +84,7 @@ const updateUser = async (
 
 const checkEmailExists = async (email: string): Promise<number> => {
     try {
-        const q = query(
-            usersCollection,
-            where("email", "==", email),
-            where("deleted", "==", false),
-        );
+        const q = query(usersCollection, where("email", "==", email));
 
         const docs = await getDocs(q);
         var size = 0;
@@ -164,6 +160,8 @@ export const getSearchUsersPaginated = async (
                 where("fullName", "==", searchField),
                 where("email", "==", searchField),
                 where("phoneNumber", "==", searchField),
+                where("phoneNumber", "==", "+" + searchField),
+                where("phoneNumber", "==", "+591" + searchField),
             ),
         ),
         orderBy("fullName"),
@@ -181,6 +179,8 @@ export const getSearchUsersPaginated = async (
                     where("fullName", "==", searchField),
                     where("email", "==", searchField),
                     where("phoneNumber", "==", searchField),
+                    where("phoneNumber", "==", "+" + searchField),
+                    where("phoneNumber", "==", "+591" + searchField),
                 ),
             ),
             orderBy("fullName"),
@@ -212,6 +212,8 @@ export const getSearchUsersNumPages = async (
                     where("fullName", "==", searchField),
                     where("email", "==", searchField),
                     where("phoneNumber", "==", searchField),
+                    where("phoneNumber", "==", "+" + searchField),
+                    where("phoneNumber", "==", "+591" + searchField),
                 ),
             ),
         ),

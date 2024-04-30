@@ -57,7 +57,7 @@ const DeleteUser = ({
                 type="button"
                 onClick={execute}
                 className={`general-button | red no-full touchable ${
-                    loading && "loading-section"
+                    loading && validToDelete && "loading-section"
                 }`}
                 disabled={!validToDelete}
             >
