@@ -1,4 +1,4 @@
-import UserProfile from "@/components/user/UserProfile";
+import UserProfile from "@/components/user/server_user/UserProfile";
 import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
 const UserProfilePage = () => {
     return (

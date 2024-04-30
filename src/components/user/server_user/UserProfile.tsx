@@ -2,7 +2,7 @@
 
 import { AuthContext } from "@/context/AuthContext";
 import { useContext, useEffect } from "react";
-import PageLoader from "../PageLoader";
+import PageLoader from "../../PageLoader";
 import "@/styles/components/profile.css";
 import Link from "next/link";
 import PenToSquare from "@/icons/PenToSquare";

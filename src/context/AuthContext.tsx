@@ -37,7 +37,8 @@ const buildUser = (
             id: id,
             fullName: userData?.fullName === undefined ? "" : userData.fullName,
             phoneNumber: userData?.phoneNumber === undefined ? "" : userData.phoneNumber,
-            photoUrl: userData?.photoUrl === undefined ? emptyPhotoWithRef : userData.photoUrl,
+            photoUrl:
+                userData?.photoUrl === undefined ? emptyPhotoWithRef : userData.photoUrl,
             comments: userData?.comments === undefined ? [] : userData.comments,
             vehicles: userData?.vehicles === undefined ? [] : userData.vehicles,
             services: userData?.services === undefined ? [] : userData.services,
@@ -95,17 +96,27 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 try {
                     getUserById(userId).then((userData) => {
                         if (userData) {
-                            var userBuilt: UserInterface | null = buildUser(
-                                userId,
-                                userData,
-                            );
-                            setUser({
-                                data: userBuilt,
-                                hasPhoto:
-                                    userBuilt !== null &&
-                                    userBuilt.photoUrl.url.trim().length > 0,
-                            });
-                            setLoadingUser(false);
+                            if (userData.disable) {
+                                logoutWithReason(
+                                    "Fuiste desabilitado, comunicate con uno de nuestro adminstradores",
+                                );
+                            } else if (userData.deleted) {
+                                logoutWithReason(
+                                    "Tu cuenta fue borrada, comunicate con uno de nuestro adminstradores",
+                                );
+                            } else {
+                                var userBuilt: UserInterface | null = buildUser(
+                                    userId,
+                                    userData,
+                                );
+                                setUser({
+                                    data: userBuilt,
+                                    hasPhoto:
+                                        userBuilt !== null &&
+                                        userBuilt.photoUrl.url.trim().length > 0,
+                                });
+                                setLoadingUser(false);
+                            }
                         } else {
                             setUser({
                                 data: null,
@@ -130,11 +141,21 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
     }, []);
 
-    useEffect(() => {
-        if (user.data && (user.data.deleted || user.data.disable)) {
-            refirectToHome();
-        }
-    }, [user]);
+    const logoutWithReason = (reason: string) => {
+        auth.signOut()
+            .then(() => {
+                setUser({
+                    data: null,
+                    hasPhoto: false,
+                });
+                toast.warning(reason);
+                router.push("/");
+            })
+            .catch(() => {
+                toast.error("Algo salio mal");
+                window.location.replace("/");
+            });
+    };
 
     const logout = () => {
         auth.signOut()
@@ -144,7 +165,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     hasPhoto: false,
                 });
                 toast.success("Sesion cerrada existosamente");
-                window.location.replace("/");
+                router.push("/");
             })
             .catch(() => {
                 toast.error("Algo salio mal");

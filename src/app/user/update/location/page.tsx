@@ -1,4 +1,4 @@
-import ChangeLocationReq from "@/components/user/ChangeLocationReq";
+import ChangeLocationReq from "@/components/user/server_user/ChangeLocationReq";
 import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
 
 const UserLocationPage = () => {

@@ -1,10 +1,10 @@
 "use client";
 
 import { FormEvent, useContext, useEffect, useState } from "react";
-import ImageUploader from "../form/ImageUploader";
-import { defaultPhoto, PhotoField } from "../services/FormModels";
+import ImageUploader from "../../form/ImageUploader";
+import { defaultPhoto, PhotoField } from "../../services/FormModels";
 import { AuthContext } from "@/context/AuthContext";
-import PageLoader from "../PageLoader";
+import PageLoader from "../../PageLoader";
 import { useRouter } from "next/navigation";
 import { updateUser } from "@/utils/requests/UserRequester";
 import { saveChangePhotoReq } from "@/utils/requests/ChangePhotoRequester";

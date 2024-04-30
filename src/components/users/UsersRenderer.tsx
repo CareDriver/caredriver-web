@@ -12,6 +12,7 @@ import {
     getSearchUsersPaginated,
 } from "@/utils/requests/UserRequester";
 import { UserInterface } from "@/interfaces/UserInterface";
+import UserItemRenderer from "./UserItemRenderer";
 
 const UsersRenderer = () => {
     const numPerPage = 10;
@@ -168,24 +169,7 @@ const UsersRenderer = () => {
                     ) : (
                         <div className="enterprise-list">
                             {data.map((req, i) => (
-                                // <ServiceItemReq
-                                //     req={req}
-                                //     key={`service-req-item-${i}`}
-                                //     type={type}
-                                // />
-                                <div key={`user-item-${i}`}>
-                                    <img src={req.photoUrl.url} alt="" />
-                                    <div>
-                                        <h2>{req.fullName}</h2>
-                                        <h4>{req.email}</h4>
-                                        <h4>{req.phoneNumber}</h4>
-                                        <h4>
-                                            {req.services
-                                                .toString()
-                                                .replaceAll(",", " | ")}
-                                        </h4>
-                                    </div>
-                                </div>
+                                <UserItemRenderer req={req} key={`user-item-${i}`} />
                             ))}
                         </div>
                     )}
