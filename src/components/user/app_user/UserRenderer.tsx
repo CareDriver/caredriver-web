@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import NormalUserRenderer from "./NormalUserRenderer";
-import AdminUserRenderer from "./AdminUserRenderer";
 import DisableUser from "./options/DisableUser";
 import DeleteUser from "./options/DeleteUser";
 
@@ -140,14 +139,8 @@ const UserRenderer = ({ userId }: { userId: string }) => {
     }, []);
 
     const getPageRenderer = () => {
-        if (user) {
-            switch (user.role) {
-                case UserRole.User:
-                    return <NormalUserRenderer user={user} />;
-                case UserRole.Support:
-                case UserRole.Admin:
-                    return <AdminUserRenderer user={user} />;
-            }
+        if (user && user.role === UserRole.User) {
+            return <NormalUserRenderer user={user} />;
         }
     };
 

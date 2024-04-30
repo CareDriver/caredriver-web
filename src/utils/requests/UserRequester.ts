@@ -101,6 +101,7 @@ const checkEmailExists = async (email: string): Promise<number> => {
 // GET ALL USERS WITH PAGINATION
 
 export const getAllUsersPaginated = async (
+    adminEmail: string,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
     endBeforeDoc?: DocumentSnapshot,
@@ -111,6 +112,7 @@ export const getAllUsersPaginated = async (
         orderBy("fullName"),
         limit(numPerPage),
         where("deleted", "==", false),
+        where("email", "!=", adminEmail),
     );
 
     if (direction === "next" && startAfterDoc) {
@@ -122,6 +124,7 @@ export const getAllUsersPaginated = async (
             endBefore(endBeforeDoc),
             limitToLast(numPerPage),
             where("deleted", "==", false),
+            where("email", "!=", adminEmail),
         );
     }
 
@@ -135,9 +138,16 @@ export const getAllUsersPaginated = async (
     };
 };
 
-export const getAllUsersNumPages = async (numPerPages: number): Promise<number> => {
+export const getAllUsersNumPages = async (
+    adminEmail: string,
+    numPerPages: number,
+): Promise<number> => {
     const count = await getCountFromServer(
-        query(usersCollection, where("deleted", "==", false)),
+        query(
+            usersCollection,
+            where("deleted", "==", false),
+            where("email", "!=", adminEmail),
+        ),
     );
     const numPages = Math.ceil(count.data().count / numPerPages);
     return numPages;
@@ -146,6 +156,7 @@ export const getAllUsersNumPages = async (numPerPages: number): Promise<number> 
 // GET ALL SEARCH USERS PAGINATED
 
 export const getSearchUsersPaginated = async (
+    adminEmail: string,
     searchField: string,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
@@ -156,12 +167,13 @@ export const getSearchUsersPaginated = async (
         usersCollection,
         and(
             where("deleted", "==", false),
+            where("email", "!=", adminEmail),
             or(
                 where("fullName", "==", searchField),
                 where("email", "==", searchField),
-                where("phoneNumber", "==", searchField),
-                where("phoneNumber", "==", "+" + searchField),
                 where("phoneNumber", "==", "+591" + searchField),
+                where("phoneNumber", "==", "+" + searchField),
+                where("phoneNumber", "==", searchField),
             ),
         ),
         orderBy("fullName"),
@@ -175,12 +187,13 @@ export const getSearchUsersPaginated = async (
             usersCollection,
             and(
                 where("deleted", "==", false),
+                where("email", "!=", adminEmail),
                 or(
                     where("fullName", "==", searchField),
                     where("email", "==", searchField),
-                    where("phoneNumber", "==", searchField),
-                    where("phoneNumber", "==", "+" + searchField),
                     where("phoneNumber", "==", "+591" + searchField),
+                    where("phoneNumber", "==", "+" + searchField),
+                    where("phoneNumber", "==", searchField),
                 ),
             ),
             orderBy("fullName"),
@@ -200,6 +213,7 @@ export const getSearchUsersPaginated = async (
 };
 
 export const getSearchUsersNumPages = async (
+    adminEmail: string,
     numPerPages: number,
     searchField: string,
 ): Promise<number> => {
@@ -208,12 +222,13 @@ export const getSearchUsersNumPages = async (
             usersCollection,
             and(
                 where("deleted", "==", false),
+                where("email", "!=", adminEmail),
                 or(
                     where("fullName", "==", searchField),
                     where("email", "==", searchField),
-                    where("phoneNumber", "==", searchField),
-                    where("phoneNumber", "==", "+" + searchField),
                     where("phoneNumber", "==", "+591" + searchField),
+                    where("phoneNumber", "==", "+" + searchField),
+                    where("phoneNumber", "==", searchField),
                 ),
             ),
         ),

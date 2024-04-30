@@ -2,7 +2,7 @@
 
 import PageLoader from "@/components/PageLoader";
 import { DocumentSnapshot } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "@/styles/components/pagination.css";
 import PageChanger from "@/components/requests/data_renderer/form/PageChanger";
 import {
@@ -13,9 +13,10 @@ import {
 } from "@/utils/requests/UserRequester";
 import { UserInterface } from "@/interfaces/UserInterface";
 import UserItemRenderer from "./UserItemRenderer";
+import { AuthContext } from "@/context/AuthContext";
 
 const UsersRenderer = () => {
-    const numPerPage = 10;
+    const numPerPage = 1;
     const [data, setData] = useState<UserInterface[] | null>(null);
     const [firstDoc, setFirstDoc] = useState<DocumentSnapshot | undefined>(undefined);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
@@ -24,6 +25,8 @@ const UsersRenderer = () => {
     const [direction, setDirection] = useState<"prev" | "next" | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
 
+    const { loadingUser, user } = useContext(AuthContext);
+
     const [searchState, setSearchState] = useState({
         value: "",
         isSearching: false,
@@ -31,11 +34,14 @@ const UsersRenderer = () => {
     });
 
     const calculateSearchPages = async () => {
-        setLoading(true);
-
-        if (searchState.isSearching) {
+        if (user.data && user.data.email && searchState.isSearching) {
+            setLoading(true);
             try {
-                var pags = await getSearchUsersNumPages(numPerPage, searchState.value);
+                var pags = await getSearchUsersNumPages(
+                    user.data.email,
+                    numPerPage,
+                    searchState.value,
+                );
                 setPages(pags);
                 setLoading(false);
             } catch (e) {
@@ -46,20 +52,24 @@ const UsersRenderer = () => {
     };
 
     const calculateNormalNumPages = async () => {
-        setLoading(true);
-        try {
-            var pags = await getAllUsersNumPages(numPerPage);
-            setPages(pags);
-            setLoading(false);
-        } catch (e) {
-            console.log(e);
-            setLoading(false);
+        if (user.data && user.data.email) {
+            setLoading(true);
+            try {
+                var pags = await getAllUsersNumPages(user.data.email, numPerPage);
+                setPages(pags);
+                setLoading(false);
+            } catch (e) {
+                console.log(e);
+                setLoading(false);
+            }
         }
     };
 
     useEffect(() => {
-        calculateNormalNumPages();
-    }, []);
+        if (!loadingUser) {
+            calculateNormalNumPages();
+        }
+    }, [loadingUser]);
 
     useEffect(() => {
         if (!pages) {
@@ -72,43 +82,49 @@ const UsersRenderer = () => {
     }, [pages]);
 
     const getSearchData = async () => {
-        try {
-            const startAfterDoc = direction === "next" ? lastDoc : undefined;
-            const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
-            var dat = await getSearchUsersPaginated(
-                searchState.value,
-                direction,
-                startAfterDoc,
-                endBeforeDoc,
-                numPerPage,
-            );
-            setData(dat.result);
-            setFirstDoc(dat.firstDoc);
-            setLastDoc(dat.lastDoc);
-            setLoading(false);
-        } catch (e) {
-            console.log(e);
-            setLoading(false);
+        if (user.data && user.data.email) {
+            try {
+                const startAfterDoc = direction === "next" ? lastDoc : undefined;
+                const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
+                var dat = await getSearchUsersPaginated(
+                    user.data.email,
+                    searchState.value,
+                    direction,
+                    startAfterDoc,
+                    endBeforeDoc,
+                    numPerPage,
+                );
+                setData(dat.result);
+                setFirstDoc(dat.firstDoc);
+                setLastDoc(dat.lastDoc);
+                setLoading(false);
+            } catch (e) {
+                console.log(e);
+                setLoading(false);
+            }
         }
     };
 
     const getAllUsersData = async () => {
-        try {
-            const startAfterDoc = direction === "next" ? lastDoc : undefined;
-            const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
-            var dat = await getAllUsersPaginated(
-                direction,
-                startAfterDoc,
-                endBeforeDoc,
-                numPerPage,
-            );
-            setData(dat.result);
-            setFirstDoc(dat.firstDoc);
-            setLastDoc(dat.lastDoc);
-            setLoading(false);
-        } catch (e) {
-            console.log(e);
-            setLoading(false);
+        if (user.data && user.data.email) {
+            try {
+                const startAfterDoc = direction === "next" ? lastDoc : undefined;
+                const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
+                var dat = await getAllUsersPaginated(
+                    user.data.email,
+                    direction,
+                    startAfterDoc,
+                    endBeforeDoc,
+                    numPerPage,
+                );
+                setData(dat.result);
+                setFirstDoc(dat.firstDoc);
+                setLastDoc(dat.lastDoc);
+                setLoading(false);
+            } catch (e) {
+                console.log(e);
+                setLoading(false);
+            }
         }
     };
 
@@ -185,13 +201,17 @@ const UsersRenderer = () => {
                         </div>
                     )}
 
-                    <PageChanger
-                        page={page}
-                        pages={pages}
-                        loading={loading}
-                        setPage={setPage}
-                        setDirection={setDirection}
-                    />
+                    {pages ? (
+                        <PageChanger
+                            page={page}
+                            pages={pages}
+                            loading={loading}
+                            setPage={setPage}
+                            setDirection={setDirection}
+                        />
+                    ) : (
+                        <span className="loader-green"></span>
+                    )}
                 </div>
             ) : (
                 <div className="empty-wrapper | auto-height">

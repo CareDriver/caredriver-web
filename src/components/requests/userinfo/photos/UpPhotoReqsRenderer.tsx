@@ -12,7 +12,7 @@ import UpPhotoItemReq from "./UpPhotoItemReq";
 import PageChanger from "../../data_renderer/form/PageChanger";
 
 const UpPhotoReqsRenderer = () => {
-    const numPerPage = 10;
+    const numPerPage = 1;
     const [data, setData] = useState<ChangePhotoReqInterface[] | null>(null);
     const [firstDoc, setFirstDoc] = useState<DocumentSnapshot | undefined>(undefined);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
