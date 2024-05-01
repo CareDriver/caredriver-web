@@ -10,72 +10,59 @@ import {
     getEnterpriseReqsNumPages,
 } from "@/utils/requests/enterprise/EnterpriseRequester";
 import { Enterprise, EnterpriseTypeRender } from "@/interfaces/Enterprise";
-import PageChanger from "../data_renderer/form/PageChanger";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
     const numPerPage = 10;
     const [data, setData] = useState<Enterprise[] | null>(null);
-    const [firstDoc, setFirstDoc] = useState<DocumentSnapshot | undefined>(undefined);
+    const [page, setPage] = useState<number>(1);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
     const [pages, setPages] = useState<number | null>(null);
-    const [page, setPage] = useState<number>(1);
-    const [direction, setDirection] = useState<"prev" | "next" | undefined>(undefined);
-    const [loading, setLoading] = useState<boolean>(false);
+
+    const handleNextClick = () => {
+        if (page === pages) return;
+        setPage((prev) => prev + 1);
+    };
 
     useEffect(() => {
-        setLoading(true);
-
         getEnterpriseReqsNumPages(numPerPage, type)
             .then((pages) => {
                 setPages(pages);
-                setLoading(false);
             })
-            .catch(() => {
-                setLoading(false);
-            });
+            .catch(() => {});
     }, []);
 
     useEffect(() => {
-        setLoading(true);
-        const startAfterDoc = direction === "next" ? lastDoc : undefined;
-        const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
-        getEnterpriseReqs(type, direction, startAfterDoc, endBeforeDoc, numPerPage)
-            .then((data) => {
-                setData(data.result);
-                setFirstDoc(data.firstDoc);
-                setLastDoc(data.lastDoc);
-                setLoading(false);
+        const startAfterDoc = lastDoc;
+        const endBeforeDoc = undefined;
+        getEnterpriseReqs(type, "next", startAfterDoc, endBeforeDoc, numPerPage)
+            .then((result) => {
+                if (data) {
+                    setData([...data, ...result.result]);
+                } else {
+                    setData(result.result);
+                }
+                setLastDoc(result.lastDoc);
             })
-            .catch(() => {
-                setLoading(false);
-            });
+            .catch(() => {});
     }, [page]);
 
     return data ? (
         data.length > 0 ? (
-            <div>
-                {loading ? (
-                    <span className="loader-green | big-loader"></span>
-                ) : (
-                    <div className="enterprise-list">
-                        {data.map((req, i) => (
-                            <EnterpriseItemReq
-                                enterprise={req}
-                                type={type}
-                                key={`service-req-item-${i}`}
-                            />
-                        ))}
-                    </div>
-                )}
-
-                <PageChanger
-                    page={page}
-                    pages={pages}
-                    loading={loading}
-                    setPage={setPage}
-                    setDirection={setDirection}
-                />
-            </div>
+            <InfiniteScroll
+                dataLength={data.length}
+                next={handleNextClick}
+                hasMore={page !== pages}
+                loader={<span className="loader-gray"></span>}
+            >
+                {data.map((req, i) => (
+                    <EnterpriseItemReq
+                        enterprise={req}
+                        type={type}
+                        key={`service-req-item-${i}`}
+                    />
+                ))}
+            </InfiniteScroll>
         ) : (
             <div className="empty-wrapper | auto-height">
                 <h2>

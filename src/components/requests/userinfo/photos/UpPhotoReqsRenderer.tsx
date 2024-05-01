@@ -9,72 +9,57 @@ import {
     getChangePhotoReqPaginated,
 } from "@/utils/requests/ChangePhotoRequester";
 import UpPhotoItemReq from "./UpPhotoItemReq";
-import PageChanger from "../../data_renderer/form/PageChanger";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const UpPhotoReqsRenderer = () => {
-    const numPerPage = 1;
+    const numPerPage = 10;
     const [data, setData] = useState<ChangePhotoReqInterface[] | null>(null);
-    const [firstDoc, setFirstDoc] = useState<DocumentSnapshot | undefined>(undefined);
+    const [page, setPage] = useState<number>(1);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
     const [pages, setPages] = useState<number | null>(null);
-    const [page, setPage] = useState<number>(1);
-    const [direction, setDirection] = useState<"prev" | "next" | undefined>(undefined);
-    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        setLoading(true);
-
         getChangePhotoReqNumPages(numPerPage)
             .then((pages) => {
                 setPages(pages);
-                setLoading(false);
             })
-            .catch(() => {
-                setLoading(false);
+            .catch((e) => {
+                console.log(e);
             });
     }, []);
 
     useEffect(() => {
-        setLoading(true);
-
-        const startAfterDoc = direction === "next" ? lastDoc : undefined;
-        const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
-        getChangePhotoReqPaginated(direction, startAfterDoc, endBeforeDoc, numPerPage)
-            .then((data) => {
-                setData(data.result);
-                setFirstDoc(data.firstDoc);
-                setLastDoc(data.lastDoc);
-                setLoading(false);
+        const startAfterDoc = lastDoc;
+        const endBeforeDoc = undefined;
+        getChangePhotoReqPaginated("next", startAfterDoc, endBeforeDoc, numPerPage)
+            .then((result) => {
+                if (data) {
+                    setData([...data, ...result.result]);
+                } else {
+                    setData(result.result);
+                }
+                setLastDoc(result.lastDoc);
             })
-            .catch(() => {
-                setLoading(false);
-            });
+            .catch(() => {});
     }, [page]);
+
+    const handleNextClick = () => {
+        if (page === pages) return;
+        setPage((prev) => prev + 1);
+    };
 
     return data ? (
         data.length > 0 ? (
-            <div>
-                {loading ? (
-                    <span className="loader-green | big-loader"></span>
-                ) : (
-                    <div className="enterprise-list">
-                        {data.map((req, i) => (
-                            <UpPhotoItemReq
-                                photo={req}
-                                key={`photo-update-req-item-${i}`}
-                            />
-                        ))}
-                    </div>
-                )}
-
-                <PageChanger
-                    page={page}
-                    pages={pages}
-                    loading={loading}
-                    setPage={setPage}
-                    setDirection={setDirection}
-                />
-            </div>
+            <InfiniteScroll
+                dataLength={data.length}
+                next={handleNextClick}
+                hasMore={page !== pages}
+                loader={<span className="loader-gray"></span>}
+            >
+                {data.map((req, i) => (
+                    <UpPhotoItemReq photo={req} key={`photo-update-req-item-${i}`} />
+                ))}
+            </InfiniteScroll>
         ) : (
             <div className="empty-wrapper | auto-height">
                 <h2>No hay peticiones para actualizar fotos de perfil</h2>

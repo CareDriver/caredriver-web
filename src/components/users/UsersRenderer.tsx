@@ -16,11 +16,12 @@ import { AuthContext } from "@/context/AuthContext";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const UsersRenderer = () => {
-    const numPerPage = 2;
+    const numPerPage = 10;
     const [data, setData] = useState<UserInterface[] | null>(null);
     const [page, setPage] = useState<number>(1);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
     const [pages, setPages] = useState<number | null>(null);
+    
     const { loadingUser, user } = useContext(AuthContext);
     const [searchState, setSearchState] = useState({
         value: "",
@@ -161,7 +162,6 @@ const UsersRenderer = () => {
 
     return data ? (
         <div>
-            {pages && <div>Pages : {pages}</div>}
             <div>
                 <fieldset>
                     <input
@@ -187,11 +187,6 @@ const UsersRenderer = () => {
                     next={handleNextClick}
                     hasMore={page !== pages}
                     loader={<span className="loader-gray"></span>}
-                    endMessage={
-                        <p style={{ textAlign: "center" }}>
-                            <b>No hay mas usuarios</b>
-                        </p>
-                    }
                 >
                     {data.map((req, i) => (
                         <UserItemRenderer req={req} key={`user-item-${i}`} />
