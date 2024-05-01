@@ -4,7 +4,6 @@ import PageLoader from "@/components/PageLoader";
 import { DocumentSnapshot } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import "@/styles/components/pagination.css";
-import PageChanger from "@/components/requests/data_renderer/form/PageChanger";
 import {
     getAllUsersNumPages,
     getAllUsersPaginated,
@@ -14,19 +13,16 @@ import {
 import { UserInterface } from "@/interfaces/UserInterface";
 import UserItemRenderer from "./UserItemRenderer";
 import { AuthContext } from "@/context/AuthContext";
+import Plus from "@/icons/Plus";
 
 const UsersRenderer = () => {
-    const numPerPage = 1;
+    const numPerPage = 2;
     const [data, setData] = useState<UserInterface[] | null>(null);
-    const [firstDoc, setFirstDoc] = useState<DocumentSnapshot | undefined>(undefined);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
     const [pages, setPages] = useState<number | null>(null);
     const [page, setPage] = useState<number>(1);
-    const [direction, setDirection] = useState<"prev" | "next" | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(false);
-
     const { loadingUser, user } = useContext(AuthContext);
-
     const [searchState, setSearchState] = useState({
         value: "",
         isSearching: false,
@@ -84,19 +80,22 @@ const UsersRenderer = () => {
     const getSearchData = async () => {
         if (user.data && user.data.email) {
             try {
-                const startAfterDoc = direction === "next" ? lastDoc : undefined;
-                const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
-                var dat = await getSearchUsersPaginated(
+                const startAfterDoc = lastDoc;
+                const endBeforeDoc = undefined;
+                var result = await getSearchUsersPaginated(
                     user.data.email,
                     searchState.value,
-                    direction,
+                    "next",
                     startAfterDoc,
                     endBeforeDoc,
                     numPerPage,
                 );
-                setData(dat.result);
-                setFirstDoc(dat.firstDoc);
-                setLastDoc(dat.lastDoc);
+                if (data) {
+                    setData([...data, ...result.result]);
+                } else {
+                    setData(result.result);
+                }
+                setLastDoc(result.lastDoc);
                 setLoading(false);
             } catch (e) {
                 console.log(e);
@@ -108,18 +107,21 @@ const UsersRenderer = () => {
     const getAllUsersData = async () => {
         if (user.data && user.data.email) {
             try {
-                const startAfterDoc = direction === "next" ? lastDoc : undefined;
-                const endBeforeDoc = direction === "prev" ? firstDoc : undefined;
-                var dat = await getAllUsersPaginated(
+                const startAfterDoc = lastDoc;
+                const endBeforeDoc = undefined;
+                var result = await getAllUsersPaginated(
                     user.data.email,
-                    direction,
+                    "next",
                     startAfterDoc,
                     endBeforeDoc,
                     numPerPage,
                 );
-                setData(dat.result);
-                setFirstDoc(dat.firstDoc);
-                setLastDoc(dat.lastDoc);
+                if (data) {
+                    setData([...data, ...result.result]);
+                } else {
+                    setData(result.result);
+                }
+                setLastDoc(result.lastDoc);
                 setLoading(false);
             } catch (e) {
                 console.log(e);
@@ -148,9 +150,7 @@ const UsersRenderer = () => {
     }, [data]);
 
     const search = async () => {
-        setFirstDoc(undefined);
         setLastDoc(undefined);
-        setDirection(undefined);
         if (searchState.value.trim().length == 0) {
             setSearchState({
                 ...searchState,
@@ -166,6 +166,11 @@ const UsersRenderer = () => {
         }
         setPages(null);
         setPage(1);
+    };
+
+    const handleNextClick = () => {
+        if (page === pages) return;
+        setPage((prev) => prev + 1);
     };
 
     return data ? (
@@ -191,17 +196,33 @@ const UsersRenderer = () => {
             </div>
             {data.length > 0 ? (
                 <div>
-                    {loading ? (
-                        <span className="loader-green | big-loader"></span>
-                    ) : (
-                        <div className="enterprise-list">
-                            {data.map((req, i) => (
-                                <UserItemRenderer req={req} key={`user-item-${i}`} />
-                            ))}
-                        </div>
-                    )}
+                    <div className="enterprise-list">
+                        {data.map((req, i) => (
+                            <UserItemRenderer req={req} key={`user-item-${i}`} />
+                        ))}
+                    </div>
 
-                    {pages ? (
+                    <div>
+                        <button
+                            className="icon-wrapper small-general-button text | bold gray-icon gray | margin-top-25"
+                            disabled={page === pages}
+                            type="button"
+                            onClick={handleNextClick}
+                        >
+                            {loading ? (
+                                <span className="loader-gray"></span>
+                            ) : page === pages ? (
+                                "No hay mas usuarios"
+                            ) : (
+                                <>
+                                    <Plus />
+                                    Cargar mas
+                                </>
+                            )}
+                        </button>
+                    </div>
+
+                    {/* {pages ? (
                         <PageChanger
                             page={page}
                             pages={pages}
@@ -211,7 +232,7 @@ const UsersRenderer = () => {
                         />
                     ) : (
                         <span className="loader-green"></span>
-                    )}
+                    )} */}
                 </div>
             ) : (
                 <div className="empty-wrapper | auto-height">
