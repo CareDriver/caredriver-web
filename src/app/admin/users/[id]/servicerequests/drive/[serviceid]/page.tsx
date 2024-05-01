@@ -1,5 +1,13 @@
-const SingleDriveServiceDidByUserPage = () => {
-    return <div>drive services</div>;
+import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+
+const SingleDriveServiceDidByUserPage = ({ params }: { params: any }) => {
+    return (
+        <AdminWrapperWithSideBar>
+            <div>
+                user: {params.id} service: {params.serviceid}
+            </div>
+        </AdminWrapperWithSideBar>
+    );
 };
 
 export default SingleDriveServiceDidByUserPage;
