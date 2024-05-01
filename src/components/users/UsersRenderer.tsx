@@ -13,15 +13,14 @@ import {
 import { UserInterface } from "@/interfaces/UserInterface";
 import UserItemRenderer from "./UserItemRenderer";
 import { AuthContext } from "@/context/AuthContext";
-import Plus from "@/icons/Plus";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const UsersRenderer = () => {
     const numPerPage = 2;
     const [data, setData] = useState<UserInterface[] | null>(null);
+    const [page, setPage] = useState<number>(1);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
     const [pages, setPages] = useState<number | null>(null);
-    const [page, setPage] = useState<number>(1);
-    const [loading, setLoading] = useState<boolean>(false);
     const { loadingUser, user } = useContext(AuthContext);
     const [searchState, setSearchState] = useState({
         value: "",
@@ -31,7 +30,6 @@ const UsersRenderer = () => {
 
     const calculateSearchPages = async () => {
         if (user.data && user.data.email && searchState.isSearching) {
-            setLoading(true);
             try {
                 var pags = await getSearchUsersNumPages(
                     user.data.email,
@@ -39,43 +37,22 @@ const UsersRenderer = () => {
                     searchState.value,
                 );
                 setPages(pags);
-                setLoading(false);
             } catch (e) {
                 console.log(e);
-                setLoading(false);
             }
         }
     };
 
     const calculateNormalNumPages = async () => {
         if (user.data && user.data.email) {
-            setLoading(true);
             try {
                 var pags = await getAllUsersNumPages(user.data.email, numPerPage);
                 setPages(pags);
-                setLoading(false);
             } catch (e) {
                 console.log(e);
-                setLoading(false);
             }
         }
     };
-
-    useEffect(() => {
-        if (!loadingUser) {
-            calculateNormalNumPages();
-        }
-    }, [loadingUser]);
-
-    useEffect(() => {
-        if (!pages) {
-            if (searchState.isSearching) {
-                calculateSearchPages();
-            } else {
-                calculateNormalNumPages();
-            }
-        }
-    }, [pages]);
 
     const getSearchData = async () => {
         if (user.data && user.data.email) {
@@ -96,10 +73,8 @@ const UsersRenderer = () => {
                     setData(result.result);
                 }
                 setLastDoc(result.lastDoc);
-                setLoading(false);
             } catch (e) {
                 console.log(e);
-                setLoading(false);
             }
         }
     };
@@ -122,17 +97,52 @@ const UsersRenderer = () => {
                     setData(result.result);
                 }
                 setLastDoc(result.lastDoc);
-                setLoading(false);
             } catch (e) {
                 console.log(e);
-                setLoading(false);
             }
         }
     };
 
-    useEffect(() => {
-        setLoading(true);
+    const search = async () => {
+        setData(null);
+        setLastDoc(undefined);
+        if (searchState.value.trim().length == 0) {
+            setSearchState({
+                ...searchState,
+                isSearching: false,
+            });
+        } else {
+            setSearchState({
+                ...searchState,
+                isSearching: true,
+            });
+        }
+        setPages(null);
+        setPage(1);
+    };
 
+    const handleNextClick = () => {
+        if (page === pages) return;
+        setPage((prev) => prev + 1);
+    };
+
+    useEffect(() => {
+        if (!loadingUser) {
+            calculateNormalNumPages();
+        }
+    }, [loadingUser]);
+
+    useEffect(() => {
+        if (!pages) {
+            if (searchState.isSearching) {
+                calculateSearchPages();
+            } else {
+                calculateNormalNumPages();
+            }
+        }
+    }, [pages]);
+
+    useEffect(() => {
         if (searchState.isSearching) {
             getSearchData();
         } else {
@@ -149,32 +159,9 @@ const UsersRenderer = () => {
         }
     }, [data]);
 
-    const search = async () => {
-        setLastDoc(undefined);
-        if (searchState.value.trim().length == 0) {
-            setSearchState({
-                ...searchState,
-                isSearching: false,
-            });
-            await getAllUsersData();
-        } else {
-            setSearchState({
-                ...searchState,
-                isSearching: true,
-            });
-            await getSearchData();
-        }
-        setPages(null);
-        setPage(1);
-    };
-
-    const handleNextClick = () => {
-        if (page === pages) return;
-        setPage((prev) => prev + 1);
-    };
-
     return data ? (
         <div>
+            {pages && <div>Pages : {pages}</div>}
             <div>
                 <fieldset>
                     <input
@@ -195,45 +182,21 @@ const UsersRenderer = () => {
                 </fieldset>
             </div>
             {data.length > 0 ? (
-                <div>
-                    <div className="enterprise-list">
-                        {data.map((req, i) => (
-                            <UserItemRenderer req={req} key={`user-item-${i}`} />
-                        ))}
-                    </div>
-
-                    <div>
-                        <button
-                            className="icon-wrapper small-general-button text | bold gray-icon gray | margin-top-25"
-                            disabled={page === pages}
-                            type="button"
-                            onClick={handleNextClick}
-                        >
-                            {loading ? (
-                                <span className="loader-gray"></span>
-                            ) : page === pages ? (
-                                "No hay mas usuarios"
-                            ) : (
-                                <>
-                                    <Plus />
-                                    Cargar mas
-                                </>
-                            )}
-                        </button>
-                    </div>
-
-                    {/* {pages ? (
-                        <PageChanger
-                            page={page}
-                            pages={pages}
-                            loading={loading}
-                            setPage={setPage}
-                            setDirection={setDirection}
-                        />
-                    ) : (
-                        <span className="loader-green"></span>
-                    )} */}
-                </div>
+                <InfiniteScroll
+                    dataLength={data.length}
+                    next={handleNextClick}
+                    hasMore={page !== pages}
+                    loader={<span className="loader-gray"></span>}
+                    endMessage={
+                        <p style={{ textAlign: "center" }}>
+                            <b>No hay mas usuarios</b>
+                        </p>
+                    }
+                >
+                    {data.map((req, i) => (
+                        <UserItemRenderer req={req} key={`user-item-${i}`} />
+                    ))}
+                </InfiniteScroll>
             ) : (
                 <div className="empty-wrapper | auto-height">
                     <h2>
