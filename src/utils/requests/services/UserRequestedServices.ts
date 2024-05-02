@@ -17,19 +17,22 @@ import {
     where,
 } from "firebase/firestore";
 
-const driveDoneServicesColl = collection(firestore, Collections.DriverServices);
-const mechanicDoneServicesColl = collection(firestore, Collections.MechanicalServices);
-const towDoneServicesColl = collection(firestore, Collections.TowsServices);
+const driveRequestedServicesColl = collection(firestore, Collections.DriverServices);
+const mechanicRequestedServicesColl = collection(
+    firestore,
+    Collections.MechanicalServices,
+);
+const towRequestedServicesColl = collection(firestore, Collections.TowsServices);
 
-export const getServiceDoneCollection = (type: "driver" | "mechanic" | "tow") => {
+export const getServiceRequestedCollection = (type: "driver" | "mechanic" | "tow") => {
     return type === "driver"
-        ? driveDoneServicesColl
+        ? driveRequestedServicesColl
         : type === "mechanic"
-        ? mechanicDoneServicesColl
-        : towDoneServicesColl;
+        ? mechanicRequestedServicesColl
+        : towRequestedServicesColl;
 };
 
-export const getServiceDoneById = async (
+export const getServicerRequestedById = async (
     id: string,
     collection: CollectionReference,
 ): Promise<ServiceRequestInterface | undefined> => {
@@ -46,7 +49,7 @@ export const getServiceDoneById = async (
 
 // ALL DATA
 
-export const getServicesDonePaginated = async (
+export const getServicesRequestedPaginated = async (
     userId: string,
     direction: "next" | undefined,
     collection: CollectionReference,
@@ -57,7 +60,7 @@ export const getServicesDonePaginated = async (
         collection,
         orderBy("createdAt"),
         limit(numPerPage),
-        where("serviceUserId", "==", userId),
+        where("userId", "==", userId),
     );
 
     if (direction === "next" && startAfterDoc) {
@@ -74,13 +77,13 @@ export const getServicesDonePaginated = async (
     };
 };
 
-export const getServicesDoneNumPages = async (
+export const getServicesRequestedNumPages = async (
     userId: string,
     numPerPages: number,
     collection: CollectionReference,
 ): Promise<number> => {
     const count = await getCountFromServer(
-        query(collection, where("serviceUserId", "==", userId)),
+        query(collection, where("userId", "==", userId)),
     );
     const numPages = Math.ceil(count.data().count / numPerPages);
     return numPages;
@@ -88,7 +91,7 @@ export const getServicesDoneNumPages = async (
 
 // FILTER DATA BY DATE
 
-export const getServicesDoneFilterPaginated = async (
+export const getServicesRequestedFilterPaginated = async (
     userId: string,
     tillDate: Timestamp,
     direction: "next" | undefined,
@@ -100,7 +103,7 @@ export const getServicesDoneFilterPaginated = async (
         collection,
         orderBy("createdAt"),
         limit(numPerPage),
-        where("serviceUserId", "==", userId),
+        where("userId", "==", userId),
         where("createdAt", "<=", tillDate),
     );
 
@@ -118,7 +121,7 @@ export const getServicesDoneFilterPaginated = async (
     };
 };
 
-export const getServicesDoneFilterNumPages = async (
+export const getServicesRequestedFilterNumPages = async (
     userId: string,
     tillDate: Timestamp,
     numPerPages: number,
@@ -127,7 +130,7 @@ export const getServicesDoneFilterNumPages = async (
     const count = await getCountFromServer(
         query(
             collection,
-            where("serviceUserId", "==", userId),
+            where("userId", "==", userId),
             where("createdAt", "<=", tillDate),
         ),
     );

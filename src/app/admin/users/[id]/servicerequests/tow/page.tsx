@@ -1,9 +1,10 @@
+import ServicesRequestedByUser from "@/components/done_services/requested/ServicesRequestedByUser";
 import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const ListOfTowServiceDoneByUser = ({ params }: { params: any }) => {
     return (
         <AdminWrapperWithSideBar>
-            <div>req by {params.id}</div>
+            <ServicesRequestedByUser serviceUserId={params.id} type="tow" />
         </AdminWrapperWithSideBar>
     );
 };
