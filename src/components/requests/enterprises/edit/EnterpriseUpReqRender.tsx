@@ -160,6 +160,8 @@ const EnterpriseUpReqRender = ({ enterprise }: { enterprise: ReqEditEnterprise }
                 onApprove={approve}
                 onDecline={decline}
                 loading={reviewState.loading}
+                stateB1={true}
+                stateB2={true}
             />
         </section>
     );

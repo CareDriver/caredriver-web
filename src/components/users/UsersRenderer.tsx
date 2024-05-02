@@ -187,6 +187,11 @@ const UsersRenderer = () => {
                     next={handleNextClick}
                     hasMore={page !== pages}
                     loader={<span className="loader-gray"></span>}
+                    endMessage={
+                        <div>
+                            <span>no hay mas usuarios</span>
+                        </div>
+                    }
                 >
                     {data.map((req, i) => (
                         <UserItemRenderer req={req} key={`user-item-${i}`} />

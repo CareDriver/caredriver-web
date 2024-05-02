@@ -28,6 +28,8 @@ import FieldDeleted from "../../data_renderer/form/FieldDeleted";
 import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import TowRenderer from "../../data_renderer/enterprise/TowRenderer";
+import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
+import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
 
 const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -36,7 +38,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         reviewed: false,
     });
     const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(null);
-    const [userData, setUserData] = useState<UserInterface | null>(null);
+    const [userData, setUserData] = useState<UserInterface | null | undefined>(null);
 
     const saveReviewHistory = async (wasApproved: boolean) => {
         try {
@@ -92,9 +94,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
                 if (isLimitToReviews) {
                     var tow = getVehicle(VehicleType.CAR);
-                    const userData = await getUserById(serviceReq.userId);
                     if (userData) {
-                        setUserData(userData);
                         var vehicles: ServiceVehicles =
                             userData.serviceVehicles !== undefined
                                 ? { ...userData.serviceVehicles }
@@ -226,6 +226,16 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         fetchWorkshop();
     }, []);
 
+    useEffect(() => {
+        getUserById(serviceReq.userId).then((res) => {
+            if (res) {
+                setUserData(res);
+            } else {
+                setUserData(undefined);
+            }
+        });
+    }, []);
+
     return (
         <section>
             <div>
@@ -234,6 +244,8 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     serviceReq={serviceReq}
                     reviewed={reviewState.reviewed}
                 />
+
+                <UserVerifierPrompter userData={userData} />
 
                 <PersonalData
                     location={serviceReq.location}
@@ -263,10 +275,18 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             <TowRenderer tow={enterprise} />
                         )}
 
+                        {userData && <UserStatusIndicatorV2 user={userData} />}
+
                         <ReqButtonRes
                             onApprove={approve}
                             onDecline={decline}
-                            loading={reviewState.loading}
+                            loading={reviewState.loading || userData === null}
+                            stateB1={true}
+                            stateB2={
+                                userData !== null &&
+                                userData !== undefined &&
+                                !userData.deleted
+                            }
                         />
                     </>
                 )}

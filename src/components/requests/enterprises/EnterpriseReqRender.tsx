@@ -104,6 +104,8 @@ const EnterpriseReqRender = ({ enterprise }: { enterprise: Enterprise }) => {
                 onApprove={approve}
                 onDecline={decline}
                 loading={reviewState.loading}
+                stateB1={true}
+                stateB2={true}
             />
         </section>
     );

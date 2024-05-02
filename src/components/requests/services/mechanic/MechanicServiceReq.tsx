@@ -22,6 +22,8 @@ import FieldDeleted from "../../data_renderer/form/FieldDeleted";
 import WorkshopRenderer from "../../data_renderer/enterprise/WorkshopRenderer";
 import { mechanicReqCollection } from "@/utils/requests/services/MechanicRequester";
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
+import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
+import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 
 const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -30,7 +32,7 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         reviewed: false,
     });
     const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(null);
-    const [userData, setUserData] = useState<UserInterface | null>(null);
+    const [userData, setUserData] = useState<UserInterface | null | undefined>(null);
 
     const saveReviewHistory = async (wasApproved: boolean) => {
         try {
@@ -73,9 +75,7 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 await updateService(serviceReq.id, toUpdateReq, mechanicReqCollection);
 
                 if (isLimitToReviews) {
-                    const userData = await getUserById(serviceReq.userId);
                     if (userData) {
-                        setUserData(userData);
                         const serviceReqState = {
                             id: serviceReq.id,
                             state: wasApproved
@@ -163,6 +163,16 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         fetchWorkshop();
     }, []);
 
+    useEffect(() => {
+        getUserById(serviceReq.userId).then((res) => {
+            if (res) {
+                setUserData(res);
+            } else {
+                setUserData(undefined);
+            }
+        });
+    }, []);
+
     return (
         <section>
             <div>
@@ -171,6 +181,8 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     serviceReq={serviceReq}
                     reviewed={reviewState.reviewed}
                 />
+
+                <UserVerifierPrompter userData={userData} />
 
                 <PersonalData
                     location={serviceReq.location}
@@ -196,10 +208,19 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         ) : (
                             <WorkshopRenderer workshop={enterprise} />
                         )}
+
+                        {userData && <UserStatusIndicatorV2 user={userData} />}
+
                         <ReqButtonRes
                             onApprove={approve}
                             onDecline={decline}
-                            loading={reviewState.loading}
+                            loading={reviewState.loading || userData === null}
+                            stateB1={true}
+                            stateB2={
+                                userData !== null &&
+                                userData !== undefined &&
+                                !userData.deleted
+                            }
                         />
                     </>
                 )}

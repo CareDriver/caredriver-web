@@ -6,10 +6,14 @@ const ReqButtonRes = ({
     onDecline,
     onApprove,
     loading,
+    stateB1,
+    stateB2,
 }: {
     onDecline: () => Promise<void>;
     onApprove: () => Promise<void>;
     loading: boolean;
+    stateB1: boolean;
+    stateB2: boolean;
 }) => {
     const execute = async (e: SyntheticEvent) => {
         e.preventDefault();
@@ -44,6 +48,7 @@ const ReqButtonRes = ({
                 type="button"
                 name="button_1"
                 onClick={execute}
+                disabled={!stateB1}
             >
                 <CircleXmark />
                 Rechazar
@@ -53,6 +58,7 @@ const ReqButtonRes = ({
                 type="button"
                 name="button_2"
                 onClick={execute}
+                disabled={!stateB2}
             >
                 <CircleCheck />
                 Aceptar

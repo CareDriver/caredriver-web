@@ -1,10 +1,8 @@
 "use client";
-import PersonCircleCheck from "@/icons/PersonCircleCheck";
 import { UserRequest, Vehicle } from "@/interfaces/UserRequest";
 import {
     deleteImagesIfLimitOfApproves,
     MIN_NUM_OF_APPROVALS,
-    numOfApprovals,
     updateService,
 } from "@/utils/requests/services/ServicesRequester";
 import PersonalData from "../../data_renderer/personal_data/PersonalData";
@@ -27,6 +25,8 @@ import { toast } from "react-toastify";
 import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import FieldDeleted from "../../data_renderer/form/FieldDeleted";
+import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
+import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 
 const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -34,7 +34,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         loading: false,
         reviewed: false,
     });
-    const [userData, setUserData] = useState<UserInterface | null>(null);
+    const [userData, setUserData] = useState<UserInterface | null | undefined>(null);
 
     const saveReviewHistory = async (wasApproved: boolean) => {
         try {
@@ -91,9 +91,8 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 if (isLimitToReviews) {
                     var car = getVehicle(VehicleType.CAR);
                     var motorcycle = getVehicle(VehicleType.MOTORCYCLE);
-                    const userData = await getUserById(serviceReq.userId);
+
                     if (userData) {
-                        setUserData(userData);
                         var vehicles: ServiceVehicles =
                             userData.serviceVehicles !== undefined
                                 ? { ...userData.serviceVehicles }
@@ -232,6 +231,16 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         await review(false);
     };
 
+    useEffect(() => {
+        getUserById(serviceReq.userId).then((res) => {
+            if (res) {
+                setUserData(res);                
+            } else {
+                setUserData(undefined);
+            }
+        });
+    }, []);
+
     return (
         <section>
             <div>
@@ -240,6 +249,8 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     serviceReq={serviceReq}
                     reviewed={reviewState.reviewed}
                 />
+
+                <UserVerifierPrompter userData={userData} />
 
                 <PersonalData
                     location={serviceReq.location}
@@ -262,10 +273,18 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             <VehiclesRenderer vehicles={serviceReq.vehicles} />
                         )}
 
+                        {userData && <UserStatusIndicatorV2 user={userData} />}
+
                         <ReqButtonRes
                             onApprove={approve}
                             onDecline={decline}
-                            loading={reviewState.loading}
+                            loading={reviewState.loading || userData === null}
+                            stateB1={true}
+                            stateB2={
+                                userData !== null &&
+                                userData !== undefined &&
+                                !userData.deleted
+                            }
                         />
                     </>
                 )}
