@@ -16,28 +16,38 @@ import { AuthContext } from "@/context/AuthContext";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const UsersRenderer = () => {
-    const numPerPage = 10;
-    const [data, setData] = useState<UserInterface[] | null>(null);
-    const [page, setPage] = useState<number>(1);
-    const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
-    const [pages, setPages] = useState<number | null>(null);
-    
+    const numPerPage = 2;
     const { loadingUser, user } = useContext(AuthContext);
-    const [searchState, setSearchState] = useState({
+    const [dataState, setDataState] = useState<{
+        data: UserInterface[] | null;
+        page: number;
+        pages: number | null;
+        lastDoc: DocumentSnapshot | undefined;
+        value: string;
+        isSearching: boolean;
+        wereThereResults: boolean;
+    }>({
+        data: null,
+        page: 1,
+        pages: null,
+        lastDoc: undefined,
         value: "",
         isSearching: false,
         wereThereResults: true,
     });
 
     const calculateSearchPages = async () => {
-        if (user.data && user.data.email && searchState.isSearching) {
+        if (user.data && user.data.email && dataState.isSearching) {
             try {
-                var pags = await getSearchUsersNumPages(
+                var pages = await getSearchUsersNumPages(
                     user.data.email,
                     numPerPage,
-                    searchState.value,
+                    dataState.value,
                 );
-                setPages(pags);
+                setDataState({
+                    ...dataState,
+                    pages,
+                });
             } catch (e) {
                 console.log(e);
             }
@@ -47,8 +57,11 @@ const UsersRenderer = () => {
     const calculateNormalNumPages = async () => {
         if (user.data && user.data.email) {
             try {
-                var pags = await getAllUsersNumPages(user.data.email, numPerPage);
-                setPages(pags);
+                var pages = await getAllUsersNumPages(user.data.email, numPerPage);
+                setDataState({
+                    ...dataState,
+                    pages,
+                });
             } catch (e) {
                 console.log(e);
             }
@@ -58,22 +71,27 @@ const UsersRenderer = () => {
     const getSearchData = async () => {
         if (user.data && user.data.email) {
             try {
-                const startAfterDoc = lastDoc;
+                const startAfterDoc = dataState.lastDoc;
                 const endBeforeDoc = undefined;
                 var result = await getSearchUsersPaginated(
                     user.data.email,
-                    searchState.value,
+                    dataState.value,
                     "next",
                     startAfterDoc,
                     endBeforeDoc,
                     numPerPage,
                 );
-                if (data) {
-                    setData([...data, ...result.result]);
+                var newData;
+                if (dataState.data) {
+                    newData = [...dataState.data, ...result.result];
                 } else {
-                    setData(result.result);
+                    newData = result.result;
                 }
-                setLastDoc(result.lastDoc);
+                setDataState({
+                    ...dataState,
+                    data: newData,
+                    lastDoc: result.lastDoc,
+                });
             } catch (e) {
                 console.log(e);
             }
@@ -83,7 +101,7 @@ const UsersRenderer = () => {
     const getAllUsersData = async () => {
         if (user.data && user.data.email) {
             try {
-                const startAfterDoc = lastDoc;
+                const startAfterDoc = dataState.lastDoc;
                 const endBeforeDoc = undefined;
                 var result = await getAllUsersPaginated(
                     user.data.email,
@@ -92,12 +110,17 @@ const UsersRenderer = () => {
                     endBeforeDoc,
                     numPerPage,
                 );
-                if (data) {
-                    setData([...data, ...result.result]);
+                var newData;
+                if (dataState.data) {
+                    newData = [...dataState.data, ...result.result];
                 } else {
-                    setData(result.result);
+                    newData = result.result;
                 }
-                setLastDoc(result.lastDoc);
+                setDataState({
+                    ...dataState,
+                    data: newData,
+                    lastDoc: result.lastDoc,
+                });
             } catch (e) {
                 console.log(e);
             }
@@ -105,26 +128,91 @@ const UsersRenderer = () => {
     };
 
     const search = async () => {
-        setData(null);
-        setLastDoc(undefined);
-        if (searchState.value.trim().length == 0) {
-            setSearchState({
-                ...searchState,
+        if (dataState.value.trim().length == 0) {
+            setDataState({
+                ...dataState,
+                data: null,
+                lastDoc: undefined,
+                pages: null,
+                page: 1,
                 isSearching: false,
             });
         } else {
-            setSearchState({
-                ...searchState,
+            setDataState({
+                ...dataState,
+                data: null,
+                lastDoc: undefined,
+                pages: null,
+                page: 1,
                 isSearching: true,
             });
         }
-        setPages(null);
-        setPage(1);
     };
 
-    const handleNextClick = () => {
-        if (page === pages) return;
-        setPage((prev) => prev + 1);
+    const handleNextClick = async () => {
+        if (dataState.page === dataState.pages) {
+            setDataState({
+                ...dataState,
+                wereThereResults: false,
+            });
+        } else {
+            if (user.data && user.data.email) {
+                if (dataState.isSearching) {
+                    try {
+                        const startAfterDoc = dataState.lastDoc;
+                        const endBeforeDoc = undefined;
+                        var result = await getSearchUsersPaginated(
+                            user.data.email,
+                            dataState.value,
+                            "next",
+                            startAfterDoc,
+                            endBeforeDoc,
+                            numPerPage,
+                        );
+                        var newData;
+                        if (dataState.data) {
+                            newData = [...dataState.data, ...result.result];
+                        } else {
+                            newData = result.result;
+                        }
+                        setDataState({
+                            ...dataState,
+                            data: newData,
+                            lastDoc: result.lastDoc,
+                            page: dataState.page + 1,
+                        });
+                    } catch (e) {
+                        console.log(e);
+                    }
+                } else {
+                    try {
+                        const startAfterDoc = dataState.lastDoc;
+                        const endBeforeDoc = undefined;
+                        var result = await getAllUsersPaginated(
+                            user.data.email,
+                            "next",
+                            startAfterDoc,
+                            endBeforeDoc,
+                            numPerPage,
+                        );
+                        var newData;
+                        if (dataState.data) {
+                            newData = [...dataState.data, ...result.result];
+                        } else {
+                            newData = result.result;
+                        }
+                        setDataState({
+                            ...dataState,
+                            data: newData,
+                            lastDoc: result.lastDoc,
+                            page: dataState.page + 1,
+                        });
+                    } catch (e) {
+                        console.log(e);
+                    }
+                }
+            }
+        }
     };
 
     useEffect(() => {
@@ -134,73 +222,58 @@ const UsersRenderer = () => {
     }, [loadingUser]);
 
     useEffect(() => {
-        if (!pages) {
-            if (searchState.isSearching) {
+        if (!dataState.pages) {
+            if (dataState.isSearching) {
                 calculateSearchPages();
             } else {
                 calculateNormalNumPages();
             }
         }
-    }, [pages]);
+    }, [dataState.pages]);
 
     useEffect(() => {
-        if (searchState.isSearching) {
-            getSearchData();
-        } else {
-            getAllUsersData();
+        if (dataState.data === null) {
+            if (dataState.isSearching) {
+                getSearchData();
+            } else {
+                getAllUsersData();
+            }
         }
-    }, [page]);
+    }, [dataState.data]);
 
-    useEffect(() => {
-        if (searchState.isSearching && data && data.length <= 0) {
-            setSearchState({
-                ...searchState,
-                wereThereResults: false,
-            });
-        }
-    }, [data]);
-
-    return data ? (
+    return dataState.data ? (
         <div>
             <div>
                 <fieldset>
                     <input
                         type="text"
                         placeholder="Buscar por nombre, email, telefono"
-                        value={searchState.value}
+                        value={dataState.value}
                         onChange={(e) => {
-                            setSearchState({
-                                ...searchState,
+                            setDataState({
+                                ...dataState,
                                 value: e.target.value,
-                                wereThereResults: true,
                             });
                         }}
                     />
-                    <button onClick={search} disabled={!searchState.wereThereResults}>
-                        Buscar
-                    </button>
+                    <button onClick={search}>Buscar</button>
                 </fieldset>
             </div>
-            {data.length > 0 ? (
+            {dataState.data.length > 0 ? (
                 <InfiniteScroll
-                    dataLength={data.length}
+                    dataLength={dataState.data.length}
                     next={handleNextClick}
-                    hasMore={page !== pages}
+                    hasMore={dataState.page !== dataState.pages}
                     loader={<span className="loader-gray"></span>}
-                    endMessage={
-                        <div>
-                            <span>no hay mas usuarios</span>
-                        </div>
-                    }
                 >
-                    {data.map((req, i) => (
+                    {dataState.data.map((req, i) => (
                         <UserItemRenderer req={req} key={`user-item-${i}`} />
                     ))}
                 </InfiniteScroll>
             ) : (
                 <div className="empty-wrapper | auto-height">
                     <h2>
-                        {searchState.isSearching
+                        {dataState.isSearching
                             ? "Ningun usuario fue encontrado"
                             : "No hay usuarios registrados en la aplicacion"}
                     </h2>
