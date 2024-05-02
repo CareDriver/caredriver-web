@@ -1,9 +1,10 @@
+import ServicesServedByUser from "@/components/done_services/served/ServicesServedByUser";
 import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const ListOfMechanicServiceReqsByUser = ({ params }: { params: any }) => {
     return (
         <AdminWrapperWithSideBar>
-            <div>mechanic service by {params.id}</div>
+            <ServicesServedByUser serviceUserId={params.id} type="mechanic" />
         </AdminWrapperWithSideBar>
     );
 };

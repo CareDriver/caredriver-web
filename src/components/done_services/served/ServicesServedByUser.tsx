@@ -1,29 +1,35 @@
 "use client";
 
 import PageLoader from "@/components/PageLoader";
-import { DocumentSnapshot } from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
-import "@/styles/components/pagination.css";
+import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
+import { userReqTypes } from "@/interfaces/UserRequest";
+import { inputToDate } from "@/utils/parser/ForDate";
 import {
-    getAllUsersNumPages,
-    getAllUsersPaginated,
-    getSearchUsersNumPages,
-    getSearchUsersPaginated,
-} from "@/utils/requests/UserRequester";
-import { UserInterface } from "@/interfaces/UserInterface";
-import UserItemRenderer from "./UserItemRenderer";
-import { AuthContext } from "@/context/AuthContext";
+    getServiceDoneCollection,
+    getServicesDoneFilterNumPages,
+    getServicesDoneFilterPaginated,
+    getServicesDoneNumPages,
+    getServicesDonePaginated,
+} from "@/utils/requests/services/UserMadeServices";
+import { CollectionReference, DocumentSnapshot, Timestamp } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-const UsersRenderer = () => {
-    const { loadingUser, user } = useContext(AuthContext);
+const ServicesServedByUser = ({
+    serviceUserId,
+    type,
+}: {
+    serviceUserId: string;
+    type: "driver" | "mechanic" | "tow";
+}) => {
+    const collection: CollectionReference = getServiceDoneCollection(type);
     const numPerPage = 10;
     const [dataState, setDataState] = useState<{
-        data: UserInterface[] | null;
+        data: ServiceRequestInterface[] | null;
         page: number;
         pages: number | null;
         lastDoc: DocumentSnapshot | undefined;
-        value: string;
+        value: Timestamp;
         isSearching: boolean;
         wereThereResults: boolean;
     }>({
@@ -31,122 +37,108 @@ const UsersRenderer = () => {
         page: 1,
         pages: null,
         lastDoc: undefined,
-        value: "",
+        value: Timestamp.fromDate(new Date()),
         isSearching: false,
         wereThereResults: true,
     });
 
     const calculateSearchPages = async () => {
-        if (user.data && user.data.email && dataState.isSearching) {
-            try {
-                var pages = await getSearchUsersNumPages(
-                    user.data.email,
-                    numPerPage,
-                    dataState.value,
-                );
+        getServicesDoneFilterNumPages(
+            serviceUserId,
+            dataState.value,
+            numPerPage,
+            collection,
+        )
+            .then((pages) => {
                 setDataState({
                     ...dataState,
                     pages,
                 });
-            } catch (e) {
+            })
+            .catch((e) => {
                 console.log(e);
-            }
-        }
+            });
     };
 
     const calculateNormalNumPages = async () => {
-        if (user.data && user.data.email) {
-            try {
-                var pages = await getAllUsersNumPages(user.data.email, numPerPage);
+        getServicesDoneNumPages(serviceUserId, numPerPage, collection)
+            .then((pages) => {
                 setDataState({
                     ...dataState,
                     pages,
                 });
-            } catch (e) {
+            })
+            .catch((e) => {
                 console.log(e);
-            }
-        }
+            });
     };
 
     const getSearchData = async () => {
-        if (user.data && user.data.email) {
-            try {
-                const startAfterDoc = dataState.lastDoc;
-                const endBeforeDoc = undefined;
-                var result = await getSearchUsersPaginated(
-                    user.data.email,
-                    dataState.value,
-                    "next",
-                    startAfterDoc,
-                    endBeforeDoc,
-                    numPerPage,
-                );
+        const startAfterDoc = dataState.lastDoc;
+        getServicesDoneFilterPaginated(
+            serviceUserId,
+            dataState.value,
+            "next",
+            collection,
+            startAfterDoc,
+            numPerPage,
+        )
+            .then((result) => {
                 var newData;
                 if (dataState.data) {
                     newData = [...dataState.data, ...result.result];
                 } else {
                     newData = result.result;
                 }
+
                 setDataState({
                     ...dataState,
                     data: newData,
                     lastDoc: result.lastDoc,
                 });
-            } catch (e) {
+            })
+            .catch((e) => {
                 console.log(e);
-            }
-        }
+            });
     };
 
     const getAllUsersData = async () => {
-        if (user.data && user.data.email) {
-            try {
-                const startAfterDoc = dataState.lastDoc;
-                const endBeforeDoc = undefined;
-                var result = await getAllUsersPaginated(
-                    user.data.email,
-                    "next",
-                    startAfterDoc,
-                    endBeforeDoc,
-                    numPerPage,
-                );
+        const startAfterDoc = dataState.lastDoc;
+        getServicesDonePaginated(
+            serviceUserId,
+            "next",
+            collection,
+            startAfterDoc,
+            numPerPage,
+        )
+            .then((result) => {
                 var newData;
                 if (dataState.data) {
                     newData = [...dataState.data, ...result.result];
                 } else {
                     newData = result.result;
                 }
+
                 setDataState({
                     ...dataState,
                     data: newData,
                     lastDoc: result.lastDoc,
                 });
-            } catch (e) {
+            })
+            .catch((e) => {
                 console.log(e);
-            }
-        }
+            });
     };
 
     const search = async () => {
-        if (dataState.value.trim().length == 0) {
-            setDataState({
-                ...dataState,
-                data: null,
-                lastDoc: undefined,
-                pages: null,
-                page: 1,
-                isSearching: false,
-            });
-        } else {
-            setDataState({
-                ...dataState,
-                data: null,
-                lastDoc: undefined,
-                pages: null,
-                page: 1,
-                isSearching: true,
-            });
-        }
+        setDataState({
+            ...dataState,
+            data: null,
+            lastDoc: undefined,
+            pages: null,
+            page: 1,
+            isSearching: true,
+        });
     };
 
     const handleNextClick = async () => {
@@ -156,70 +148,64 @@ const UsersRenderer = () => {
                 wereThereResults: false,
             });
         } else {
-            if (user.data && user.data.email) {
-                if (dataState.isSearching) {
-                    try {
-                        const startAfterDoc = dataState.lastDoc;
-                        const endBeforeDoc = undefined;
-                        var result = await getSearchUsersPaginated(
-                            user.data.email,
-                            dataState.value,
-                            "next",
-                            startAfterDoc,
-                            endBeforeDoc,
-                            numPerPage,
-                        );
+            if (dataState.isSearching) {
+                const startAfterDoc = dataState.lastDoc;
+                getServicesDoneFilterPaginated(
+                    serviceUserId,
+                    dataState.value,
+                    "next",
+                    collection,
+                    startAfterDoc,
+                    numPerPage,
+                )
+                    .then((result) => {
                         var newData;
                         if (dataState.data) {
                             newData = [...dataState.data, ...result.result];
                         } else {
                             newData = result.result;
                         }
+
                         setDataState({
                             ...dataState,
                             data: newData,
                             lastDoc: result.lastDoc,
                             page: dataState.page + 1,
                         });
-                    } catch (e) {
+                    })
+                    .catch((e) => {
                         console.log(e);
-                    }
-                } else {
-                    try {
-                        const startAfterDoc = dataState.lastDoc;
-                        const endBeforeDoc = undefined;
-                        var result = await getAllUsersPaginated(
-                            user.data.email,
-                            "next",
-                            startAfterDoc,
-                            endBeforeDoc,
-                            numPerPage,
-                        );
+                    });
+            } else {
+                const startAfterDoc = dataState.lastDoc;
+                getServicesDonePaginated(
+                    serviceUserId,
+                    "next",
+                    collection,
+                    startAfterDoc,
+                    numPerPage,
+                )
+                    .then((result) => {
                         var newData;
                         if (dataState.data) {
                             newData = [...dataState.data, ...result.result];
                         } else {
                             newData = result.result;
                         }
+
                         setDataState({
                             ...dataState,
                             data: newData,
                             lastDoc: result.lastDoc,
                             page: dataState.page + 1,
                         });
-                    } catch (e) {
+                    })
+                    .catch((e) => {
                         console.log(e);
-                    }
-                }
+                    });
             }
         }
     };
-
-    useEffect(() => {
-        if (!loadingUser) {
-            calculateNormalNumPages();
-        }
-    }, [loadingUser]);
 
     useEffect(() => {
         if (!dataState.pages) {
@@ -246,17 +232,16 @@ const UsersRenderer = () => {
             <div>
                 <fieldset>
                     <input
-                        type="text"
-                        placeholder="Buscar por nombre, email, telefono"
-                        value={dataState.value}
+                        type="date"
+                        value={dataState.value.toDate().toISOString().split("T")[0]}
                         onChange={(e) => {
                             setDataState({
                                 ...dataState,
-                                value: e.target.value,
+                                value: Timestamp.fromDate(inputToDate(e)),
                             });
                         }}
                     />
-                    <button onClick={search}>Buscar</button>
+                    <button onClick={search}>Filtrar</button>
                 </fieldset>
             </div>
             {dataState.data.length > 0 ? (
@@ -267,15 +252,19 @@ const UsersRenderer = () => {
                     loader={<span className="loader-gray"></span>}
                 >
                     {dataState.data.map((req, i) => (
-                        <UserItemRenderer req={req} key={`user-item-${i}`} />
+                        <div>
+                            <h2>{req.requestReason}</h2>
+                        </div>
                     ))}
                 </InfiniteScroll>
             ) : (
                 <div className="empty-wrapper | auto-height">
                     <h2>
                         {dataState.isSearching
-                            ? "Ningun usuario fue encontrado"
-                            : "No hay usuarios registrados en la aplicacion"}
+                            ? `No se encontro servicios hechos hasta la fecha ${
+                                  dataState.value.toDate().toISOString().split("T")[0]
+                              }`
+                            : `El usuario no ha hecho ningun servicio como ${userReqTypes[type]}`}
                     </h2>
                 </div>
             )}
@@ -285,4 +274,4 @@ const UsersRenderer = () => {
     );
 };
 
-export default UsersRenderer;
+export default ServicesServedByUser;

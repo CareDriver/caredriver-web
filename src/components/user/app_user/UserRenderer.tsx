@@ -6,9 +6,10 @@ import { getUserById, updateUser } from "@/utils/requests/UserRequester";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import NormalUserRenderer from "./NormalUserRenderer";
+import ServiceServedByUser from "./ServiceServedByUser";
 import DisableUser from "./options/DisableUser";
 import DeleteUser from "./options/DeleteUser";
+import ServiceReqsByUser from "./ServiceReqsByUser";
 
 const UserRenderer = ({ userId }: { userId: string }) => {
     const [user, setUser] = useState<UserInterface | null>(null);
@@ -138,9 +139,19 @@ const UserRenderer = ({ userId }: { userId: string }) => {
             });
     }, []);
 
-    const getPageRenderer = () => {
-        if (user && user.role === UserRole.User) {
-            return <NormalUserRenderer user={user} />;
+    const getServicesServed = () => {
+        if (
+            user &&
+            (user.role === undefined || user.role !== UserRole.Admin) &&
+            user.services.length > 1
+        ) {
+            return <ServiceServedByUser user={user} />;
+        }
+    };
+
+    const getServicesRequested = () => {
+        if (user && (user.role === undefined || user.role !== UserRole.Admin)) {
+            return <ServiceReqsByUser user={user} />;
         }
     };
 
@@ -155,7 +166,8 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                     <h3>{user.role}</h3>
                 </div>
             </div>
-            {getPageRenderer()}
+            {getServicesServed()}
+            {getServicesRequested()}
             <DisableUser
                 loading={formState.loading}
                 onAction={toggleDisableUser}
