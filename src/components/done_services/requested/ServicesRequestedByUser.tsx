@@ -19,6 +19,7 @@ import {
     getServicesRequestedPaginated,
 } from "@/utils/requests/services/UserRequestedServices";
 import { CollectionReference, DocumentSnapshot, Timestamp } from "firebase/firestore";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -259,9 +260,12 @@ const ServicesRequestedByUser = ({
                     loader={<span className="loader-gray"></span>}
                 >
                     {dataState.data.map((req, i) => (
-                        <div>
+                        <Link
+                            href={`/admin/users/${serviceUserId}/servicerequests/${type}/${req.id}`}
+                            key={`servie-requested-${i}`}
+                        >
                             <h2>{req.userId}</h2>
-                        </div>
+                        </Link>
                     ))}
                 </InfiniteScroll>
             ) : (

@@ -17,7 +17,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                 {user.serviceRequests?.driveCar?.state === ServiceReqState.Approved ||
                 user.serviceRequests?.driveMotorcycle?.state ===
                     ServiceReqState.Approved ? (
-                    <Link href={`/admin/users/${user.id}/services/drive`}>
+                    <Link href={`/admin/users/${user.id}/services/driver`}>
                         <h3>Chofer</h3>
                         {user.serviceVehicles?.car ? (
                             <span>
@@ -45,7 +45,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                         </span>
                     </Link>
                 ) : (
-                    <Link href={`/admin/users/${user.id}/services/drive`}>
+                    <Link href={`/admin/users/${user.id}/services/driver`}>
                         <h3>Chofer - No registrado</h3>
                     </Link>
                 )}

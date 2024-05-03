@@ -27,6 +27,7 @@ export interface ServiceRequestInterface {
     price: number; // Numeric value of the trip price
     method: "cash" | "qr"; // Payment method
   };
+  finished: boolean
 }
 
 // Type to set a service request definition
@@ -50,5 +51,6 @@ export const initialServiceData = (userId: string | null): ServiceRequestInterfa
       price: 0,
       method: "cash"
     },
+    finished: false
   }
 }

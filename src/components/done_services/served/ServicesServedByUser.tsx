@@ -3,7 +3,7 @@
 import PageLoader from "@/components/PageLoader";
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import { userReqTypes } from "@/interfaces/UserRequest";
-import { inputToDate } from "@/utils/parser/ForDate";
+import { inputToDate, toformatDate } from "@/utils/parser/ForDate";
 import {
     getServiceDoneCollection,
     getServicesDoneFilterNumPages,
@@ -233,7 +233,7 @@ const ServicesServedByUser = ({
                 <fieldset>
                     <input
                         type="date"
-                        value={dataState.value.toDate().toISOString().split("T")[0]}
+                        value={toformatDate(dataState.value.toDate())}
                         onChange={(e) => {
                             setDataState({
                                 ...dataState,

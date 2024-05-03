@@ -11,7 +11,7 @@ const ServiceReqsByUser = ({ user }: { user: UserInterface }) => {
                 Servicios solicitados como usuario normal
             </h2>
             <p>Puedes monitorear los servicios que este usuario ha requerido</p>
-            <Link href={`/admin/users/${user.id}/servicerequests/drive`}>
+            <Link href={`/admin/users/${user.id}/servicerequests/driver`}>
                 <h3>Solicitudes para Choferes</h3>
                 <span className="icon-wrapper | gray-icon">
                     <Eye />

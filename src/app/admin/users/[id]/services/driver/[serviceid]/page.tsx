@@ -1,11 +1,10 @@
+import SingleServiceDone from "@/components/done_services/SingleServiceDone";
 import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const SingleDriveServiceReqByUser = ({ params }: { params: any }) => {
     return (
         <AdminWrapperWithSideBar>
-            <div>
-                user: {params.id} service: {params.serviceid}
-            </div>
+            <SingleServiceDone id={params.serviceid} type="driver" />
         </AdminWrapperWithSideBar>
     );
 };
