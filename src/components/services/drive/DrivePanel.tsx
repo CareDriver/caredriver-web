@@ -123,7 +123,7 @@ const DrivePanel = () => {
     return loadingUser ? (
         <PageLoader />
     ) : user.data ? (
-        <div className="service-form-wrapper">
+        <div className="service-form-wrapper | max-height-100">
             <h1 className="text | big bolder green">Tu solicitud fue aprobada!</h1>
             <p className="text icon-wrapper | green-icon green bolder lb medium margin-top-15">
                 <SackDollar />
@@ -278,6 +278,7 @@ const DrivePanel = () => {
                     )}
                 </div>
             )}
+            <span className="circles-right-bottomv2 green"></span>
         </div>
     ) : (
         <h2>Usuario no encontrado</h2>

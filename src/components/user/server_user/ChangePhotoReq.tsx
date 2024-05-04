@@ -99,7 +99,7 @@ const ChangePhotoReq = () => {
     return loadingUser ? (
         <PageLoader />
     ) : user.data ? (
-        <section className="service-form-wrapper">
+        <section className="service-form-wrapper | max-height-100">
             <h1 className="text | big bolder">Actualiza tu Foto de Perfil</h1>
             <p>
                 Se mandara una solicitud por Whatsapp para que puedas actualizar tu foto
@@ -152,6 +152,7 @@ const ChangePhotoReq = () => {
                     </button>
                 </div>
             </form>
+            <span className="circles-right-bottomv2 green"></span>
         </section>
     ) : (
         <h1>No tienes Cuenta</h1>

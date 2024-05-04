@@ -130,8 +130,8 @@ const ChangeLocationReq = () => {
     return loadingUser ? (
         <PageLoader />
     ) : user.data && location.value ? (
-        <section className="service-form-wrapper">
-            <h1 className="text | big bolder">Actualiza tu Foto de Perfil</h1>
+        <section className="service-form-wrapper | max-height-100">
+            <h1 className="text | big bolder">Cambia tu Localizacion</h1>
             <p className="text | light">
                 Se mandara una solicitud por Whatsapp para que puedas actualizar tu foto
                 de perfil.
@@ -198,6 +198,7 @@ const ChangeLocationReq = () => {
                     </button>
                 </div>
             </form>
+            <span className="circles-right-bottomv2 green"></span>
         </section>
     ) : (
         <h1>No tienes Cuenta</h1>

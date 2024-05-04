@@ -59,7 +59,7 @@ const UserProfile = () => {
     return loadingUser ? (
         <PageLoader />
     ) : user.data ? (
-        <section className="user-page-wrapper">
+        <section className="user-page-wrapper | max-height-100">
             <section className="profile-wrapper">
                 <img
                     src={user.data.photoUrl.url === "" ? DEFAULT_PHOTO : user.data.photoUrl.url}
@@ -130,6 +130,7 @@ const UserProfile = () => {
                     </div>
                 }
             </section>
+            <span className="circles-right-bottomv2 green"></span>
         </section>
     ) : (
         <h2>User not found</h2>
