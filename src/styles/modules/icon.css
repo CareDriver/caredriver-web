@@ -9,6 +9,10 @@
     justify-content: center;
 }
 
+.icon-wrapper.bottom {
+    align-items: end;
+}
+
 .icon-wrapper.column {
     flex-direction: column;
 }
@@ -41,6 +45,11 @@
 .icon-wrapper.lb > svg {
     height: 25px;
     width: 25px;
+}
+
+.icon-wrapper.mb > svg {
+    height: 35px;
+    width: 35px;
 }
 
 .icon-wrapper.bg > svg {

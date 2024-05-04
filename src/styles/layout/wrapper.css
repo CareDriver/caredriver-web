@@ -21,6 +21,14 @@
     padding: 80px 50px;
 }
 
+.render-data-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    padding: 80px 50px;
+}
+
 .row-wrapper {
     display: flex;
     align-items: center;

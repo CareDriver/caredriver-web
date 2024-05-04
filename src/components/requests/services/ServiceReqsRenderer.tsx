@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import "@/styles/components/pagination.css";
 import ServiceItemReq from "./ServiceItemReq";
 import InfiniteScroll from "react-infinite-scroll-component";
+import MiddleMessage from "@/components/MiddleMessage";
+import "@/styles/components/service-req.css";
 
 const ServiceReqsRenderer = ({ type }: { type: "driver" | "mechanic" | "tow" }) => {
     const numPerPage = 10;
@@ -52,20 +54,30 @@ const ServiceReqsRenderer = ({ type }: { type: "driver" | "mechanic" | "tow" }) 
 
     return data ? (
         data.length > 0 ? (
-            <InfiniteScroll
-                dataLength={data.length}
-                next={handleNextClick}
-                hasMore={page !== pages}
-                loader={<span className="loader-gray"></span>}
-            >
-                {data.map((req, i) => (
-                    <ServiceItemReq req={req} key={`service-req-item-${i}`} type={type} />
-                ))}
-            </InfiniteScroll>
-        ) : (
-            <div className="empty-wrapper | auto-height">
-                <h2>No hay peticiones para ser {userReqTypes[type]}</h2>
+            <div className="render-data-wrapper">
+                <h1 className={`text | big bolder margin-bottom-25`}>
+                    Solicitudes para ser {userReqTypes[type]}
+                </h1>
+
+                <InfiniteScroll
+                    dataLength={data.length}
+                    next={handleNextClick}
+                    hasMore={page !== pages}
+                    loader={<span className="loader-gray"></span>}
+                >
+                    <div className="service-req-wrapper">
+                        {data.map((req, i) => (
+                            <ServiceItemReq
+                                req={req}
+                                key={`service-req-item-${i}`}
+                                type={type}
+                            />
+                        ))}
+                    </div>
+                </InfiniteScroll>
             </div>
+        ) : (
+            <MiddleMessage message={`No hay peticiones para ser ${userReqTypes[type]}`} />
         )
     ) : (
         <PageLoader />
