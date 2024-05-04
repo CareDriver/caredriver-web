@@ -20,6 +20,17 @@
     animation: rotation 700ms linear infinite;
 }
 
+.loader-gray-medium {
+    width: 40px;
+    height: 40px;
+    border: 6px solid var(--gray-medium);
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 700ms linear infinite;
+}
+
 .loader-green {
     width: 40px;
     height: 40px;
@@ -44,6 +55,7 @@
 
 .loader.small-loader,
 .loader-black.small-loader,
+.loader-gray-medium.small-loader,
 .loader-gray.small-loader,
 .loader-green.small-loader {
     width: 25px;
@@ -54,6 +66,7 @@
 .loader.big-loader,
 .loader-black.big-loader,
 .loader-gray.big-loader,
+.loader-gray-medium.big-loader,
 .loader-green.big-loader {
     width: 60px;
     height: 60px;

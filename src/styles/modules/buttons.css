@@ -27,6 +27,10 @@
     transition: all ease-in-out 200ms;
 }
 
+.general-button:hover {
+    border-radius: 20px;
+}
+
 .general-button.no-full {
     display: inline-flex;
     justify-content: center;

@@ -202,6 +202,7 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
                 loading={reviewState.loading || userData === null}
                 stateB1={true}
                 stateB2={userData !== null && userData !== undefined && !userData.deleted}
+                alreadyReviewed={!req.active}
             />
         </div>
     ) : (

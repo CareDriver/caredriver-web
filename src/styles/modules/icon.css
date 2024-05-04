@@ -29,6 +29,10 @@
     fill: var(--gray-dark);
 }
 
+.icon-wrapper.gray-medium-icon > svg {
+    fill: var(--gray-medium);
+}
+
 .icon-wrapper.green-icon > svg {
     fill: var(--main-light);
 }

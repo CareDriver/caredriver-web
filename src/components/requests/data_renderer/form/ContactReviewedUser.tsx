@@ -34,20 +34,20 @@ const ContactReviewedUser = ({
                 <Phone />
                 Datos Personales
             </h2>
-            <div>
+            <div className="column-wrapper">
                 <button
                     type="button"
                     onClick={contactByEmail}
-                    className="icon-wrapper text | bolder lb"
+                    className="icon-wrapper text general-button | red white-icon bolder mb"
                 >
-                    <Envelope /> Contactar por Email
+                    <Envelope /> Contactar por CORREO
                 </button>
                 <button
                     type="button"
                     onClick={contactByWhatsapp}
-                    className="icon-wrapper text | bolder lb"
+                    className="icon-wrapper text general-button | white-icon bolder mb"
                 >
-                    <Whatsapp /> Contactar por Whatsapp
+                    <Whatsapp /> Contactar por WHATSAPP
                 </button>
             </div>
         </div>

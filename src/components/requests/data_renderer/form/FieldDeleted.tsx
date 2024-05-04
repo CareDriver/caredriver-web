@@ -2,9 +2,9 @@ import TriangleExclamation from "@/icons/TriangleExclamation";
 
 const FieldDeleted = ({ description }: { description: string }) => {
     return (
-        <div className="icon-wrapper | lb">
+        <div className="icon-wrapper deleted-field | red-icon lb">
             <TriangleExclamation />
-            <p>{description}</p>
+            <p className="text | red">{description}</p>
         </div>
     );
 };

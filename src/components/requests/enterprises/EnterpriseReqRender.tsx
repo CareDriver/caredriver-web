@@ -106,6 +106,7 @@ const EnterpriseReqRender = ({ enterprise }: { enterprise: Enterprise }) => {
                 loading={reviewState.loading}
                 stateB1={true}
                 stateB2={true}
+                alreadyReviewed={reviewState.reviewed || !enterprise.active}
             />
         </section>
     );

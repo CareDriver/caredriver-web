@@ -1,43 +1,64 @@
 import AddressCar from "@/icons/AddressCar";
-import { LicenseInterface, LicenseUpdateReq } from "@/interfaces/PersonalDocumentsInterface";
+import {
+    LicenseInterface,
+    LicenseUpdateReq,
+} from "@/interfaces/PersonalDocumentsInterface";
 import InputData from "../form/InputData";
 import InpurDate from "../form/InpurDate";
 import ImageRenderer from "../form/ImageRenderer";
 import { getUrl } from "@/utils/validator/ImageValidator";
 
-const LicenseRenderer = ({ license }: { license: LicenseInterface | LicenseUpdateReq }) => {
+const LicenseRenderer = ({
+    license,
+}: {
+    license: LicenseInterface | LicenseUpdateReq;
+}) => {
     return (
-        <div>
-            <div>
-                <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
-                    <AddressCar /> Licencia
-                </h2>
-                <p>
-                    Verifica que las fotos de la licencia de conducir sean correctas,
-                    porque se eliminaran cuando se acepte o rechaze la solicitud.
-                </p>
+        <div className="form-sub-container">
+            <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
+                <AddressCar /> Licencia
+            </h2>
+            <p className="text | light">
+                Verifica que las fotos de la licencia de conducir sean correctas, porque
+                se eliminaran cuando se acepte o rechaze la solicitud.
+            </p>
+            <fieldset className="form-section">
                 <InputData
                     content={license.licenseNumber}
                     placeholder="Numero de la licencia"
                 />
+                <legend className="form-section-legend">Número</legend>
+            </fieldset>
+            <fieldset className="form-section">
                 <InpurDate date={license.expiredDateLicense.toDate()} />
-                {license.frontImgUrl && (
+                <legend className="form-section-legend">Fecha de expiración</legend>
+            </fieldset>
+            {license.frontImgUrl && (
+                <fieldset className="form-section">
                     <ImageRenderer
                         url={getUrl(license.frontImgUrl.url)}
                         isCircle={false}
                         placeholder={undefined}
                         noFoundDescr={undefined}
                     />
-                )}
-                {license.backImgUrl && (
+                    <legend className="form-section-legend | focused">
+                        Parte frontal de la licencia
+                    </legend>
+                </fieldset>
+            )}
+            {license.backImgUrl && (
+                <fieldset className="form-section">
                     <ImageRenderer
                         url={getUrl(license.backImgUrl.url)}
                         isCircle={false}
                         placeholder={undefined}
                         noFoundDescr={undefined}
                     />
-                )}
-            </div>
+                    <legend className="form-section-legend | focused">
+                        Parte posterior de la licencia
+                    </legend>
+                </fieldset>
+            )}
         </div>
     );
 };

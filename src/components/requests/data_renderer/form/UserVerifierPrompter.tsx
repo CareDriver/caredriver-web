@@ -20,9 +20,9 @@ const UserVerifierPrompter = ({
                     </span>
                 )
             ) : (
-                <span>
-                    <span className="loader-gray | small-loader"></span> Verificando al
-                    usuario
+                <span className="row-wrapper text | bold gray-medium">
+                    <span className="loader-gray-medium | small-loader"></span>{" "}
+                    Verificando al usuario
                 </span>
             )}
         </div>

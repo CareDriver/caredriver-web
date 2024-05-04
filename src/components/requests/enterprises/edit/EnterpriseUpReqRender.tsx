@@ -162,6 +162,7 @@ const EnterpriseUpReqRender = ({ enterprise }: { enterprise: ReqEditEnterprise }
                 loading={reviewState.loading}
                 stateB1={true}
                 stateB2={true}
+                alreadyReviewed={reviewState.reviewed || !enterprise.active}
             />
         </section>
     );

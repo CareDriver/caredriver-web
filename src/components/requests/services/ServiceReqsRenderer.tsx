@@ -63,7 +63,11 @@ const ServiceReqsRenderer = ({ type }: { type: "driver" | "mechanic" | "tow" }) 
                     dataLength={data.length}
                     next={handleNextClick}
                     hasMore={page !== pages}
-                    loader={<span className="loader-gray"></span>}
+                    loader={
+                        <div className="empty-wrapper | auto-height padding-top-20">
+                            <span className="loader-gray-medium"></span>
+                        </div>
+                    }
                 >
                     <div className="service-req-wrapper">
                         {data.map((req, i) => (

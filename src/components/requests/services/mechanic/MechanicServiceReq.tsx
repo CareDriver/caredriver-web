@@ -221,6 +221,7 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 userData !== undefined &&
                                 !userData.deleted
                             }
+                            alreadyReviewed={reviewState.reviewed || !serviceReq.active}
                         />
                     </>
                 )}

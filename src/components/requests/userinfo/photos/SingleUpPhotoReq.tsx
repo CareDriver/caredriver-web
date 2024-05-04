@@ -151,6 +151,7 @@ const SingleUpPhotoReq = ({ reqId }: { reqId: string }) => {
                 loading={reviewState.loading || userReq === null}
                 stateB1={true}
                 stateB2={userReq !== null && !userReq.deleted}
+                alreadyReviewed={!req.active}
             />
         </div>
     ) : (

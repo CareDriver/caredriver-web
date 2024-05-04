@@ -234,7 +234,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     useEffect(() => {
         getUserById(serviceReq.userId).then((res) => {
             if (res) {
-                setUserData(res);                
+                setUserData(res);
             } else {
                 setUserData(undefined);
             }
@@ -242,54 +242,58 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     }, []);
 
     return (
-        <section>
-            <div>
-                <h1>Solicitud para ser Chofer</h1>
+        <div className="service-form-wrapper | max-width-60">
+            <h1 className="text | big bolder">Solicitud para ser Chofer</h1>
+            <div className="row-wrapper | gap-20">
                 <ApprovalsRenderer
                     serviceReq={serviceReq}
                     reviewed={reviewState.reviewed}
                 />
-
                 <UserVerifierPrompter userData={userData} />
-
-                <PersonalData
-                    location={serviceReq.location}
-                    name={serviceReq.newFullName}
-                    photo={serviceReq.newProfilePhotoImgUrl}
-                />
-                {reviewState.reviewed ? (
-                    userData && user.data ? (
-                        <ContactReviewedUser
-                            user={userData}
-                            transmitter={user.data.fullName}
-                        />
-                    ) : (
-                        <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
-                    )
-                ) : (
-                    <>
-                        <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                        {serviceReq.vehicles && (
-                            <VehiclesRenderer vehicles={serviceReq.vehicles} />
-                        )}
-
-                        {userData && <UserStatusIndicatorV2 user={userData} />}
-
-                        <ReqButtonRes
-                            onApprove={approve}
-                            onDecline={decline}
-                            loading={reviewState.loading || userData === null}
-                            stateB1={true}
-                            stateB2={
-                                userData !== null &&
-                                userData !== undefined &&
-                                !userData.deleted
-                            }
-                        />
-                    </>
-                )}
             </div>
-        </section>
+
+            <PersonalData
+                location={serviceReq.location}
+                name={serviceReq.newFullName}
+                photo={serviceReq.newProfilePhotoImgUrl}
+            />
+            {reviewState.reviewed ? (
+                userData && user.data ? (
+                    <ContactReviewedUser
+                        user={userData}
+                        transmitter={user.data.fullName}
+                    />
+                ) : (
+                    <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
+                )
+            ) : (
+                <>
+                    <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+                    {serviceReq.vehicles && (
+                        <VehiclesRenderer vehicles={serviceReq.vehicles} />
+                    )}
+
+                    {userData && <UserStatusIndicatorV2 user={userData} />}
+
+                    <p className="text | light margin-top-25">
+                        Podras contactarte con el usuario despues de{" "}
+                        <b>aprobar o rechazar</b> la solicitud
+                    </p>
+                    <ReqButtonRes
+                        onApprove={approve}
+                        onDecline={decline}
+                        loading={reviewState.loading || userData === null}
+                        stateB1={true}
+                        stateB2={
+                            userData !== null &&
+                            userData !== undefined &&
+                            !userData.deleted
+                        }
+                        alreadyReviewed={reviewState.reviewed || !serviceReq.active}
+                    />
+                </>
+            )}
+        </div>
     );
 };
 

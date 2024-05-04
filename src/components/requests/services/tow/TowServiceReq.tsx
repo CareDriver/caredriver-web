@@ -287,6 +287,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 userData !== undefined &&
                                 !userData.deleted
                             }
+                            alreadyReviewed={reviewState.reviewed || !serviceReq.active}
                         />
                     </>
                 )}
