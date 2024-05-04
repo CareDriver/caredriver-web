@@ -1,24 +1,41 @@
-import { Enterprise, EnterpriseTypeRender, ReqEditEnterprise } from "@/interfaces/Enterprise";
+import {
+    Enterprise,
+    EnterpriseTypeRender,
+    ReqEditEnterprise,
+} from "@/interfaces/Enterprise";
 import ImageRenderer from "../form/ImageRenderer";
 import InputData from "../form/InputData";
 import MarkRenderer from "../map/MarkRenderer";
 
-const EnterpriseRenderer = ({ enterprise }: { enterprise: Enterprise | ReqEditEnterprise }) => {
-    const title = (enterprise.type === "tow" ? "de la" : "del").concat(
+const EnterpriseRenderer = ({
+    enterprise,
+}: {
+    enterprise: Enterprise | ReqEditEnterprise;
+}) => {
+    const title = (enterprise.type === "tow" ? "de la " : "del ").concat(
         EnterpriseTypeRender[enterprise.type],
     );
 
     return (
-        <>
-            <InputData
-                content={enterprise.name}
-                placeholder={`Nombre ${title}
+        <div className="form-sub-container">
+            <fieldset className="form-section">
+                <InputData
+                    content={enterprise.name}
+                    placeholder={`Nombre ${title}
                 `}
-            />
-            <InputData content={enterprise.phone} placeholder={"Numero de Telefono"} />
+                />
+                <legend className="form-section-legend">Nombre {title}</legend>
+            </fieldset>
+            <fieldset className="form-section">
+                <InputData
+                    content={enterprise.phone}
+                    placeholder={"Numero de Telefono"}
+                />
+                <legend className="form-section-legend">Telefono {title}</legend>
+            </fieldset>
             <ImageRenderer
                 isCircle={true}
-                placeholder="Logo"
+                placeholder={`Logo ${title}`}
                 url={enterprise.logoImgUrl}
                 noFoundDescr={undefined}
             />
@@ -33,7 +50,7 @@ const EnterpriseRenderer = ({ enterprise }: { enterprise: Enterprise | ReqEditEn
                     />
                 </fieldset>
             )}
-        </>
+        </div>
     );
 };
 

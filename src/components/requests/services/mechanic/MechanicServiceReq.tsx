@@ -174,59 +174,62 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     }, []);
 
     return (
-        <section>
-            <div>
-                <h1>Solicitud para ser Chofer</h1>
+        <div className="service-form-wrapper | max-width-60">
+            <h1 className="text | big bolder">Solicitud para ser Mecanico</h1>
+            <div className="row-wrapper | gap-20">
                 <ApprovalsRenderer
                     serviceReq={serviceReq}
                     reviewed={reviewState.reviewed}
                 />
 
                 <UserVerifierPrompter userData={userData} />
-
-                <PersonalData
-                    location={serviceReq.location}
-                    name={serviceReq.newFullName}
-                    photo={serviceReq.newProfilePhotoImgUrl}
-                />
-                {reviewState.reviewed ? (
-                    userData && user.data ? (
-                        <ContactReviewedUser
-                            user={userData}
-                            transmitter={user.data.fullName}
-                        />
-                    ) : (
-                        <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
-                    )
-                ) : (
-                    <>
-                        <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                        {enterprise === null ? (
-                            <span className="loader-green"></span>
-                        ) : enterprise === undefined ? (
-                            <FieldDeleted description="No se selecciono el taller mecanico (El campo era opcional)" />
-                        ) : (
-                            <WorkshopRenderer workshop={enterprise} />
-                        )}
-
-                        {userData && <UserStatusIndicatorV2 user={userData} />}
-
-                        <ReqButtonRes
-                            onApprove={approve}
-                            onDecline={decline}
-                            loading={reviewState.loading || userData === null}
-                            stateB1={true}
-                            stateB2={
-                                userData !== null &&
-                                userData !== undefined &&
-                                !userData.deleted
-                            }
-                            alreadyReviewed={reviewState.reviewed || !serviceReq.active}
-                        />
-                    </>
-                )}
             </div>
-        </section>
+
+            <PersonalData
+                location={serviceReq.location}
+                name={serviceReq.newFullName}
+                photo={serviceReq.newProfilePhotoImgUrl}
+            />
+            {reviewState.reviewed ? (
+                userData && user.data ? (
+                    <ContactReviewedUser
+                        user={userData}
+                        transmitter={user.data.fullName}
+                    />
+                ) : (
+                    <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
+                )
+            ) : (
+                <>
+                    <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+                    {enterprise === null ? (
+                        <span className="loader-green"></span>
+                    ) : enterprise === undefined ? (
+                        <FieldDeleted description="No se selecciono el taller mecanico (El campo era opcional)" />
+                    ) : (
+                        <WorkshopRenderer workshop={enterprise} />
+                    )}
+
+                    {userData && <UserStatusIndicatorV2 user={userData} />}
+                    <p className="text | light margin-top-25">
+                        Podras contactarte con el usuario despues de{" "}
+                        <b>aprobar o rechazar</b> la solicitud
+                    </p>
+                    <ReqButtonRes
+                        onApprove={approve}
+                        onDecline={decline}
+                        loading={reviewState.loading || userData === null}
+                        stateB1={true}
+                        stateB2={
+                            userData !== null &&
+                            userData !== undefined &&
+                            !userData.deleted
+                        }
+                        alreadyReviewed={reviewState.reviewed || !serviceReq.active}
+                    />
+                </>
+            )}
+        </div>
     );
 };
 
