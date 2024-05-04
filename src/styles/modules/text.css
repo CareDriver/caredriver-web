@@ -11,6 +11,10 @@
     font-size: 60px;
 }
 
+.text.big-medium {
+    font-size: 50px;
+}
+
 .text.medium-big {
     font-size: 22px;
 }

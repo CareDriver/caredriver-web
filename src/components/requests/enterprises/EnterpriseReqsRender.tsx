@@ -11,6 +11,7 @@ import {
 } from "@/utils/requests/enterprise/EnterpriseRequester";
 import { Enterprise, EnterpriseTypeRender } from "@/interfaces/Enterprise";
 import InfiniteScroll from "react-infinite-scroll-component";
+import "@/styles/components/enterprise-req.css";
 
 const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
     const numPerPage = 10;
@@ -49,20 +50,29 @@ const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
 
     return data ? (
         data.length > 0 ? (
-            <InfiniteScroll
-                dataLength={data.length}
-                next={handleNextClick}
-                hasMore={page !== pages}
-                loader={<span className="loader-gray"></span>}
-            >
-                {data.map((req, i) => (
-                    <EnterpriseItemReq
-                        enterprise={req}
-                        type={type}
-                        key={`service-req-item-${i}`}
-                    />
-                ))}
-            </InfiniteScroll>
+            <div className="render-data-wrapper">
+                <h1 className={`text | big-medium bolder margin-bottom-25 capitalize`}>
+                    Solicitudes para crear {type === "tow" ? "una" : "un"}{" "}
+                    {EnterpriseTypeRender[type]}
+                </h1>
+
+                <InfiniteScroll
+                    dataLength={data.length}
+                    next={handleNextClick}
+                    hasMore={page !== pages}
+                    loader={<span className="loader-gray"></span>}
+                >
+                    <div className="enterprise-req-wrapper">
+                        {data.map((req, i) => (
+                            <EnterpriseItemReq
+                                enterprise={req}
+                                type={type}
+                                key={`service-req-item-${i}`}
+                            />
+                        ))}
+                    </div>
+                </InfiniteScroll>
+            </div>
         ) : (
             <div className="empty-wrapper | auto-height">
                 <h2>
