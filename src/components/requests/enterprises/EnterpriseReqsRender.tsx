@@ -51,7 +51,7 @@ const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
     return data ? (
         data.length > 0 ? (
             <div className="render-data-wrapper">
-                <h1 className={`text | big-medium bolder margin-bottom-25 capitalize`}>
+                <h1 className={"text | big-medium bolder margin-bottom-25 capitalize"}>
                     Solicitudes para crear {type === "tow" ? "una" : "un"}{" "}
                     {EnterpriseTypeRender[type]}
                 </h1>
