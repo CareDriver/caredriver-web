@@ -313,7 +313,7 @@ const VehiclesForm = ({
                             onChange={(e) => updateNumberLicense(i, e.target.value)}
                             className="form-section-input"
                         />
-                        <legend className="form-section-legend">Numero</legend>
+                        <legend className="form-section-legend">Número</legend>
                         {vehicle.license.number.message && (
                             <small>{vehicle.license.number.message}</small>
                         )}

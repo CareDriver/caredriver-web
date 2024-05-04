@@ -10,7 +10,7 @@ const ServiceHeader = ({ data }: { data: Data }) => {
     return (
         <div className="margin-bottom-25">
             <h1
-                className={`text | big bolder ${
+                className={`text | big bolder max-width-90 ${
                     data.state === ServiceReqState.Refused && "red"
                 }`}
             >

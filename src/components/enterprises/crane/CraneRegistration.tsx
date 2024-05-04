@@ -179,24 +179,25 @@ const CraneRegistration = () => {
     return (
         <section className="service-form-wrapper">
             <h1 className="text | big bolder">Registar Empresa Operadora de Grua</h1>
-            <p>
+            <p className="text | light">
                 Necesitamos verificar que la nueva empresa sea valida antes de
                 registrarla.
             </p>
             <form
-                className="form-sub-container | margin-top-25"
+                className="form-sub-container | margin-top-50"
                 onSubmit={handleSummbit}
                 data-state={formState.loading ? "loading" : "loaded"}
             >
                 <fieldset className="form-section | max-width-60">
                     <input
                         type="text"
-                        placeholder="Nombre de la Empresa"
+                        placeholder=""
                         className="form-section-input"
                         value={formData.name.value}
                         name="fullname"
                         onChange={(e) => handleInputChange(e)}
                     />
+                    <legend className="form-section-legend">Nombre de la Empresa</legend>
 
                     {formData.name.message && <small>{formData.name.message}</small>}
                 </fieldset>
@@ -219,7 +220,7 @@ const CraneRegistration = () => {
                         }}
                         content={{
                             id: "workshop-uploader-image",
-                            indicator: "Logo del Taller",
+                            indicator: "Logo de la Empresa",
                             isCircle: true,
                         }}
                     />

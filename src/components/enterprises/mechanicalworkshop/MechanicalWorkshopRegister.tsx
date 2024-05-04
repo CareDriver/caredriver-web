@@ -179,24 +179,25 @@ const MechanicRegister = () => {
     return (
         <section className="service-form-wrapper">
             <h1 className="text | big bolder">Registar Taller Mecanico</h1>
-            <p>
+            <p className="text | light">
                 Necesitamos verificar que el taller mecanico es valido antes de
                 registrarlo.
             </p>
             <form
-                className="form-sub-container | margin-top-25"
+                className="form-sub-container | margin-top-50"
                 onSubmit={handleSummbit}
                 data-state={formState.loading ? "loading" : "loaded"}
             >
                 <fieldset className="form-section | max-width-60">
                     <input
                         type="text"
-                        placeholder="Nombre del Taller"
+                        placeholder=""
                         className="form-section-input"
                         value={formData.name.value}
                         name="fullname"
                         onChange={(e) => handleInputChange(e)}
                     />
+                    <legend className="form-section-legend">Nombre del taller</legend>
 
                     {formData.name.message && <small>{formData.name.message}</small>}
                 </fieldset>

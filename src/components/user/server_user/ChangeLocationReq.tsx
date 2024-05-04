@@ -1,20 +1,15 @@
 "use client";
 
 import { FormEvent, useContext, useEffect, useState } from "react";
-import ImageUploader from "../../form/ImageUploader";
-import { defaultPhoto, PhotoField } from "../../services/FormModels";
 import { AuthContext } from "@/context/AuthContext";
 import PageLoader from "../../PageLoader";
 import { useRouter } from "next/navigation";
 import { updateUser } from "@/utils/requests/UserRequester";
-import { saveChangePhotoReq } from "@/utils/requests/ChangePhotoRequester";
-import { nanoid } from "nanoid";
-import { uploadImageBase64 } from "@/utils/requests/FileUploader";
-import { DirectoryPath } from "@/firebase/StoragePaths";
 import { toast } from "react-toastify";
 import { locationList, Locations } from "@/interfaces/Locations";
 import { getGreeting } from "@/utils/contact/Content";
 import { sendWhatsapp } from "@/utils/contact/Sender";
+import ChevronDown from "@/icons/ChevronDown";
 
 const ChangeLocationReq = () => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -55,6 +50,10 @@ const ChangeLocationReq = () => {
 
     const submit = async (e: FormEvent) => {
         e.preventDefault();
+        setFormState({
+            ...formState,
+            loading: true,
+        })
         if (
             location.value &&
             location.default &&
@@ -133,7 +132,7 @@ const ChangeLocationReq = () => {
     ) : user.data && location.value ? (
         <section className="service-form-wrapper">
             <h1 className="text | big bolder">Actualiza tu Foto de Perfil</h1>
-            <p>
+            <p className="text | light">
                 Se mandara una solicitud por Whatsapp para que puedas actualizar tu foto
                 de perfil.
             </p>
@@ -143,7 +142,8 @@ const ChangeLocationReq = () => {
                 data-state={formState.loading ? "loading" : "loaded"}
                 onSubmit={submit}
             >
-                <fieldset className="form-section">
+                <fieldset className="form-section | select-item">
+                    <ChevronDown />
                     <select
                         className="form-section-input"
                         onChange={(e) => {
@@ -165,6 +165,7 @@ const ChangeLocationReq = () => {
                             </option>
                         ))}
                     </select>
+                    <legend className="form-section-legend">Nueva localizacion</legend>
                     {location.message && <small>{location.message}</small>}
                 </fieldset>
                 <div
