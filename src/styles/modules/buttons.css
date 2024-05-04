@@ -7,6 +7,7 @@
 
     background-color: var(--white);
     color: var(--second-dark);
+    transition: all ease-in-out 200ms;
 }
 
 .touchable:active {
@@ -23,6 +24,7 @@
 
     background-color: var(--main-light);
     color: var(--white);
+    transition: all ease-in-out 200ms;
 }
 
 .general-button.no-full {
@@ -77,6 +79,7 @@
 
     border: none;
     background-color: transparent;
+    transition: all ease-in-out 200ms;
 }
 
 .option-button.selected {
@@ -96,6 +99,7 @@
 
     border: 2px solid var(--main-light);
     cursor: pointer;
+    transition: all ease-in-out 200ms;
 }
 
 .circle-button:disabled {
@@ -112,21 +116,30 @@
     align-items: center;
     justify-content: center;
 
-    padding: 10px 60px;
+    padding: 10px 50px;
 
     background-color: var(--main-light);
     color: var(--white);
     border: none;
     border-radius: 15px;
+    transition: all ease-in-out 200ms;
 }
 
 .small-general-button.gray {
-    border: 2px solid var(--gray-dark);
+    border: 2px solid var(--gray-medium);
     background-color: var(--white);
     color: var(--gray-dark);
+}
+
+.small-general-button.gray:hover {
+    background-color: var(--gray-light);
 }
 
 .small-general-button.yellow {
     background-color: var(--yellow);
     color: var(--second-dark);
+}
+
+.pointer-option {
+    cursor: pointer;
 }

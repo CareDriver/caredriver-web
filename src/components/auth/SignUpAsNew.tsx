@@ -21,6 +21,7 @@ import { defaultServiceReq, UserInterface, UserRole } from "@/interfaces/UserInt
 import { Services } from "@/interfaces/Services";
 import { generateVerificationCode } from "generate-verification-code";
 import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
+import ChevronDown from "@/icons/ChevronDown";
 
 interface FormData {
     fullName: {
@@ -380,7 +381,7 @@ const SignUpAsNew = () => {
                     <fieldset className="form-section">
                         <input
                             type="text"
-                            placeholder="000000"
+                            placeholder=""
                             value={credentials.code.toVerify}
                             onChange={(e) =>
                                 setCredentials({
@@ -393,6 +394,9 @@ const SignUpAsNew = () => {
                             }
                             className="form-section-input"
                         />
+                        <legend className="form-section-legend">
+                            Codigo de verificacion
+                        </legend>
                         {credentials.code.errorMessage && (
                             <small>{credentials.code.errorMessage}</small>
                         )}
@@ -411,11 +415,14 @@ const SignUpAsNew = () => {
                         <input
                             type="email"
                             name="email"
-                            placeholder="Correo Electronico"
+                            placeholder=""
                             value={credentials.email.value}
                             onChange={(e) => handleInputChange(e, isValidEmail)}
                             className="form-section-input"
                         />
+                        <legend className="form-section-legend">
+                            Correo electrónico
+                        </legend>
                         {credentials.email.errorMessage && (
                             <small>{credentials.email.errorMessage}</small>
                         )}
@@ -424,11 +431,12 @@ const SignUpAsNew = () => {
                         <input
                             type="text"
                             name="password"
-                            placeholder="Contraseña"
+                            placeholder=""
                             value={credentials.password.value}
                             onChange={(e) => handleInputChange(e, isValidPassword)}
                             className="form-section-input"
                         />
+                        <legend className="form-section-legend">Contraseña</legend>
                         {credentials.password.errorMessage && (
                             <small>{credentials.password.errorMessage}</small>
                         )}
@@ -437,11 +445,12 @@ const SignUpAsNew = () => {
                         <input
                             type="text"
                             name="fullName"
-                            placeholder="Nombre Completo"
+                            placeholder=""
                             value={credentials.fullName.value}
                             onChange={(e) => handleInputChange(e, isValidName)}
                             className="form-section-input"
                         />
+                        <legend className="form-section-legend">Nombre completo</legend>
                         {credentials.fullName.errorMessage && (
                             <small>{credentials.fullName.errorMessage}</small>
                         )}
@@ -455,7 +464,8 @@ const SignUpAsNew = () => {
                             <small>{credentials.phone.errorMessage}</small>
                         )}
                     </fieldset>
-                    <fieldset className="form-section">
+                    <fieldset className="form-section | select-item">
+                        <ChevronDown />
                         <select
                             className="form-section-input"
                             onChange={(e) => {
@@ -472,6 +482,7 @@ const SignUpAsNew = () => {
                                 </option>
                             ))}
                         </select>
+                        <legend className="form-section-legend">Ubicacion</legend>
                     </fieldset>
 
                     <button

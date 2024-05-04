@@ -15,7 +15,7 @@ const SelfieConfirmer = ({
                 <h2 className="text icon-wrapper | lb medium-big bold">
                     <PersonQuestion /> Confirmacion del Usuario
                 </h2>
-                <p className="text | normal">
+                <p className="text | light">
                     Sube una selfie para verificar que eres el que esta solicitando
                     nuestro servicio. Esta foto sera eliminada cuando tu solicitud sera
                     aceptada o rechazada

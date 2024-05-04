@@ -45,6 +45,10 @@ button:disabled {
     pointer-events: none;
 }
 
+input[type="checkbox"] {
+    cursor: pointer;
+}
+
 a {
     text-decoration: none;
     all: unset;

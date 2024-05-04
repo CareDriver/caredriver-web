@@ -82,13 +82,13 @@ const PersonalDataForm = ({
                 <fieldset className="form-section">
                     <input
                         type="text"
-                        placeholder="Nombre completo"
+                        placeholder=""
                         className="form-section-input"
                         value={personalData.fullname.value}
                         name="fullname"
                         onChange={(e) => handleInputChange(e)}
                     />
-
+                    <legend className="form-section-legend">Nombre completo</legend>
                     {personalData.fullname.message && (
                         <small>{personalData.fullname.message}</small>
                     )}

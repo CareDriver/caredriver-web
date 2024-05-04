@@ -20,6 +20,7 @@ import {
     isValidLicenseNumber,
     isValidLicenseDate,
 } from "@/utils/validator/service_requests/DriveValidator";
+import ChevronDown from "@/icons/ChevronDown";
 
 const VehiclesForm = ({
     vehicles,
@@ -218,7 +219,8 @@ const VehiclesForm = ({
                     <h2 className="text icon-wrapper | medium-big bold">
                         <Car /> Tipo de Vehiculo
                     </h2>
-                    <fieldset className="form-section">
+                    <fieldset className="form-section | select-item">
+                        <ChevronDown />
                         <select
                             key={"form-section-vehicle-types"}
                             defaultValue={vehicle.type.type}
@@ -243,9 +245,11 @@ const VehiclesForm = ({
                                 }
                             })}
                         </select>
+                        <legend className="form-section-legend">Categoria</legend>
                     </fieldset>
                     {vehicle.type.mode.length == 1 ? (
-                        <fieldset className="form-section">
+                        <fieldset className="form-section | select-item">
+                            <ChevronDown />
                             <select
                                 defaultValue={vehicle.type.mode[0]}
                                 className="form-section-input"
@@ -257,6 +261,7 @@ const VehiclesForm = ({
                                     </option>
                                 ))}
                             </select>
+                            <legend className="form-section-legend">Transmisión</legend>
                         </fieldset>
                     ) : (
                         <>
@@ -270,6 +275,9 @@ const VehiclesForm = ({
                                         className="form-section-input"
                                         onChange={() => {}}
                                     />
+                                    <legend className="form-section-legend">
+                                        Transmisión {i + 1}
+                                    </legend>
                                 </fieldset>
                             ))}
                         </>
@@ -280,7 +288,7 @@ const VehiclesForm = ({
                             <button
                                 type="button"
                                 onClick={() => addNewTransmision(i)}
-                                className="icon-wrapper small-general-button text | gray-icon gray bold touchable"
+                                className="icon-wrapper small-general-button text | gray-icon gray touchable"
                             >
                                 <Plus />
                                 Agregar otra Transmisión
@@ -292,7 +300,7 @@ const VehiclesForm = ({
                         <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
                             <AddressCar /> Licencia
                         </h2>
-                        <p>
+                        <p className="text | light">
                             Las fotos de tu licencia de conducir se eliminaran cuando se
                             acepte o rechaze tu solicitud.
                         </p>
@@ -300,11 +308,12 @@ const VehiclesForm = ({
                     <fieldset className="form-section">
                         <input
                             type="text"
-                            placeholder="Numero"
+                            placeholder=""
                             value={vehicle.license.number.value}
                             onChange={(e) => updateNumberLicense(i, e.target.value)}
                             className="form-section-input"
                         />
+                        <legend className="form-section-legend">Numero</legend>
                         {vehicle.license.number.message && (
                             <small>{vehicle.license.number.message}</small>
                         )}
@@ -315,6 +324,7 @@ const VehiclesForm = ({
                             onChange={(e) => updateDateLicense(i, e)}
                             className="form-section-input"
                         />
+                        <legend className="form-section-legend">Fecha de expiración</legend>
                         {vehicle.license.expirationDate.message && (
                             <small>{vehicle.license.expirationDate.message}</small>
                         )}

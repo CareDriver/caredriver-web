@@ -8,7 +8,7 @@ interface Data {
 
 const ServiceHeader = ({ data }: { data: Data }) => {
     return (
-        <>
+        <div className="margin-bottom-25">
             <h1
                 className={`text | big bolder ${
                     data.state === ServiceReqState.Refused && "red"
@@ -16,8 +16,8 @@ const ServiceHeader = ({ data }: { data: Data }) => {
             >
                 {data.title}
             </h1>
-            <p>{data.description}</p>
-        </>
+            <p className="text | light">{data.description}</p>
+        </div>
     );
 };
 
