@@ -23,6 +23,10 @@ const ChangePhotoReq = () => {
 
     const submit = async (e: FormEvent) => {
         e.preventDefault();
+        setFormState({
+            loading: true,
+            isValid: true,
+        });
         if (newPhoto.value) {
             if (!newPhoto.message) {
                 if (user.data && user.data.id) {

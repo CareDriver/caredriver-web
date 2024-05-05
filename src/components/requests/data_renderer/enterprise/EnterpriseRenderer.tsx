@@ -6,6 +6,7 @@ import {
 import ImageRenderer from "../form/ImageRenderer";
 import InputData from "../form/InputData";
 import MarkRenderer from "../map/MarkRenderer";
+import EnterpriseState from "./EnterpriseState";
 
 const EnterpriseRenderer = ({
     enterprise,
@@ -18,6 +19,8 @@ const EnterpriseRenderer = ({
 
     return (
         <div className="form-sub-container">
+            <EnterpriseState enterprise={enterprise} />
+
             <fieldset className="form-section">
                 <InputData
                     content={enterprise.name}

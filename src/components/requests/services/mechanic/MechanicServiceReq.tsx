@@ -223,7 +223,11 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         stateB2={
                             userData !== null &&
                             userData !== undefined &&
-                            !userData.deleted
+                            !userData.deleted &&
+                            enterprise !== null &&
+                            enterprise !== undefined &&
+                            enterprise.deleted === false &&
+                            enterprise.active === true
                         }
                         alreadyReviewed={reviewState.reviewed || !serviceReq.active}
                     />

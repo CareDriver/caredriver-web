@@ -1,9 +1,8 @@
 "use client";
 import "react-international-phone/style.css";
 
-import { AuthContext } from "@/context/AuthContext";
 import { isValidWorkshopName } from "@/utils/validator/enterprises/EnterpriseValidator";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import PhoneForm from "../../form/PhoneForm";
 import { isPhoneValid } from "@/utils/validator/auth/CredentialsValidator";
 import ImageUploader from "../../form/ImageUploader";
@@ -15,8 +14,7 @@ import {
     getEnterpriseById,
     updateEnterprise,
 } from "@/utils/requests/enterprise/EnterpriseRequester";
-import { Enterprise, EnterpriseType, ReqEditEnterprise } from "@/interfaces/Enterprise";
-import { nanoid } from "nanoid";
+import { Enterprise, EnterpriseType } from "@/interfaces/Enterprise";
 import { GeoPoint } from "firebase/firestore";
 import { deleteFile, uploadImageBase64 } from "@/utils/requests/FileUploader";
 import { toast } from "react-toastify";
@@ -25,7 +23,6 @@ import { useRouter } from "next/navigation";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
 import PageLoader from "../../PageLoader";
 import TriangleExclamation from "@/icons/TriangleExclamation";
-import { sendEditEnterpriseReq } from "@/utils/requests/enterprise/EditEnterpriseReq";
 
 interface FormData {
     name: {
@@ -50,6 +47,7 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
         isValid: true,
         loading: false,
         loadingRev: false,
+        loadingEdit: false,
     });
     const [formData, setFormData] = useState<FormData>({
         name: {
@@ -71,6 +69,7 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
     });
 
     const [validToDelete, setValidToDelete] = useState<boolean>(false);
+    const [validToDisable, setValidToDisable] = useState<boolean>(false);
 
     const handleSummbit = async (e: FormEvent) => {
         e.preventDefault();
@@ -238,6 +237,66 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
         });
     }, [formData]);
 
+    const toggleDisableEnterprise = async () => {
+        if (!formState.loadingEdit) {
+            if (enterpriseData && enterpriseData.id) {
+                setFormState({
+                    ...formState,
+                    loadingEdit: true,
+                });
+                try {
+                    const newState = !enterpriseData.active
+                    const messages = newState ? {
+                        pending: `Habilitando ${
+                            type === EnterpriseType.Mechanical
+                                ? "el Taller"
+                                : "la Empresa"
+                        }`,
+                        success: "Habilitado",
+                        error: `Error al habilitar ${
+                            type === EnterpriseType.Mechanical
+                                ? "el Taller"
+                                : "la Empresa"
+                        }, intentalo de nuevo por favor`,
+                    } : {
+                        pending: `Desabilitando ${
+                            type === EnterpriseType.Mechanical
+                                ? "el Taller"
+                                : "la Empresa"
+                        }`,
+                        success: "Desabilitado",
+                        error: `Error al desabilitar ${
+                            type === EnterpriseType.Mechanical
+                                ? "el Taller"
+                                : "la Empresa"
+                        }, intentalo de nuevo por favor`,
+                    }
+
+                    await toast.promise(
+                        updateEnterprise(enterpriseData.id, {
+                            active: newState,
+                        }),
+                        messages
+                    );
+                    setEnterpriseData({
+                        ...enterpriseData,
+                        active: newState
+                    })
+                    setFormState({
+                        ...formState,
+                        loadingEdit: false,
+                    });
+                } catch (e) {
+                    setFormState({
+                        ...formState,
+                        loadingEdit: false,
+                    });
+                    window.location.reload();
+                }
+            }
+        }
+    };
+
     const deleteEnterprise = async () => {
         if (!formState.loadingRev) {
             if (enterpriseData && enterpriseData.id) {
@@ -387,10 +446,63 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                         }
                         disabled={!formState.isValid}
                     >
-                        {formState.loading ? (
-                            <span className="loader"></span>
+                        {formState.loading ? <span className="loader"></span> : "Editar"}
+                    </button>
+                </div>
+                <div
+                    className={`form-sub-container | margin-top-50 max-width-60 ${
+                        formState.loadingRev && "loading-section"
+                    }`}
+                    data-state={
+                        formState.loading || formState.loadingRev || formState.loadingEdit
+                            ? "loading"
+                            : "loaded"
+                    }
+                >
+                    <h2 className="text icon-wrapper | yellow yellow-icon medium-big bold">
+                        <TriangleExclamation />
+                        Zona Peligrosa
+                    </h2>
+                    <p>
+                        Esta accion si puede revertir, pero si afectara los datos que
+                        estan relacionados con este mientras este desabilitado. Por favor
+                        escribe el nombre{" "}
+                        {type === EnterpriseType.Mechanical
+                            ? "del taller"
+                            : "de la empresa"}{" "}
+                        para confirmar la accion.
+                    </p>
+                    <fieldset className="form-section | max-width-60">
+                        <input
+                            type="text"
+                            placeholder={`Nombre ${
+                                type === EnterpriseType.Mechanical
+                                    ? "del taller"
+                                    : "de la empresa"
+                            }`}
+                            className="form-section-input"
+                            name="fullname"
+                            onChange={(e) =>
+                                setValidToDisable(e.target.value === enterpriseData.name)
+                            }
+                            autoComplete="off"
+                        />
+
+                        {formData.name.message && <small>{formData.name.message}</small>}
+                    </fieldset>
+                    <button
+                        type="button"
+                        onClick={toggleDisableEnterprise}
+                        className={`general-button | yellow no-full touchable ${
+                            formState.loadingEdit && "loading-section"
+                        }`}
+                        disabled={!validToDisable}
+                    >
+                        {formState.loadingEdit ? (
+                            <span className="loader-black"></span>
                         ) : (
-                            "Editar"
+                            `${enterpriseData.active ? "Desabilitar" : "Habilitar"} 
+                        ${type === EnterpriseType.Mechanical ? "Taller" : "Empresa"}`
                         )}
                     </button>
                 </div>
@@ -399,7 +511,9 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                         formState.loadingRev && "loading-section"
                     }`}
                     data-state={
-                        formState.loading || formState.loadingRev ? "loading" : "loaded"
+                        formState.loading || formState.loadingRev || formState.loadingEdit
+                            ? "loading"
+                            : "loaded"
                     }
                 >
                     <h2 className="text icon-wrapper | red red-icon medium-big bold">
