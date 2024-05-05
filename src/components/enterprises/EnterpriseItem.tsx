@@ -10,7 +10,7 @@ const EnterpriseItem = ({
     route: string;
 }) => {
     return (
-        <Link href={route} className="enterprise-item">
+        <Link href={route} className="enterprise-item | touchable">
             <h3 className="enterprise-item-title">{enterprise.name}</h3>
             <h4 className="text | light small">{enterprise.phone}</h4>
             <img

@@ -79,7 +79,7 @@ const EnterpriseListForAdmins = ({ type }: { type: string }) => {
                         {data.map((product, i) => (
                             <EnterpriseItem
                                 key={`enterprise-item-${i}`}
-                                route={`/admin/enterprise/${
+                                route={`/admin/enterprises/${
                                     type === "tow" ? "cranes" : "workshops"
                                 }/edit/${product.id}`}
                                 enterprise={product}

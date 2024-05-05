@@ -13,11 +13,12 @@ import MapForm from "../../form/MapForm";
 import {
     deleteEnterpriseReq,
     getEnterpriseById,
+    updateEnterprise,
 } from "@/utils/requests/enterprise/EnterpriseRequester";
 import { Enterprise, EnterpriseType, ReqEditEnterprise } from "@/interfaces/Enterprise";
 import { nanoid } from "nanoid";
 import { GeoPoint } from "firebase/firestore";
-import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { deleteFile, uploadImageBase64 } from "@/utils/requests/FileUploader";
 import { toast } from "react-toastify";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
@@ -43,7 +44,6 @@ interface FormData {
 }
 
 const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
-    const { user, loadingUser } = useContext(AuthContext);
     const router = useRouter();
     const [enterpriseData, setEnterpriseData] = useState<Enterprise | null>(null);
     const [formState, setFormState] = useState({
@@ -88,67 +88,66 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                             "Por favor selecciona la ubicacion de la Empresa de Grua",
                     },
                 });
-            } else if (!loadingUser && user.data && user.data.id) {
-                if (
-                    formData.name.value &&
-                    formData.logo.value &&
-                    formData.coordinates.value &&
-                    enterpriseData
-                ) {
-                    var image = {
-                        url: formData.logo.value,
-                        ref: enterpriseData.logoImgUrl.ref,
-                    };
-                    if (isImageBase64(formData.logo.value)) {
-                        const imgWithRef = await toast.promise(
-                            uploadImageBase64(
-                                DirectoryPath.Enterprises,
-                                formData.logo.value,
-                            ),
-                            {
-                                pending: "Subiendo el logo, por favor espera",
-                                success: "Logo subido",
-                                error: "Error al subir el logo, intentalo de nuevo por favor",
-                            },
-                        );
-                        image = imgWithRef;
-                    }
-
-                    var reqId = nanoid(25);
-                    const enterprise: ReqEditEnterprise = {
-                        id: reqId,
-                        enterpriseId: id,
-                        type: type === "tow" ? "tow" : "mechanical",
-                        name: formData.name.value,
-                        logoImgUrl: image,
-                        coordinates: new GeoPoint(
-                            formData.coordinates.value.lat,
-                            formData.coordinates.value.lng,
-                        ),
-                        phone: isPhoneValid(formData.phone.value).isValid
-                            ? formData.phone.value
-                            : undefined,
-                        userId: user.data.id,
-                        aproved: false,
-                        deleted: false,
-                        active: true,
-                    };
-
-                    await toast.promise(sendEditEnterpriseReq(reqId, enterprise), {
-                        pending: "Enviando el formulario, por favor espera",
-                        success: "Formulario enviado",
-                        error: "Error al enviar el formulario, intentalo de nuevo por favor",
+            } else if (
+                formData.name.value &&
+                formData.logo.value &&
+                formData.coordinates.value &&
+                enterpriseData &&
+                enterpriseData.id
+            ) {
+                var image = {
+                    url: enterpriseData.logoImgUrl.url,
+                    ref: enterpriseData.logoImgUrl.ref,
+                };
+                if (isImageBase64(formData.logo.value)) {
+                    const imgWithRef = await toast.promise(
+                        uploadImageBase64(DirectoryPath.Enterprises, formData.logo.value),
+                        {
+                            pending: "Cambiando el logo, por favor espera",
+                            success: "Logo cambiado",
+                            error: "Error al cambiar el logo, intentalo de nuevo por favor",
+                        },
+                    );
+                    await toast.promise(deleteFile(enterpriseData.logoImgUrl.ref), {
+                        pending: "Borrando el anterior logo",
+                        success: "Logo anterior borrado",
+                        error: "Error al borrar el anterior logo",
                     });
-
-                    setFormState({
-                        ...formState,
-                        loading: false,
-                    });
-                    toast.info("Tu solicitud sera revisada, por favor se paciente");
-                    router.push(`/enterprise/${type === "tow" ? "cranes" : "workshops"}`);
-                } else {
-                    console.log("error");
+                    image = imgWithRef;
                 }
+
+                const enterprise: Partial<Enterprise> = {
+                    name: formData.name.value,
+                    logoImgUrl: image,
+                    coordinates: new GeoPoint(
+                        formData.coordinates.value.lat,
+                        formData.coordinates.value.lng,
+                    ),
+                    phone: isPhoneValid(formData.phone.value).isValid
+                        ? formData.phone.value
+                        : "",
+                    active: true,
+                };
+
+                await toast.promise(updateEnterprise(enterpriseData.id, enterprise), {
+                    pending: `Editando ${
+                        type === "tow" ? "empresa operadora de grua" : "taller mecanico"
+                    }`,
+                    success: "Editado",
+                    error: `Error al editar ${
+                        type === "tow" ? "empresa" : "taller"
+                    }, intentalo de nuevo por favor`,
+                });
+
+                setFormState({
+                    ...formState,
+                    loading: false,
+                });
+                router.push(
+                    `/admin/enterprises/${type === "tow" ? "cranes" : "workshops"}`,
+                );
+            } else {
+                console.log("error");
             }
         }
     };
@@ -260,7 +259,9 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                                 : "la Empresa"
                         }, intentalo de nuevo por favor`,
                     });
-                    router.push(`/enterprise/${type === "tow" ? "cranes" : "workshops"}`);
+                    router.push(
+                        `/admin/enterprises/${type === "tow" ? "cranes" : "workshops"}`,
+                    );
                     setFormState({
                         ...formState,
                         loadingRev: false,
@@ -280,14 +281,9 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
         <section className="service-form-wrapper">
             <h1 className="text | big bolder">
                 {type === "tow"
-                    ? "Editar Empresa Operadora de Gruas"
+                    ? "Editar Empresa Operadora de Grua"
                     : "Editar Taller Mecanico"}
             </h1>
-            <p>
-                {type === "tow"
-                    ? "Necesitamos verificar que los nuevos datos de la Empresa sean validos antes de editarlo."
-                    : "Necesitamos verificar que los nuevos datos del taller mecanico son validos antes de editarlo."}
-            </p>
             <form
                 className="form-sub-container | margin-top-25"
                 onSubmit={handleSummbit}
@@ -334,7 +330,9 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                         }}
                         content={{
                             id: "workshop-uploader-image",
-                            indicator: "Logo del Taller",
+                            indicator: `Logo ${
+                                type === "tow" ? "de la empresa" : "del Taller"
+                            }`,
                             isCircle: true,
                         }}
                     />
@@ -392,7 +390,7 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                         {formState.loading ? (
                             <span className="loader"></span>
                         ) : (
-                            "Solicitar Edicion"
+                            "Editar"
                         )}
                     </button>
                 </div>
