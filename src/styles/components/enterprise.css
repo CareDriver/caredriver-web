@@ -10,8 +10,8 @@
 
 .enterprise-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, 310px);
+    gap: 20px;
 
     width: 100%;
 }
@@ -21,7 +21,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 25px;
+    gap: 5px;
 
     padding: 30px 25px;
     border: 2px solid var(--gray-medium);

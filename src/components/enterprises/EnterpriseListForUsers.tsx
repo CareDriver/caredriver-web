@@ -14,7 +14,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 const EnterpriseListForUsers = ({ type }: { type: string }) => {
     const { loadingUser, user } = useContext(AuthContext);
-    const numPerPage = 2;
+    const numPerPage = 12;
     const [data, setData] = useState<Enterprise[] | null>(null);
     const [page, setPage] = useState<number>(1);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
@@ -61,13 +61,15 @@ const EnterpriseListForUsers = ({ type }: { type: string }) => {
                 hasMore={page !== pages}
                 loader={<span className="loader-gray"></span>}
             >
-                {data.map((product, i) => (
-                    <EnterpriseItem
-                        key={`enterprise-item-${i}`}
-                        type={type}
-                        enterprise={product}
-                    />
-                ))}
+                <div className="enterprise-list">
+                    {data.map((product, i) => (
+                        <EnterpriseItem
+                            key={`enterprise-item-${i}`}
+                            type={type}
+                            enterprise={product}
+                        />
+                    ))}
+                </div>
             </InfiniteScroll>
         ) : (
             <div className="empty-wrapper | auto-height">

@@ -16,7 +16,8 @@ const EnterpriseItem = ({
             className="enterprise-item"
         >
             <h3 className="enterprise-item-title">{enterprise.name}</h3>
-            <img className="enterprise-item-logo" src={enterprise.logoImgUrl.url} alt="" />
+            <h4 className="text | light small">{enterprise.phone}</h4>
+            <img className="enterprise-item-logo | margin-top-25" src={enterprise.logoImgUrl.url} alt="" />
         </Link>
     );
 };
