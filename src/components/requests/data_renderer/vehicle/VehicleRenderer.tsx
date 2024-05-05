@@ -10,10 +10,9 @@ const VehicleRenderer = ({ vehicle }: { vehicle: Vehicle }) => {
         <div className="form-sub-container">
             <VehicleTypeRender type={vehicle.type.type} />
             {vehicle.type.mode.map((mode, i) => (
-                <fieldset className="form-section">
+                <fieldset className="form-section" key={`vehicle-mode-${i}`}>
                     <InputData
                         content={vehicleModeRender[mode]}
-                        key={`vehicle-mode-${i}`}
                         placeholder={undefined}
                     />
                     <legend className="form-section-legend">

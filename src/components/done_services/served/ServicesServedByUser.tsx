@@ -252,7 +252,7 @@ const ServicesServedByUser = ({
                     loader={<span className="loader-gray"></span>}
                 >
                     {dataState.data.map((req, i) => (
-                        <div>
+                        <div key={`service-served-by-user-${i}`}>
                             <h2>{req.requestReason}</h2>
                         </div>
                     ))}
