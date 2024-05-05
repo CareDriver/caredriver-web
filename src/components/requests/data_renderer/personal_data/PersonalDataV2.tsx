@@ -23,22 +23,34 @@ const PersonalDataV2 = ({
 
             <div className="form-sub-container">
                 <fieldset className="form-section">
-                    <InputData content={name} placeholder="Nombre completo" />
+                    <InputData content={name} placeholder="" />
+                    <legend className="form-section-legend">Nombre completo</legend>
                 </fieldset>
                 <fieldset className="form-section">
-                    <InputData content={location} placeholder="Localizacion" />
+                    <InputData content={location} placeholder="" />
+                    <legend className="form-section-legend">Localizacion</legend>
                 </fieldset>
-                <ImageRenderer
-                    url={photo}
-                    placeholder="Foto de Perfil"
-                    isCircle={true}
-                    noFoundDescr={"El usuario no tiene foto de perfil"}
-                />
-                {custom && (
-                    <InputData
-                        content={custom.content}
-                        placeholder={custom.placeholder}
+                <fieldset className="form-section">
+                    <ImageRenderer
+                        url={photo}
+                        placeholder=""
+                        isCircle={true}
+                        noFoundDescr={"El usuario no tiene foto de perfil"}
                     />
+                    <legend className="form-section-legend | focused">
+                        Foto de Perfil
+                    </legend>
+                </fieldset>
+                {custom && (
+                    <fieldset className="form-section">
+                        <InputData
+                            content={custom.content}
+                            placeholder={custom.placeholder}
+                        />
+                        <legend className="form-section-legend">
+                            {custom.placeholder}
+                        </legend>
+                    </fieldset>
                 )}
             </div>
         </div>

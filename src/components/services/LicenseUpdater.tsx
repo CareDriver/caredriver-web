@@ -126,7 +126,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                     backImgUrl: vehiclesData.backImgUrl,
                     realTimePhotoImgUrl: realTimePhotoImgUrl,
                     aproved: false,
-                    active: true
+                    active: true,
                 };
                 await sendLicenseUpdateReq(formId, reqDoc);
             } catch (e) {
@@ -294,6 +294,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                         onChange={(e) => updateNumberLicense(e)}
                         className="form-section-input"
                     />
+                    <legend className="form-section-legend">Número</legend>
                     {license.number.message && <small>{license.number.message}</small>}
                 </fieldset>
                 <fieldset className="form-section | max-width-60">
@@ -303,6 +304,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                         onChange={(e) => updateDateLicense(e)}
                         className="form-section-input"
                     />
+                    <legend className="form-section-legend">Fecha de expiración</legend>
                     {license.expirationDate.message && (
                         <small>{license.expirationDate.message}</small>
                     )}

@@ -6,6 +6,7 @@ import { createContext, useState, useEffect } from "react";
 import { getUserById } from "@/utils/requests/UserRequester";
 import { servicesData } from "@/interfaces/ServicesDataInterface";
 import { toast } from "react-toastify";
+import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
 
 interface UserInfo {
     data: UserInterface | null;
@@ -27,37 +28,48 @@ const authContextDefaultValues: authContextType = {
     logout: () => {},
 };
 
-const buildUser = (id: string, userData: UserInterface | undefined): UserInterface => {
-    return {
-        id: id,
-        fullName: userData?.fullName === undefined ? "" : userData.fullName,
-        phoneNumber: userData?.phoneNumber === undefined ? "" : userData.phoneNumber,
-        photoUrl: userData?.photoUrl === undefined ? "" : userData.photoUrl,
-        comments: userData?.comments === undefined ? [] : userData.comments,
-        vehicles: userData?.vehicles === undefined ? [] : userData.vehicles,
-        services: userData?.services === undefined ? [] : userData.services,
-        servicesData:
-            userData?.servicesData === undefined ? servicesData : userData.servicesData,
-        pickUpLocationsHistory:
-            userData?.pickUpLocationsHistory === undefined
-                ? []
-                : userData.pickUpLocationsHistory,
-        deliveryLocationsHistory:
-            userData?.deliveryLocationsHistory === undefined
-                ? []
-                : userData.deliveryLocationsHistory,
-        email: userData?.email === undefined ? "" : userData.email,
-        serviceRequests:
-            userData?.serviceRequests === undefined
-                ? defaultServiceReq
-                : userData.serviceRequests,
-        location: userData?.location,
-        currentDebtWithTheApp: userData?.currentDebtWithTheApp,
-        appPaymentHistory: userData?.appPaymentHistory,
-        disable: userData?.disable,
-        serviceVehicles: userData?.serviceVehicles,
-        role: userData?.role === undefined ? UserRole.User : userData.role,
-    };
+const buildUser = (
+    id: string,
+    userData: UserInterface | undefined,
+): UserInterface | null => {
+    if (userData) {
+        return {
+            id: id,
+            fullName: userData?.fullName === undefined ? "" : userData.fullName,
+            phoneNumber: userData?.phoneNumber === undefined ? "" : userData.phoneNumber,
+            photoUrl:
+                userData?.photoUrl === undefined ? emptyPhotoWithRef : userData.photoUrl,
+            comments: userData?.comments === undefined ? [] : userData.comments,
+            vehicles: userData?.vehicles === undefined ? [] : userData.vehicles,
+            services: userData?.services === undefined ? [] : userData.services,
+            servicesData:
+                userData?.servicesData === undefined
+                    ? servicesData
+                    : userData.servicesData,
+            pickUpLocationsHistory:
+                userData?.pickUpLocationsHistory === undefined
+                    ? []
+                    : userData.pickUpLocationsHistory,
+            deliveryLocationsHistory:
+                userData?.deliveryLocationsHistory === undefined
+                    ? []
+                    : userData.deliveryLocationsHistory,
+            email: userData?.email === undefined ? "" : userData.email,
+            serviceRequests:
+                userData?.serviceRequests === undefined
+                    ? defaultServiceReq
+                    : userData.serviceRequests,
+            location: userData?.location,
+            currentDebtWithTheApp: userData?.currentDebtWithTheApp,
+            appPaymentHistory: userData?.appPaymentHistory,
+            disable: userData?.disable,
+            deleted: userData.deleted,
+            serviceVehicles: userData?.serviceVehicles,
+            role: userData?.role === undefined ? UserRole.User : userData.role,
+        };
+    }
+
+    return null;
 };
 
 export const AuthContext = createContext<authContextType>(authContextDefaultValues);
@@ -84,12 +96,27 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 try {
                     getUserById(userId).then((userData) => {
                         if (userData) {
-                            var userBuilt: UserInterface = buildUser(userId, userData);
-                            setUser({
-                                data: userBuilt,
-                                hasPhoto: userBuilt.photoUrl.trim().length > 0,
-                            });
-                            setLoadingUser(false);
+                            if (userData.deleted) {
+                                logoutWithReason(
+                                    "Tu cuenta fue borrada, comunicate con uno de nuestro adminstradores",
+                                );
+                            } else if (userData.disable) {
+                                logoutWithReason(
+                                    "Fuiste desabilitado, comunicate con uno de nuestro adminstradores",
+                                );
+                            } else {
+                                var userBuilt: UserInterface | null = buildUser(
+                                    userId,
+                                    userData,
+                                );
+                                setUser({
+                                    data: userBuilt,
+                                    hasPhoto:
+                                        userBuilt !== null &&
+                                        userBuilt.photoUrl.url.trim().length > 0,
+                                });
+                                setLoadingUser(false);
+                            }
                         } else {
                             setUser({
                                 data: null,
@@ -114,6 +141,22 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
     }, []);
 
+    const logoutWithReason = (reason: string) => {
+        auth.signOut()
+            .then(() => {
+                setUser({
+                    data: null,
+                    hasPhoto: false,
+                });
+                toast.warning(reason);
+                router.push("/");
+            })
+            .catch(() => {
+                toast.error("Algo salio mal");
+                window.location.replace("/");
+            });
+    };
+
     const logout = () => {
         auth.signOut()
             .then(() => {
@@ -122,7 +165,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     hasPhoto: false,
                 });
                 toast.success("Sesion cerrada existosamente");
-                window.location.replace("/");
+                router.push("/");
             })
             .catch(() => {
                 toast.error("Algo salio mal");

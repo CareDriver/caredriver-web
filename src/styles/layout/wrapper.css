@@ -21,6 +21,14 @@
     padding: 80px 50px;
 }
 
+.render-data-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    padding: 80px 90px 80px 50px;
+}
+
 .row-wrapper {
     display: flex;
     align-items: center;
@@ -29,6 +37,12 @@
 
 .row-wrapper.gap-20 {
     gap: 20px;
+}
+
+.column-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .empty-wrapper {
@@ -49,6 +63,10 @@
     height: auto;
 }
 
+.empty-wrapper.padding-top-20 {
+    padding: 10px 0;
+}
+
 .max-width-40 {
     max-width: 40%;
 }
@@ -67,4 +85,11 @@
 
 .max-width-90 {
     max-width: 90%;
+}
+
+.max-height-100 {
+    position: relative;
+    overflow: hidden;
+
+    height: 100vh;
 }

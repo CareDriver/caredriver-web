@@ -17,6 +17,8 @@ import { toast } from "react-toastify";
 import VehicleCategoryRender from "../../data_renderer/vehicle/VehicleCategoryRender";
 import ReqButtonRes from "../../data_renderer/form/ReqButtonRes";
 import { deleteFile } from "@/utils/requests/FileUploader";
+import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
+import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
 
 const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
     const { user } = useContext(AuthContext);
@@ -26,6 +28,7 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
     const [req, setReq] = useState<LicenseUpdateReq | null>(null);
     const [userReq, setUserReq] = useState<UserInterface | null>(null);
     const router = useRouter();
+    const [userData, setUserData] = useState<UserInterface | null | undefined>(null);
 
     const faildRedirect = (reason: string) => {
         toast.error(reason);
@@ -150,18 +153,33 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
         await review(false);
     };
 
+    useEffect(() => {
+        if (req) {
+            getUserById(req.userId).then((res) => {
+                if (res) {
+                    setUserData(res);
+                } else {
+                    setUserData(undefined);
+                }
+            });
+        } else {
+            setUserData(undefined);
+        }
+    }, [req]);
+
     return req ? (
-        <div className="service-form-wrapper">
-            <div className="max-width-60">
-                <h1 className="text | big bolder">
-                    Solicitud para actualizar una licencia de conducir
-                </h1>
-            </div>
-            {userReq ? (
+        <div className="service-form-wrapper | max-width-60">
+            <h1 className="text | big bolder">
+                Solicitud para actualizar una licencia de conducir
+            </h1>
+
+            <UserVerifierPrompter userData={userData} />
+
+            {userReq && userData ? (
                 <PersonalDataV2
                     location={userReq.location}
-                    name={userReq.fullName}
-                    photo={userReq.photoUrl}
+                    name={userData.fullName}
+                    photo={userData.photoUrl}
                     custom={{
                         content: userReq.services.toString().replaceAll(",", " - "),
                         placeholder: "Servicios del usuario",
@@ -173,10 +191,16 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
             <VehicleCategoryRender category={req.vehicleType} />
             <LicenseRenderer license={req} />
             <SelfieRenderer image={req.realTimePhotoImgUrl} />
+
+            {userData && <UserStatusIndicatorV2 user={userData} />}
+
             <ReqButtonRes
                 onApprove={approve}
                 onDecline={decline}
-                loading={reviewState.loading}
+                loading={reviewState.loading || userData === null}
+                stateB1={true}
+                stateB2={userData !== null && userData !== undefined && !userData.deleted}
+                alreadyReviewed={!req.active}
             />
         </div>
     ) : (

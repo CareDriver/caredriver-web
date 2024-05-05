@@ -15,6 +15,9 @@ import {
     getUpPhotoReqById,
 } from "@/utils/requests/ChangePhotoRequester";
 import ImageRenderer from "../../data_renderer/form/ImageRenderer";
+import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
+import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
+import Camera from "@/icons/Camera";
 
 const SingleUpPhotoReq = ({ reqId }: { reqId: string }) => {
     const { user } = useContext(AuthContext);
@@ -75,9 +78,9 @@ const SingleUpPhotoReq = ({ reqId }: { reqId: string }) => {
             try {
                 if (wasApproved) {
                     await updateUser(userReq.id, {
-                        photoUrl: req.newPhoto.url,
+                        photoUrl: req.newPhoto,
                     });
-                } else {
+                } else if (req.newPhoto.ref !== "") {
                     await deleteFile(req.newPhoto.ref);
                 }
                 await deleteChangePhotoReq(req.id);
@@ -112,12 +115,13 @@ const SingleUpPhotoReq = ({ reqId }: { reqId: string }) => {
     };
 
     return req ? (
-        <div className="service-form-wrapper">
-            <div className="max-width-60">
-                <h1 className="text | big bolder">
-                    Solicitud para actualizar foto de perfil
-                </h1>
-            </div>
+        <div className="service-form-wrapper | max-width-60">
+            <h1 className="text | big bolder">
+                Solicitud para actualizar foto de perfil
+            </h1>
+
+            <UserVerifierPrompter userData={userReq} />
+
             {userReq ? (
                 <PersonalDataV2
                     location={userReq.location}
@@ -131,16 +135,31 @@ const SingleUpPhotoReq = ({ reqId }: { reqId: string }) => {
             ) : (
                 <span className="loader-green"></span>
             )}
+
+            <h2 className="text icon-wrapper | medium-big bold margin-top-25 margin-bottom-25">
+                <Camera />
+                Nueva Foto de Perfil
+            </h2>
             <ImageRenderer
                 url={req.newPhoto}
-                placeholder="Nueva foto de perfil"
+                placeholder="Foto de Perfil"
                 isCircle={true}
                 noFoundDescr={"No se ha encontrado la nueva foto de perfil"}
             />
+
+            <p className="text | light margin-top-25">
+                La nueva foto sera eliminada si se rechaza la solicitud
+            </p>
+
+            {userReq && <UserStatusIndicatorV2 user={userReq} />}
+
             <ReqButtonRes
                 onApprove={approve}
                 onDecline={decline}
-                loading={reviewState.loading}
+                loading={reviewState.loading || userReq === null}
+                stateB1={true}
+                stateB2={userReq !== null && !userReq.deleted}
+                alreadyReviewed={!req.active}
             />
         </div>
     ) : (

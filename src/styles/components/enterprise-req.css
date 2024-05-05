@@ -1,0 +1,48 @@
+.enterprise-req-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-rows: auto;
+    gap: 20px;
+}
+
+.enterprise-req-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    padding: 40px 20px;
+    border: 2px solid var(--gray-medium);
+    border-radius: 15px;
+    transition: all ease-in 150ms;
+}
+
+.enterprise-req-item:hover {
+    border-color: var(--main-light);
+}
+
+.enterprise-req-item-title {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.enterprise-req-item-logo {
+    --size: 270px;
+
+    width: var(--size);
+    height: var(--size);
+    margin-top: 15px;
+
+    border-radius: 50%;
+    object-fit: cover;
+
+    background-color: var(--gray-light);
+}
+
+.enterprise-req-item-aprove {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+}

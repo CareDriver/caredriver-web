@@ -1,6 +1,10 @@
 "use client";
 
-import { EnterpriseTypeRender, ReqEditEnterprise } from "@/interfaces/Enterprise";
+import {
+    Enterprise,
+    EnterpriseTypeRender,
+    ReqEditEnterprise,
+} from "@/interfaces/Enterprise";
 import EnterpriseRenderer from "../../data_renderer/enterprise/EnterpriseRenderer";
 import ReqButtonRes from "../../data_renderer/form/ReqButtonRes";
 import { useContext, useState } from "react";
@@ -13,8 +17,15 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { deleteDocument, deleteFile } from "@/utils/requests/FileUploader";
 import { Collections } from "@/firebase/CollecionNames";
+import EnterpriseState from "../../data_renderer/enterprise/EnterpriseState";
 
-const EnterpriseUpReqRender = ({ enterprise }: { enterprise: ReqEditEnterprise }) => {
+const EnterpriseUpReqRender = ({
+    enterprise,
+    realEnteprise,
+}: {
+    enterprise: ReqEditEnterprise;
+    realEnteprise: Enterprise;
+}) => {
     const { user } = useContext(AuthContext);
     const [reviewState, setReviewState] = useState({
         loading: false,
@@ -150,16 +161,26 @@ const EnterpriseUpReqRender = ({ enterprise }: { enterprise: ReqEditEnterprise }
     };
 
     return (
-        <section>
-            <h1>
+        <section className="service-form-wrapper | max-width-60">
+            <h1 className="text | big-medium bolder margin-bottom-25 capitalize">
                 Solicitud para editar {enterprise.type === "tow" ? "una" : "un"}{" "}
                 {EnterpriseTypeRender[enterprise.type]}
             </h1>
+            <EnterpriseState enterprise={realEnteprise} />
             <EnterpriseRenderer enterprise={enterprise} />
+            <p className="text | light margin-top-25">
+                Se eliminaran los datos que ya <b>no seran necesarios</b> si rechazas la
+                solicitud
+            </p>
             <ReqButtonRes
                 onApprove={approve}
                 onDecline={decline}
                 loading={reviewState.loading}
+                stateB1={true}
+                stateB2={true}
+                alreadyReviewed={
+                    reviewState.reviewed || !realEnteprise.active || realEnteprise.deleted
+                }
             />
         </section>
     );

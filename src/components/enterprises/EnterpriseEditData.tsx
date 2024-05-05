@@ -13,7 +13,6 @@ import MapForm from "../form/MapForm";
 import {
     deleteEnterpriseReq,
     getEnterpriseById,
-    sendEnterpriseReq,
 } from "@/utils/requests/enterprise/EnterpriseRequester";
 import { Enterprise, EnterpriseType, ReqEditEnterprise } from "@/interfaces/Enterprise";
 import { nanoid } from "nanoid";
@@ -97,7 +96,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                     enterpriseData
                 ) {
                     var image = {
-                        url: formData.logo.value,
+                        url: enterpriseData.logoImgUrl.url,
                         ref: enterpriseData.logoImgUrl.ref,
                     };
                     if (isImageBase64(formData.logo.value)) {
@@ -128,7 +127,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                         ),
                         phone: isPhoneValid(formData.phone.value).isValid
                             ? formData.phone.value
-                            : undefined,
+                            : "",
                         userId: user.data.id,
                         aproved: false,
                         deleted: false,
@@ -335,7 +334,9 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                         }}
                         content={{
                             id: "workshop-uploader-image",
-                            indicator: "Logo del Taller",
+                            indicator: `Logo ${
+                                type === "tow" ? "de la empresa" : "del Taller"
+                            }`,
                             isCircle: true,
                         }}
                     />

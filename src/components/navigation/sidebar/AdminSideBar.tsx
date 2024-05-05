@@ -32,7 +32,7 @@ const AdminSideBar = () => {
                 <Link href={"/"}>
                     <img src="/images/logo.png" className="sidebar-logo" alt="" />
                 </Link>
-                <span className="icon-wrapper text | bolder medium green green-icon lb | margin-top-5 margin-bottom-25">
+                <span className="icon-wrapper text | bolder medium green green-icon lb | margin-top-5 margin-bottom-25 bottom">
                     <UserTie />
                     {user.data?.role === UserRole.Admin ? "Administrador" : "Soporte"}
                 </span>
@@ -42,7 +42,7 @@ const AdminSideBar = () => {
                         <span className="text | medium bolder | margin-bottom-15">
                             Solicitudes
                         </span>
-                        <li className="sidebar-options">
+                        <li className="sidebar-options | margin-bottom-25">
                             <Link
                                 href={"/admin/requests/services/driver"}
                                 className={`sidebar-option ${
@@ -70,6 +70,9 @@ const AdminSideBar = () => {
                                 <Truck />
                                 <span>Grua</span>
                             </Link>
+                            <div>
+                                <i className="separator-horizontal"></i>
+                            </div>
                             <Link
                                 href={"/admin/requests/enterprises/workshops"}
                                 className={`sidebar-option lb-icon ${
@@ -79,7 +82,7 @@ const AdminSideBar = () => {
                                 }`}
                             >
                                 <MechanicReq />
-                                <span>Talleres</span>
+                                <span>Crear Talleres</span>
                             </Link>
                             <Link
                                 href={"/admin/requests/enterprises/editworkshops"}
@@ -92,7 +95,6 @@ const AdminSideBar = () => {
                                 <MechanicReq />
                                 <span>Editar Talleres</span>
                             </Link>
-
                             <Link
                                 href={"/admin/requests/enterprises/cranes"}
                                 className={`sidebar-option ${
@@ -101,7 +103,7 @@ const AdminSideBar = () => {
                                 }`}
                             >
                                 <TowReq />
-                                <span>Empresas de Grua</span>
+                                <span>Crear Empresas de Grua</span>
                             </Link>
                             <Link
                                 href={"/admin/requests/enterprises/editcranes"}
@@ -114,6 +116,9 @@ const AdminSideBar = () => {
                                 <TowReq />
                                 <span>Editar Empresas de Grua</span>
                             </Link>
+                            <div>
+                                <i className="separator-horizontal"></i>
+                            </div>
                             <Link
                                 href={"/admin/requests/userinfo/photo"}
                                 className={`sidebar-option ${
@@ -133,12 +138,10 @@ const AdminSideBar = () => {
                                 <span>Renovacion de Licencias</span>
                             </Link>
                         </li>
-                        <div>
-                            <i className="separator-horizontal"></i>
-                        </div>
                     </>
                 )}
 
+                <span className="text | medium bolder | margin-bottom-15">Registros</span>
                 <li className="sidebar-options">
                     <Link
                         href={"/admin/users"}
@@ -153,7 +156,7 @@ const AdminSideBar = () => {
                 <div>
                     <i className="separator-horizontal"></i>
                 </div>
-                <li className="sidebar-options">
+                <li className="sidebar-options | margin-bottom-25">
                     <Link
                         href={"/admin/enterprises/workshops"}
                         className={`sidebar-option ${
@@ -177,9 +180,8 @@ const AdminSideBar = () => {
                         <span>Empresas de Grua</span>
                     </Link>
                 </li>
-                <div>
-                    <i className="separator-horizontal"></i>
-                </div>
+                <span className="text | medium bolder | margin-bottom-15">Perfil</span>
+
                 <li className="sidebar-options">
                     <Link
                         href={"/admin/profile"}

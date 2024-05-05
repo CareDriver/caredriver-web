@@ -1,5 +1,12 @@
+import UsersRenderer from "@/components/users/UsersRenderer";
+import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+
 const ListOfUsersOntheApplicationPage = () => {
-    return <div>users</div>;
+    return (
+        <AdminWrapperWithSideBar>
+            <UsersRenderer />
+        </AdminWrapperWithSideBar>
+    );
 };
 
 export default ListOfUsersOntheApplicationPage;

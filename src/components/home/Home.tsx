@@ -20,7 +20,9 @@ const Home = () => {
             if (user.data) {
                 window.location.replace("/redirector");
             } else {
-                toast.info("No estas authenticado en nuestra aplicacion");
+                toast.info("No estas authenticado en nuestra aplicacion", {
+                    toastId: "no-auth-user-toast-info",
+                });
             }
         }
     }, [loadingUser]);

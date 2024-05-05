@@ -119,12 +119,13 @@ const SignIn = () => {
                 <fieldset className="form-section">
                     <input
                         type="email"
-                        placeholder="Correo Electronico"
                         name="email"
+                        placeholder=""
                         value={credentials.email.value}
                         onChange={(e) => handleInputChange(e, isValidEmail)}
                         className="form-section-input"
                     />
+                    <legend className="form-section-legend">Correo electrónico</legend>
                     {credentials.email.errorMessage && (
                         <small className="form-section-message">
                             {credentials.email.errorMessage}
@@ -134,12 +135,13 @@ const SignIn = () => {
                 <fieldset className="form-section">
                     <input
                         type="text"
-                        placeholder="Contraseña"
                         name="password"
+                        placeholder=""
                         value={credentials.password.value}
                         onChange={(e) => handleInputChange(e, isValidPassword)}
                         className="form-section-input"
                     />
+                    <legend className="form-section-legend">Contraseña</legend>
                     {credentials.password.errorMessage && (
                         <small className="form-section-message">
                             {credentials.password.errorMessage}

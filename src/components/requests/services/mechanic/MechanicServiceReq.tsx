@@ -22,6 +22,8 @@ import FieldDeleted from "../../data_renderer/form/FieldDeleted";
 import WorkshopRenderer from "../../data_renderer/enterprise/WorkshopRenderer";
 import { mechanicReqCollection } from "@/utils/requests/services/MechanicRequester";
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
+import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
+import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 
 const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -30,7 +32,7 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         reviewed: false,
     });
     const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(null);
-    const [userData, setUserData] = useState<UserInterface | null>(null);
+    const [userData, setUserData] = useState<UserInterface | null | undefined>(null);
 
     const saveReviewHistory = async (wasApproved: boolean) => {
         try {
@@ -73,9 +75,7 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 await updateService(serviceReq.id, toUpdateReq, mechanicReqCollection);
 
                 if (isLimitToReviews) {
-                    const userData = await getUserById(serviceReq.userId);
                     if (userData) {
-                        setUserData(userData);
                         const serviceReqState = {
                             id: serviceReq.id,
                             state: wasApproved
@@ -163,48 +163,77 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         fetchWorkshop();
     }, []);
 
+    useEffect(() => {
+        getUserById(serviceReq.userId).then((res) => {
+            if (res) {
+                setUserData(res);
+            } else {
+                setUserData(undefined);
+            }
+        });
+    }, []);
+
     return (
-        <section>
-            <div>
-                <h1>Solicitud para ser Chofer</h1>
+        <div className="service-form-wrapper | max-width-60">
+            <h1 className="text | big bolder">Solicitud para ser Mecanico</h1>
+            <div className="row-wrapper | gap-20">
                 <ApprovalsRenderer
                     serviceReq={serviceReq}
                     reviewed={reviewState.reviewed}
                 />
 
-                <PersonalData
-                    location={serviceReq.location}
-                    name={serviceReq.newFullName}
-                    photo={serviceReq.newProfilePhotoImgUrl}
-                />
-                {reviewState.reviewed ? (
-                    userData && user.data ? (
-                        <ContactReviewedUser
-                            user={userData}
-                            transmitter={user.data.fullName}
-                        />
-                    ) : (
-                        <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
-                    )
-                ) : (
-                    <>
-                        <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                        {enterprise === null ? (
-                            <span className="loader-green"></span>
-                        ) : enterprise === undefined ? (
-                            <FieldDeleted description="No se selecciono el taller mecanico (El campo era opcional)" />
-                        ) : (
-                            <WorkshopRenderer workshop={enterprise} />
-                        )}
-                        <ReqButtonRes
-                            onApprove={approve}
-                            onDecline={decline}
-                            loading={reviewState.loading}
-                        />
-                    </>
-                )}
+                <UserVerifierPrompter userData={userData} />
             </div>
-        </section>
+
+            <PersonalData
+                location={serviceReq.location}
+                name={serviceReq.newFullName}
+                photo={serviceReq.newProfilePhotoImgUrl}
+            />
+            {reviewState.reviewed ? (
+                userData && user.data ? (
+                    <ContactReviewedUser
+                        user={userData}
+                        transmitter={user.data.fullName}
+                    />
+                ) : (
+                    <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
+                )
+            ) : (
+                <>
+                    <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+                    {enterprise === null ? (
+                        <span className="loader-green"></span>
+                    ) : enterprise === undefined ? (
+                        <FieldDeleted description="No se selecciono el taller mecanico (El campo era opcional)" />
+                    ) : (
+                        <WorkshopRenderer workshop={enterprise} />
+                    )}
+
+                    {userData && <UserStatusIndicatorV2 user={userData} />}
+                    <p className="text | light margin-top-25">
+                        Podras contactarte con el usuario despues de{" "}
+                        <b>aprobar o rechazar</b> la solicitud
+                    </p>
+                    <ReqButtonRes
+                        onApprove={approve}
+                        onDecline={decline}
+                        loading={reviewState.loading || userData === null}
+                        stateB1={true}
+                        stateB2={
+                            userData !== null &&
+                            userData !== undefined &&
+                            !userData.deleted &&
+                            enterprise !== null &&
+                            enterprise !== undefined &&
+                            enterprise.deleted === false &&
+                            enterprise.active === true
+                        }
+                        alreadyReviewed={reviewState.reviewed || !serviceReq.active}
+                    />
+                </>
+            )}
+        </div>
     );
 };
 

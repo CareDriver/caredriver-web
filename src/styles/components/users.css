@@ -1,0 +1,45 @@
+.users-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+    gap: 20px;
+
+    padding-bottom: 20px;
+}
+
+.users-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    padding: 25px;
+    border: 2px solid var(--gray-medium);
+    border-radius: 15px;
+    transition: all ease-in 150ms;
+}
+
+.users-item.users-disable {
+    border-color: var(--yellow);
+}
+
+.users-item:hover {
+    border-color: var(--main-light);
+}
+
+.users-item-photo {
+    --size: 200px;
+    height: var(--size);
+    width: var(--size);
+    object-fit: cover;
+
+    border-radius: 50%;
+    background-color: #ecfaf5;
+}
+
+.users-item-role {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+}
+

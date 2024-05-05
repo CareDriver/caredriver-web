@@ -5,6 +5,7 @@ import { ServicesData } from "./ServicesDataInterface";
 import { Payment, Price } from "./Payment";
 import { Locations } from "./Locations";
 import { ServiceStateRequest, Vehicle } from "./UserRequest";
+import { ImgWithRef } from "./ImageInterface";
 
 export interface HistoryLocationInterface {
     locationName: string;
@@ -32,7 +33,7 @@ export interface UserInterface {
     role?: UserRole; // the role that the user has in the application
     fullName: string; // Full name of the user
     phoneNumber: string; // Phone number of the user (includes country code, ej: +591 76543218)
-    photoUrl: string; // URL of the user's photo
+    photoUrl: ImgWithRef; // URL of the user's photo
 
     comments: string[]; // Array of comments given by drivers
     vehicles: VehicleInterface[]; // Array of vehicles associated with the user
@@ -47,6 +48,7 @@ export interface UserInterface {
     appPaymentHistory?: Payment[]; // Array of the payments made by the service user to the app.
     location?: Locations; // Location user begins
     disable?: boolean; // true when user did not paid to the app and was disabled.
+    deleted: boolean; // used for soft delete
     mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
     towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
 

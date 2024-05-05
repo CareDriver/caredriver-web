@@ -1,10 +1,8 @@
 "use client";
-import PersonCircleCheck from "@/icons/PersonCircleCheck";
 import { UserRequest, Vehicle } from "@/interfaces/UserRequest";
 import {
     deleteImagesIfLimitOfApproves,
     MIN_NUM_OF_APPROVALS,
-    numOfApprovals,
     updateService,
 } from "@/utils/requests/services/ServicesRequester";
 import PersonalData from "../../data_renderer/personal_data/PersonalData";
@@ -27,6 +25,8 @@ import { toast } from "react-toastify";
 import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import FieldDeleted from "../../data_renderer/form/FieldDeleted";
+import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
+import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 
 const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -34,7 +34,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         loading: false,
         reviewed: false,
     });
-    const [userData, setUserData] = useState<UserInterface | null>(null);
+    const [userData, setUserData] = useState<UserInterface | null | undefined>(null);
 
     const saveReviewHistory = async (wasApproved: boolean) => {
         try {
@@ -91,9 +91,8 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 if (isLimitToReviews) {
                     var car = getVehicle(VehicleType.CAR);
                     var motorcycle = getVehicle(VehicleType.MOTORCYCLE);
-                    const userData = await getUserById(serviceReq.userId);
+
                     if (userData) {
-                        setUserData(userData);
                         var vehicles: ServiceVehicles =
                             userData.serviceVehicles !== undefined
                                 ? { ...userData.serviceVehicles }
@@ -232,45 +231,69 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         await review(false);
     };
 
+    useEffect(() => {
+        getUserById(serviceReq.userId).then((res) => {
+            if (res) {
+                setUserData(res);
+            } else {
+                setUserData(undefined);
+            }
+        });
+    }, []);
+
     return (
-        <section>
-            <div>
-                <h1>Solicitud para ser Chofer</h1>
+        <div className="service-form-wrapper | max-width-60">
+            <h1 className="text | big bolder">Solicitud para ser Chofer</h1>
+            <div className="row-wrapper | gap-20">
                 <ApprovalsRenderer
                     serviceReq={serviceReq}
                     reviewed={reviewState.reviewed}
                 />
-
-                <PersonalData
-                    location={serviceReq.location}
-                    name={serviceReq.newFullName}
-                    photo={serviceReq.newProfilePhotoImgUrl}
-                />
-                {reviewState.reviewed ? (
-                    userData && user.data ? (
-                        <ContactReviewedUser
-                            user={userData}
-                            transmitter={user.data.fullName}
-                        />
-                    ) : (
-                        <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
-                    )
-                ) : (
-                    <>
-                        <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                        {serviceReq.vehicles && (
-                            <VehiclesRenderer vehicles={serviceReq.vehicles} />
-                        )}
-
-                        <ReqButtonRes
-                            onApprove={approve}
-                            onDecline={decline}
-                            loading={reviewState.loading}
-                        />
-                    </>
-                )}
+                <UserVerifierPrompter userData={userData} />
             </div>
-        </section>
+
+            <PersonalData
+                location={serviceReq.location}
+                name={serviceReq.newFullName}
+                photo={serviceReq.newProfilePhotoImgUrl}
+            />
+            {reviewState.reviewed ? (
+                userData && user.data ? (
+                    <ContactReviewedUser
+                        user={userData}
+                        transmitter={user.data.fullName}
+                    />
+                ) : (
+                    <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
+                )
+            ) : (
+                <>
+                    <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+                    {serviceReq.vehicles && (
+                        <VehiclesRenderer vehicles={serviceReq.vehicles} />
+                    )}
+
+                    {userData && <UserStatusIndicatorV2 user={userData} />}
+
+                    <p className="text | light margin-top-25">
+                        Podras contactarte con el usuario despues de{" "}
+                        <b>aprobar o rechazar</b> la solicitud
+                    </p>
+                    <ReqButtonRes
+                        onApprove={approve}
+                        onDecline={decline}
+                        loading={reviewState.loading || userData === null}
+                        stateB1={true}
+                        stateB2={
+                            userData !== null &&
+                            userData !== undefined &&
+                            !userData.deleted
+                        }
+                        alreadyReviewed={reviewState.reviewed || !serviceReq.active}
+                    />
+                </>
+            )}
+        </div>
     );
 };
 

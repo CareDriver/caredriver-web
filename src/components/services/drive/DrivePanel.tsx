@@ -1,7 +1,6 @@
 "use client";
 import PageLoader from "@/components/PageLoader";
 import { AuthContext } from "@/context/AuthContext";
-import AddressCar from "@/icons/AddressCar";
 import CarSide from "@/icons/CarSide";
 import Motorcycle from "@/icons/Motorcycle";
 import Plus from "@/icons/Plus";
@@ -9,7 +8,6 @@ import SackDollar from "@/icons/SackDollar";
 import { ServiceReqState } from "@/interfaces/Services";
 import { ServiceVehicles, UserInterface } from "@/interfaces/UserInterface";
 import {
-    vehicleModeRender,
     vehicleModeRenderV2,
     VehicleTransmission,
 } from "@/interfaces/VehicleInterface";
@@ -123,7 +121,7 @@ const DrivePanel = () => {
     return loadingUser ? (
         <PageLoader />
     ) : user.data ? (
-        <div className="service-form-wrapper">
+        <div className="service-form-wrapper | max-height-100">
             <h1 className="text | big bolder green">Tu solicitud fue aprobada!</h1>
             <p className="text icon-wrapper | green-icon green bolder lb medium margin-top-15">
                 <SackDollar />
@@ -190,6 +188,12 @@ const DrivePanel = () => {
                         {getFormatDate(
                             user.data.serviceVehicles.motorcycle.license.expiredDateLicense.toDate(),
                         )}
+                    </h3>
+                    <h3 className="text | gray gray-dark bold margin-top-5">
+                        Transmisión{" "}
+                        {getModes(user.data.serviceVehicles.motorcycle.type.mode)
+                            .toString()
+                            .replaceAll(",", " | ")}
                     </h3>
                     <div
                         className="row-wrapper | gap-20"
@@ -278,6 +282,7 @@ const DrivePanel = () => {
                     )}
                 </div>
             )}
+            <span className="circles-right-bottomv2 green"></span>
         </div>
     ) : (
         <h2>Usuario no encontrado</h2>

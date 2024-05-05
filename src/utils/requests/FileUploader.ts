@@ -8,7 +8,7 @@ export const uploadImageBase64 = async (
     location: string,
     image: string,
 ): Promise<ImgWithRef> => {
-    const uniqueName = nanoid();
+    const uniqueName = nanoid(40);
     const refLocation = `${location.concat(uniqueName)}`;
     const mountainsRef = ref(storage, refLocation);
     await uploadString(mountainsRef, image, "data_url");

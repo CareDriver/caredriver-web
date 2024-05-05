@@ -22,9 +22,11 @@ const PersonalData = ({
             <div className="form-sub-container">
                 <fieldset className="form-section">
                     <InputData content={name} placeholder="Nombre completo" />
+                    <legend className="form-section-legend">Nombre completo</legend>
                 </fieldset>
                 <fieldset className="form-section">
                     <InputData content={location} placeholder="Localizacion" />
+                    <legend className="form-section-legend">Localizacion</legend>
                 </fieldset>
                 <ImageRenderer
                     url={photo}

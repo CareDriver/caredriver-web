@@ -94,16 +94,23 @@ const EnterpriseReqRender = ({ enterprise }: { enterprise: Enterprise }) => {
     };
 
     return (
-        <section>
-            <h1>
+        <section className="service-form-wrapper | max-width-60">
+            <h1 className="text | big-medium bolder margin-bottom-25 capitalize">
                 Solicitud para crear {enterprise.type === "tow" ? "una" : "un"}{" "}
                 {EnterpriseTypeRender[enterprise.type]}
             </h1>
             <EnterpriseRenderer enterprise={enterprise} />
+            <p className="text | light margin-top-25">
+                Se eliminaran los datos que ya <b>no seran necesarios</b> si rechazas la
+                solicitud
+            </p>
             <ReqButtonRes
                 onApprove={approve}
                 onDecline={decline}
                 loading={reviewState.loading}
+                stateB1={true}
+                stateB2={true}
+                alreadyReviewed={reviewState.reviewed || !enterprise.active}
             />
         </section>
     );

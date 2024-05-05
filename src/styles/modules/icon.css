@@ -9,6 +9,10 @@
     justify-content: center;
 }
 
+.icon-wrapper.bottom {
+    align-items: baseline;
+}
+
 .icon-wrapper.column {
     flex-direction: column;
 }
@@ -25,8 +29,16 @@
     fill: var(--gray-dark);
 }
 
+.icon-wrapper.gray-medium-icon > svg {
+    fill: var(--gray-medium);
+}
+
 .icon-wrapper.green-icon > svg {
     fill: var(--main-light);
+}
+
+.icon-wrapper.yellow-icon > svg {
+    fill: var(--yellow);
 }
 
 .icon-wrapper > svg {
@@ -37,6 +49,11 @@
 .icon-wrapper.lb > svg {
     height: 25px;
     width: 25px;
+}
+
+.icon-wrapper.mb > svg {
+    height: 35px;
+    width: 35px;
 }
 
 .icon-wrapper.bg > svg {

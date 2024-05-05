@@ -1,5 +1,12 @@
-const EditCranceByAdminPage = () => {
-    return <div>edit</div>;
+import EnterpriseEditByAdmin from "@/components/enterprises/admin/EnterpriseEditByAdmin";
+import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+
+const EditCranceByAdminPage = ({ params }: { params: any }) => {
+    return (
+        <AdminWrapperWithSideBar>
+            <EnterpriseEditByAdmin id={params.id} type="tow" />;
+        </AdminWrapperWithSideBar>
+    );
 };
 
 export default EditCranceByAdminPage;

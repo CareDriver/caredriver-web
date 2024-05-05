@@ -1,10 +1,10 @@
 "use client";
 
 import { FormEvent, useContext, useEffect, useState } from "react";
-import ImageUploader from "../form/ImageUploader";
-import { defaultPhoto, PhotoField } from "../services/FormModels";
+import ImageUploader from "../../form/ImageUploader";
+import { defaultPhoto, PhotoField } from "../../services/FormModels";
 import { AuthContext } from "@/context/AuthContext";
-import PageLoader from "../PageLoader";
+import PageLoader from "../../PageLoader";
 import { useRouter } from "next/navigation";
 import { saveChangePhotoReq } from "@/utils/requests/ChangePhotoRequester";
 import { nanoid } from "nanoid";
@@ -23,6 +23,10 @@ const ChangePhotoReq = () => {
 
     const submit = async (e: FormEvent) => {
         e.preventDefault();
+        setFormState({
+            loading: true,
+            isValid: true,
+        });
         if (newPhoto.value) {
             if (!newPhoto.message) {
                 if (user.data && user.data.id) {
@@ -30,7 +34,7 @@ const ChangePhotoReq = () => {
                         var id = nanoid(30);
                         const imgWithRef = await toast.promise(
                             uploadImageBase64(
-                                DirectoryPath.TempProfilePhotos,
+                                DirectoryPath.Users,
                                 newPhoto.value,
                             ),
                             {
@@ -99,7 +103,7 @@ const ChangePhotoReq = () => {
     return loadingUser ? (
         <PageLoader />
     ) : user.data ? (
-        <section className="service-form-wrapper">
+        <section className="service-form-wrapper | max-height-100">
             <h1 className="text | big bolder">Actualiza tu Foto de Perfil</h1>
             <p>
                 Se mandara una solicitud por Whatsapp para que puedas actualizar tu foto
@@ -152,6 +156,7 @@ const ChangePhotoReq = () => {
                     </button>
                 </div>
             </form>
+            <span className="circles-right-bottomv2 green"></span>
         </section>
     ) : (
         <h1>No tienes Cuenta</h1>

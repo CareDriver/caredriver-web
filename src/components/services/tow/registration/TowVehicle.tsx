@@ -2,12 +2,12 @@ import ImageUploader from "@/components/form/ImageUploader";
 import { vehiclesModes, PhotoField, VehicleForm } from "@/components/services/FormModels";
 import AddressCar from "@/icons/AddressCar";
 import Car from "@/icons/Car";
+import ChevronDown from "@/icons/ChevronDown";
 import Plus from "@/icons/Plus";
 import {
     vehicleModeRender,
     VehicleTransmission,
     VehicleType,
-    vehicleTypeRender,
 } from "@/interfaces/VehicleInterface";
 import {
     isValidLicenseDate,
@@ -101,7 +101,9 @@ const TowVehicle = ({
                 <Car /> Tipo de Transmision de su Vehiculo
             </h2>
             {vehicle.type.mode.length == 1 ? (
-                <fieldset className="form-section">
+                <fieldset className="form-section | select-item">
+                    <ChevronDown />
+
                     <select
                         defaultValue={vehicle.type.mode[0]}
                         className="form-section-input"
@@ -113,6 +115,7 @@ const TowVehicle = ({
                             </option>
                         ))}
                     </select>
+                    <legend className="form-section-legend">Transmisión</legend>
                 </fieldset>
             ) : (
                 <>
@@ -126,6 +129,9 @@ const TowVehicle = ({
                                 className="form-section-input"
                                 onChange={() => {}}
                             />
+                            <legend className="form-section-legend">
+                                Transmisión {i + 1}
+                            </legend>
                         </fieldset>
                     ))}
                 </>
@@ -148,7 +154,7 @@ const TowVehicle = ({
                 <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
                     <AddressCar /> Licencia
                 </h2>
-                <p>
+                <p className="text | light">
                     Las fotos de tu licencia de conducir se eliminaran cuando se acepte o
                     rechaze tu solicitud.
                 </p>
@@ -156,12 +162,14 @@ const TowVehicle = ({
             <fieldset className="form-section">
                 <input
                     type="text"
-                    placeholder="Numero"
+                    placeholder=""
                     name="number"
                     value={vehicle.license.number.value}
                     onChange={(e) => updateNumberLicense(e)}
                     className="form-section-input"
                 />
+                <legend className="form-section-legend">Número</legend>
+
                 {vehicle.license.number.message && (
                     <small>{vehicle.license.number.message}</small>
                 )}
@@ -173,6 +181,8 @@ const TowVehicle = ({
                     onChange={(e) => updateDateLicense(e)}
                     className="form-section-input"
                 />
+                <legend className="form-section-legend">Fecha de expiración</legend>
+
                 {vehicle.license.expirationDate.message && (
                     <small>{vehicle.license.expirationDate.message}</small>
                 )}

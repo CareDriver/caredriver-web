@@ -6,6 +6,7 @@ import UserIcon from "@/icons/UserIcon";
 import { PersonalDataFormField, PhotoField } from "../services/FormModels";
 import { isValidName } from "@/utils/validator/auth/CredentialsValidator";
 import { AuthContext } from "@/context/AuthContext";
+import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
 const PersonalDataForm = ({
     personalData,
     setPersonalData,
@@ -38,7 +39,7 @@ const PersonalDataForm = ({
                         message: null,
                     },
                     photo: {
-                        value: user.hasPhoto ? user.data.photoUrl : null,
+                        value: user.hasPhoto ? user.data.photoUrl.url : null,
                         message: user.hasPhoto
                             ? null
                             : "No tienes foto de perfil, por favor sube una foto de perfil",
@@ -81,13 +82,13 @@ const PersonalDataForm = ({
                 <fieldset className="form-section">
                     <input
                         type="text"
-                        placeholder="Nombre completo"
+                        placeholder=""
                         className="form-section-input"
                         value={personalData.fullname.value}
                         name="fullname"
                         onChange={(e) => handleInputChange(e)}
                     />
-
+                    <legend className="form-section-legend">Nombre completo</legend>
                     {personalData.fullname.message && (
                         <small>{personalData.fullname.message}</small>
                     )}

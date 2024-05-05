@@ -1,15 +1,25 @@
-import { auth, firestore } from "../../firebase/FirebaseConfig";
+import { firestore } from "../../firebase/FirebaseConfig";
 import {
     collection,
-    addDoc,
     DocumentReference,
     getDoc,
     doc,
     setDoc,
     updateDoc,
+    where,
+    query,
+    getDocs,
+    DocumentSnapshot,
+    orderBy,
+    limit,
+    startAfter,
+    endBefore,
+    limitToLast,
+    getCountFromServer,
+    and,
+    or,
 } from "firebase/firestore";
 import { UserInterface } from "../../interfaces/UserInterface";
-import { fetchSignInMethodsForEmail } from "firebase/auth";
 
 const usersCollection = collection(firestore, "users");
 
@@ -72,16 +82,159 @@ const updateUser = async (
     }
 };
 
-const checkEmailExists = async (email: string): Promise<boolean> => {
+const checkEmailExists = async (email: string): Promise<number> => {
     try {
-        const signInMethods = await fetchSignInMethodsForEmail(auth, email);
-        console.log(signInMethods);
-        
-        return signInMethods.length === 0;
+        const q = query(usersCollection, where("email", "==", email));
+
+        const docs = await getDocs(q);
+        var size = 0;
+        docs.forEach(() => {
+            size++;
+        });
+
+        return size;
     } catch (error) {
-        console.error("Error al verificar el correo electrónico:", error);
         throw error;
     }
+};
+
+// GET ALL USERS WITH PAGINATION
+
+export const getAllUsersPaginated = async (
+    adminEmail: string,
+    direction: "next" | "prev" | undefined,
+    startAfterDoc?: DocumentSnapshot,
+    endBeforeDoc?: DocumentSnapshot,
+    numPerPage: number = 8,
+) => {
+    let dataQuery = query(
+        usersCollection,
+        orderBy("fullName"),
+        limit(numPerPage),
+        where("deleted", "==", false),
+        where("email", "!=", adminEmail),
+    );
+
+    if (direction === "next" && startAfterDoc) {
+        dataQuery = query(dataQuery, startAfter(startAfterDoc));
+    } else if (direction === "prev" && endBeforeDoc) {
+        dataQuery = query(
+            usersCollection,
+            orderBy("fullName"),
+            endBefore(endBeforeDoc),
+            limitToLast(numPerPage),
+            where("deleted", "==", false),
+            where("email", "!=", adminEmail),
+        );
+    }
+
+    const productsSnapshot = await getDocs(dataQuery);
+    const products = productsSnapshot.docs.map((doc) => doc.data());
+
+    return {
+        result: products as UserInterface[],
+        lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
+        firstDoc: productsSnapshot.docs[0],
+    };
+};
+
+export const getAllUsersNumPages = async (
+    adminEmail: string,
+    numPerPages: number,
+): Promise<number> => {
+    const count = await getCountFromServer(
+        query(
+            usersCollection,
+            where("deleted", "==", false),
+            where("email", "!=", adminEmail),
+        ),
+    );
+    const numPages = Math.ceil(count.data().count / numPerPages);
+    return numPages;
+};
+
+// GET ALL SEARCH USERS PAGINATED
+
+export const getSearchUsersPaginated = async (
+    adminEmail: string,
+    searchField: string,
+    direction: "next" | "prev" | undefined,
+    startAfterDoc?: DocumentSnapshot,
+    endBeforeDoc?: DocumentSnapshot,
+    numPerPage: number = 8,
+) => {
+    let dataQuery = query(
+        usersCollection,
+        and(
+            where("deleted", "==", false),
+            where("email", "!=", adminEmail),
+            or(
+                where("fullName", "==", searchField),
+                where("email", "==", searchField),
+                where("phoneNumber", "==", "+591" + searchField),
+                where("phoneNumber", "==", "+" + searchField),
+                where("phoneNumber", "==", searchField),
+            ),
+        ),
+        orderBy("fullName"),
+        limit(numPerPage),
+    );
+
+    if (direction === "next" && startAfterDoc) {
+        dataQuery = query(dataQuery, startAfter(startAfterDoc));
+    } else if (direction === "prev" && endBeforeDoc) {
+        dataQuery = query(
+            usersCollection,
+            and(
+                where("deleted", "==", false),
+                where("email", "!=", adminEmail),
+                or(
+                    where("fullName", "==", searchField),
+                    where("email", "==", searchField),
+                    where("phoneNumber", "==", "+591" + searchField),
+                    where("phoneNumber", "==", "+" + searchField),
+                    where("phoneNumber", "==", searchField),
+                ),
+            ),
+            orderBy("fullName"),
+            endBefore(endBeforeDoc),
+            limitToLast(numPerPage),
+        );
+    }
+
+    const productsSnapshot = await getDocs(dataQuery);
+    const products = productsSnapshot.docs.map((doc) => doc.data());
+
+    return {
+        result: products as UserInterface[],
+        lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
+        firstDoc: productsSnapshot.docs[0],
+    };
+};
+
+export const getSearchUsersNumPages = async (
+    adminEmail: string,
+    numPerPages: number,
+    searchField: string,
+): Promise<number> => {
+    const count = await getCountFromServer(
+        query(
+            usersCollection,
+            and(
+                where("deleted", "==", false),
+                where("email", "!=", adminEmail),
+                or(
+                    where("fullName", "==", searchField),
+                    where("email", "==", searchField),
+                    where("phoneNumber", "==", "+591" + searchField),
+                    where("phoneNumber", "==", "+" + searchField),
+                    where("phoneNumber", "==", searchField),
+                ),
+            ),
+        ),
+    );
+    const numPages = Math.ceil(count.data().count / numPerPages);
+    return numPages;
 };
 
 export { saveUser, getUserById, updateUser, checkEmailExists };

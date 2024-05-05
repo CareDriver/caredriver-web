@@ -3,4 +3,5 @@ export enum DirectoryPath {
     Licenses = "requests/licenses/",
     TempProfilePhotos = "requests/temppriflephotos/",
     Enterprises = "enterprises/",
+    Users = "users/",
 }

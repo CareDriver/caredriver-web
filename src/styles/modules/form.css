@@ -1,7 +1,7 @@
 .form-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
 
     width: 95%;
 }
@@ -30,6 +30,10 @@
 }
 
 .form-section {
+    --padding-field: 1rem;
+
+    position: relative;
+
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -44,13 +48,12 @@
 
     border-radius: 15px;
     border: 1px solid #ddd;
-
 }
 
 .form-section-input {
     width: 100%;
     font-size: 20px;
-    padding: 22px;
+    padding: var(--padding-field);
 
     border: 1px solid #ddd;
     border-radius: 15px;
@@ -64,6 +67,47 @@
     font-weight: bold;
 }
 
+.form-section-input:is(:focus) {
+    border: 1px solid #000;
+}
+
+.form-section-legend {
+    position: absolute;
+    left: var(--padding-field);
+    top: var(--padding-field);
+
+    font-size: 1.125rem;
+    padding: 0 0.25rem;
+    border-radius: 5px;
+
+    color: gray;
+    background-color: white;
+    transition: all ease-in 150ms;
+    pointer-events: none;
+}
+
+.form-section-input:is(:focus, :not(:placeholder-shown)) ~ legend,
+.form-section-legend.focused {
+    top: calc(-1 * (var(--padding-field) - 0.5125rem));
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--focus-color);
+}
+
+.form-section.select-item > select {
+    appearance: none;
+}
+
+.form-section.select-item > svg {
+    position: absolute;
+    bottom: calc(var(--padding-field) + 5px);
+    right: var(--padding-field);
+    fill: black;
+
+    height: 15px;
+    width: 15px;
+}
+
 .form-section-uploader {
     --border-color: var(--gray-medium);
     --background-color: var(--gray-lighter);
@@ -73,8 +117,9 @@
 
     padding: 60px 20px;
     border-radius: 15px;
-
-    border: 1px solid var(--border-color);
+    border: 3px solid var(--border-color);
+    
+    border-style: dashed;
     background-color: var(--background-color);
 }
 
@@ -105,7 +150,6 @@
 
 .form-section-uploaded-image {
     width: 100%;
-    max-height: 30vh;
     border-radius: 15px;
 
     object-fit: cover;
@@ -132,8 +176,20 @@
     border: none;
 }
 
+.form-section-uploaded-button:hover > svg {
+    transition: all ease-in-out 200ms;
+    fill: var(--red);
+}
+
 .form-section-uploaded-button > svg {
-    width: 25px;
-    height: 25px;
+    width: 22px;
+    height: 22px;
     fill: var(--gray-medium);
+}
+
+.deleted-field {
+    padding: 20px;
+    border: 3px solid var(--red);
+    border-style: dotted;
+    border-radius: 15px;
 }

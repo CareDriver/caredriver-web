@@ -94,7 +94,7 @@ const EnterpriseSelector = ({
                         </div>
                     ))}
                 </div>
-                <div>
+                <div title={page === pages ? "No hay mas resultados" : "Cargar mas"}>
                     <button
                         className="icon-wrapper small-general-button text | bold gray-icon gray | margin-top-25"
                         disabled={page === pages}

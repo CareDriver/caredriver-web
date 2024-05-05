@@ -144,6 +144,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
                     >
                         <Trash />
                     </button>
+                    <legend className="form-section-legend | focused">{content.indicator}</legend>
                 </div>
             ) : (
                 <label htmlFor={content.id}>

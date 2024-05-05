@@ -1,0 +1,22 @@
+.user-info-wrapper {
+    display: flex;
+    gap: 40px;
+}
+
+.user-info-subwrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.user-info-photo {
+    --size: 220px;
+    width: var(--size);
+    height: var(--size);
+
+    border-radius: 50%;
+
+    object-fit: cover;
+    background-color: #fcfffe;
+    box-shadow: 0 0 40px var(--gray-light);
+}
