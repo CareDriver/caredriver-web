@@ -1,26 +1,12 @@
 import { UserInterface, UserRole } from "@/interfaces/UserInterface";
-import { DEFAULT_PHOTO } from "@/utils/user/UserData";
+import { DEFAULT_PHOTO, getRole } from "@/utils/user/UserData";
 import Link from "next/link";
 
 const UserItemRenderer = ({ req }: { req: UserInterface }) => {
-    var role = {
-        value: "Normal",
-        isHigher: false,
-    };
-    if (req.role !== undefined && req.role !== UserRole.User) {
-        role = {
-            value: req.role,
-            isHigher: true,
-        };
-    } else if (req.services.length > 1) {
-        role = {
-            value: "Normal | Servidor",
-            isHigher: false,
-        };
-    }
+    var role = getRole(req);
 
     return (
-        <Link href={`/admin/users/${req.id}`} className="users-item">
+        <Link href={`/admin/users/${req.id}`} className="users-item | touchable">
             <img
                 src={req.photoUrl.url === "" ? DEFAULT_PHOTO : req.photoUrl.url}
                 alt=""

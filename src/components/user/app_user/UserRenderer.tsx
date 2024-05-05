@@ -10,6 +10,11 @@ import ServiceServedByUser from "./ServiceServedByUser";
 import DisableUser from "./options/DisableUser";
 import DeleteUser from "./options/DeleteUser";
 import ServiceReqsByUser from "./ServiceReqsByUser";
+import "@/styles/components/app-user.css";
+import { getRole } from "@/utils/user/UserData";
+import MoneyBillWave from "@/icons/MoneyBillWave";
+import DebtUser from "./options/DebtUser";
+import DebtHistory from "./DebtHistory";
 
 const UserRenderer = ({ userId }: { userId: string }) => {
     const [user, setUser] = useState<UserInterface | null>(null);
@@ -26,6 +31,10 @@ const UserRenderer = ({ userId }: { userId: string }) => {
         confirm: "",
         isValid: false,
     });
+    const [role, setRole] = useState<{
+        value: string;
+        isHigher: boolean;
+    } | null>(null);
 
     const toggleDisableUser = async () => {
         if (user) {
@@ -127,6 +136,7 @@ const UserRenderer = ({ userId }: { userId: string }) => {
             .then((res) => {
                 if (res) {
                     setUser(res);
+                    setRole(getRole(res));
                 } else {
                     toast.error("Usuario no encontrado");
                     router.push("/admin/users");
@@ -156,16 +166,27 @@ const UserRenderer = ({ userId }: { userId: string }) => {
     };
 
     return user ? (
-        <section>
-            <div>
-                <img src={user.photoUrl.url} alt="" />
-                <div>
-                    <h1>{user.fullName}</h1>
-                    <h3>{user.email}</h3>
-                    <h3>{user.location}</h3>
-                    <h3>{user.role}</h3>
+        <section className="render-data-wrapper">
+            <div className="user-info-wrapper">
+                <img src={user.photoUrl.url} alt="" className="user-info-photo" />
+                <div className="user-info-subwrapper">
+                    <h1 className="text | big bolder capitalize">{user.fullName}</h1>
+                    <h3 className="text | gray-dark bold">{user.email}</h3>
+                    <h3 className="text | gray-dark bold">{user.location}</h3>
+                    <h3 className="text | gray-dark bold margin-bottom-15">
+                        {user.phoneNumber}
+                    </h3>
+                    {role ? (
+                        <h3 className={`text | bolder ${role.isHigher && "green"}`}>
+                            {role.value}
+                        </h3>
+                    ) : (
+                        <span className="loader-gray-medium"></span>
+                    )}
                 </div>
             </div>
+            <DebtUser user={user} />
+            <DebtHistory user={user}/>
             {getServicesServed()}
             {getServicesRequested()}
             <DisableUser
