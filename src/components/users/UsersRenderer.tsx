@@ -2,7 +2,7 @@
 
 import PageLoader from "@/components/PageLoader";
 import { DocumentSnapshot } from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import "@/styles/components/pagination.css";
 import {
     getAllUsersNumPages,
@@ -14,6 +14,9 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import UserItemRenderer from "./UserItemRenderer";
 import { AuthContext } from "@/context/AuthContext";
 import InfiniteScroll from "react-infinite-scroll-component";
+import "@/styles/modules/search.css";
+import "@/styles/components/users.css";
+import Search from "@/icons/Search";
 
 const UsersRenderer = () => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -127,7 +130,8 @@ const UsersRenderer = () => {
         }
     };
 
-    const search = async () => {
+    const search = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (dataState.value.trim().length == 0) {
             setDataState({
                 ...dataState,
@@ -240,13 +244,16 @@ const UsersRenderer = () => {
             }
         }
     }, [dataState.data]);
-
     return dataState.data ? (
-        <div>
-            <div>
-                <fieldset>
+        <div className="render-data-wrapper">
+            <h1 className="text | big-medium bolder margin-bottom-25 capitalize">
+                Usuarios
+            </h1>
+            <div className="row-wrapper | margin-bottom-50">
+                <form className="search-wrapper" onSubmit={(e) => search(e)}>
                     <input
                         type="text"
+                        className="search-input"
                         placeholder="Buscar por nombre, email, telefono"
                         value={dataState.value}
                         onChange={(e) => {
@@ -256,8 +263,10 @@ const UsersRenderer = () => {
                             });
                         }}
                     />
-                    <button onClick={search}>Buscar</button>
-                </fieldset>
+                    <button className="search-button icon-wrapper | gray-icon">
+                        <Search />
+                    </button>
+                </form>
             </div>
             {dataState.data.length > 0 ? (
                 <InfiniteScroll
@@ -266,9 +275,11 @@ const UsersRenderer = () => {
                     hasMore={dataState.page !== dataState.pages}
                     loader={<span className="loader-gray"></span>}
                 >
-                    {dataState.data.map((req, i) => (
-                        <UserItemRenderer req={req} key={`user-item-${i}`} />
-                    ))}
+                    <div className="users-wrapper">
+                        {dataState.data.map((req, i) => (
+                            <UserItemRenderer req={req} key={`user-item-${i}`} />
+                        ))}
+                    </div>
                 </InfiniteScroll>
             ) : (
                 <div className="empty-wrapper | auto-height">
