@@ -10,6 +10,7 @@ import {
 } from "@/utils/requests/ChangePhotoRequester";
 import UpPhotoItemReq from "./UpPhotoItemReq";
 import InfiniteScroll from "react-infinite-scroll-component";
+import "@/styles/components/personal-data-req.css";
 
 const UpPhotoReqsRenderer = () => {
     const numPerPage = 10;
@@ -50,16 +51,26 @@ const UpPhotoReqsRenderer = () => {
 
     return data ? (
         data.length > 0 ? (
-            <InfiniteScroll
-                dataLength={data.length}
-                next={handleNextClick}
-                hasMore={page !== pages}
-                loader={<span className="loader-gray"></span>}
-            >
-                {data.map((req, i) => (
-                    <UpPhotoItemReq photo={req} key={`photo-update-req-item-${i}`} />
-                ))}
-            </InfiniteScroll>
+            <div className="render-data-wrapper">
+                <h1 className={"text | big-medium bolder margin-bottom-25 capitalize"}>
+                    Solicitudes para editar fotos de Perfil
+                </h1>
+                <InfiniteScroll
+                    dataLength={data.length}
+                    next={handleNextClick}
+                    hasMore={page !== pages}
+                    loader={<span className="loader-gray"></span>}
+                >
+                    <div className="personal-data-req-wrapper">
+                        {data.map((req, i) => (
+                            <UpPhotoItemReq
+                                photo={req}
+                                key={`photo-update-req-item-${i}`}
+                            />
+                        ))}
+                    </div>
+                </InfiniteScroll>
+            </div>
         ) : (
             <div className="empty-wrapper | auto-height">
                 <h2>No hay peticiones para actualizar fotos de perfil</h2>
