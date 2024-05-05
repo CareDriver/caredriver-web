@@ -121,6 +121,7 @@ const SingleVehicleForm = ({
                             onChange={() => {}}
                             className="form-section-input"
                         />
+                        <legend className="form-section-legend">Categoria</legend>
                     </fieldset>
                     {vehicle.type.mode.length == 1 ? (
                         <fieldset className="form-section">
@@ -135,6 +136,7 @@ const SingleVehicleForm = ({
                                     </option>
                                 ))}
                             </select>
+                            <legend className="form-section-legend">Transmisión</legend>
                         </fieldset>
                     ) : (
                         <>
@@ -148,6 +150,9 @@ const SingleVehicleForm = ({
                                         className="form-section-input"
                                         onChange={() => {}}
                                     />
+                                    <legend className="form-section-legend">
+                                        Transmisión {i + 1}
+                                    </legend>
                                 </fieldset>
                             ))}
                         </>
@@ -183,6 +188,8 @@ const SingleVehicleForm = ({
                             onChange={(e) => updateNumberLicense(e.target.value)}
                             className="form-section-input"
                         />
+                        <legend className="form-section-legend">Número</legend>
+
                         {vehicle.license.number.message && (
                             <small>{vehicle.license.number.message}</small>
                         )}
@@ -193,6 +200,10 @@ const SingleVehicleForm = ({
                             onChange={(e) => updateDateLicense(e)}
                             className="form-section-input"
                         />
+                        <legend className="form-section-legend">
+                            Fecha de expiración
+                        </legend>
+
                         {vehicle.license.expirationDate.message && (
                             <small>{vehicle.license.expirationDate.message}</small>
                         )}

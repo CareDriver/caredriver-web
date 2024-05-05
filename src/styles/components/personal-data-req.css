@@ -19,6 +19,11 @@
     transition: all ease-in 150ms;
 }
 
+.personal-data-req-item.left {
+    align-items: flex-start;
+    padding: 30px;
+}
+
 .personal-data-req-item:hover {
     border-color: var(--main-light);
 }

@@ -168,20 +168,18 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
     }, [req]);
 
     return req ? (
-        <div className="service-form-wrapper">
-            <div className="max-width-60">
-                <h1 className="text | big bolder">
-                    Solicitud para actualizar una licencia de conducir
-                </h1>
-            </div>
+        <div className="service-form-wrapper | max-width-60">
+            <h1 className="text | big bolder">
+                Solicitud para actualizar una licencia de conducir
+            </h1>
 
             <UserVerifierPrompter userData={userData} />
 
-            {userReq ? (
+            {userReq && userData ? (
                 <PersonalDataV2
                     location={userReq.location}
-                    name={userReq.fullName}
-                    photo={userReq.photoUrl}
+                    name={userData.fullName}
+                    photo={userData.photoUrl}
                     custom={{
                         content: userReq.services.toString().replaceAll(",", " - "),
                         placeholder: "Servicios del usuario",

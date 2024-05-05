@@ -7,7 +7,7 @@ const UserStatusIndicatorV2 = ({ user }: { user: UserInterface }) => {
     const getState = () => {
         if (user.deleted) {
             return (
-                <span className="icon-wrapper text | red-icon bold red">
+                <span className="icon-wrapper text | red-icon bold red margin-bottom-5">
                     <TriangleExclamation />
                     No puedes aprobar esta solicitud porque el usuario fue eliminado
                 </span>
@@ -15,7 +15,7 @@ const UserStatusIndicatorV2 = ({ user }: { user: UserInterface }) => {
         } else if (user.disable) {
             return (
                 <Link
-                    className="icon-wrapper text | yellow-icon bold yellow"
+                    className="icon-wrapper text | yellow-icon bold yellow margin-bottom-5"
                     href={`/admin/users/${user.id}`}
                 >
                     <TriangleExclamation />

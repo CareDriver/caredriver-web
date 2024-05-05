@@ -1,7 +1,6 @@
 "use client";
 import PageLoader from "@/components/PageLoader";
 import { AuthContext } from "@/context/AuthContext";
-import AddressCar from "@/icons/AddressCar";
 import CarSide from "@/icons/CarSide";
 import Motorcycle from "@/icons/Motorcycle";
 import Plus from "@/icons/Plus";
@@ -9,7 +8,6 @@ import SackDollar from "@/icons/SackDollar";
 import { ServiceReqState } from "@/interfaces/Services";
 import { ServiceVehicles, UserInterface } from "@/interfaces/UserInterface";
 import {
-    vehicleModeRender,
     vehicleModeRenderV2,
     VehicleTransmission,
 } from "@/interfaces/VehicleInterface";
@@ -190,6 +188,12 @@ const DrivePanel = () => {
                         {getFormatDate(
                             user.data.serviceVehicles.motorcycle.license.expiredDateLicense.toDate(),
                         )}
+                    </h3>
+                    <h3 className="text | gray gray-dark bold margin-top-5">
+                        Transmisión{" "}
+                        {getModes(user.data.serviceVehicles.motorcycle.type.mode)
+                            .toString()
+                            .replaceAll(",", " | ")}
                     </h3>
                     <div
                         className="row-wrapper | gap-20"
