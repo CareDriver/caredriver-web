@@ -37,6 +37,8 @@
 
     border-radius: 50%;
     object-fit: contain;
+
+    background-color: var(--gray-light);
 }
 
 .enterprise-req-item-aprove {
