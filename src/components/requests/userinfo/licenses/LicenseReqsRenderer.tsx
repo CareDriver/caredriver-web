@@ -11,9 +11,10 @@ import { useEffect, useState } from "react";
 import LicenseUpdateItemReq from "./LicenseUpdateItemReq";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "@/styles/components/personal-data-req.css";
+import MiddleMessage from "@/components/MiddleMessage";
 
 const LicenseReqsRenderer = () => {
-    const numPerPage = 10;
+    const numPerPage = 15;
     const [data, setData] = useState<LicenseUpdateReq[] | null>(null);
     const [page, setPage] = useState<number>(1);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
@@ -72,9 +73,7 @@ const LicenseReqsRenderer = () => {
                 </InfiniteScroll>
             </div>
         ) : (
-            <div className="empty-wrapper | auto-height">
-                <h2>No hay peticiones para actualizar licencias</h2>
-            </div>
+            <MiddleMessage message="No hay peticiones para actualizar licencias" />
         )
     ) : (
         <PageLoader />

@@ -12,6 +12,7 @@ import {
 import { Enterprise, EnterpriseTypeRender } from "@/interfaces/Enterprise";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "@/styles/components/enterprise-req.css";
+import MiddleMessage from "@/components/MiddleMessage";
 
 const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
     const numPerPage = 10;
@@ -74,12 +75,10 @@ const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
                 </InfiniteScroll>
             </div>
         ) : (
-            <div className="empty-wrapper | auto-height">
-                <h2>
-                    No hay peticiones para crear {type === "tow" ? "una" : "un"}{" "}
-                    {EnterpriseTypeRender[type]}
-                </h2>
-            </div>
+            <MiddleMessage
+                message={`No hay peticiones para crear ${type === "tow" ? "una" : "un"} 
+            ${EnterpriseTypeRender[type]}`}
+            />
         )
     ) : (
         <PageLoader />

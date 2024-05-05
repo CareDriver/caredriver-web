@@ -11,6 +11,7 @@ import {
 import UpPhotoItemReq from "./UpPhotoItemReq";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "@/styles/components/personal-data-req.css";
+import MiddleMessage from "@/components/MiddleMessage";
 
 const UpPhotoReqsRenderer = () => {
     const numPerPage = 10;
@@ -72,9 +73,7 @@ const UpPhotoReqsRenderer = () => {
                 </InfiniteScroll>
             </div>
         ) : (
-            <div className="empty-wrapper | auto-height">
-                <h2>No hay peticiones para actualizar fotos de perfil</h2>
-            </div>
+            <MiddleMessage message="No hay peticiones para actualizar fotos de perfil" />
         )
     ) : (
         <PageLoader />
