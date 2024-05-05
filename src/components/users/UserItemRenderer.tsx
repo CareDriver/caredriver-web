@@ -1,4 +1,4 @@
-import { UserInterface, UserRole } from "@/interfaces/UserInterface";
+import { UserInterface } from "@/interfaces/UserInterface";
 import { DEFAULT_PHOTO, getRole } from "@/utils/user/UserData";
 import Link from "next/link";
 
@@ -6,7 +6,7 @@ const UserItemRenderer = ({ req }: { req: UserInterface }) => {
     var role = getRole(req);
 
     return (
-        <Link href={`/admin/users/${req.id}`} className="users-item | touchable">
+        <Link href={`/admin/users/${req.id}`} className={`users-item | touchable ${req.disable && "users-disable"}`}>
             <img
                 src={req.photoUrl.url === "" ? DEFAULT_PHOTO : req.photoUrl.url}
                 alt=""
@@ -19,13 +19,17 @@ const UserItemRenderer = ({ req }: { req: UserInterface }) => {
                 <h4 className="text | light margin-bottom-50">
                     {req.services.toString().replaceAll(",", " | ")}
                 </h4>
-                <h4
-                    className={`users-item-role text | right bold ${
-                        role.isHigher && "green"
-                    }`}
-                >
-                    {role.value}
-                </h4>
+                <div className="row-wrapper">
+                    {req.disable && <h4 className="text | bold yellow">Desabilitado</h4>}
+
+                    <h4
+                        className={`users-item-role text | right bold ${
+                            role.isHigher && "green"
+                        }`}
+                    >
+                        {role.value}
+                    </h4>
+                </div>
             </div>
         </Link>
     );

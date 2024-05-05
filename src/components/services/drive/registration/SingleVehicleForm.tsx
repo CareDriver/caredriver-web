@@ -116,7 +116,7 @@ const SingleVehicleForm = ({
                     <fieldset className="form-section">
                         <input
                             type="text"
-                            placeholder="Numero"
+                            placeholder=""
                             value={vehicleTypeRender[vehicle.type.type]}
                             onChange={() => {}}
                             className="form-section-input"
@@ -183,7 +183,7 @@ const SingleVehicleForm = ({
                     <fieldset className="form-section">
                         <input
                             type="text"
-                            placeholder="Numero"
+                            placeholder=""
                             value={vehicle.license.number.value}
                             onChange={(e) => updateNumberLicense(e.target.value)}
                             className="form-section-input"

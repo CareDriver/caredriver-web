@@ -15,7 +15,35 @@
 
     border-right: 1px solid var(--gray-medium);
     background-color: var(--white);
+    transition: all ease-in-out 200ms;
 }
+/* Para Firefox */
+.sidebar-wrapper {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+.sidebar-wrapper:hover {
+    scrollbar-color: var(--main-light) #f5f5f5;
+}
+
+/* Para Chrome */
+.sidebar-wrapper::-webkit-scrollbar {
+    width: 2px;
+}
+
+.sidebar-wrapper::-webkit-scrollbar-thumb {
+    background-color: transparent;
+}
+
+.sidebar-wrapper:hover::-webkit-scrollbar-thumb {
+    background-color: var(--main-light);
+}
+
+.sidebar-wrapper::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+}
+
 
 .sidebar-logo {
     width: 100px;
@@ -37,6 +65,7 @@
     padding: 13px 20px;
 
     border: none;
+    transition: all ease-in 50ms;
 }
 
 .sidebar-option.lb-icon > svg {

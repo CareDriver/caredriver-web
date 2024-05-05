@@ -11,10 +11,10 @@ import DisableUser from "./options/DisableUser";
 import DeleteUser from "./options/DeleteUser";
 import ServiceReqsByUser from "./ServiceReqsByUser";
 import "@/styles/components/app-user.css";
-import { getRole } from "@/utils/user/UserData";
-import MoneyBillWave from "@/icons/MoneyBillWave";
+import { DEFAULT_PHOTO, getRole } from "@/utils/user/UserData";
 import DebtUser from "./options/DebtUser";
 import DebtHistory from "./DebtHistory";
+import "@/styles/components/debt-user.css";
 
 const UserRenderer = ({ userId }: { userId: string }) => {
     const [user, setUser] = useState<UserInterface | null>(null);
@@ -168,9 +168,13 @@ const UserRenderer = ({ userId }: { userId: string }) => {
     return user ? (
         <section className="render-data-wrapper">
             <div className="user-info-wrapper">
-                <img src={user.photoUrl.url} alt="" className="user-info-photo" />
+                <img
+                    src={user.photoUrl.url === "" ? DEFAULT_PHOTO : user.photoUrl.url}
+                    alt=""
+                    className="user-info-photo"
+                />
                 <div className="user-info-subwrapper">
-                    <h1 className="text | big bolder capitalize">{user.fullName}</h1>
+                    <h1 className="text | big bolder">{user.fullName}</h1>
                     <h3 className="text | gray-dark bold">{user.email}</h3>
                     <h3 className="text | gray-dark bold">{user.location}</h3>
                     <h3 className="text | gray-dark bold margin-bottom-15">
@@ -186,9 +190,8 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                 </div>
             </div>
             <DebtUser user={user} />
-            <DebtHistory user={user}/>
-            {getServicesServed()}
-            {getServicesRequested()}
+            <DebtHistory user={user} />
+
             <DisableUser
                 loading={formState.loading}
                 onAction={toggleDisableUser}

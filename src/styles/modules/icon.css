@@ -10,7 +10,7 @@
 }
 
 .icon-wrapper.bottom {
-    align-items: end;
+    align-items: baseline;
 }
 
 .icon-wrapper.column {

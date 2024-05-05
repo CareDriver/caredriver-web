@@ -17,4 +17,6 @@
     border-radius: 50%;
 
     object-fit: cover;
+    background-color: #fcfffe;
+    box-shadow: 0 0 40px var(--gray-light);
 }

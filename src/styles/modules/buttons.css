@@ -129,6 +129,10 @@
     transition: all ease-in-out 200ms;
 }
 
+.small-general-button:hover {
+    border-radius: 25px;
+}
+
 .small-general-button.gray {
     border: 2px solid var(--gray-medium);
     background-color: var(--white);

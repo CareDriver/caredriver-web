@@ -28,7 +28,7 @@ const SideBar = () => {
             <span className="text | medium bolder | margin-top-25 margin-bottom-15">
                 Servicios
             </span>
-            <li className="sidebar-options">
+            <li className="sidebar-options margin-bottom-25">
                 <Link
                     href={"/services/drive"}
                     className={`sidebar-option ${
@@ -58,8 +58,9 @@ const SideBar = () => {
                     <span>Grua</span>
                 </Link>
             </li>
-            <i className="separator-horizontal"></i>
-            <li className="sidebar-options">
+            <span className="text | medium bolder | margin-bottom-15">Registros</span>
+
+            <li className="sidebar-options | margin-bottom-25">
                 <Link
                     href={"/enterprise/workshops"}
                     className={`sidebar-option ${
@@ -79,7 +80,8 @@ const SideBar = () => {
                     <span>Empresas de Grua</span>
                 </Link>
             </li>
-            <i className="separator-horizontal"></i>
+            <span className="text | medium bolder | margin-bottom-15">Perfil</span>
+
             <li className="sidebar-options">
                 <Link
                     href={"/user/profile"}
