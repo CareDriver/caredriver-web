@@ -1,23 +1,29 @@
+import TriangleExclamation from "@/icons/TriangleExclamation";
 import { Enterprise } from "@/interfaces/Enterprise";
 import Link from "next/link";
 
 const EnterpriseItem = ({
-    type,
     enterprise,
+    route,
 }: {
-    type: string;
     enterprise: Enterprise;
+    route: string;
 }) => {
     return (
-        <Link
-            href={`/enterprise/${type === "tow" ? "cranes" : "workshops"}/edit/${
-                enterprise.id
-            }`}
-            className="enterprise-item"
-        >
+        <Link href={route} className="enterprise-item">
             <h3 className="enterprise-item-title">{enterprise.name}</h3>
             <h4 className="text | light small">{enterprise.phone}</h4>
-            <img className="enterprise-item-logo | margin-top-25" src={enterprise.logoImgUrl.url} alt="" />
+            <img
+                className="enterprise-item-logo | margin-top-25"
+                src={enterprise.logoImgUrl.url}
+                alt=""
+            />
+            {!enterprise.active && (
+                <h4 className="icon-wrapper text | yellow-icon bold yellow">
+                    <TriangleExclamation />
+                    Desabilitado
+                </h4>
+            )}
         </Link>
     );
 };

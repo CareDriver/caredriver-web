@@ -65,7 +65,9 @@ const EnterpriseListForUsers = ({ type }: { type: string }) => {
                     {data.map((product, i) => (
                         <EnterpriseItem
                             key={`enterprise-item-${i}`}
-                            type={type}
+                            route={`/enterprise/${
+                                type === "tow" ? "cranes" : "workshops"
+                            }/edit/${product.id}`}
                             enterprise={product}
                         />
                     ))}

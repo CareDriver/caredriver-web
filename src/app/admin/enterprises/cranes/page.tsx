@@ -1,5 +1,12 @@
+import EnterpriseListForAdmins from "@/components/enterprises/admin/EnterpriseListForAdmins";
+import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+
 const CraneListViewerPageForAdmin = () => {
-    return <div>crane list for admins</div>;
+    return (
+        <AdminWrapperWithSideBar>
+            <EnterpriseListForAdmins type="tow" />;
+        </AdminWrapperWithSideBar>
+    );
 };
 
 export default CraneListViewerPageForAdmin;
