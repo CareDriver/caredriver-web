@@ -1,9 +1,38 @@
-import { auth } from "@/firebase/FirebaseConfig";
+import { SignUpInterface } from "@/components/auth/AuthInterfaces";
+import { Services } from "@/interfaces/Services";
+import { defaultServiceReq, UserInterface, UserRole } from "@/interfaces/UserInterface";
+import { servicesData } from "@/interfaces/ServicesDataInterface";
+import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
 
-export const registerWithCredentials = (email: String, password: String) => {
-    
+export const createUserData = (
+    id: string,
+    role: UserRole,
+    credentials: SignUpInterface,
+): UserInterface => {
+    return {
+        id: id,
+        role: role,
+        fullName: credentials.fullName.value,
+        phoneNumber: credentials.phone.value,
+        photoUrl: emptyPhotoWithRef,
+
+        comments: [],
+        vehicles: [],
+        services: [Services.Normal],
+
+        servicesData: servicesData,
+        pickUpLocationsHistory: [],
+        deliveryLocationsHistory: [],
+
+        location: credentials.location,
+        email: credentials.email.value.toLowerCase(),
+
+        serviceRequests: defaultServiceReq,
+
+        disable: false,
+        deleted: false,
+    };
 };
-
 
 /* 
 

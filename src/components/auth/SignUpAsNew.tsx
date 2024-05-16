@@ -2,7 +2,6 @@
 
 import "react-international-phone/style.css";
 import { auth } from "@/firebase/FirebaseConfig";
-import { servicesData } from "@/interfaces/ServicesDataInterface";
 import { checkEmailExists, saveUser } from "@/utils/requests/UserRequester";
 import { InputValidator } from "@/utils/validator/InputValidator";
 import {
@@ -16,37 +15,15 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { locationList, Locations } from "@/interfaces/Locations";
-import PhoneForm from "../form/PhoneForm";
-import { defaultServiceReq, UserInterface, UserRole } from "@/interfaces/UserInterface";
-import { Services } from "@/interfaces/Services";
+import { UserInterface, UserRole } from "@/interfaces/UserInterface";
 import { generateVerificationCode } from "generate-verification-code";
-import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
-import ChevronDown from "@/icons/ChevronDown";
-
-interface FormData {
-    fullName: {
-        value: string;
-        errorMessage: null | string;
-    };
-    phone: {
-        value: string;
-        errorMessage: null | string;
-    };
-    email: {
-        value: string;
-        errorMessage: null | string;
-    };
-    password: {
-        value: string;
-        errorMessage: null | string;
-    };
-    code: {
-        sent: string;
-        toVerify: string;
-        errorMessage: null | string;
-    };
-    location: Locations;
-}
+import SignUpForm from "./SignUpForm";
+import { defaultSignUpValues, SignUpInterface } from "./AuthInterfaces";
+import {
+    isNotEmpty,
+    thereAreNotErrorsSignUp,
+} from "@/utils/validator/auth/SignUpValidator";
+import { createUserData } from "@/utils/auth/UserAuth";
 
 const SignUpAsNew = () => {
     const router = useRouter();
@@ -55,30 +32,7 @@ const SignUpAsNew = () => {
         isValid: true,
         isVerifyingCode: false,
     });
-    const [credentials, setCredentials] = useState<FormData>({
-        fullName: {
-            value: "",
-            errorMessage: null,
-        },
-        phone: {
-            value: "",
-            errorMessage: null,
-        },
-        email: {
-            value: "",
-            errorMessage: null,
-        },
-        password: {
-            value: "",
-            errorMessage: null,
-        },
-        code: {
-            sent: "",
-            toVerify: "",
-            errorMessage: null,
-        },
-        location: Locations.CochabambaBolivia,
-    });
+    const [credentials, setCredentials] = useState<SignUpInterface>(defaultSignUpValues);
 
     const signUp = async (e: FormEvent) => {
         e.preventDefault();
@@ -87,18 +41,8 @@ const SignUpAsNew = () => {
             loading: true,
         });
 
-        if (
-            credentials.email.value.trim().length > 0 &&
-            credentials.password.value.trim().length > 0 &&
-            credentials.phone.value.trim().length > 0 &&
-            credentials.fullName.value.trim().length > 0
-        ) {
-            if (
-                !credentials.fullName.errorMessage &&
-                !credentials.phone.errorMessage &&
-                !credentials.email.errorMessage &&
-                !credentials.password.errorMessage
-            ) {
+        if (isNotEmpty(credentials)) {
+            if (thereAreNotErrorsSignUp(credentials)) {
                 if (
                     credentials.code.sent.trim().length > 0 &&
                     credentials.code.sent === credentials.code.toVerify
@@ -109,29 +53,11 @@ const SignUpAsNew = () => {
                         credentials.password.value,
                     )
                         .then((res) => {
-                            const emptyUserData: UserInterface = {
-                                id: res.user.uid,
-                                role: UserRole.User,
-                                fullName: credentials.fullName.value,
-                                phoneNumber: credentials.phone.value,
-                                photoUrl: emptyPhotoWithRef,
-
-                                comments: [],
-                                vehicles: [],
-                                services: [Services.Normal],
-
-                                servicesData: servicesData,
-                                pickUpLocationsHistory: [],
-                                deliveryLocationsHistory: [],
-
-                                location: credentials.location,
-                                email: credentials.email.value.toLowerCase(),
-
-                                serviceRequests: defaultServiceReq,
-
-                                disable: false,
-                                deleted: false,
-                            };
+                            const emptyUserData: UserInterface = createUserData(
+                                res.user.uid,
+                                UserRole.User,
+                                credentials,
+                            );
 
                             saveUser(res.user.uid, emptyUserData)
                                 .then(() => {
@@ -254,11 +180,7 @@ const SignUpAsNew = () => {
     useEffect(() => {
         setFormState({
             ...formState,
-            isValid:
-                !credentials.fullName.errorMessage &&
-                !credentials.phone.errorMessage &&
-                !credentials.email.errorMessage &&
-                !credentials.password.errorMessage,
+            isValid: thereAreNotErrorsSignUp(credentials),
         });
     }, [credentials]);
 
@@ -269,18 +191,8 @@ const SignUpAsNew = () => {
             loading: true,
         });
 
-        if (
-            credentials.email.value.trim().length > 0 &&
-            credentials.password.value.trim().length > 0 &&
-            credentials.phone.value.trim().length > 0 &&
-            credentials.fullName.value.trim().length > 0
-        ) {
-            if (
-                !credentials.fullName.errorMessage &&
-                !credentials.phone.errorMessage &&
-                !credentials.email.errorMessage &&
-                !credentials.password.errorMessage
-            ) {
+        if (isNotEmpty(credentials)) {
+            if (thereAreNotErrorsSignUp(credentials)) {
                 try {
                     const amountOfUsers = await checkEmailExists(credentials.email.value);
                     if (amountOfUsers > 0) {
@@ -305,6 +217,16 @@ const SignUpAsNew = () => {
                                 length: 6,
                                 type: "string",
                             });
+                        // ----------------------------------------
+                        // ----------------------------------------
+                        // ---------- TO REMOVE -------------------
+                        // ----------------------------------------
+                        // ----------------------------------------
+                        console.log(codeToSent);
+                        // ----------------------------------------
+                        // ----------------------------------------
+                        // ----------------------------------------
+                        // ----------------------------------------
                         try {
                             await toast.promise(
                                 fetch("/api/sms", {
@@ -410,93 +332,44 @@ const SignUpAsNew = () => {
                     </button>
                 </form>
             ) : (
-                <form onSubmit={verifyCode} className="form-container">
-                    <fieldset className="form-section">
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder=""
-                            value={credentials.email.value}
-                            onChange={(e) => handleInputChange(e, isValidEmail)}
-                            className="form-section-input"
-                        />
-                        <legend className="form-section-legend">
-                            Correo electrónico
-                        </legend>
-                        {credentials.email.errorMessage && (
-                            <small>{credentials.email.errorMessage}</small>
-                        )}
-                    </fieldset>
-                    <fieldset className="form-section">
-                        <input
-                            type="text"
-                            name="password"
-                            placeholder=""
-                            value={credentials.password.value}
-                            onChange={(e) => handleInputChange(e, isValidPassword)}
-                            className="form-section-input"
-                        />
-                        <legend className="form-section-legend">Contraseña</legend>
-                        {credentials.password.errorMessage && (
-                            <small>{credentials.password.errorMessage}</small>
-                        )}
-                    </fieldset>
-                    <fieldset className="form-section">
-                        <input
-                            type="text"
-                            name="fullName"
-                            placeholder=""
-                            value={credentials.fullName.value}
-                            onChange={(e) => handleInputChange(e, isValidName)}
-                            className="form-section-input"
-                        />
-                        <legend className="form-section-legend">Nombre completo</legend>
-                        {credentials.fullName.errorMessage && (
-                            <small>{credentials.fullName.errorMessage}</small>
-                        )}
-                    </fieldset>
-                    <fieldset className="form-section">
-                        <PhoneForm
-                            phone={credentials.phone.value}
-                            validatePhone={validatePhone}
-                        />
-                        {credentials.phone.errorMessage && (
-                            <small>{credentials.phone.errorMessage}</small>
-                        )}
-                    </fieldset>
-                    <fieldset className="form-section | select-item">
-                        <ChevronDown />
-                        <select
-                            className="form-section-input"
-                            onChange={(e) => {
-                                setCredentials({
-                                    ...credentials,
-                                    location: getLocation(e.target.value),
-                                });
-                            }}
-                            value={credentials.location}
-                        >
-                            {locationList.map((location, i) => (
-                                <option key={`location-option-${i}`} value={location}>
-                                    {location}
-                                </option>
-                            ))}
-                        </select>
-                        <legend className="form-section-legend">Ubicacion</legend>
-                    </fieldset>
-
-                    <button
-                        className="general-button | touchable margin-top-25 touchable"
-                        data-theme="dark"
-                        disabled={!formState.isValid}
-                    >
-                        {formState.loading ? (
-                            <i className="loader"></i>
-                        ) : (
-                            <span>Verificar numero</span>
-                        )}
-                    </button>
-                </form>
+                <SignUpForm
+                    email={{
+                        value: credentials.email.value,
+                        message: credentials.email.errorMessage,
+                        onChange: (e) => handleInputChange(e, isValidEmail),
+                    }}
+                    password={{
+                        value: credentials.password.value,
+                        message: credentials.password.errorMessage,
+                        onChange: (e) => handleInputChange(e, isValidPassword),
+                    }}
+                    fullName={{
+                        value: credentials.fullName.value,
+                        message: credentials.fullName.errorMessage,
+                        onChange: (e) => handleInputChange(e, isValidName),
+                    }}
+                    phone={{
+                        value: credentials.phone.value,
+                        message: credentials.phone.errorMessage,
+                        onChange: validatePhone,
+                    }}
+                    location={{
+                        value: credentials.location,
+                        onChange: (e) =>
+                            setCredentials({
+                                ...credentials,
+                                location: getLocation(e.target.value),
+                            }),
+                    }}
+                    handleSummit={verifyCode}
+                    formState={{
+                        isValid: formState.isValid,
+                        loading: formState.loading,
+                    }}
+                    formInfo={{
+                        message: "Verificar numero",
+                    }}
+                />
             )}
         </div>
     );
