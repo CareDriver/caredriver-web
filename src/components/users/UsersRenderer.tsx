@@ -17,6 +17,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import "@/styles/modules/search.css";
 import "@/styles/components/users.css";
 import Search from "@/icons/Search";
+import Link from "next/link";
 
 const UsersRenderer = () => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -267,6 +268,14 @@ const UsersRenderer = () => {
                         <Search />
                     </button>
                 </form>
+                <div>
+                    <Link
+                        href="/admin/users/register/support"
+                        className="general-button | green"
+                    >
+                        Usuario Soporte
+                    </Link>
+                </div>
             </div>
             {dataState.data.length > 0 ? (
                 <InfiniteScroll

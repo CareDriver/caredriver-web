@@ -1,5 +1,12 @@
+import SupportUser from "@/components/auth/SupportUser";
+import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+
 const RegisterNewSupportUserPage = () => {
-    return <div>register support</div>;
+    return (
+        <AdminWrapperWithSideBar>
+            <SupportUser />
+        </AdminWrapperWithSideBar>
+    );
 };
 
 export default RegisterNewSupportUserPage;
