@@ -3,6 +3,10 @@ import { Services } from "@/interfaces/Services";
 import { defaultServiceReq, UserInterface, UserRole } from "@/interfaces/UserInterface";
 import { servicesData } from "@/interfaces/ServicesDataInterface";
 import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
+import { InputValidator } from "../validator/InputValidator";
+import { Dispatch, SetStateAction } from "react";
+import { locationList, Locations } from "@/interfaces/Locations";
+import { isPhoneValid } from "../validator/auth/CredentialsValidator";
 
 export const createUserData = (
     id: string,
@@ -34,24 +38,48 @@ export const createUserData = (
     };
 };
 
-/* 
+export const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    validationFunction: InputValidator,
+    credentials: SignUpInterface,
+    setCredentials: Dispatch<SetStateAction<SignUpInterface>>,
+) => {
+    const value = e.target.value;
+    const { isValid, message } = validationFunction(value);
 
-import { getAuth, signInWithEmailAndPassword, unlink } from "firebase/auth";
+    setCredentials({
+        ...credentials,
+        [e.target.name]: {
+            value: value,
+            errorMessage: isValid ? "" : message,
+        },
+    });
+};
 
-async function removeEmailAndPasswordAuth(email: string, password: string) {
-  const auth = getAuth();
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  const user = userCredential.user;
+export const validatePhone = (
+    phone: string,
+    credentials: SignUpInterface,
+    setCredentials: Dispatch<SetStateAction<SignUpInterface>>,
+) => {
+    const { isValid, message } = isPhoneValid(phone);
 
-  if (user) {
-    await unlink(user, 'password');
-    console.log('El método de autenticación por correo electrónico y contraseña se ha eliminado correctamente.');
-  } else {
-    console.log('No se pudo autenticar al usuario.');
-  }
-}
+    setCredentials({
+        ...credentials,
+        phone: {
+            ...credentials.phone,
+            value: phone,
+            errorMessage: isValid ? "" : message,
+        },
+    });
+};
 
-// Uso de la función
-removeEmailAndPasswordAuth('usuario@example.com', 'password123');
+export const getLocation = (input: string): Locations => {
+    var location = Locations.CochabambaBolivia;
+    locationList.forEach((value) => {
+        if (value === input) {
+            location = value;
+        }
+    });
 
-*/
+    return location;
+};

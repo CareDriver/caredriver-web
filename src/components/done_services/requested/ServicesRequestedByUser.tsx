@@ -257,7 +257,7 @@ const ServicesRequestedByUser = ({
                     dataLength={dataState.data.length}
                     next={handleNextClick}
                     hasMore={dataState.page !== dataState.pages}
-                    loader={<span className="loader-gray"></span>}
+                    loader={<span className="text | bolder | margin-top-25">Cargando mas datos...</span>}
                 >
                     {dataState.data.map((req, i) => (
                         <Link

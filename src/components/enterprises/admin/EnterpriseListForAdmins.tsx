@@ -13,6 +13,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Link from "next/link";
 import Plus from "@/icons/Plus";
 import "@/styles/components/enterprise.css";
+import DataLoaderIndicator from "@/components/DataLoaderIndicator";
 
 
 const EnterpriseListForAdmins = ({ type }: { type: string }) => {
@@ -73,7 +74,7 @@ const EnterpriseListForAdmins = ({ type }: { type: string }) => {
                     dataLength={data.length}
                     next={handleNextClick}
                     hasMore={page !== pages}
-                    loader={<span className="loader-gray"></span>}
+                    loader={<DataLoaderIndicator />}
                 >
                     <div className="enterprise-list">
                         {data.map((product, i) => (

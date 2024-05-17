@@ -14,6 +14,7 @@ import ServiceItemReq from "./ServiceItemReq";
 import InfiniteScroll from "react-infinite-scroll-component";
 import MiddleMessage from "@/components/MiddleMessage";
 import "@/styles/components/service-req.css";
+import DataLoaderIndicator from "@/components/DataLoaderIndicator";
 
 const ServiceReqsRenderer = ({ type }: { type: "driver" | "mechanic" | "tow" }) => {
     const numPerPage = 10;
@@ -63,11 +64,7 @@ const ServiceReqsRenderer = ({ type }: { type: "driver" | "mechanic" | "tow" }) 
                     dataLength={data.length}
                     next={handleNextClick}
                     hasMore={page !== pages}
-                    loader={
-                        <div className="empty-wrapper | auto-height padding-top-20">
-                            <span className="loader-gray-medium"></span>
-                        </div>
-                    }
+                    loader={<DataLoaderIndicator />}
                 >
                     <div className="service-req-wrapper">
                         {data.map((req, i) => (

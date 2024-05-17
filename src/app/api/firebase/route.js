@@ -48,36 +48,16 @@ export async function POST(request) {
         await initAdmin();
         const { email, password } = await request.json();
         const userId = nanoid(25);
-        const userRecord = await admin.auth().createUser({
+        await admin.auth().createUser({
             uid: userId,
             email,
             emailVerified: false,
             password: password,
         });
 
-        return NextResponse.json("support user created");
+        return NextResponse.json({ userId });
     } catch (e) {
         console.log(e);
         return NextResponse.json({ error: "error, intentalo de nuevo por favor" });
     }
 }
-
-// interface FirebaseAdminAppParams {
-//     projectId: string;
-
-// clientEmail: string;
-// storageBucket: string;
-// privateKey: string;
-// }
-
-// function formatPrivateKey(key: string) {
-//     return key.replace(/\\n/g, "\n");
-// }
-
-// export function createFirebaseAdminApp (params: FirebaseAdminAppParams) {
-//     const privateKey = formatPrivateKey(params.privateKey);
-//     if (admin.apps.length > 0) {
-//     }
-//     return admin.app();
-//     const cert = admin.credential.cert
-// }

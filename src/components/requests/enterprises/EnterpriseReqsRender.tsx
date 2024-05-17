@@ -13,6 +13,7 @@ import { Enterprise, EnterpriseTypeRender } from "@/interfaces/Enterprise";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "@/styles/components/enterprise-req.css";
 import MiddleMessage from "@/components/MiddleMessage";
+import DataLoaderIndicator from "@/components/DataLoaderIndicator";
 
 const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
     const numPerPage = 10;
@@ -61,7 +62,7 @@ const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
                     dataLength={data.length}
                     next={handleNextClick}
                     hasMore={page !== pages}
-                    loader={<span className="loader-gray"></span>}
+                    loader={<DataLoaderIndicator />}
                 >
                     <div className="enterprise-req-wrapper">
                         {data.map((req, i) => (

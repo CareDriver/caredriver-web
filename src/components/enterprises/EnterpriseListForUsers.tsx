@@ -11,6 +11,7 @@ import { AuthContext } from "@/context/AuthContext";
 import EnterpriseItem from "./EnterpriseItem";
 import "@/styles/components/pagination.css";
 import InfiniteScroll from "react-infinite-scroll-component";
+import DataLoaderIndicator from "../DataLoaderIndicator";
 
 const EnterpriseListForUsers = ({ type }: { type: string }) => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -59,7 +60,7 @@ const EnterpriseListForUsers = ({ type }: { type: string }) => {
                 dataLength={data.length}
                 next={handleNextClick}
                 hasMore={page !== pages}
-                loader={<span className="loader-gray"></span>}
+                loader={<DataLoaderIndicator />}
             >
                 <div className="enterprise-list">
                     {data.map((product, i) => (

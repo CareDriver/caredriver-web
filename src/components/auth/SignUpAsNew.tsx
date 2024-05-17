@@ -5,7 +5,6 @@ import { auth } from "@/firebase/FirebaseConfig";
 import { checkEmailExists, saveUser } from "@/utils/requests/UserRequester";
 import { InputValidator } from "@/utils/validator/InputValidator";
 import {
-    isPhoneValid,
     isValidEmail,
     isValidName,
     isValidPassword,
@@ -14,7 +13,6 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { locationList, Locations } from "@/interfaces/Locations";
 import { UserInterface, UserRole } from "@/interfaces/UserInterface";
 import { generateVerificationCode } from "generate-verification-code";
 import SignUpForm from "./SignUpForm";
@@ -23,7 +21,12 @@ import {
     isNotEmpty,
     thereAreNotErrorsSignUp,
 } from "@/utils/validator/auth/SignUpValidator";
-import { createUserData } from "@/utils/auth/UserAuth";
+import {
+    createUserData,
+    getLocation,
+    handleInputChange,
+    validatePhone,
+} from "@/utils/auth/UserAuth";
 
 const SignUpAsNew = () => {
     const router = useRouter();
@@ -137,46 +140,6 @@ const SignUpAsNew = () => {
         }
     };
 
-    const handleInputChange = (
-        e: React.ChangeEvent<HTMLInputElement>,
-        validationFunction: InputValidator,
-    ) => {
-        const value = e.target.value;
-        const { isValid, message } = validationFunction(value);
-
-        setCredentials({
-            ...credentials,
-            [e.target.name]: {
-                value: value,
-                errorMessage: isValid ? "" : message,
-            },
-        });
-    };
-
-    const validatePhone = (phone: string) => {
-        const { isValid, message } = isPhoneValid(phone);
-
-        setCredentials({
-            ...credentials,
-            phone: {
-                ...credentials.phone,
-                value: phone,
-                errorMessage: isValid ? "" : message,
-            },
-        });
-    };
-
-    const getLocation = (input: string): Locations => {
-        var location = Locations.CochabambaBolivia;
-        locationList.forEach((value) => {
-            if (value === input) {
-                location = value;
-            }
-        });
-
-        return location;
-    };
-
     useEffect(() => {
         setFormState({
             ...formState,
@@ -217,16 +180,6 @@ const SignUpAsNew = () => {
                                 length: 6,
                                 type: "string",
                             });
-                        // ----------------------------------------
-                        // ----------------------------------------
-                        // ---------- TO REMOVE -------------------
-                        // ----------------------------------------
-                        // ----------------------------------------
-                        console.log(codeToSent);
-                        // ----------------------------------------
-                        // ----------------------------------------
-                        // ----------------------------------------
-                        // ----------------------------------------
                         try {
                             await toast.promise(
                                 fetch("/api/sms", {
@@ -296,6 +249,13 @@ const SignUpAsNew = () => {
         }
     };
 
+    const getInputHandler = (
+        e: React.ChangeEvent<HTMLInputElement>,
+        validationFunction: InputValidator,
+    ) => {
+        return handleInputChange(e, validationFunction, credentials, setCredentials);
+    };
+
     return (
         <div className="form-container margin-top-50">
             {formState.isVerifyingCode ? (
@@ -336,22 +296,23 @@ const SignUpAsNew = () => {
                     email={{
                         value: credentials.email.value,
                         message: credentials.email.errorMessage,
-                        onChange: (e) => handleInputChange(e, isValidEmail),
+                        onChange: (e) => getInputHandler(e, isValidEmail),
                     }}
                     password={{
                         value: credentials.password.value,
                         message: credentials.password.errorMessage,
-                        onChange: (e) => handleInputChange(e, isValidPassword),
+                        onChange: (e) => getInputHandler(e, isValidPassword),
                     }}
                     fullName={{
                         value: credentials.fullName.value,
                         message: credentials.fullName.errorMessage,
-                        onChange: (e) => handleInputChange(e, isValidName),
+                        onChange: (e) => getInputHandler(e, isValidName),
                     }}
                     phone={{
                         value: credentials.phone.value,
                         message: credentials.phone.errorMessage,
-                        onChange: validatePhone,
+                        onChange: (str: string) =>
+                            validatePhone(str, credentials, setCredentials),
                     }}
                     location={{
                         value: credentials.location,
