@@ -22,7 +22,9 @@ const ReqButtonRes = ({
         var button = e.target as HTMLButtonElement;
         const icon = button.children[0];
         const text = button.innerHTML;
-        button.removeChild(icon);
+        if (icon) {
+            button.removeChild(icon);
+        }
         button.innerHTML = "";
         button.classList.add("loading-section");
         var loader = document.createElement("span");
@@ -35,7 +37,9 @@ const ReqButtonRes = ({
             await onApprove();
         }
         button.removeChild(loader);
-        button.appendChild(icon);
+        if (icon) {
+            button.appendChild(icon);
+        }
         button.innerHTML = text;
         button.classList.remove("loading-section");
     };
