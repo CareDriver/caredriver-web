@@ -7,7 +7,7 @@ import PersonalDataForm from "../../../form/PersonalDataForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
 import { defaultPhoto, PhotoField } from "../../FormModels";
-import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { AuthContext } from "@/context/AuthContext";
 import { VehicleTypeAndMode, Vehicle, driveReqBuilder } from "@/interfaces/UserRequest";
@@ -70,7 +70,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                 isImageBase64(personalData.photo.value)
             ) {
                 try {
-                    newProfilePhotoImgUrl = await uploadImageBase64(
+                    newProfilePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.TempProfilePhotos,
                         personalData.photo.value,
                     );
@@ -81,11 +81,11 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
 
             if (vehicle.license.frontPhoto.value && vehicle.license.behindPhoto.value) {
                 try {
-                    const frontImgUrl = await uploadImageBase64(
+                    const frontImgUrl = await uploadFileBase64(
                         DirectoryPath.Licenses,
                         vehicle.license.frontPhoto.value,
                     );
-                    const behindImgUrl = await uploadImageBase64(
+                    const behindImgUrl = await uploadFileBase64(
                         DirectoryPath.Licenses,
                         vehicle.license.behindPhoto.value,
                     );
@@ -109,7 +109,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
 
             if (userConfirmation.value) {
                 try {
-                    realTimePhotoImgUrl = await uploadImageBase64(
+                    realTimePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.Selfies,
                         userConfirmation.value,
                     );

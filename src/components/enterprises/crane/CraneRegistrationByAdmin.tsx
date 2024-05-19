@@ -18,7 +18,7 @@ import { sendEnterpriseReq } from "@/utils/requests/enterprise/EnterpriseRequest
 import { Enterprise } from "@/interfaces/Enterprise";
 import { nanoid } from "nanoid";
 import { GeoPoint } from "firebase/firestore";
-import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { toast } from "react-toastify";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
@@ -81,7 +81,7 @@ const CraneRegistrationByAdmin = () => {
                 if (isValidForm(formData)) {
                     try {
                         const imgWithRef = await toast.promise(
-                            uploadImageBase64(
+                            uploadFileBase64(
                                 DirectoryPath.Enterprises,
                                 formData.logo.value,
                             ),

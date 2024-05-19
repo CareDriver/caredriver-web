@@ -23,7 +23,7 @@ import { toast } from "react-toastify";
 import { sendLicenseUpdateReq } from "@/utils/requests/LicenseUpdaterReq";
 import { emptyPhotoWithRef, ImgWithRef } from "@/interfaces/ImageInterface";
 import { DirectoryPath } from "@/firebase/StoragePaths";
-import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { nanoid } from "nanoid";
 import { Timestamp } from "firebase/firestore";
 
@@ -76,11 +76,11 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
         if (user.data && license) {
             if (license.frontPhoto.value && license.behindPhoto.value) {
                 try {
-                    frontImgUrl = await uploadImageBase64(
+                    frontImgUrl = await uploadFileBase64(
                         DirectoryPath.Licenses,
                         license.frontPhoto.value,
                     );
-                    behindImgUrl = await uploadImageBase64(
+                    behindImgUrl = await uploadFileBase64(
                         DirectoryPath.Licenses,
                         license.behindPhoto.value,
                     );
@@ -91,7 +91,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
 
             if (userConfirmation.value) {
                 try {
-                    realTimePhotoImgUrl = await uploadImageBase64(
+                    realTimePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.Selfies,
                         userConfirmation.value,
                     );

@@ -6,7 +6,7 @@ import PersonalDataForm from "../../../form/PersonalDataForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
 import { defaultPhoto, PhotoField } from "../../FormModels";
-import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import {
     isValidForm,
@@ -66,7 +66,7 @@ const MechanicRegistration = () => {
                 isImageBase64(personalData.photo.value)
             ) {
                 try {
-                    newProfilePhotoImgUrl = await uploadImageBase64(
+                    newProfilePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.TempProfilePhotos,
                         personalData.photo.value,
                     );
@@ -77,7 +77,7 @@ const MechanicRegistration = () => {
 
             if (userConfirmation.value) {
                 try {
-                    realTimePhotoImgUrl = await uploadImageBase64(
+                    realTimePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.Selfies,
                         userConfirmation.value,
                     );

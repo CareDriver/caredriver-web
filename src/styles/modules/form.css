@@ -245,3 +245,9 @@
     object-fit: cover;
     border-radius: 50%;
 }
+
+.form-section-uploaded-file-pdf {
+    width: 100%;
+    min-height: 40vh;
+    border-radius: 15px;
+}

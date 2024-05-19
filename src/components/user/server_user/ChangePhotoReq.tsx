@@ -8,7 +8,7 @@ import PageLoader from "../../PageLoader";
 import { useRouter } from "next/navigation";
 import { saveChangePhotoReq } from "@/utils/requests/ChangePhotoRequester";
 import { nanoid } from "nanoid";
-import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { toast } from "react-toastify";
 
@@ -33,7 +33,7 @@ const ChangePhotoReq = () => {
                     try {
                         var id = nanoid(30);
                         const imgWithRef = await toast.promise(
-                            uploadImageBase64(
+                            uploadFileBase64(
                                 DirectoryPath.Users,
                                 newPhoto.value,
                             ),

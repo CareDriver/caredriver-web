@@ -46,6 +46,7 @@ export interface UserRequest {
     services: Services[];
     location?: Locations; // just if user does not have a location registered yet.
     vehicles?: Vehicle[]; // vehicles that are in the request
+    policeRecordsPdf?: ImgWithRef;
 }
 
 export const emptyVehicleCar: Vehicle = {
@@ -84,6 +85,7 @@ export const driveReqBuilder = (
     realTimePhotoImgUrl: ImgWithRef,
     services: Services[],
     location: Locations,
+    policeRecordsPdf: ImgWithRef,
 ): UserRequest => {
     return {
         id,
@@ -97,6 +99,7 @@ export const driveReqBuilder = (
         services: services,
         location,
         vehicles,
+        policeRecordsPdf,
     };
 };
 

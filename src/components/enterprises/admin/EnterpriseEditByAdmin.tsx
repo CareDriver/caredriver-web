@@ -16,7 +16,7 @@ import {
 } from "@/utils/requests/enterprise/EnterpriseRequester";
 import { Enterprise, EnterpriseType } from "@/interfaces/Enterprise";
 import { GeoPoint } from "firebase/firestore";
-import { deleteFile, uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { deleteFile, uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { toast } from "react-toastify";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
@@ -100,7 +100,7 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                 };
                 if (isImageBase64(formData.logo.value)) {
                     const imgWithRef = await toast.promise(
-                        uploadImageBase64(DirectoryPath.Enterprises, formData.logo.value),
+                        uploadFileBase64(DirectoryPath.Enterprises, formData.logo.value),
                         {
                             pending: "Cambiando el logo, por favor espera",
                             success: "Logo cambiado",
