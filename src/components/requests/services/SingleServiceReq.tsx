@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import DriveServiceReq from "./drive/DriveServiceReq";
 import MechanicServiceReq from "./mechanic/MechanicServiceReq";
 import TowServiceReq from "./tow/TowServiceReq";
+import "@/styles/modules/form.css"
 
 const SingleServiceReq = ({
     reqId,

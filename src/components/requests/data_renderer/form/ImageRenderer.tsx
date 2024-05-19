@@ -1,10 +1,7 @@
 "use client";
-import TriangleExclamation from "@/icons/TriangleExclamation";
 import { ImgWithRef } from "@/interfaces/ImageInterface";
 import { getUrl } from "@/utils/validator/ImageValidator";
-import { useEffect, useState } from "react";
 import FieldDeleted from "./FieldDeleted";
-import Trash from "@/icons/Trash";
 const ImageRenderer = ({
     url,
     placeholder,

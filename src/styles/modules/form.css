@@ -251,3 +251,7 @@
     min-height: 40vh;
     border-radius: 15px;
 }
+
+.form-section-uploaded-file-pdf.renderer-pdf {
+    min-height: 60vh;
+}

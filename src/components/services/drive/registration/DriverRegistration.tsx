@@ -152,8 +152,8 @@ const DriverRegistration = () => {
     const uploadForm = async (
         vehiclesData: Vehicle[],
         newProfilePhotoImgUrl: string | ImgWithRef,
-        pdfRef: ImgWithRef,
         realTimePhotoImgUrl: ImgWithRef,
+        pdfRef: ImgWithRef,
     ) => {
         if (user.data) {
             var formId = nanoid(30);

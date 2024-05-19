@@ -27,6 +27,7 @@ import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import FieldDeleted from "../../data_renderer/form/FieldDeleted";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
+import PoliceRecords from "../../data_renderer/vehicle/PoliceRecords";
 
 const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -272,6 +273,8 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     {serviceReq.vehicles && (
                         <VehiclesRenderer vehicles={serviceReq.vehicles} />
                     )}
+
+                    <PoliceRecords pdf={serviceReq.policeRecordsPdf} />
 
                     {userData && <UserStatusIndicatorV2 user={userData} />}
 
