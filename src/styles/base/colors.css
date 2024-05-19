@@ -17,6 +17,7 @@
     --gray-lighter: #fafafa;
 
     --white: #fff;
+    --white-opacity: rgba(255, 255, 255, 0.512);
     --yellow: #FFCC00;
     --red: #F52D56;
 }

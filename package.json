@@ -28,6 +28,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-international-phone": "^4.2.6",
     "react-toastify": "^10.0.5",
+    "react-webcam": "^7.2.0",
     "twilio": "^5.0.4",
     "uniqid": "^5.4.0",
     "uuid-v4": "^0.1.0",
