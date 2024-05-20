@@ -181,25 +181,30 @@ const SignUpAsNew = () => {
                                 type: "string",
                             });
                         try {
-                            await toast.promise(
-                                fetch("/api/sms", {
-                                    method: "POST",
-                                    body: JSON.stringify({
-                                        code: codeToSent,
-                                        toPhone: credentials.phone.value,
-                                    }),
-                                    headers: {
-                                        Accept: "application/json",
-                                        "Content-Type": "application/json",
-                                    },
-                                }),
-                                {
-                                    pending:
-                                        "Enviando codigo de verificacion a tu celular",
-                                    success: "Codigo enviado",
-                                    error: "Error al enviar el codigo, intentalo de nuevo por favor",
+                            const url = "https://gate.whapi.cloud/messages/text";
+                            const options = {
+                                method: "POST",
+                                headers: {
+                                    accept: "application/json",
+                                    "content-type": "application/json",
+                                    authorization:
+                                        "Bearer yRU7YFfWWJeDot5OE1Arx7ElJ0oVwcjD",
                                 },
-                            );
+                                body: JSON.stringify({
+                                    typing_time: 0,
+                                    to: credentials.phone.value.replace("+", ""),
+                                    body: JSON.stringify(
+                                        `Tu codigo de verificacion es ${codeToSent}`,
+                                    ),
+                                }),
+                            };
+
+                            const res = await toast.promise(fetch(url, options), {
+                                pending: "Enviando codigo de verificacion a tu celular",
+                                success: "Codigo enviado",
+                                error: "Error al enviar el codigo, intentalo de nuevo por favor",
+                            });
+
                             setCredentials({
                                 ...credentials,
                                 code: {
