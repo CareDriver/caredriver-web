@@ -3,6 +3,7 @@ import Trash from "@/icons/Trash";
 import Upload from "@/icons/Upload";
 import React, { useState } from "react";
 import { PhotoField } from "@/components/services/FormModels";
+import FileImage from "@/icons/FileImage";
 
 interface ImageUploaderProps {
     uploader: UploaderProps;
@@ -153,9 +154,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
                             draggingOver && "uploading"
                         }`}
                     >
-                        <Upload />
+                        <FileImage />
                         <span className="text | normal gray-dark | margin-top-15">
-                            Subir Foto
+                            Subir Imagen
                         </span>
                         <p className="text | medium-big bold gray-dark">
                             {content.indicator}

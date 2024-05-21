@@ -3,10 +3,12 @@
 import ImageUploader from "@/components/form/ImageUploader";
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import UserIcon from "@/icons/UserIcon";
-import { PersonalDataFormField, PhotoField } from "../services/FormModels";
+import { IdCardForm, PersonalDataFormField, PhotoField } from "../services/FormModels";
 import { isValidName } from "@/utils/validator/auth/CredentialsValidator";
 import { AuthContext } from "@/context/AuthContext";
-import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
+import IdentityCardForm from "../services/IdentityCardForm";
+import { IdentityCard } from "@/interfaces/UserInterface";
+
 const PersonalDataForm = ({
     personalData,
     setPersonalData,
@@ -33,6 +35,9 @@ const PersonalDataForm = ({
     useEffect(() => {
         if (!loadingUser) {
             if (user.data) {
+                var hasIdCard: boolean =
+                    user.data.identityCard !== null &&
+                    user.data.identityCard !== undefined;
                 setPersonalData({
                     fullname: {
                         value: user.data.fullName,
@@ -43,6 +48,30 @@ const PersonalDataForm = ({
                         message: user.hasPhoto
                             ? null
                             : "No tienes foto de perfil, por favor sube una foto de perfil",
+                    },
+                    idCard: {
+                        frontCard: {
+                            value: user.data.identityCard
+                                ? user.data.identityCard.frontCard.url
+                                : null,
+                            message: hasIdCard
+                                ? null
+                                : "No tienes foto frontal de tu carnet de identidad",
+                        },
+                        backCard: {
+                            value: user.data.identityCard
+                                ? user.data.identityCard.backCard.url
+                                : null,
+                            message: hasIdCard
+                                ? null
+                                : "No tienes foto de atras de tu carnet de identidad",
+                        },
+                        location: {
+                            value: user.data.identityCard
+                                ? user.data.identityCard.location
+                                : "",
+                            message: hasIdCard ? null : "No tienes localizacion",
+                        },
                     },
                 });
                 setLoading(false);
@@ -56,6 +85,20 @@ const PersonalDataForm = ({
                         value: null,
                         message: "Sube una foto de perfil",
                     },
+                    idCard: {
+                        frontCard: {
+                            value: null,
+                            message: "No tienes foto frontal de tu carnet de identidad",
+                        },
+                        backCard: {
+                            value: null,
+                            message: "No tienes foto de atras de tu carnet de identidad",
+                        },
+                        location: {
+                            value: "",
+                            message: "No tienes localizacion",
+                        },
+                    },
                 });
                 setLoading(false);
             }
@@ -63,51 +106,60 @@ const PersonalDataForm = ({
     }, [loadingUser]);
 
     return (
-        <div className="form-sub-container | margin-top-25 max-width-60">
-            <h2 className="text icon-wrapper | medium-big bold">
-                <UserIcon />
-                Datos Personales
-            </h2>
+        <>
+            <div className="form-sub-container | margin-top-25 max-width-60">
+                <h2 className="text icon-wrapper | medium-big bold">
+                    <UserIcon />
+                    Datos Personales
+                </h2>
 
-            {loading && (
-                <span className="row-wrapper">
-                    <span className="loader | loader-gray small-loader"></span>
-                    <span className="text | bold gray-dark">Cargando Datos</span>
-                </span>
-            )}
-            <div
-                className="form-sub-container"
-                data-state={loading ? "loading" : "loaded"}
-            >
-                <fieldset className="form-section">
-                    <input
-                        type="text"
-                        placeholder=""
-                        className="form-section-input"
-                        value={personalData.fullname.value}
-                        name="fullname"
-                        onChange={(e) => handleInputChange(e)}
+                {loading && (
+                    <span className="row-wrapper">
+                        <span className="loader | loader-gray small-loader"></span>
+                        <span className="text | bold gray-dark">Cargando Datos</span>
+                    </span>
+                )}
+                <div
+                    className="form-sub-container"
+                    data-state={loading ? "loading" : "loaded"}
+                >
+                    <fieldset className="form-section">
+                        <input
+                            type="text"
+                            placeholder=""
+                            className="form-section-input"
+                            value={personalData.fullname.value}
+                            name="fullname"
+                            onChange={(e) => handleInputChange(e)}
+                        />
+                        <legend className="form-section-legend">Nombre completo</legend>
+                        {personalData.fullname.message && (
+                            <small>{personalData.fullname.message}</small>
+                        )}
+                    </fieldset>
+                    <ImageUploader
+                        uploader={{
+                            image: personalData.photo,
+                            setImage: (image: PhotoField) => {
+                                setPersonalData({ ...personalData, photo: image });
+                            },
+                        }}
+                        content={{
+                            id: "personal-data-photo-uploader",
+                            indicator: "Foto de Perfil",
+                            isCircle: true,
+                        }}
                     />
-                    <legend className="form-section-legend">Nombre completo</legend>
-                    {personalData.fullname.message && (
-                        <small>{personalData.fullname.message}</small>
-                    )}
-                </fieldset>
-                <ImageUploader
-                    uploader={{
-                        image: personalData.photo,
-                        setImage: (image: PhotoField) => {
-                            setPersonalData({ ...personalData, photo: image });
-                        },
-                    }}
-                    content={{
-                        id: "personal-data-photo-uploader",
-                        indicator: "Foto de Perfil",
-                        isCircle: true,
-                    }}
-                />
+                </div>
             </div>
-        </div>
+            <IdentityCardForm
+                idCardForm={personalData.idCard}
+                setIdCardForm={(idCardForm: IdCardForm) => setPersonalData({
+                    ...personalData,
+                    idCard: idCardForm
+                })}
+            />
+        </>
     );
 };
 

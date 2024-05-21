@@ -1,11 +1,11 @@
-import { GeoPoint } from "firebase/firestore";
+import { GeoPoint, Timestamp } from "firebase/firestore";
 import { VehicleInterface } from "./VehicleInterface";
 import { ServiceReqState, Services } from "./Services";
 import { ServicesData } from "./ServicesDataInterface";
 import { Payment, Price } from "./Payment";
 import { Locations } from "./Locations";
 import { ServiceStateRequest, Vehicle } from "./UserRequest";
-import { ImgWithRef } from "./ImageInterface";
+import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
 
 export interface HistoryLocationInterface {
     locationName: string;
@@ -53,8 +53,24 @@ export interface UserInterface {
     towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
 
     serviceVehicles?: ServiceVehicles; // vehicles that the user registered
-    serviceRequests?: ServiceRequestsInterface // status of the services that the user made a request
+    serviceRequests?: ServiceRequestsInterface; // status of the services that the user made a request
+
+    identityCard?: IdentityCard;
 }
+
+export interface IdentityCard {
+    frontCard: ImgWithRef;
+    backCard: ImgWithRef;
+    location: string;
+    updatedDate: Timestamp;
+}
+
+export const emptyIdCard: IdentityCard = {
+    frontCard: emptyPhotoWithRef,
+    backCard: emptyPhotoWithRef,
+    location: "",
+    updatedDate: Timestamp.fromDate(new Date()),
+};
 
 export interface ServiceRequestsInterface {
     driveCar?: ServiceStateRequest;

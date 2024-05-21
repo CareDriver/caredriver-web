@@ -42,6 +42,20 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
             value: null,
             message: null,
         },
+        idCard: {
+            frontCard: {
+                value: null,
+                message: null,
+            },
+            backCard: {
+                value: null,
+                message: null,
+            },
+            location: {
+                value: "",
+                message: null,
+            },
+        },
     });
     const vehicleTypeAndMode: VehicleTypeAndMode = {
         type: type === "car" ? VehicleType.CAR : VehicleType.MOTORCYCLE,

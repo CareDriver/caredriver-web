@@ -29,6 +29,7 @@ import ServiceHeader from "../../ServiceHeader";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
 import { PDFField } from "@/components/form/PDFUploader";
 import AntecedentsPdf from "@/components/form/AntecedentsPdf";
+import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 
 const DriverRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -40,6 +41,20 @@ const DriverRegistration = () => {
         photo: {
             value: null,
             message: null,
+        },
+        idCard: {
+            frontCard: {
+                value: null,
+                message: null,
+            },
+            backCard: {
+                value: null,
+                message: null,
+            },
+            location: {
+                value: "",
+                message: null,
+            },
         },
     });
     const [vehicles, setVehicles] = useState<VehicleForm[]>([
@@ -235,6 +250,7 @@ const DriverRegistration = () => {
             userConfirmation,
             acceptedTerms,
             pdf,
+            personalData.idCard,
         );
         if (isValid) {
             isValid = isValidForm(
@@ -243,9 +259,11 @@ const DriverRegistration = () => {
                 userConfirmation,
                 acceptedTerms,
                 pdf,
+                personalData.idCard,
             );
             if (isValid && user.data) {
                 try {
+                    await updateIdCard(personalData.idCard, user.data);
                     const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
                         await toast.promise(uploadImages(), {
                             pending: "Subiendo imagenes, por favor espera",
@@ -316,6 +334,7 @@ const DriverRegistration = () => {
                     userConfirmation,
                     acceptedTerms,
                     pdf,
+                    personalData.idCard,
                 ),
             }),
         [personalData, vehicles, userConfirmation, acceptedTerms],

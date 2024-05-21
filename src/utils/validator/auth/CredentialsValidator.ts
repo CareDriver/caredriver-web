@@ -2,7 +2,7 @@ import { PhoneNumberUtil } from "google-libphonenumber";
 import { InputState } from "../InputValidator";
 
 export const isValidName = (name: string): InputState => {
-    const nameRegex: RegExp = /^[a-zA-Z\s]+$/;
+    const nameRegex: RegExp = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
 
     if (name.trim() === "") {
         return {

@@ -22,6 +22,7 @@ export interface PersonalDataFormField {
         message: string | null;
     };
     photo: PhotoField;
+    idCard: IdCardForm;
 }
 
 export interface LicenseForm {
@@ -62,4 +63,13 @@ export const defaultLicense: LicenseForm = {
 export interface EnterpriseField {
     value: string | null;
     message: string | null;
+}
+
+export interface IdCardForm {
+    frontCard: PhotoField;
+    backCard: PhotoField;
+    location: {
+        value: string;
+        message: string | null;
+    };
 }
