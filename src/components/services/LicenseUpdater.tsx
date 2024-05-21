@@ -26,6 +26,7 @@ import { DirectoryPath } from "@/firebase/StoragePaths";
 import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { nanoid } from "nanoid";
 import { Timestamp } from "firebase/firestore";
+import { isImageBase64 } from "@/utils/validator/ImageValidator";
 
 const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
     const router = useRouter();
@@ -69,43 +70,54 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
     };
 
     const uploadImages = async () => {
-        var frontImgUrl: ImgWithRef = emptyPhotoWithRef;
-        var behindImgUrl: ImgWithRef = emptyPhotoWithRef;
-        var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
+        if (user.data && user.data.serviceVehicles) {
+            var vehicle = user.data.serviceVehicles[type];
+            var frontImgUrl: ImgWithRef = vehicle?.license.frontImgUrl
+                ? vehicle?.license.frontImgUrl
+                : emptyPhotoWithRef;
+            var behindImgUrl: ImgWithRef = vehicle?.license.backImgUrl
+                ? vehicle?.license.backImgUrl
+                : emptyPhotoWithRef;
+            var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
 
-        if (user.data && license) {
-            if (license.frontPhoto.value && license.behindPhoto.value) {
-                try {
-                    frontImgUrl = await uploadFileBase64(
-                        DirectoryPath.Licenses,
-                        license.frontPhoto.value,
-                    );
-                    behindImgUrl = await uploadFileBase64(
-                        DirectoryPath.Licenses,
-                        license.behindPhoto.value,
-                    );
-                } catch (e) {
-                    throw e;
+            if (user.data && license) {
+                if (license.frontPhoto.value && license.behindPhoto.value) {
+                    try {
+                        if (isImageBase64(license.frontPhoto.value)) {
+                            frontImgUrl = await uploadFileBase64(
+                                DirectoryPath.Licenses,
+                                license.frontPhoto.value,
+                            );
+                        }
+                        if (isImageBase64(license.behindPhoto.value)) {
+                            behindImgUrl = await uploadFileBase64(
+                                DirectoryPath.Licenses,
+                                license.behindPhoto.value,
+                            );
+                        }
+                    } catch (e) {
+                        throw e;
+                    }
+                }
+
+                if (userConfirmation.value) {
+                    try {
+                        realTimePhotoImgUrl = await uploadFileBase64(
+                            DirectoryPath.Selfies,
+                            userConfirmation.value,
+                        );
+                    } catch (e) {
+                        throw e;
+                    }
                 }
             }
 
-            if (userConfirmation.value) {
-                try {
-                    realTimePhotoImgUrl = await uploadFileBase64(
-                        DirectoryPath.Selfies,
-                        userConfirmation.value,
-                    );
-                } catch (e) {
-                    throw e;
-                }
-            }
+            return {
+                frontImgUrl,
+                behindImgUrl,
+                realTimePhotoImgUrl,
+            };
         }
-
-        return {
-            frontImgUrl,
-            behindImgUrl,
-            realTimePhotoImgUrl,
-        };
     };
 
     const uploadForm = async (
@@ -154,47 +166,48 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                 license.behindPhoto.value
             ) {
                 try {
-                    const { frontImgUrl, behindImgUrl, realTimePhotoImgUrl } =
-                        await toast.promise(uploadImages(), {
-                            pending: "Subiendo imagenes, por favor espera",
-                            success: "Imagenes subidas",
-                            error: "Error al subir imagenes, intentalo de nuevo por favor",
-                        });
-                    await toast.promise(
-                        uploadForm(
-                            {
-                                licenseNumber: license.number.value,
-                                expiredDateLicense: Timestamp.fromDate(
-                                    license.expirationDate.value,
-                                ),
-                                frontImgUrl: frontImgUrl,
-                                backImgUrl: behindImgUrl,
-                            },
-                            realTimePhotoImgUrl,
-                        ),
-                        {
-                            pending: "Enviando el formulario, por favor espera",
-                            success: "Formulario enviado",
-                            error: "Error al enviar el formulario, intentalo de nuevo por favor",
-                        },
-                    );
-                    toast.info(
-                        "Tu solicitud sera revisada por uno de nuestros administradores",
-                        {
-                            toastId: "toast-info-sent-form-succesful",
-                        },
-                    );
-                    router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
-                    setFormState({
-                        loading: false,
-                        isValid: true,
+                    const res = await toast.promise(uploadImages(), {
+                        pending: "Subiendo imagenes, por favor espera",
+                        success: "Imagenes subidas",
+                        error: "Error al subir imagenes, intentalo de nuevo por favor",
                     });
+                    if (res) {
+                        const { frontImgUrl, behindImgUrl, realTimePhotoImgUrl } = res;
+                        await toast.promise(
+                            uploadForm(
+                                {
+                                    licenseNumber: license.number.value,
+                                    expiredDateLicense: Timestamp.fromDate(
+                                        license.expirationDate.value,
+                                    ),
+                                    frontImgUrl: frontImgUrl,
+                                    backImgUrl: behindImgUrl,
+                                },
+                                realTimePhotoImgUrl,
+                            ),
+                            {
+                                pending: "Enviando el formulario, por favor espera",
+                                success: "Formulario enviado",
+                                error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                            },
+                        );
+                        toast.info(
+                            "Tu solicitud sera revisada por uno de nuestros administradores",
+                            {
+                                toastId: "toast-info-sent-form-succesful",
+                            },
+                        );
+                        router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
+                        setFormState({
+                            loading: false,
+                            isValid: true,
+                        });
+                    }
                 } catch (e) {
                     setFormState({
                         loading: false,
                         isValid: false,
                     });
-                    window.location.reload();
                 }
             } else {
                 setFormState({
@@ -217,47 +230,57 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
     };
 
     useEffect(() => {
-        if (!loadingUser && user && user.data && user.data.serviceVehicles) {
-            switch (type) {
-                case "car":
-                case "motorcycle":
-                case "tow":
-                    var vehicle = user.data.serviceVehicles[type];
-                    if (vehicle) {
-                        var license: LicenseInterface = vehicle.license;
-                        setLicense({
-                            number: {
-                                value: license.licenseNumber,
-                                message: null,
-                            },
-                            expirationDate: {
-                                value: null,
-                                message: null,
-                            },
-                            frontPhoto: {
-                                value: null,
-                                message: null,
-                            },
-                            behindPhoto: {
-                                value: null,
-                                message: null,
-                            },
+        if (!loadingUser) {
+            if (user && user.data && user.data.serviceVehicles) {
+                switch (type) {
+                    case "car":
+                    case "motorcycle":
+                    case "tow":
+                        var vehicle = user.data.serviceVehicles[type];
+                        if (vehicle) {
+                            var license: LicenseInterface = vehicle.license;
+                            setLicense({
+                                number: {
+                                    value: license.licenseNumber,
+                                    message: null,
+                                },
+                                expirationDate: {
+                                    value: null,
+                                    message: null,
+                                },
+                                frontPhoto: {
+                                    value: license.frontImgUrl
+                                        ? license.frontImgUrl.url
+                                        : null,
+                                    message: license.frontImgUrl
+                                        ? null
+                                        : "No tienes foto frontal de tu carnet de identidad",
+                                },
+                                behindPhoto: {
+                                    value: license.backImgUrl
+                                        ? license.backImgUrl.url
+                                        : null,
+                                    message: license.backImgUrl
+                                        ? null
+                                        : "No tienes foto por atras de tu carnet de identidad",
+                                },
+                            });
+                        }
+                        break;
+                    default:
+                        // Si type no coincide con ninguna de las opciones conocidas
+                        router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
+                        toast.error("Licencia no encontrada", {
+                            toastId: "licence-no-found-error",
                         });
-                    }
-                    break;
-                default:
-                    // Si type no coincide con ninguna de las opciones conocidas
-                    router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
-                    toast.error("Licencia no encontrada", {
-                        toastId: "licence-no-found-error",
-                    });
-                    break;
+                        break;
+                }
+            } else {
+                router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
+                toast.error("Licencia no encontrada", {
+                    toastId: "licence-no-found-error",
+                });
             }
-        } else {
-            router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
-            toast.error("Licencia no encontrada", {
-                toastId: "licence-no-found-error",
-            });
         }
     }, [loadingUser]);
 
@@ -274,7 +297,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
         <div className="service-form-wrapper">
             <div className="max-width-60">
                 <h1 className="text | big bolder">Actualiza tu licencia de conducir</h1>
-                <p className="text | bold">
+                <p className="text | light">
                     Necesitamos verificar que tu licencia sigue siendo valida para que
                     continues trabajando con nosotros. Las fotos de tu licencia de
                     conducir se eliminaran cuando se acepte o rechaze tu solicitud.

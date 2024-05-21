@@ -191,7 +191,7 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 name={serviceReq.newFullName}
                 photo={serviceReq.newProfilePhotoImgUrl}
             />
-            
+
             {userData ? (
                 <IdCardRenderer idCard={userData.identityCard} />
             ) : (
@@ -215,8 +215,6 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
                     {enterprise === null ? (
                         <span className="loader-green"></span>
-                    ) : enterprise === undefined ? (
-                        <FieldDeleted description="No se selecciono el taller mecanico (El campo era opcional)" />
                     ) : (
                         <WorkshopRenderer workshop={enterprise} />
                     )}
@@ -234,11 +232,7 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         stateB2={
                             userData !== null &&
                             userData !== undefined &&
-                            !userData.deleted &&
-                            enterprise !== null &&
-                            enterprise !== undefined &&
-                            enterprise.deleted === false &&
-                            enterprise.active === true
+                            !userData.deleted
                         }
                         alreadyReviewed={reviewState.reviewed || !serviceReq.active}
                     />
