@@ -29,6 +29,7 @@ import {
 import { useRouter } from "next/navigation";
 import AntecedentsPdf from "@/components/form/AntecedentsPdf";
 import { PDFField } from "@/components/form/PDFUploader";
+import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 
 const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -230,6 +231,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
             userConfirmation,
             acceptedTerms,
             pdf,
+            personalData.idCard,
         );
         if (isValid) {
             isValid = isValidForm(
@@ -238,9 +240,11 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                 userConfirmation,
                 acceptedTerms,
                 pdf,
+                personalData.idCard,
             );
             if (isValid && user.data) {
                 try {
+                    await updateIdCard(personalData.idCard, user.data);
                     const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
                         await toast.promise(uploadImages(), {
                             pending: "Subiendo imagenes, por favor espera",
@@ -310,6 +314,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                     userConfirmation,
                     acceptedTerms,
                     pdf,
+                    personalData.idCard,
                 ),
             }),
         [personalData, vehicle, userConfirmation, acceptedTerms],

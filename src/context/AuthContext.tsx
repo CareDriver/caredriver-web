@@ -66,6 +66,7 @@ const buildUser = (
             deleted: userData.deleted,
             serviceVehicles: userData?.serviceVehicles,
             role: userData?.role === undefined ? UserRole.User : userData.role,
+            identityCard: userData.identityCard ? userData.identityCard : undefined,
         };
     }
 

@@ -30,6 +30,7 @@ import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import TowRenderer from "../../data_renderer/enterprise/TowRenderer";
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
+import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
 
 const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -65,21 +66,20 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         url: "",
                     };
 
-                    var vehiclesWithoutImages = serviceReq.vehicles.map((vehicle) => {
-                        return {
-                            ...vehicle,
-                            license: {
-                                ...vehicle.license,
-                                backImgUrl: imgDeleted,
-                                frontImgUrl: imgDeleted,
-                            },
-                        };
-                    });
+                    // var vehiclesWithoutImages = serviceReq.vehicles.map((vehicle) => {
+                    //     return {
+                    //         ...vehicle,
+                    //         license: {
+                    //             ...vehicle.license,
+                    //             backImgUrl: imgDeleted,
+                    //             frontImgUrl: imgDeleted,
+                    //         },
+                    //     };
+                    // });
 
                     toUpdateReq = {
                         ...toUpdateReq,
                         realTimePhotoImgUrl: imgDeleted,
-                        vehicles: vehiclesWithoutImages,
                     };
 
                     if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
@@ -115,6 +115,8 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             tow = {
                                 ...tow,
                                 license: {
+                                    frontImgUrl: tow.license.frontImgUrl,
+                                    backImgUrl: tow.license.backImgUrl,
                                     expiredDateLicense: tow.license.expiredDateLicense,
                                     licenseNumber: tow.license.licenseNumber,
                                 },
@@ -253,6 +255,15 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 name={serviceReq.newFullName}
                 photo={serviceReq.newProfilePhotoImgUrl}
             />
+            {userData ? (
+                <IdCardRenderer idCard={userData.identityCard} />
+            ) : (
+                <span className="row-wrapper text | bold gray-medium">
+                    <span className="loader-gray-medium | small-loader"></span> Cargando
+                    carnet de identidad
+                </span>
+            )}
+
             {reviewState.reviewed ? (
                 userData && user.data ? (
                     <ContactReviewedUser

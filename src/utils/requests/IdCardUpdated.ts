@@ -85,6 +85,15 @@ export const updateIdCard = async (idCard: IdCardForm, user: UserInterface) => {
             wasUpdated = true;
         }
 
+        if (idCard.location.value !== user.identityCard.location) {
+            toUpdate = {
+                ...toUpdate,
+                location: idCard.location.value,
+            };
+
+            wasUpdated = true;
+        }
+
         if (wasUpdated) {
             toUpdate = {
                 ...toUpdate,

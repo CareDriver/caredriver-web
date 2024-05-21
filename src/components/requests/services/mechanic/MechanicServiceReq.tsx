@@ -24,6 +24,7 @@ import { mechanicReqCollection } from "@/utils/requests/services/MechanicRequest
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
+import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
 
 const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -190,6 +191,16 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 name={serviceReq.newFullName}
                 photo={serviceReq.newProfilePhotoImgUrl}
             />
+            
+            {userData ? (
+                <IdCardRenderer idCard={userData.identityCard} />
+            ) : (
+                <span className="row-wrapper text | bold gray-medium">
+                    <span className="loader-gray-medium | small-loader"></span> Cargando
+                    carnet de identidad
+                </span>
+            )}
+
             {reviewState.reviewed ? (
                 userData && user.data ? (
                     <ContactReviewedUser

@@ -17,8 +17,7 @@ const IdentityCardForm = ({
                     <IdCard /> Carnet de identidad
                 </h2>
                 <p className="text | light">
-                    Estos datos se guardaran en tu perfil, si los cambias a los que ya existen
-                    <b> afectara a las solicitudes que ya fueron enviadas</b>.
+                    Estos datos se guardaran en tu perfil, si los cambias <b>tambien se cambiaran en las solicitudes que ya fueron enviadas</b>.
                 </p>
             </div>
             <fieldset className="form-section">

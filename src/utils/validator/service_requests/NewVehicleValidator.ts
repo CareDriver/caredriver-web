@@ -1,5 +1,6 @@
 import { PDFField } from "@/components/form/PDFUploader";
 import {
+    IdCardForm,
     PersonalDataFormField,
     PhotoField,
     VehicleForm,
@@ -11,8 +12,16 @@ export const isValidForm = (
     userConfirmation: PhotoField,
     acceptedTerms: boolean,
     pdf: PDFField,
+    idCardForm: IdCardForm,
 ): boolean => {
     var isValid = !personalData.fullname.message && !personalData.photo.message;
+
+    if (isValid) {
+        isValid =
+            !idCardForm.backCard.message &&
+            !idCardForm.frontCard.message &&
+            !idCardForm.location.message;
+    }
 
     isValid =
         !vehicle.license.number.message &&
@@ -37,10 +46,18 @@ export const verifyNoEmptyData = (
     userConfirmation: PhotoField,
     acceptedTerms: boolean,
     pdf: PDFField,
+    idCardForm: IdCardForm,
 ): boolean => {
     var isNotEmpty =
         personalData.fullname.value.trim().length > 0 &&
         personalData.photo.value !== null;
+
+    if (isNotEmpty) {
+        isNotEmpty =
+            idCardForm.backCard.value !== null &&
+            idCardForm.frontCard.value !== null &&
+            idCardForm.location.value.trim().length > 0;
+    }
 
     isNotEmpty =
         vehicle.license.number.value.trim().length > 0 &&

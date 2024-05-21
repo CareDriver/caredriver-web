@@ -63,7 +63,8 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         url: "",
                     };
 
-                    var vehiclesWithoutImages = serviceReq.vehicles.map((vehicle) => {
+                    // Delete vehicle licenses images
+                    /* var vehiclesWithoutImages = serviceReq.vehicles.map((vehicle) => {
                         return {
                             ...vehicle,
                             license: {
@@ -72,12 +73,11 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 frontImgUrl: imgDeleted,
                             },
                         };
-                    });
+                    }); */
 
                     toUpdateReq = {
                         ...toUpdateReq,
                         realTimePhotoImgUrl: imgDeleted,
-                        vehicles: vehiclesWithoutImages,
                     };
 
                     if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
@@ -115,6 +115,8 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             car = {
                                 ...car,
                                 license: {
+                                    frontImgUrl: car.license.frontImgUrl,
+                                    backImgUrl: car.license.backImgUrl,
                                     expiredDateLicense: car.license.expiredDateLicense,
                                     licenseNumber: car.license.licenseNumber,
                                 },
@@ -124,6 +126,8 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             motorcycle = {
                                 ...motorcycle,
                                 license: {
+                                    frontImgUrl: motorcycle.license.frontImgUrl,
+                                    backImgUrl: motorcycle.license.backImgUrl,
                                     expiredDateLicense:
                                         motorcycle.license.expiredDateLicense,
                                     licenseNumber: motorcycle.license.licenseNumber,

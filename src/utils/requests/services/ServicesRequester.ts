@@ -113,7 +113,8 @@ export const deleteImages = async (serviceReq: UserRequest) => {
             await deleteFile(serviceReq.newProfilePhotoImgUrl.ref);
         }
         await deleteFile(serviceReq.realTimePhotoImgUrl.ref);
-        if (serviceReq.vehicles) {
+        // Remove vehicle licenses
+/*         if (serviceReq.vehicles) {
             serviceReq.vehicles.forEach(async (vehicle) => {
                 if (vehicle.license.frontImgUrl) {
                     await deleteFile(vehicle.license.frontImgUrl?.ref);
@@ -122,7 +123,7 @@ export const deleteImages = async (serviceReq: UserRequest) => {
                     await deleteFile(vehicle.license.backImgUrl?.ref);
                 }
             });
-        }
+        } */
     } catch (e) {
         console.log(e);
     }

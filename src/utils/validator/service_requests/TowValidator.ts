@@ -1,5 +1,6 @@
 import {
     EnterpriseField,
+    IdCardForm,
     PersonalDataFormField,
     PhotoField,
     VehicleForm,
@@ -11,11 +12,19 @@ export const isValidForm = (
     userConfirmation: PhotoField,
     acceptedTerms: boolean,
     towEnteprise: EnterpriseField,
+    idCardForm: IdCardForm,
 ): boolean => {
     var isValid =
         !personalData.fullname.message &&
         !personalData.photo.message &&
         !towEnteprise.message;
+
+    if (isValid) {
+        isValid =
+            !idCardForm.backCard.message &&
+            !idCardForm.frontCard.message &&
+            !idCardForm.location.message;
+    }
 
     isValid =
         !vehicle.license.number.message &&
@@ -35,11 +44,19 @@ export const verifyNoEmptyData = (
     userConfirmation: PhotoField,
     acceptedTerms: boolean,
     towEnteprise: EnterpriseField,
+    idCardForm: IdCardForm,
 ): boolean => {
     var isNotEmpty =
         personalData.fullname.value.trim().length > 0 &&
         personalData.photo.value !== null &&
         towEnteprise.value !== null;
+
+    if (isNotEmpty) {
+        isNotEmpty =
+            idCardForm.backCard.value !== null &&
+            idCardForm.frontCard.value !== null &&
+            idCardForm.location.value.trim().length > 0;
+    }
 
     isNotEmpty =
         vehicle.license.number.value.trim().length > 0 &&
