@@ -71,7 +71,7 @@ const IdentityCardForm = ({
                     },
                 }}
                 content={{
-                    indicator: "Parte Frontal de tu carnet de Identidad",
+                    indicator: "Parte de Atras de tu carnet de Identidad",
                     isCircle: false,
                     id: `identify-card-back-image-2`,
                 }}
