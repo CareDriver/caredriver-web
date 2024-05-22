@@ -24,10 +24,10 @@ const DebtUser = ({ user }: { user: UserInterface }) => {
         if (user) {
             var valid = false;
 
-            if (!user.currentDebtWithTheApp) {
+            if (!user.balance) {
                 valid = true;
             }
-            if (user.currentDebtWithTheApp && user.currentDebtWithTheApp.amount <= 0) {
+            if (user.balance && user.balance.amount <= 0) {
                 valid = true;
             }
 
@@ -39,16 +39,16 @@ const DebtUser = ({ user }: { user: UserInterface }) => {
 
     const payAllDebt = async (e: SyntheticEvent) => {
         e.preventDefault();
-        if (!formState.loading && user.id && user.currentDebtWithTheApp) {
+        if (!formState.loading && user.id && user.balance) {
             setFormState({
                 ...formState,
                 loading: true,
             });
             try {
-                const debt = user.currentDebtWithTheApp;
-                const newHistory = user.appPaymentHistory
+                const debt = user.balance;
+                const newHistory = user.balanceHistory
                     ? [
-                          ...user.appPaymentHistory,
+                          ...user.balanceHistory,
                           {
                               ...debt,
                               date: Timestamp.fromDate(new Date()),
@@ -62,11 +62,11 @@ const DebtUser = ({ user }: { user: UserInterface }) => {
                       ];
                 await toast.promise(
                     updateUser(user.id, {
-                        currentDebtWithTheApp: {
+                        balance: {
                             amount: 0,
                             currency: "Bs. (BOB)",
                         },
-                        appPaymentHistory: newHistory,
+                        balanceHistory: newHistory,
                     }),
                     {
                         pending: "Estableciendo como deuda cobrada",
@@ -90,20 +90,20 @@ const DebtUser = ({ user }: { user: UserInterface }) => {
 
     const setDebt = async (e: SyntheticEvent) => {
         e.preventDefault();
-        if (!formState.loading && user.id && user.currentDebtWithTheApp) {
+        if (!formState.loading && user.id && user.balance) {
             setFormState({
                 ...formState,
                 loading: true,
             });
             try {
-                const currentDebt = user.currentDebtWithTheApp.amount;
+                const currentDebt = user.balance.amount;
                 const debt: Price = {
                     amount: parseFloat(formState.newDebt),
                     currency: "Bs. (BOB)",
                 };
-                const newHistory = user.appPaymentHistory
+                const newHistory = user.balanceHistory
                     ? [
-                          ...user.appPaymentHistory,
+                          ...user.balanceHistory,
                           {
                               ...debt,
                               date: Timestamp.fromDate(new Date()),
@@ -117,11 +117,11 @@ const DebtUser = ({ user }: { user: UserInterface }) => {
                       ];
                 await toast.promise(
                     updateUser(user.id, {
-                        currentDebtWithTheApp: {
+                        balance: {
                             amount: currentDebt - debt.amount,
                             currency: "Bs. (BOB)",
                         },
-                        appPaymentHistory: newHistory,
+                        balanceHistory: newHistory,
                     }),
                     {
                         pending: "Estableciendo nueva deuda",
@@ -148,10 +148,10 @@ const DebtUser = ({ user }: { user: UserInterface }) => {
             <h2 className="profile-subtitle icon-wrapper | mb">
                 <MoneyBillWave />
                 Deuda |{" "}
-                {user.currentDebtWithTheApp
-                    ? user.currentDebtWithTheApp.amount +
+                {user.balance
+                    ? user.balance.amount +
                       " " +
-                      user.currentDebtWithTheApp.currency
+                      user.balance.currency
                     : "0"}
             </h2>
             <p className="text | gray-dark">
@@ -169,7 +169,7 @@ const DebtUser = ({ user }: { user: UserInterface }) => {
                         var newDebt = e.target.value;
                         const { isValid, message } = isValidAmount(
                             newDebt,
-                            user.currentDebtWithTheApp?.amount,
+                            user.balance?.amount,
                         );
                         setFormState({
                             ...formState,

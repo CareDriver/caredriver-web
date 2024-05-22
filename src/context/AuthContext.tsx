@@ -60,8 +60,8 @@ const buildUser = (
                     ? defaultServiceReq
                     : userData.serviceRequests,
             location: userData?.location,
-            currentDebtWithTheApp: userData?.currentDebtWithTheApp,
-            appPaymentHistory: userData?.appPaymentHistory,
+            balance: userData?.balance,
+            balanceHistory: userData?.balanceHistory,
             disable: userData?.disable,
             deleted: userData.deleted,
             serviceVehicles: userData?.serviceVehicles,

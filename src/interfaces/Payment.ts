@@ -9,3 +9,7 @@ export interface Price {
 export interface Payment extends Price {
     date: Timestamp; // when used for a debt: last time the user paid to the app, and when user for a payment it will register the date the payment is being done
 }
+
+export interface BalanceHistory extends Payment {
+    balanceRechargeId?: string;
+}

@@ -19,12 +19,12 @@ const UserProfile = () => {
         if (!loadingUser && user.data) {
             var valid = false;
 
-            if (!user.data.currentDebtWithTheApp) {
+            if (!user.data.balance) {
                 valid = true;
             }
             if (
-                user.data.currentDebtWithTheApp &&
-                user.data.currentDebtWithTheApp.amount <= 0
+                user.data.balance &&
+                user.data.balance.amount <= 0
             ) {
                 valid = true;
             }
@@ -36,19 +36,19 @@ const UserProfile = () => {
     const sendMessageToPay = () => {
         if (
             user.data &&
-            user.data.currentDebtWithTheApp &&
-            user.data.currentDebtWithTheApp.amount > 0
+            user.data.balance &&
+            user.data.balance.amount > 0
         ) {
-            const currency = user.data.currentDebtWithTheApp.currency;
+            const currency = user.data.balance.currency;
             const number = "+59164868951";
             const message = `${getGreeting()}\n\nSoy el usuario servidor ${
                 user.data?.fullName
             }, **quiero pagar ${
-                user.data.currentDebtWithTheApp.amount
+                user.data.balance.amount
             } ${currency} de mi deuda ${
-                user.data.currentDebtWithTheApp.amount
-            } ${currency} **. Es decir **${user.data.currentDebtWithTheApp.amount}/${
-                user.data.currentDebtWithTheApp.amount
+                user.data.balance.amount
+            } ${currency} **. Es decir **${user.data.balance.amount}/${
+                user.data.balance.amount
             }**`;
 
             sendWhatsapp(number, message);
@@ -104,15 +104,15 @@ const UserProfile = () => {
                 <h2 className="profile-subtitle icon-wrapper">
                     <MoneyBillWave />
                     Deuda |{" "}
-                    {user.data.currentDebtWithTheApp
-                        ? user.data.currentDebtWithTheApp.amount +
+                    {user.data.balance
+                        ? user.data.balance.amount +
                           " " +
-                          user.data.currentDebtWithTheApp.currency
+                          user.data.balance.currency
                         : "0"}
                 </h2>
                 <p className="text | gray-dark">
-                    {user.data.currentDebtWithTheApp &&
-                    user.data.currentDebtWithTheApp.amount > 0
+                    {user.data.balance &&
+                    user.data.balance.amount > 0
                         ? "Tienes que pagar tu deuda, sino no podras seguir usando nuestra aplicacion para ofrecer tus servicios. Haz click para enviar un mensaje a nuestro administrador para pagar tu deuda."
                         : "Aqui se mostrara la deuda actual que tienes que pagar a medida que usas nuestra aplicacion"}
                 </p>
