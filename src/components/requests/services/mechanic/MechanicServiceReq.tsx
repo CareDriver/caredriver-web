@@ -25,6 +25,7 @@ import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
+import MechanicToolsRenderer from "../../data_renderer/mechanic/MechanicToolsRenderer";
 
 const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -213,6 +214,9 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
             ) : (
                 <>
                     <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+                    
+                    <MechanicToolsRenderer tools={serviceReq.mechanicTools} />
+
                     {enterprise === null ? (
                         <span className="loader-green"></span>
                     ) : (

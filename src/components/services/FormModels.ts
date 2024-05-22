@@ -73,3 +73,8 @@ export interface IdCardForm {
         message: string | null;
     };
 }
+
+export interface FieldStringForm {
+    value: string;
+    message: string | null;
+}

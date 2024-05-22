@@ -7,7 +7,6 @@ import { IdCardForm, PersonalDataFormField, PhotoField } from "../services/FormM
 import { isValidName } from "@/utils/validator/auth/CredentialsValidator";
 import { AuthContext } from "@/context/AuthContext";
 import IdentityCardForm from "../services/IdentityCardForm";
-import { IdentityCard } from "@/interfaces/UserInterface";
 
 const PersonalDataForm = ({
     personalData,

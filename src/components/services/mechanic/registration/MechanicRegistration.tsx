@@ -1,7 +1,11 @@
 "use client";
 
 import { FormEvent, useContext, useEffect, useState } from "react";
-import { EnterpriseField, PersonalDataFormField } from "../../FormModels";
+import {
+    EnterpriseField,
+    FieldStringForm,
+    PersonalDataFormField,
+} from "../../FormModels";
 import PersonalDataForm from "../../../form/PersonalDataForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
@@ -28,6 +32,7 @@ import Warehouse from "@/icons/Warehouse";
 import { EnterpriseType } from "@/interfaces/Enterprise";
 import { saveMechanicReq } from "@/utils/requests/services/MechanicRequester";
 import { updateIdCard } from "@/utils/requests/IdCardUpdated";
+import MechanicTools from "./MechanicTools";
 
 const MechanicRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -54,6 +59,11 @@ const MechanicRegistration = () => {
                 message: null,
             },
         },
+    });
+
+    const [mechanicTools, setMechanicTools] = useState<FieldStringForm>({
+        value: "",
+        message: null,
     });
 
     const [mechanicWorkshop, setMechanicWorkshop] = useState<EnterpriseField>({
@@ -127,6 +137,7 @@ const MechanicRegistration = () => {
                             ? Locations.CochabambaBolivia
                             : user.data.location,
                         mechanicWorkshop.value,
+                        mechanicTools.value
                     ),
                 );
 
@@ -163,6 +174,7 @@ const MechanicRegistration = () => {
             userConfirmation,
             acceptedTerms,
             personalData.idCard,
+            mechanicTools,
         );
         if (isValid) {
             isValid = isValidForm(
@@ -170,6 +182,7 @@ const MechanicRegistration = () => {
                 userConfirmation,
                 acceptedTerms,
                 personalData.idCard,
+                mechanicTools,
             );
             if (isValid && user.data) {
                 try {
@@ -267,6 +280,7 @@ const MechanicRegistration = () => {
                     userConfirmation,
                     acceptedTerms,
                     personalData.idCard,
+                    mechanicTools,
                 ),
             }),
         [personalData, userConfirmation, acceptedTerms],
@@ -306,6 +320,8 @@ const MechanicRegistration = () => {
                     personalData={personalData}
                     setPersonalData={setPersonalData}
                 />
+
+                <MechanicTools tools={mechanicTools} setTools={setMechanicTools} />
 
                 <div className="form-sub-container | margin-top-25 max-width-90">
                     <h2 className="text icon-wrapper | medium-big bold">
