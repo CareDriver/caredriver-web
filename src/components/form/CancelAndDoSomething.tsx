@@ -8,7 +8,7 @@ const CancelAndDoSomething = ({
     isSecondButtonAble,
 }: {
     onCancel: () => void;
-    onDoSomething: () => Promise<void>;
+    onDoSomething: (e: SyntheticEvent) => Promise<void>;
     loading: boolean;
     doSomethingText: string;
     isSecondButtonAble: boolean;
@@ -26,7 +26,7 @@ const CancelAndDoSomething = ({
             loader.classList.add("loader-black");
             await onCancel();
         } else {
-            await onDoSomething();
+            await onDoSomething(e);
         }
         button.removeChild(loader);
         button.innerHTML = text;

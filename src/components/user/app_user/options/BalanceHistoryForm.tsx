@@ -16,9 +16,11 @@ export interface BalanceHistoryItemForm {
 const BalanceHistoryForm = ({
     balanceHistoryItem,
     setBalanceHistoryItem,
+    loading,
 }: {
     balanceHistoryItem: BalanceHistoryItemForm;
     setBalanceHistoryItem: Dispatch<SetStateAction<BalanceHistoryItemForm>>;
+    loading: boolean;
 }) => {
     const verifyBankTransactionNumber = (e: ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
@@ -53,7 +55,10 @@ const BalanceHistoryForm = ({
                     razon por la cual esta haciendo este cambio.
                 </p>
             </div>
-            <div className="double-button-wrapper | margin-top-25 margin-bottom-25">
+            <div
+                className="double-button-wrapper | margin-top-25 margin-bottom-25"
+                data-state={loading ? "loading" : "loaded"}
+            >
                 <button
                     className={`option-button ${
                         balanceHistoryItem.reasonType === "bankTransactionNumber" &&
@@ -92,7 +97,7 @@ const BalanceHistoryForm = ({
                 </button>
             </div>
 
-            <fieldset className="form-section">
+            <fieldset className="form-section" data-state={loading ? "loading" : "loaded"}>
                 <input
                     type="text"
                     placeholder=""

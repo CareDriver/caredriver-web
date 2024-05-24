@@ -9,39 +9,25 @@ import { Timestamp } from "firebase/firestore";
 import { SyntheticEvent, useState } from "react";
 import { toast } from "react-toastify";
 
-const MinBalanceUser = ({ user }: { user: UserInterface }) => {
+const MinBalanceUser = ({
+    user,
+    loading,
+    setLoading,
+}: {
+    user: UserInterface;
+    loading: boolean;
+    setLoading: (loading: boolean) => void;
+}) => {
     const [formState, setFormState] = useState<{
         newDebt: string;
-        loading: boolean;
         message: string | null;
     }>({
         newDebt: "",
-        loading: false,
         message: null,
     });
 
-    const validToDisable = () => {
-        if (user) {
-            var valid = false;
-
-            if (!user.balance) {
-                valid = true;
-            }
-            if (user.balance && user.balance.amount <= 0) {
-                valid = true;
-            }
-
-            return valid;
-        }
-    };
-
-    const setMinBalance = async (e: SyntheticEvent) => {
-        e.preventDefault();
-        if (!formState.loading && user.id && user.balance) {
-            setFormState({
-                ...formState,
-                loading: true,
-            });
+    const perform = async () => {
+        if (user.id && user.balance) {
             try {
                 await toast.promise(
                     updateUser(user.id, {
@@ -57,16 +43,30 @@ const MinBalanceUser = ({ user }: { user: UserInterface }) => {
                     },
                 );
                 window.location.reload();
-                setFormState({
-                    ...formState,
-                    loading: false,
-                });
+                setLoading(false);
             } catch (e) {
-                setFormState({
-                    ...formState,
-                    loading: false,
-                });
+                setLoading(false);
             }
+        }
+    };
+
+    const setMinBalance = async (e: SyntheticEvent) => {
+        e.preventDefault();
+        if (!loading) {
+            setLoading(true);
+            var button = e.target as HTMLButtonElement;
+            const text = button.innerHTML;
+            button.innerHTML = "";
+            button.classList.add("loading-section");
+            var loader = document.createElement("span");
+            loader.classList.add("loader");
+            button.appendChild(loader);
+
+            await perform();
+
+            button.removeChild(loader);
+            button.innerHTML = text;
+            button.classList.remove("loading-section");
         }
     };
 
@@ -83,7 +83,10 @@ const MinBalanceUser = ({ user }: { user: UserInterface }) => {
                 Ingresa el nuevo saldo minimo que el usuario puede tener en su cuenta.
             </p>
 
-            <div className="margin-top-25 margin-bottom-25">
+            <div
+                className="margin-top-25 margin-bottom-25"
+                data-state={loading ? "loading" : "loaded"}
+            >
                 <fieldset className="form-section">
                     <input
                         type="text"
@@ -108,19 +111,16 @@ const MinBalanceUser = ({ user }: { user: UserInterface }) => {
                 </fieldset>
             </div>
 
-            <div>
-                <button
-                    type="button"
-                    onClick={setMinBalance}
-                    disabled={
-                        !(formState.newDebt.trim().length > 0) ||
-                        formState.message !== null
-                    }
-                    className="small-general-button text | medium bold touchable green"
-                >
-                    Establecer saldo minimo
-                </button>
-            </div>
+            <button
+                type="button"
+                onClick={setMinBalance}
+                disabled={
+                    !(formState.newDebt.trim().length > 0) || formState.message !== null
+                }
+                className="small-general-button text | medium bold touchable green"
+            >
+                Establecer saldo minimo
+            </button>
         </section>
     );
 };

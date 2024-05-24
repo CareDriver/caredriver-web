@@ -125,6 +125,7 @@
     justify-content: center;
 
     padding: 10px 50px;
+    width: max-content;
 
     background-color: var(--main-light);
     color: var(--white);

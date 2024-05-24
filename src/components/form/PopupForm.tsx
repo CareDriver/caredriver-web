@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import CancelAndDoSomething from "./CancelAndDoSomething";
 
 const PopupForm = ({
@@ -11,7 +11,7 @@ const PopupForm = ({
 }: {
     isOpen: boolean;
     close: () => void;
-    onSummit: () => Promise<void>;
+    onSummit: (e: SyntheticEvent) => Promise<void>;
     children: React.ReactNode;
     loading: boolean;
     isSecondButtonAble: boolean;

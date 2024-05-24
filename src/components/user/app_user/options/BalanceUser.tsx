@@ -6,7 +6,7 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import { updateUser } from "@/utils/requests/UserRequester";
 import { isValidAmount } from "@/utils/validator/debt/DebtValidator";
 import { Timestamp } from "firebase/firestore";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { toast } from "react-toastify";
 import BalanceHistoryForm, { BalanceHistoryItemForm } from "./BalanceHistoryForm";
 import "@/styles/modules/popup.css";
@@ -17,17 +17,19 @@ import { saveBalanceHistoryItem } from "@/utils/requests/BalanceHistoryRequester
 const BalanceUser = ({
     user,
     adminUser,
+    loading,
+    setLoading,
 }: {
     user: UserInterface;
     adminUser: UserInterface;
+    loading: boolean;
+    setLoading: (loading: boolean) => void;
 }) => {
     const [formState, setFormState] = useState<{
         newDebt: string;
-        loading: boolean;
         message: string | null;
     }>({
         newDebt: "",
-        loading: false,
         message: null,
     });
 
@@ -41,12 +43,8 @@ const BalanceUser = ({
 
     const [isOpenPopup, setOpenPopup] = useState(false);
 
-    const setDebt = async () => {
-        if (!formState.loading && user.id && adminUser.id) {
-            setFormState({
-                ...formState,
-                loading: true,
-            });
+    const perform = async () => {
+        if (user.id && adminUser.id) {
             try {
                 const balanceHistoryId = nanoid();
                 var balanceItem: BalanceHistoryItem = {
@@ -111,16 +109,18 @@ const BalanceUser = ({
                     },
                 );
                 window.location.reload();
-                setFormState({
-                    ...formState,
-                    loading: false,
-                });
+                setLoading(false);
             } catch (e) {
-                setFormState({
-                    ...formState,
-                    loading: false,
-                });
+                setLoading(false);
             }
+        }
+    };
+
+    const setDebt = async (e: SyntheticEvent) => {
+        e.preventDefault();
+        if (!loading) {
+            setLoading(true);
+            await perform();
         }
     };
 
@@ -135,7 +135,10 @@ const BalanceUser = ({
                 Ingresa el nuevo monto de saldo del usuario.
             </p>
 
-            <div className="margin-top-25 margin-bottom-25">
+            <div
+                className="margin-top-25 margin-bottom-25"
+                data-state={loading ? "loading" : "loaded"}
+            >
                 <fieldset className="form-section">
                     <input
                         type="text"
@@ -160,10 +163,19 @@ const BalanceUser = ({
                 </fieldset>
             </div>
 
+            <button
+                type="button"
+                onClick={() => setOpenPopup(true)}
+                disabled={!(!formState.message && formState.newDebt.trim().length > 0)}
+                className="small-general-button text | medium bold touchable green"
+            >
+                Establecer nuevo saldo
+            </button>
+
             <PopupForm
                 isOpen={isOpenPopup}
                 close={() => setOpenPopup(false)}
-                loading={formState.loading}
+                loading={loading}
                 onSummit={setDebt}
                 isSecondButtonAble={
                     !balanceHistory.reason.message &&
@@ -171,23 +183,11 @@ const BalanceUser = ({
                 }
             >
                 <BalanceHistoryForm
+                    loading={loading}
                     balanceHistoryItem={balanceHistory}
                     setBalanceHistoryItem={setBalanceHistory}
                 />
             </PopupForm>
-
-            <div>
-                <button
-                    type="button"
-                    onClick={() => setOpenPopup(true)}
-                    disabled={
-                        !(!formState.message && formState.newDebt.trim().length > 0)
-                    }
-                    className="small-general-button text | medium bold touchable green"
-                >
-                    Establecer nuevo saldo
-                </button>
-            </div>
         </section>
     );
 };

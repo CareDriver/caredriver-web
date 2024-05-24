@@ -199,8 +199,29 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                     )}
                 </div>
             </div>
-            {user.data && <BalanceUser user={userData} adminUser={user.data} />}
-            <MinBalanceUser user={userData} />
+            {user.data && (
+                <BalanceUser
+                    loading={formState.loading}
+                    setLoading={(loading: boolean) =>
+                        setFormState({
+                            ...formState,
+                            loading: loading,
+                        })
+                    }
+                    user={userData}
+                    adminUser={user.data}
+                />
+            )}
+            <MinBalanceUser
+                user={userData}
+                loading={formState.loading}
+                setLoading={(loading: boolean) =>
+                    setFormState({
+                        ...formState,
+                        loading: loading,
+                    })
+                }
+            />
             <DebtHistory user={userData} />
 
             <DisableUser
