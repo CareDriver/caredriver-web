@@ -1,9 +1,10 @@
 :root {
     --main-dark: #2a7b54;
     --main-light: #3bb770;
-    --main-light-opacity: rgba(59, 183, 112, .2);
+    --main-light-opacity: rgba(59, 183, 112, 0.2);
 
-    --second-dark: #0E1724;
+    --second-dark: #0e1724;
+    --second-dark-opacity: rgba(14, 23, 36, 0.7);
     --second-light: #456079;
 
     --black-darker: #000000;
@@ -18,6 +19,6 @@
 
     --white: #fff;
     --white-opacity: rgba(255, 255, 255, 0.512);
-    --yellow: #FFCC00;
-    --red: #F52D56;
+    --yellow: #ffcc00;
+    --red: #f52d56;
 }

@@ -45,8 +45,8 @@ export interface UserInterface {
     pickUpLocationsHistory: HistoryLocationInterface[]; // Array of historical pickup locations
     deliveryLocationsHistory: HistoryLocationInterface[]; // Array of historical delivery locations
 
-    balance?: Price; // current debt of a server user towards the application, will contain the money that the user owes to the application following the services made and last time he/she paid
-    minimumBalance?: Price;
+    balance: Price; // current debt of a server user towards the application, will contain the money that the user owes to the application following the services made and last time he/she paid
+    minimumBalance: Price;
     balanceHistory?: BalanceHistory[]; // Array of the payments made by the service user to the app.
     location?: Locations; // Location user begins
     disable?: boolean; // true when user did not paid to the app and was disabled.

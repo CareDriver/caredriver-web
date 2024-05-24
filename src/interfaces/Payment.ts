@@ -13,3 +13,25 @@ export interface Payment extends Price {
 export interface BalanceHistory extends Payment {
     balanceRechargeId?: string;
 }
+
+export const defaultBalance: Price = {
+    currency: "Bs. (BOB)",
+    amount: 0,
+};
+
+export const defaultMinBalance: Price = {
+    currency: "Bs. (BOB)",
+    amount: -10,
+};
+
+export interface BalanceHistoryItem {
+    id: string;
+    bankTransactionNumber?: string;
+    modificationReason?: string;
+    dateTime: Timestamp;
+    previousBalance: Price;
+    oldBalance: Price;
+    userWhoChanged: string;
+}
+
+export const currencyList = ["Bs. (BOB)"];

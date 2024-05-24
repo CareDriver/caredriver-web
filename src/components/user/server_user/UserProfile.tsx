@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthContext } from "@/context/AuthContext";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import PageLoader from "../../PageLoader";
 import "@/styles/components/profile.css";
 import Link from "next/link";
@@ -15,41 +15,12 @@ import { DEFAULT_PHOTO } from "@/utils/user/UserData";
 const UserProfile = () => {
     const { user, loadingUser } = useContext(AuthContext);
 
-    const validToDisable = () => {
-        if (!loadingUser && user.data) {
-            var valid = false;
-
-            if (!user.data.balance) {
-                valid = true;
-            }
-            if (
-                user.data.balance &&
-                user.data.balance.amount <= 0
-            ) {
-                valid = true;
-            }
-
-            return valid;
-        }
-    };
-
     const sendMessageToPay = () => {
-        if (
-            user.data &&
-            user.data.balance &&
-            user.data.balance.amount > 0
-        ) {
-            const currency = user.data.balance.currency;
+        if (user.data) {
             const number = "+59164868951";
             const message = `${getGreeting()}\n\nSoy el usuario servidor ${
                 user.data?.fullName
-            }, **quiero pagar ${
-                user.data.balance.amount
-            } ${currency} de mi deuda ${
-                user.data.balance.amount
-            } ${currency} **. Es decir **${user.data.balance.amount}/${
-                user.data.balance.amount
-            }**`;
+            }, **quiero recargar saldo por favor**`;
 
             sendWhatsapp(number, message);
         }
@@ -61,7 +32,11 @@ const UserProfile = () => {
         <section className="user-page-wrapper | max-height-100">
             <section className="profile-wrapper">
                 <img
-                    src={user.data.photoUrl.url === "" ? DEFAULT_PHOTO : user.data.photoUrl.url}
+                    src={
+                        user.data.photoUrl.url === ""
+                            ? DEFAULT_PHOTO
+                            : user.data.photoUrl.url
+                    }
                     className="profile-photo"
                     alt=""
                 />
@@ -103,28 +78,28 @@ const UserProfile = () => {
             <section className="profile-info-wrapper | margin-top-25 max-width-60">
                 <h2 className="profile-subtitle icon-wrapper">
                     <MoneyBillWave />
-                    Deuda |{" "}
+                    Saldo |{" "}
                     {user.data.balance
-                        ? user.data.balance.amount +
-                          " " +
-                          user.data.balance.currency
+                        ? user.data.balance.amount + " " + user.data.balance.currency
                         : "0"}
                 </h2>
                 <p className="text | gray-dark">
                     {user.data.balance &&
-                    user.data.balance.amount > 0
-                        ? "Tienes que pagar tu deuda, sino no podras seguir usando nuestra aplicacion para ofrecer tus servicios. Haz click para enviar un mensaje a nuestro administrador para pagar tu deuda."
-                        : "Aqui se mostrara la deuda actual que tienes que pagar a medida que usas nuestra aplicacion"}
+                    user.data.balance.amount <= user.data.minimumBalance.amount
+                        ? "Tienes que recargar tu salso, sino no podras seguir usando nuestra aplicacion para ofrecer tus servicios. Haz click para enviar un mensaje a nuestro administrador para recargar saldo."
+                        : `Recarga saldo cuando lo nececites, tu saldo minimo no puede ser menos de ${user.data.minimumBalance.amount
+                              .toString()
+                              .replace("-", "")} ${user.data.minimumBalance.currency}`}
                 </p>
                 {
                     <div className="margin-top-15">
                         <button
+                            type="button"
                             onClick={sendMessageToPay}
-                            disabled={validToDisable()}
                             className="small-general-button text | medium bold touchable 
     yellow"
                         >
-                            Pagar Deuda
+                            Recargar saldo
                         </button>
                     </div>
                 }
@@ -132,7 +107,7 @@ const UserProfile = () => {
             <span className="circles-right-bottomv2 green"></span>
         </section>
     ) : (
-        <h2>User not found</h2>
+        <h2>Usuario no encontrado</h2>
     );
 };
 

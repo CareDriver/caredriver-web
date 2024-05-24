@@ -33,7 +33,7 @@ const AppUserProfile = () => {
             <span className="circles-right-bottomv2 green"></span>
         </section>
     ) : (
-        <h2>User not found</h2>
+        <h2>Usuario no encontrado</h2>
     );
 };
 

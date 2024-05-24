@@ -7,6 +7,7 @@ import { InputValidator } from "../validator/InputValidator";
 import { Dispatch, SetStateAction } from "react";
 import { locationList, Locations } from "@/interfaces/Locations";
 import { isPhoneValid } from "../validator/auth/CredentialsValidator";
+import { defaultBalance, defaultMinBalance } from "@/interfaces/Payment";
 
 export const createUserData = (
     id: string,
@@ -35,6 +36,9 @@ export const createUserData = (
 
         disable: false,
         deleted: false,
+
+        balance: defaultBalance,
+        minimumBalance: defaultMinBalance,
     };
 };
 

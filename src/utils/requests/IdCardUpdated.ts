@@ -48,9 +48,9 @@ export const updateIdCard = async (idCard: IdCardForm, user: UserInterface) => {
 
     if (!user.identityCard && user.id) {
         await toast.promise(uploadNewCard(idCard, user.id), {
-            pending: "Subiendo carnet de identidad",
-            success: "Carnet de identidad subido",
-            error: "Error al subir tu carnet de identidad, intentalo de nuevo por favor",
+            pending: "Guardando carnet de identidad",
+            success: "Carnet de identidad guardado",
+            error: "Error al guardar tu carnet de identidad, intentalo de nuevo por favor",
         });
     } else if (user.identityCard) {
         if (idCard.frontCard.value && isImageBase64(idCard.frontCard.value)) {

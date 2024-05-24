@@ -3,6 +3,7 @@ import { UserRequest, Vehicle } from "@/interfaces/UserRequest";
 import {
     deleteImagesIfLimitOfApproves,
     MIN_NUM_OF_APPROVALS,
+    setFirstService,
     updateService,
 } from "@/utils/requests/services/ServicesRequester";
 import PersonalData from "../../data_renderer/personal_data/PersonalData";
@@ -156,6 +157,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 towEnterpriteId: serviceReq.towEnterprite,
                             };
                         }
+                        userToUpdate = setFirstService(userData, userToUpdate);
                         await updateUser(serviceReq.userId, userToUpdate);
                     } else {
                         toast.error("El usuario no fue encontrado");

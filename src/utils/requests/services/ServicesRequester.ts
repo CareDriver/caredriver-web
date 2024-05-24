@@ -18,9 +18,9 @@ import {
 import { driveReqCollection } from "./DriveRequester";
 import { mechanicReqCollection } from "./MechanicRequester";
 import { towReqCollection } from "./TowRequester";
-import { isUrl } from "@/utils/validator/ImageValidator";
 import { deleteFile } from "../FileUploader";
 import { toast } from "react-toastify";
+import { UserInterface } from "@/interfaces/UserInterface";
 
 export const MIN_NUM_OF_APPROVALS = 1;
 
@@ -88,7 +88,7 @@ export const getServiceReqById = async (
     }
 };
 
-export const numOfApprovals = (req: UserRequest): number => {  
+export const numOfApprovals = (req: UserRequest): number => {
     var approvals = 0;
     req.reviewedByHistory?.forEach((history) => {
         if (history.aproved) {
@@ -114,7 +114,7 @@ export const deleteImages = async (serviceReq: UserRequest) => {
         }
         await deleteFile(serviceReq.realTimePhotoImgUrl.ref);
         // Remove vehicle licenses
-/*         if (serviceReq.vehicles) {
+        /*         if (serviceReq.vehicles) {
             serviceReq.vehicles.forEach(async (vehicle) => {
                 if (vehicle.license.frontImgUrl) {
                     await deleteFile(vehicle.license.frontImgUrl?.ref);
@@ -157,4 +157,21 @@ export const updateService = async (
     } catch (error) {
         throw error;
     }
+};
+
+export const setFirstService = (
+    user: UserInterface,
+    current: Partial<UserInterface>,
+): Partial<UserInterface> => {
+    if (user.services.length === 1) {
+        current = {
+            ...current,
+            balance: {
+                currency: "Bs. (BOB)",
+                amount: 5,
+            },
+        };
+    }
+
+    return current;
 };

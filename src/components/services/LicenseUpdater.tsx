@@ -254,7 +254,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                                         : null,
                                     message: license.frontImgUrl
                                         ? null
-                                        : "No tienes foto frontal de tu carnet de identidad",
+                                        : "No tienes foto frontal de tu licencia",
                                 },
                                 behindPhoto: {
                                     value: license.backImgUrl
@@ -262,7 +262,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                                         : null,
                                     message: license.backImgUrl
                                         ? null
-                                        : "No tienes foto por atras de tu carnet de identidad",
+                                        : "No tienes foto por atras de tu licencia",
                                 },
                             });
                         }

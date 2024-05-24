@@ -7,10 +7,7 @@ import Plus from "@/icons/Plus";
 import SackDollar from "@/icons/SackDollar";
 import { ServiceReqState } from "@/interfaces/Services";
 import { ServiceVehicles, UserInterface } from "@/interfaces/UserInterface";
-import {
-    vehicleModeRenderV2,
-    VehicleTransmission,
-} from "@/interfaces/VehicleInterface";
+import { vehicleModeRenderV2, VehicleTransmission } from "@/interfaces/VehicleInterface";
 import { updateUser } from "@/utils/requests/UserRequester";
 import Link from "next/link";
 import { useContext, useState } from "react";
@@ -166,13 +163,15 @@ const DrivePanel = () => {
                             </button>
                         )}
                         <Link
-                            className={`small-general-button text | medium bolder margin-top-25 touchable 
+                            className={`small-general-button | margin-top-25 touchable 
                         ${getColorButtonLicense(
                             user.data.serviceVehicles.car.license.expiredDateLicense.toDate(),
                         )}`}
                             href={`/services/license/update/car`}
                         >
-                            Actualizar Licencia
+                            <span className="text | medium bolder">
+                                Actualizar Licencia
+                            </span>
                         </Link>
                     </div>
                 </div>
@@ -217,13 +216,15 @@ const DrivePanel = () => {
                             </button>
                         )}
                         <Link
-                            className={`small-general-button text | medium bolder margin-top-25 touchable 
+                            className={`small-general-button | margin-top-25 touchable 
                         ${getColorButtonLicense(
                             user.data.serviceVehicles.motorcycle.license.expiredDateLicense.toDate(),
                         )}`}
                             href={`/services/license/update/motorcycle`}
                         >
-                            Actualizar Licencia
+                            <span className="text | medium bolder">
+                                Actualizar Licencia
+                            </span>
                         </Link>
                     </div>
                 </div>

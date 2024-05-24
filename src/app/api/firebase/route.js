@@ -32,7 +32,7 @@ const createFirebaseAdminApp = (params) => {
     });
 };
 
-export const initAdmin = async () => {
+const initAdmin = async () => {
     const params = {
         projectId: FIREBASE_PROJECT_ID,
         clientEmail: FIREBASE_CLIENT_EMAIL,
