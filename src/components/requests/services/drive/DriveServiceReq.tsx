@@ -184,7 +184,11 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 serviceRequests: newReqState,
                             };
                         }
-                        userToUpdate = setFirstService(userData, userToUpdate);
+                        userToUpdate = await setFirstService(
+                            userData,
+                            userToUpdate,
+                            user.data.id,
+                        );
 
                         await updateUser(serviceReq.userId, userToUpdate);
                     } else {

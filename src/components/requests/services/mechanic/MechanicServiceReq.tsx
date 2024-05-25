@@ -105,7 +105,11 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 services: [...userData.services, Services.Mechanic],
                             };
                         }
-                        userToUpdate = setFirstService(userData, userToUpdate);
+                        userToUpdate = await setFirstService(
+                            userData,
+                            userToUpdate,
+                            user.data.id,
+                        );
                         await updateUser(serviceReq.userId, userToUpdate);
                     } else {
                         toast.error("El usuario no fue encontrado");
@@ -216,7 +220,7 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
             ) : (
                 <>
                     <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                    
+
                     <MechanicToolsRenderer tools={serviceReq.mechanicTools} />
 
                     {enterprise === null ? (

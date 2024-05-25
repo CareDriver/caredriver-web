@@ -12,6 +12,7 @@ import {
     orderBy,
     query,
     startAfter,
+    Timestamp,
     updateDoc,
     where,
 } from "firebase/firestore";
@@ -21,6 +22,8 @@ import { towReqCollection } from "./TowRequester";
 import { deleteFile } from "../FileUploader";
 import { toast } from "react-toastify";
 import { UserInterface } from "@/interfaces/UserInterface";
+import { saveBalanceHistoryItem } from "../BalanceHistoryRequester";
+import { nanoid } from "nanoid";
 
 export const MIN_NUM_OF_APPROVALS = 1;
 
@@ -159,19 +162,45 @@ export const updateService = async (
     }
 };
 
-export const setFirstService = (
+export const setFirstService = async (
     user: UserInterface,
     current: Partial<UserInterface>,
-): Partial<UserInterface> => {
+    adminId: string,
+): Promise<Partial<UserInterface>> => {
+    const balanceGift = 5;
     if (user.services.length === 1) {
         current = {
             ...current,
             balance: {
                 currency: "Bs. (BOB)",
-                amount: 5,
+                amount: user.balance.amount + balanceGift,
             },
         };
+        await toast.promise(saveBalanceGift(user, adminId), {
+            pending: `Regalando ${balanceGift} Bs. de saldo por ser nuevo usuario servidor`,
+            success: `${balanceGift} Bs. de saldo regalado`,
+            error: "Error al regalar saldo, intentalo de nuevo por favor",
+        });
     }
 
     return current;
+};
+
+export const saveBalanceGift = async (user: UserInterface, adminId: string) => {
+    try {
+        const balanceHistoryId = nanoid();
+        await saveBalanceHistoryItem(balanceHistoryId, {
+            id: balanceHistoryId,
+            dateTime: Timestamp.fromDate(new Date()),
+            oldBalance: user.balance,
+            previousBalance: {
+                amount: user.balance.amount + 5,
+                currency: "Bs. (BOB)",
+            },
+            userWhoChanged: adminId,
+            modificationReason: "Regalo por ser nuevo usuario servidor",
+        });
+    } catch (e) {
+        console.log(e);
+    }
 };

@@ -157,7 +157,11 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 towEnterpriteId: serviceReq.towEnterprite,
                             };
                         }
-                        userToUpdate = setFirstService(userData, userToUpdate);
+                        userToUpdate = await setFirstService(
+                            userData,
+                            userToUpdate,
+                            user.data.id,
+                        );
                         await updateUser(serviceReq.userId, userToUpdate);
                     } else {
                         toast.error("El usuario no fue encontrado");
