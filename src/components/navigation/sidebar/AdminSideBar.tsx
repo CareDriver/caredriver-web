@@ -71,6 +71,15 @@ const AdminSideBar = () => {
                                 <Truck />
                                 <span>Grua</span>
                             </Link>
+                            <Link
+                                href={"/admin/requests/services/laundry"}
+                                className={`sidebar-option ${
+                                    pathname.includes("laundry") && "selected"
+                                }`}
+                            >
+                                <Soap />
+                                <span>Lavadero</span>
+                            </Link>
                             <div>
                                 <i className="separator-horizontal"></i>
                             </div>

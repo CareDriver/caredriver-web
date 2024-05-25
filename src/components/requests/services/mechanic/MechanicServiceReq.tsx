@@ -102,8 +102,13 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             userToUpdate = {
                                 ...userToUpdate,
                                 mechanicalWorkShopId: serviceReq.mechanicalWorkShop,
-                                services: [...userData.services, Services.Mechanic],
                             };
+                            if (!userData.services.includes(Services.Mechanic)) {
+                                userToUpdate = {
+                                    ...userToUpdate,
+                                    services: [...userData.services, Services.Mechanic],
+                                };
+                            }
                         }
                         userToUpdate = await setFirstService(
                             userData,
@@ -224,10 +229,6 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
             )}
 
             {userData && <UserStatusIndicatorV2 user={userData} />}
-            <p className="text | light margin-top-25">
-                Podras contactarte con el usuario despues de <b>aprobar o rechazar</b> la
-                solicitud
-            </p>
             <ReqButtonRes
                 onApprove={approve}
                 onDecline={decline}

@@ -53,6 +53,7 @@ export interface UserInterface {
     deleted: boolean; // used for soft delete
     mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
     towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
+    laundryEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
 
     serviceVehicles?: ServiceVehicles; // vehicles that the user registered
     serviceRequests?: ServiceRequestsInterface; // status of the services that the user made a request
@@ -85,6 +86,7 @@ export interface ServiceRequestsInterface {
     driveMotorcycle?: ServiceStateRequest;
     mechanic?: ServiceStateRequest;
     tow?: ServiceStateRequest;
+    laundry?: ServiceStateRequest;
 }
 
 export interface ServiceVehicles {
@@ -107,6 +109,10 @@ export const defaultServiceReq = {
         state: ServiceReqState.NotSent,
     },
     tow: {
+        id: "",
+        state: ServiceReqState.NotSent,
+    },
+    laundry: {
         id: "",
         state: ServiceReqState.NotSent,
     },

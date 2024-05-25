@@ -1,5 +1,5 @@
 "use client";
-import { UserRequest, Vehicle } from "@/interfaces/UserRequest";
+import { UserRequest } from "@/interfaces/UserRequest";
 import {
     deleteImagesIfLimitOfApproves,
     MIN_NUM_OF_APPROVALS,
@@ -8,32 +8,27 @@ import {
 } from "@/utils/requests/services/ServicesRequester";
 import PersonalData from "../../data_renderer/personal_data/PersonalData";
 import SelfieRenderer from "../../data_renderer/personal_data/SelfieRenderer";
-import VehiclesRenderer from "../../data_renderer/vehicle/VehiclesRenderer";
 import ReqButtonRes from "../../data_renderer/form/ReqButtonRes";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { Timestamp } from "firebase/firestore";
 import { getUserById, updateUser } from "@/utils/requests/UserRequester";
-import {
-    ServiceRequestsInterface,
-    ServiceVehicles,
-    UserInterface,
-} from "@/interfaces/UserInterface";
-import { VehicleType } from "@/interfaces/VehicleInterface";
+import { ServiceRequestsInterface, UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState, Services } from "@/interfaces/Services";
 import { toast } from "react-toastify";
 import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
-import { towReqCollection } from "@/utils/requests/services/TowRequester";
+import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
 import { Enterprise } from "@/interfaces/Enterprise";
 import FieldDeleted from "../../data_renderer/form/FieldDeleted";
-import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
+import { mechanicReqCollection } from "@/utils/requests/services/MechanicRequester";
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
-import TowRenderer from "../../data_renderer/enterprise/TowRenderer";
-import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
+import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
+import LaundryRenderer from "../../data_renderer/enterprise/LaundryRenderer";
+import { laundryReqCollection } from "@/utils/requests/services/LaundryRequester";
 
-const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
+const LaundryServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
     const [reviewState, setReviewState] = useState({
         loading: false,
@@ -61,22 +56,11 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     active: isLimitToReviews ? false : true,
                     aproved: isLimitToReviews ? wasApproved : serviceReq.aproved,
                 };
-                if (isLimitToReviews && serviceReq.vehicles) {
+                if (isLimitToReviews) {
                     const imgDeleted = {
                         ref: "deleted",
                         url: "",
                     };
-
-                    // var vehiclesWithoutImages = serviceReq.vehicles.map((vehicle) => {
-                    //     return {
-                    //         ...vehicle,
-                    //         license: {
-                    //             ...vehicle.license,
-                    //             backImgUrl: imgDeleted,
-                    //             frontImgUrl: imgDeleted,
-                    //         },
-                    //     };
-                    // });
 
                     toUpdateReq = {
                         ...toUpdateReq,
@@ -91,20 +75,10 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     }
                 }
 
-                await updateService(serviceReq.id, toUpdateReq, towReqCollection);
+                await updateService(serviceReq.id, toUpdateReq, laundryReqCollection);
 
                 if (isLimitToReviews) {
-                    var tow = getVehicle(VehicleType.CAR);
                     if (userData) {
-                        var vehicles: ServiceVehicles =
-                            userData.serviceVehicles !== undefined
-                                ? { ...userData.serviceVehicles }
-                                : {};
-                        var newReqState: ServiceRequestsInterface =
-                            userData.serviceRequests !== undefined
-                                ? { ...userData.serviceRequests }
-                                : {};
-
                         const serviceReqState = {
                             id: serviceReq.id,
                             state: wasApproved
@@ -112,56 +86,28 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 : ServiceReqState.Refused,
                         };
 
-                        if (tow) {
-                            tow = {
-                                ...tow,
-                                license: {
-                                    frontImgUrl: tow.license.frontImgUrl,
-                                    backImgUrl: tow.license.backImgUrl,
-                                    expiredDateLicense: tow.license.expiredDateLicense,
-                                    licenseNumber: tow.license.licenseNumber,
-                                },
-                            };
-                        }
+                        var newReqState: ServiceRequestsInterface =
+                            userData.serviceRequests !== undefined
+                                ? {
+                                      ...userData.serviceRequests,
+                                      laundry: serviceReqState,
+                                  }
+                                : { laundry: serviceReqState };
 
-                        if (wasApproved && tow) {
-                            vehicles = { ...vehicles, tow };
-                        }
+                        var userToUpdate: Partial<UserInterface> = {
+                            serviceRequests: newReqState,
+                        };
 
-                        if (tow) {
-                            newReqState = {
-                                ...newReqState,
-                                tow: serviceReqState,
-                            };
-                        }
-
-                        var userToUpdate: Partial<UserInterface> = {};
-
-                        if (vehicles && newReqState) {
+                        if (
+                            wasApproved &&
+                            serviceReq.laundryEnterprite &&
+                            !userData.services.includes(Services.Laundry)
+                        ) {
                             userToUpdate = {
                                 ...userToUpdate,
-                                serviceVehicles: vehicles,
-                                serviceRequests: newReqState,
+                                laundryEnterpriteId: serviceReq.laundryEnterprite,
+                                services: [...userData.services, Services.Laundry],
                             };
-                        } else {
-                            userToUpdate = {
-                                ...userToUpdate,
-                                serviceRequests: newReqState,
-                            };
-                        }
-
-                        if (wasApproved && serviceReq.towEnterprite) {
-                            userToUpdate = {
-                                ...userToUpdate,
-
-                                towEnterpriteId: serviceReq.towEnterprite,
-                            };
-                            if (!userData.services.includes(Services.Tow)) {
-                                userToUpdate = {
-                                    ...userToUpdate,
-                                    services: [...userData.services, Services.Tow],
-                                };
-                            }
                         }
                         userToUpdate = await setFirstService(
                             userData,
@@ -177,17 +123,6 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         } catch (e) {
             console.log(e);
         }
-    };
-
-    const getVehicle = (type: VehicleType): Vehicle | null => {
-        if (serviceReq.vehicles) {
-            const vehicles = serviceReq.vehicles.filter((veh) => veh.type.type === type);
-            if (vehicles.length > 0) {
-                return vehicles[0];
-            }
-        }
-
-        return null;
     };
 
     const review = async (wasApproved: boolean) => {
@@ -222,10 +157,10 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         await review(false);
     };
 
-    const fetchWorkshop = async () => {
-        if (serviceReq.towEnterprite) {
+    const fetchLaundry = async () => {
+        if (serviceReq.laundryEnterprite) {
             try {
-                const data = await getEnterpriseById(serviceReq.towEnterprite);
+                const data = await getEnterpriseById(serviceReq.laundryEnterprite);
                 setEnterpise(data);
             } catch (e) {
                 setEnterpise(undefined);
@@ -237,7 +172,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     };
 
     useEffect(() => {
-        fetchWorkshop();
+        fetchLaundry();
     }, []);
 
     useEffect(() => {
@@ -252,7 +187,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
     return (
         <div className="service-form-wrapper | max-width-60">
-            <h1 className="text | big bolder">Solicitud para ser Operador de Grua</h1>
+            <h1 className="text | big bolder">Solicitud para ser Lavadero</h1>
             <div className="row-wrapper | gap-20">
                 <ApprovalsRenderer
                     serviceReq={serviceReq}
@@ -267,6 +202,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 name={serviceReq.newFullName}
                 photo={serviceReq.newProfilePhotoImgUrl}
             />
+
             {userData ? (
                 <IdCardRenderer idCard={userData.identityCard} />
             ) : (
@@ -275,15 +211,12 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     carnet de identidad
                 </span>
             )}
-
             <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-            {serviceReq.vehicles && <VehiclesRenderer vehicles={serviceReq.vehicles} />}
+
             {enterprise === null ? (
                 <span className="loader-green"></span>
-            ) : enterprise === undefined ? (
-                <FieldDeleted description="No se encontro la Empresa Operadora de Grua, es posible que fue eliminada" />
             ) : (
-                <TowRenderer tow={enterprise} />
+                <LaundryRenderer laundry={enterprise} />
             )}
 
             {userData && user.data ? (
@@ -293,25 +226,16 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
             )}
 
             {userData && <UserStatusIndicatorV2 user={userData} />}
-
             <ReqButtonRes
                 onApprove={approve}
                 onDecline={decline}
                 loading={reviewState.loading || userData === null}
                 stateB1={true}
-                stateB2={
-                    userData !== null &&
-                    userData !== undefined &&
-                    !userData.deleted &&
-                    enterprise !== null &&
-                    enterprise !== undefined &&
-                    enterprise.deleted === false &&
-                    enterprise.active === true
-                }
+                stateB2={userData !== null && userData !== undefined && !userData.deleted}
                 alreadyReviewed={reviewState.reviewed || !serviceReq.active}
             />
         </div>
     );
 };
 
-export default TowServiceReq;
+export default LaundryServiceReq;

@@ -58,6 +58,15 @@ const SideBar = () => {
                     <Truck />
                     <span>Grua</span>
                 </Link>
+                <Link
+                    href={"/services/laundry"}
+                    className={`sidebar-option ${
+                        pathname.includes("/services/laundry") && "selected"
+                    }`}
+                >
+                    <Soap />
+                    <span>Lavadero</span>
+                </Link>
             </li>
             <span className="text | medium bolder | margin-bottom-15">Registros</span>
 
@@ -83,7 +92,7 @@ const SideBar = () => {
                 <Link
                     href={"/enterprise/laundry"}
                     className={`sidebar-option ${
-                        pathname.includes("laundry") && "selected"
+                        pathname.includes("/enterprise/laundry") && "selected"
                     }`}
                 >
                     <Soap />

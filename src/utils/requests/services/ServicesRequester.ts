@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { saveBalanceHistoryItem } from "../BalanceHistoryRequester";
 import { nanoid } from "nanoid";
+import { laundryReqCollection } from "./LaundryRequester";
 
 export const MIN_NUM_OF_APPROVALS = 1;
 
@@ -102,12 +103,17 @@ export const numOfApprovals = (req: UserRequest): number => {
     return approvals;
 };
 
-export const getServiceCollection = (type: "driver" | "mechanic" | "tow") => {
-    return type === "driver"
-        ? driveReqCollection
-        : type === "mechanic"
-        ? mechanicReqCollection
-        : towReqCollection;
+export const getServiceCollection = (type: "driver" | "mechanic" | "tow" | "laundry") => {
+    switch (type) {
+        case "driver":
+            return driveReqCollection;
+        case "mechanic":
+            return mechanicReqCollection;
+        case "tow":
+            return towReqCollection;
+        default:
+            return laundryReqCollection;
+    }
 };
 
 export const deleteImages = async (serviceReq: UserRequest) => {

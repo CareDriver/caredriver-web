@@ -3,6 +3,7 @@ export enum Services {
     Driver = "Conductor",
     Mechanic = "Mecánico",
     Tow = "Remolque", // servicios de grúa
+    Laundry = "Lavadero",
 }
 
 export enum ServiceReqState {

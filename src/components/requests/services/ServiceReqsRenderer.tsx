@@ -16,8 +16,12 @@ import MiddleMessage from "@/components/MiddleMessage";
 import "@/styles/components/service-req.css";
 import DataLoaderIndicator from "@/components/DataLoaderIndicator";
 
-const ServiceReqsRenderer = ({ type }: { type: "driver" | "mechanic" | "tow" }) => {
-    const numPerPage = 10;
+const ServiceReqsRenderer = ({
+    type,
+}: {
+    type: "driver" | "mechanic" | "tow" | "laundry";
+}) => {
+    const numPerPage = 14;
     const [data, setData] = useState<UserRequest[] | null>(null);
     const [page, setPage] = useState<number>(1);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
@@ -35,7 +39,9 @@ const ServiceReqsRenderer = ({ type }: { type: "driver" | "mechanic" | "tow" }) 
             .then((pages) => {
                 setPages(pages);
             })
-            .catch(() => {});
+            .catch((e) => {
+                console.log(e);
+            });
     }, []);
 
     useEffect(() => {
@@ -50,7 +56,9 @@ const ServiceReqsRenderer = ({ type }: { type: "driver" | "mechanic" | "tow" }) 
                 }
                 setLastDoc(result.lastDoc);
             })
-            .catch(() => {});
+            .catch((e) => {
+                console.log(e);
+            });
     }, [page]);
 
     return data ? (

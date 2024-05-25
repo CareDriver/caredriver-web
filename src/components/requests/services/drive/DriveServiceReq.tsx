@@ -165,7 +165,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         }
 
                         var userToUpdate: Partial<UserInterface> = {};
-                        if (wasApproved) {
+                        if (wasApproved && !userData.services.includes(Services.Driver)) {
                             userToUpdate = {
                                 ...userToUpdate,
                                 services: [...userData.services, Services.Driver],
@@ -293,10 +293,6 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
             {userData && <UserStatusIndicatorV2 user={userData} />}
 
-            <p className="text | light margin-top-25">
-                Podras contactarte con el usuario despues de <b>aprobar o rechazar</b> la
-                solicitud
-            </p>
             <ReqButtonRes
                 onApprove={approve}
                 onDecline={decline}

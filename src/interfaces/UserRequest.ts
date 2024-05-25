@@ -24,6 +24,7 @@ export const userReqTypes = {
     driver: "Chofer",
     mechanic: "Mecanico",
     tow: "Operador de Grua",
+    laundry: "Lavadero",
 };
 
 export interface UserRequest {
@@ -43,6 +44,7 @@ export interface UserRequest {
     // the url of the real time user selfie for identification verification for the request
     mechanicalWorkShop?: string; // id of the mechanical user works for if is mechanic user
     towEnterprite?: string; // id of the tow enterprise user works for if is tow user
+    laundryEnterprite?: string; // id of the laundry enterprise user works for if is tow user
     services: Services[];
     location?: Locations; // just if user does not have a location registered yet.
     vehicles?: Vehicle[]; // vehicles that are in the request
@@ -129,7 +131,7 @@ export const mechanicReqBuilder = (
     services: Services[],
     location: Locations,
     mechanicalWorkShop: string | null,
-    mechanicTools: string
+    mechanicTools: string,
 ): UserRequest => {
     if (mechanicalWorkShop !== null) {
         return {
@@ -144,7 +146,7 @@ export const mechanicReqBuilder = (
             services: services,
             location,
             mechanicalWorkShop,
-            mechanicTools
+            mechanicTools,
         };
     } else {
         return {
@@ -158,9 +160,34 @@ export const mechanicReqBuilder = (
             realTimePhotoImgUrl,
             services: services,
             location,
-            mechanicTools
+            mechanicTools,
         };
     }
+};
+
+export const laundryReqBuilder = (
+    id: string,
+    userId: string,
+    newFullName: string,
+    newProfilePhotoImgUrl: string | ImgWithRef,
+    realTimePhotoImgUrl: ImgWithRef,
+    services: Services[],
+    location: Locations,
+    laundryEnterprite: string,
+): UserRequest => {
+    return {
+        id,
+        userId,
+        newFullName,
+        newProfilePhotoImgUrl,
+        aproved: false,
+        active: true,
+        reviewedByHistory: [],
+        realTimePhotoImgUrl,
+        services: services,
+        location,
+        laundryEnterprite,
+    };
 };
 
 export const towReqBuilder = (
