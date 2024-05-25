@@ -270,53 +270,44 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 </span>
             )}
 
-            {reviewState.reviewed ? (
-                userData && user.data ? (
-                    <ContactReviewedUser
-                        user={userData}
-                        transmitter={user.data.fullName}
-                    />
-                ) : (
-                    <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
-                )
+            <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+            {serviceReq.vehicles && <VehiclesRenderer vehicles={serviceReq.vehicles} />}
+            {enterprise === null ? (
+                <span className="loader-green"></span>
+            ) : enterprise === undefined ? (
+                <FieldDeleted description="No se encontro la Empresa Operadora de Grua, es posible que fue eliminada" />
             ) : (
-                <>
-                    <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                    {serviceReq.vehicles && (
-                        <VehiclesRenderer vehicles={serviceReq.vehicles} />
-                    )}
-                    {enterprise === null ? (
-                        <span className="loader-green"></span>
-                    ) : enterprise === undefined ? (
-                        <FieldDeleted description="No se encontro la Empresa Operadora de Grua, es posible que fue eliminada" />
-                    ) : (
-                        <TowRenderer tow={enterprise} />
-                    )}
-
-                    {userData && <UserStatusIndicatorV2 user={userData} />}
-
-                    <p className="text | light margin-top-25">
-                        Podras contactarte con el usuario despues de{" "}
-                        <b>aprobar o rechazar</b> la solicitud
-                    </p>
-                    <ReqButtonRes
-                        onApprove={approve}
-                        onDecline={decline}
-                        loading={reviewState.loading || userData === null}
-                        stateB1={true}
-                        stateB2={
-                            userData !== null &&
-                            userData !== undefined &&
-                            !userData.deleted &&
-                            enterprise !== null &&
-                            enterprise !== undefined &&
-                            enterprise.deleted === false &&
-                            enterprise.active === true
-                        }
-                        alreadyReviewed={reviewState.reviewed || !serviceReq.active}
-                    />
-                </>
+                <TowRenderer tow={enterprise} />
             )}
+
+            {userData && user.data ? (
+                <ContactReviewedUser user={userData} transmitter={user.data.fullName} />
+            ) : (
+                <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
+            )}
+
+            {userData && <UserStatusIndicatorV2 user={userData} />}
+
+            <p className="text | light margin-top-25">
+                Podras contactarte con el usuario despues de <b>aprobar o rechazar</b> la
+                solicitud
+            </p>
+            <ReqButtonRes
+                onApprove={approve}
+                onDecline={decline}
+                loading={reviewState.loading || userData === null}
+                stateB1={true}
+                stateB2={
+                    userData !== null &&
+                    userData !== undefined &&
+                    !userData.deleted &&
+                    enterprise !== null &&
+                    enterprise !== undefined &&
+                    enterprise.deleted === false &&
+                    enterprise.active === true
+                }
+                alreadyReviewed={reviewState.reviewed || !serviceReq.active}
+            />
         </div>
     );
 };

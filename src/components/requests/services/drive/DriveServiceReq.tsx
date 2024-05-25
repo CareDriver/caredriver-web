@@ -280,44 +280,31 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 </span>
             )}
 
-            {reviewState.reviewed ? (
-                userData && user.data ? (
-                    <ContactReviewedUser
-                        user={userData}
-                        transmitter={user.data.fullName}
-                    />
-                ) : (
-                    <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
-                )
+            <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+            {serviceReq.vehicles && <VehiclesRenderer vehicles={serviceReq.vehicles} />}
+
+            <PoliceRecords pdf={serviceReq.policeRecordsPdf} />
+
+            {userData && user.data ? (
+                <ContactReviewedUser user={userData} transmitter={user.data.fullName} />
             ) : (
-                <>
-                    <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                    {serviceReq.vehicles && (
-                        <VehiclesRenderer vehicles={serviceReq.vehicles} />
-                    )}
-
-                    <PoliceRecords pdf={serviceReq.policeRecordsPdf} />
-
-                    {userData && <UserStatusIndicatorV2 user={userData} />}
-
-                    <p className="text | light margin-top-25">
-                        Podras contactarte con el usuario despues de{" "}
-                        <b>aprobar o rechazar</b> la solicitud
-                    </p>
-                    <ReqButtonRes
-                        onApprove={approve}
-                        onDecline={decline}
-                        loading={reviewState.loading || userData === null}
-                        stateB1={true}
-                        stateB2={
-                            userData !== null &&
-                            userData !== undefined &&
-                            !userData.deleted
-                        }
-                        alreadyReviewed={reviewState.reviewed || !serviceReq.active}
-                    />
-                </>
+                <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
             )}
+
+            {userData && <UserStatusIndicatorV2 user={userData} />}
+
+            <p className="text | light margin-top-25">
+                Podras contactarte con el usuario despues de <b>aprobar o rechazar</b> la
+                solicitud
+            </p>
+            <ReqButtonRes
+                onApprove={approve}
+                onDecline={decline}
+                loading={reviewState.loading || userData === null}
+                stateB1={true}
+                stateB2={userData !== null && userData !== undefined && !userData.deleted}
+                alreadyReviewed={reviewState.reviewed || !serviceReq.active}
+            />
         </div>
     );
 };
