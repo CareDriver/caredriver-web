@@ -15,6 +15,7 @@ import LocationDot from "@/icons/LocationDot";
 import LogOutIcon from "@/icons/LogOutIcon";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import Soap from "@/icons/Soap";
 
 const SideBar = () => {
     const { logout } = useContext(AuthContext);
@@ -78,6 +79,15 @@ const SideBar = () => {
                 >
                     <Building />
                     <span>Empresas de Grua</span>
+                </Link>
+                <Link
+                    href={"/enterprise/laundry"}
+                    className={`sidebar-option ${
+                        pathname.includes("laundry") && "selected"
+                    }`}
+                >
+                    <Soap />
+                    <span>Lavaderos</span>
                 </Link>
             </li>
             <span className="text | medium bolder | margin-bottom-15">Perfil</span>

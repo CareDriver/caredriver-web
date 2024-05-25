@@ -3,8 +3,8 @@ import "react-international-phone/style.css";
 
 import { AuthContext } from "@/context/AuthContext";
 import {
+    isValidCraneName,
     isValidForm,
-    isValidWorkshopName,
     verifyNoEmptyData,
 } from "@/utils/validator/enterprises/EnterpriseValidator";
 import { FormEvent, useContext, useEffect, useState } from "react";
@@ -39,7 +39,7 @@ interface FormData {
     };
 }
 
-const MechanicRegister = () => {
+const LaundryRegistrationByAdmin = () => {
     const { user, loadingUser } = useContext(AuthContext);
     const router = useRouter();
     const [formState, setFormState] = useState({
@@ -95,7 +95,7 @@ const MechanicRegister = () => {
                         var id = nanoid(25);
                         const enterprise: Enterprise = {
                             id,
-                            type: "mechanical",
+                            type: "laundry",
                             name: formData.name.value,
                             logoImgUrl: imgWithRef,
                             coordinates: new GeoPoint(
@@ -106,23 +106,22 @@ const MechanicRegister = () => {
                             longitude: formData.coordinates.value.lng,
                             phone: formData.phone.value,
                             userId: user.data.id,
-                            aproved: false,
+                            aproved: true,
                             deleted: false,
                             active: true,
                         };
 
                         await toast.promise(sendEnterpriseReq(id, enterprise), {
-                            pending: "Enviando el formulario, por favor espera",
-                            success: "Formulario enviado",
-                            error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                            pending: "Creando lavadero",
+                            success: "Creado",
+                            error: "Error al crear lavadero, intentalo de nuevo por favor",
                         });
 
                         setFormState({
                             ...formState,
                             loading: false,
                         });
-                        toast.info("Tu solicitud sera revisada, por favor se paciente");
-                        router.push("/enterprise/workshops");
+                        router.push("/admin/enterprises/laundry");
                     } catch (e) {
                         window.location.reload();
                     }
@@ -149,7 +148,7 @@ const MechanicRegister = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        const { isValid, message } = isValidWorkshopName(value);
+        const { isValid, message } = isValidCraneName(value);
 
         setFormData({
             ...formData,
@@ -180,11 +179,7 @@ const MechanicRegister = () => {
 
     return (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">Registar Taller Mecanico</h1>
-            <p className="text | light">
-                Necesitamos verificar que el taller mecanico es valido antes de
-                registrarlo.
-            </p>
+            <h1 className="text | big bolder">Registar Lavadero</h1>
             <form
                 className="form-sub-container | margin-top-50"
                 onSubmit={handleSummbit}
@@ -199,7 +194,7 @@ const MechanicRegister = () => {
                         name="fullname"
                         onChange={(e) => handleInputChange(e)}
                     />
-                    <legend className="form-section-legend">Nombre del taller</legend>
+                    <legend className="form-section-legend">Nombre del Lavadero</legend>
 
                     {formData.name.message && <small>{formData.name.message}</small>}
                 </fieldset>
@@ -222,13 +217,13 @@ const MechanicRegister = () => {
                         }}
                         content={{
                             id: "workshop-uploader-image",
-                            indicator: "Logo del Taller",
+                            indicator: "Logo del Lavadero",
                             isCircle: true,
                         }}
                     />
                 </div>
                 <fieldset className="form-section">
-                    <span className="text | bold gray-dark">Ubicacion del Taller</span>
+                    <span className="text | bold gray-dark">Ubicacion del Lavadero</span>
                     <div className="form-section-map | max-width-80">
                         <MapForm
                             location={formData.coordinates.value}
@@ -248,7 +243,7 @@ const MechanicRegister = () => {
                     )}
                 </fieldset>
                 <button
-                    className={`general-button | touchable margin-top-25 max-width-60 ${
+                    className={`general-button | margin-top-25 max-width-60 touchable ${
                         formState.loading && "loading-section"
                     }`}
                     title={
@@ -261,7 +256,7 @@ const MechanicRegister = () => {
                     {formState.loading ? (
                         <span className="loader"></span>
                     ) : (
-                        "Solicitar registro"
+                        "Registrar"
                     )}
                 </button>
             </form>
@@ -269,4 +264,4 @@ const MechanicRegister = () => {
     );
 };
 
-export default MechanicRegister;
+export default LaundryRegistrationByAdmin;

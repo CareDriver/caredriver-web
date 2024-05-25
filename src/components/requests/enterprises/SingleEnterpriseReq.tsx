@@ -7,13 +7,14 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import EnterpriseReqRender from "./EnterpriseReqRender";
+import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 
 const SingleEnterpriseReq = ({
     reqId,
     type,
 }: {
     reqId: string;
-    type: "mechanical" | "tow";
+    type: "mechanical" | "tow" | "laundry";
 }) => {
     const [serviceReq, setServiceReq] = useState<Enterprise | null>(null);
     const router = useRouter();
@@ -24,20 +25,12 @@ const SingleEnterpriseReq = ({
                 if (data) {
                     setServiceReq(data);
                 } else {
-                    router.push(
-                        `/admin/requests/enterprises/${
-                            type === "tow" ? "cranes" : "workshops"
-                        }`,
-                    );
+                    router.push(`/admin/requests/enterprises/${getRoute(type)}`);
                     toast.error("Peticion no encontrada");
                 }
             })
             .catch((e) => {
-                router.push(
-                    `/admin/requests/enterprises/${
-                        type === "tow" ? "cranes" : "workshops"
-                    }`,
-                );
+                router.push(`/admin/requests/enterprises/${getRoute(type)}`);
                 toast.error("Peticion no encontrada");
             });
     }, []);

@@ -1,5 +1,6 @@
 import PersonCircleCheck from "@/icons/PersonCircleCheck";
 import { Enterprise } from "@/interfaces/Enterprise";
+import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 import Link from "next/link";
 
 const EnterpriseItemReq = ({
@@ -7,13 +8,11 @@ const EnterpriseItemReq = ({
     type,
 }: {
     enterprise: Enterprise;
-    type: "mechanical" | "tow";
+    type: "mechanical" | "tow" | "laundry";
 }) => {
     return (
         <Link
-            href={`/admin/requests/enterprises/${
-                type === "tow" ? "cranes" : "workshops"
-            }/${enterprise.id}`}
+            href={`/admin/requests/enterprises/${getRoute(type)}/${enterprise.id}`}
             className="enterprise-req-item | touchable"
         >
             <h3 className="enterprise-req-item-title">{enterprise.name}</h3>

@@ -10,6 +10,7 @@ import { locationList, Locations } from "@/interfaces/Locations";
 import { getGreeting } from "@/utils/contact/Content";
 import { sendWhatsapp } from "@/utils/contact/Sender";
 import ChevronDown from "@/icons/ChevronDown";
+import { PHONE_BUSINESS } from "@/database/Business";
 
 const ChangeLocationReq = () => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -39,13 +40,12 @@ const ChangeLocationReq = () => {
     }, [loadingUser]);
 
     const sendMessage = () => {
-        const number = "+59164868951";
         const message = `${getGreeting()}\n\nSoy el usuario servidor ${
             user.data?.fullName
         }, quiero pedirle cambiarme de grupo porque **acabo de cambiar mi localizacion de ${
             location.default
         } a ${location.value}**`;
-        sendWhatsapp(number, message);
+        sendWhatsapp(PHONE_BUSINESS, message);
     };
 
     const submit = async (e: FormEvent) => {

@@ -11,18 +11,18 @@ import MoneyBillWave from "@/icons/MoneyBillWave";
 import { getGreeting } from "@/utils/contact/Content";
 import { sendWhatsapp } from "@/utils/contact/Sender";
 import { DEFAULT_PHOTO } from "@/utils/user/UserData";
+import { PHONE_BUSINESS } from "@/database/Business";
 
 const UserProfile = () => {
     const { user, loadingUser } = useContext(AuthContext);
 
     const sendMessageToPay = () => {
         if (user.data) {
-            const number = "+59164868951";
             const message = `${getGreeting()}\n\nSoy el usuario servidor ${
                 user.data?.fullName
             }, **quiero recargar saldo por favor**`;
 
-            sendWhatsapp(number, message);
+            sendWhatsapp(PHONE_BUSINESS, message);
         }
     };
 

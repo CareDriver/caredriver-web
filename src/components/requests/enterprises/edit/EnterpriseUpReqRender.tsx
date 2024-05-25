@@ -3,6 +3,9 @@
 import {
     Enterprise,
     EnterpriseTypeRender,
+    EnterpriseTypeRenderPronoun,
+    EnterpriseTypeRenderPronounV2,
+    EnterpriseTypeRenderPronounV3,
     ReqEditEnterprise,
 } from "@/interfaces/Enterprise";
 import EnterpriseRenderer from "../../data_renderer/enterprise/EnterpriseRenderer";
@@ -18,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { deleteDocument, deleteFile } from "@/utils/requests/FileUploader";
 import { Collections } from "@/firebase/CollecionNames";
 import EnterpriseState from "../../data_renderer/enterprise/EnterpriseState";
+import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 
 const EnterpriseUpReqRender = ({
     enterprise,
@@ -68,16 +72,14 @@ const EnterpriseUpReqRender = ({
                         });
                     }
                     await toast.promise(updating(), {
-                        pending: `Editando ${enterprise.type === "tow" ? "la" : "el"} ${
-                            EnterpriseTypeRender[enterprise.type]
+                        pending: `Editando ${
+                            EnterpriseTypeRenderPronoun[enterprise.type]
                         }`,
                         success: "Editado",
                         error: "Error al editar, intentalo de nuevo por favor",
                     });
                     router.push(
-                        `/admin/requests/enterprises/edit${
-                            enterprise.type === "tow" ? "cranes" : "workshops"
-                        }`,
+                        `/admin/requests/enterprises/edit${getRoute(enterprise.type)}`,
                     );
                 } else {
                     toast.error(
@@ -117,12 +119,12 @@ const EnterpriseUpReqRender = ({
                         deleteDocument(Collections.EditEnterprises, enterprise.id),
                         {
                             pending: `Rechazando la edicion ${
-                                enterprise.type === "tow" ? "de la" : "del"
-                            } ${EnterpriseTypeRender[enterprise.type]}`,
+                                EnterpriseTypeRenderPronounV2[enterprise.type]
+                            }`,
                             success: "Rechazado",
                             error: `Error al rechazar ${
-                                enterprise.type === "tow" ? "la" : "el"
-                            } ${EnterpriseTypeRender[enterprise.type]}`,
+                                EnterpriseTypeRenderPronounV2[enterprise.type]
+                            }`,
                         },
                     );
                     if (logoChanged) {
@@ -134,9 +136,7 @@ const EnterpriseUpReqRender = ({
                     }
 
                     router.push(
-                        `/admin/requests/enterprises/edit${
-                            enterprise.type === "tow" ? "cranes" : "workshops"
-                        }`,
+                        `/admin/requests/enterprises/edit${getRoute(enterprise.type)}`,
                     );
                 } else {
                     toast.error(
@@ -163,8 +163,7 @@ const EnterpriseUpReqRender = ({
     return (
         <section className="service-form-wrapper | max-width-60">
             <h1 className="text | big-medium bolder margin-bottom-25 capitalize">
-                Solicitud para editar {enterprise.type === "tow" ? "una" : "un"}{" "}
-                {EnterpriseTypeRender[enterprise.type]}
+                Solicitud para editar {EnterpriseTypeRenderPronounV3[enterprise.type]}
             </h1>
             <EnterpriseState enterprise={realEnteprise} />
             <EnterpriseRenderer enterprise={enterprise} />

@@ -4,7 +4,11 @@ import PageLoader from "@/components/PageLoader";
 import { DocumentSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import "@/styles/components/pagination.css";
-import { EnterpriseTypeRender, ReqEditEnterprise } from "@/interfaces/Enterprise";
+import {
+    EnterpriseTypeRender,
+    EnterpriseTypeRenderPronounV3,
+    ReqEditEnterprise,
+} from "@/interfaces/Enterprise";
 import {
     getEditEnterpriseReqs,
     getEditEnterpriseReqsNumPages,
@@ -15,7 +19,7 @@ import "@/styles/components/enterprise-req.css";
 import MiddleMessage from "@/components/MiddleMessage";
 import DataLoaderIndicator from "@/components/DataLoaderIndicator";
 
-const EnterpriseUpReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
+const EnterpriseUpReqsRender = ({ type }: { type: "mechanical" | "tow" | "laundry" }) => {
     const numPerPage = 10;
     const [data, setData] = useState<ReqEditEnterprise[] | null>(null);
     const [page, setPage] = useState<number>(1);
@@ -54,8 +58,7 @@ const EnterpriseUpReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
         data.length > 0 ? (
             <div className="render-data-wrapper">
                 <h1 className={"text | big-medium bolder margin-bottom-25 capitalize"}>
-                    Solicitudes para editar {type === "tow" ? "una" : "un"}{" "}
-                    {EnterpriseTypeRender[type]}
+                    Solicitudes para editar {EnterpriseTypeRenderPronounV3[type]}
                 </h1>
                 <InfiniteScroll
                     dataLength={data.length}
@@ -76,8 +79,7 @@ const EnterpriseUpReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
             </div>
         ) : (
             <MiddleMessage
-                message={`No hay peticiones para editar ${type === "tow" ? "una" : "un"} 
-                ${EnterpriseTypeRender[type]}`}
+                message={`No hay peticiones para editar ${EnterpriseTypeRenderPronounV3[type]}`}
             />
         )
     ) : (

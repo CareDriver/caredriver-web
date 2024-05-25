@@ -102,6 +102,8 @@ const WorkshopRegisterByAdmin = () => {
                                 formData.coordinates.value.lat,
                                 formData.coordinates.value.lng,
                             ),
+                            latitude: formData.coordinates.value.lat,
+                            longitude: formData.coordinates.value.lng,
                             phone: formData.phone.value,
                             userId: user.data.id,
                             aproved: true,

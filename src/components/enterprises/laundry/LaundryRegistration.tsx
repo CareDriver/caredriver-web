@@ -3,8 +3,8 @@ import "react-international-phone/style.css";
 
 import { AuthContext } from "@/context/AuthContext";
 import {
+    isValidCraneName,
     isValidForm,
-    isValidWorkshopName,
     verifyNoEmptyData,
 } from "@/utils/validator/enterprises/EnterpriseValidator";
 import { FormEvent, useContext, useEffect, useState } from "react";
@@ -39,7 +39,7 @@ interface FormData {
     };
 }
 
-const MechanicRegister = () => {
+const LaundryRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
     const router = useRouter();
     const [formState, setFormState] = useState({
@@ -95,7 +95,7 @@ const MechanicRegister = () => {
                         var id = nanoid(25);
                         const enterprise: Enterprise = {
                             id,
-                            type: "mechanical",
+                            type: "laundry",
                             name: formData.name.value,
                             logoImgUrl: imgWithRef,
                             coordinates: new GeoPoint(
@@ -122,7 +122,7 @@ const MechanicRegister = () => {
                             loading: false,
                         });
                         toast.info("Tu solicitud sera revisada, por favor se paciente");
-                        router.push("/enterprise/workshops");
+                        router.push("/enterprise/laundry");
                     } catch (e) {
                         window.location.reload();
                     }
@@ -149,7 +149,7 @@ const MechanicRegister = () => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        const { isValid, message } = isValidWorkshopName(value);
+        const { isValid, message } = isValidCraneName(value);
 
         setFormData({
             ...formData,
@@ -180,10 +180,10 @@ const MechanicRegister = () => {
 
     return (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">Registar Taller Mecanico</h1>
+            <h1 className="text | big bolder">Registar Lavadero</h1>
             <p className="text | light">
-                Necesitamos verificar que el taller mecanico es valido antes de
-                registrarlo.
+                Necesitamos verificar que el nuevo lavadoro de vehiculos sea valido antes
+                de registrarlo.
             </p>
             <form
                 className="form-sub-container | margin-top-50"
@@ -199,7 +199,7 @@ const MechanicRegister = () => {
                         name="fullname"
                         onChange={(e) => handleInputChange(e)}
                     />
-                    <legend className="form-section-legend">Nombre del taller</legend>
+                    <legend className="form-section-legend">Nombre del Lavadero</legend>
 
                     {formData.name.message && <small>{formData.name.message}</small>}
                 </fieldset>
@@ -221,14 +221,14 @@ const MechanicRegister = () => {
                                 }),
                         }}
                         content={{
-                            id: "workshop-uploader-image",
-                            indicator: "Logo del Taller",
+                            id: "laundry-uploader-image",
+                            indicator: "Logo del Lavadero",
                             isCircle: true,
                         }}
                     />
                 </div>
                 <fieldset className="form-section">
-                    <span className="text | bold gray-dark">Ubicacion del Taller</span>
+                    <span className="text | bold gray-dark">Ubicacion del Lavadero</span>
                     <div className="form-section-map | max-width-80">
                         <MapForm
                             location={formData.coordinates.value}
@@ -248,7 +248,7 @@ const MechanicRegister = () => {
                     )}
                 </fieldset>
                 <button
-                    className={`general-button | touchable margin-top-25 max-width-60 ${
+                    className={`general-button | margin-top-25 max-width-60 touchable ${
                         formState.loading && "loading-section"
                     }`}
                     title={
@@ -269,4 +269,4 @@ const MechanicRegister = () => {
     );
 };
 
-export default MechanicRegister;
+export default LaundryRegistration;

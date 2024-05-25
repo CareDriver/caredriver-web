@@ -21,6 +21,7 @@ import AddressCar from "@/icons/AddressCar";
 import Users from "@/icons/Users";
 import { UserRole } from "@/interfaces/UserInterface";
 import UserTie from "@/icons/UserTie";
+import Soap from "@/icons/Soap";
 const AdminSideBar = () => {
     const { logout } = useContext(AuthContext);
     const pathname = usePathname();
@@ -107,7 +108,7 @@ const AdminSideBar = () => {
                             </Link>
                             <Link
                                 href={"/admin/requests/enterprises/editcranes"}
-                                className={`sidebar-option lb-icon ${
+                                className={`sidebar-option ${
                                     pathname.includes(
                                         "requests/enterprises/editcranes",
                                     ) && "selected"
@@ -116,6 +117,28 @@ const AdminSideBar = () => {
                                 <TowReq />
                                 <span>Editar Empresas de Grua</span>
                             </Link>
+                            <Link
+                                href={"/admin/requests/enterprises/laundry"}
+                                className={`sidebar-option ${
+                                    pathname.includes("/requests/enterprises/laundry") &&
+                                    "selected"
+                                }`}
+                            >
+                                <Soap />
+                                <span>Crear Lavaderos</span>
+                            </Link>
+                            <Link
+                                href={"/admin/requests/enterprises/editlaundry"}
+                                className={`sidebar-option ${
+                                    pathname.includes(
+                                        "requests/enterprises/editlaundry",
+                                    ) && "selected"
+                                }`}
+                            >
+                                <Soap />
+                                <span>Editar Lavaderos</span>
+                            </Link>
+
                             <div>
                                 <i className="separator-horizontal"></i>
                             </div>
@@ -178,6 +201,17 @@ const AdminSideBar = () => {
                     >
                         <Building />
                         <span>Empresas de Grua</span>
+                    </Link>
+                    <Link
+                        href={"/admin/enterprises/laundry"}
+                        className={`sidebar-option ${
+                            pathname.includes("laundry") &&
+                            !pathname.includes("requests") &&
+                            "selected"
+                        }`}
+                    >
+                        <Soap />
+                        <span>Lavaderos</span>
                     </Link>
                 </li>
                 <span className="text | medium bolder | margin-bottom-15">Perfil</span>

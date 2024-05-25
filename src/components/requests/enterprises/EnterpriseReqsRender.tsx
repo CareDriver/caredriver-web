@@ -9,13 +9,17 @@ import {
     getEnterpriseReqs,
     getEnterpriseReqsNumPages,
 } from "@/utils/requests/enterprise/EnterpriseRequester";
-import { Enterprise, EnterpriseTypeRender } from "@/interfaces/Enterprise";
+import {
+    Enterprise,
+    EnterpriseTypeRender,
+    EnterpriseTypeRenderPronounV3,
+} from "@/interfaces/Enterprise";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "@/styles/components/enterprise-req.css";
 import MiddleMessage from "@/components/MiddleMessage";
 import DataLoaderIndicator from "@/components/DataLoaderIndicator";
 
-const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
+const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" | "laundry" }) => {
     const numPerPage = 10;
     const [data, setData] = useState<Enterprise[] | null>(null);
     const [page, setPage] = useState<number>(1);
@@ -54,8 +58,7 @@ const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
         data.length > 0 ? (
             <div className="render-data-wrapper">
                 <h1 className={"text | big-medium bolder margin-bottom-25 capitalize"}>
-                    Solicitudes para crear {type === "tow" ? "una" : "un"}{" "}
-                    {EnterpriseTypeRender[type]}
+                    Solicitudes para crear {EnterpriseTypeRenderPronounV3[type]}
                 </h1>
 
                 <InfiniteScroll
@@ -77,8 +80,7 @@ const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" }) => {
             </div>
         ) : (
             <MiddleMessage
-                message={`No hay peticiones para crear ${type === "tow" ? "una" : "un"} 
-            ${EnterpriseTypeRender[type]}`}
+                message={`No hay peticiones para crear ${EnterpriseTypeRenderPronounV3[type]}`}
             />
         )
     ) : (
