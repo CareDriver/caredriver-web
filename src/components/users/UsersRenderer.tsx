@@ -18,7 +18,6 @@ import "@/styles/modules/search.css";
 import "@/styles/components/users.css";
 import Search from "@/icons/Search";
 import Link from "next/link";
-import Plus from "@/icons/Plus";
 import DataLoaderIndicator from "../DataLoaderIndicator";
 import UserPlus from "@/icons/UserPlus";
 

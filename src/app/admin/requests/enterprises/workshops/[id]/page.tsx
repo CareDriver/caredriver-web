@@ -1,11 +1,11 @@
+import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import SingleEnterpriseReq from "@/components/requests/enterprises/SingleEnterpriseReq";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const SingleWorlshopReqRegistrationPage = ({ params }: { params: any }) => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageRequestPermission>
             <SingleEnterpriseReq reqId={params.id} type="mechanical" />
-        </AdminWrapperWithSideBar>
+        </PageRequestPermission>
     );
 };
 

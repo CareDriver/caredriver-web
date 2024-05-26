@@ -1,11 +1,11 @@
+import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import UpPhotoReqsRenderer from "@/components/requests/userinfo/photos/UpPhotoReqsRenderer";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const ListOfPhotosReqToUpdatePage = () => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageRequestPermission>
             <UpPhotoReqsRenderer />
-        </AdminWrapperWithSideBar>
+        </PageRequestPermission>
     );
 };
 

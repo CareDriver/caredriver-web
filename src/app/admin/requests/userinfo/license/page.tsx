@@ -1,11 +1,11 @@
+import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import LicenseReqsRenderer from "@/components/requests/userinfo/licenses/LicenseReqsRenderer";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const ListOfLicensesReqToUpdatePage = () => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageRequestPermission>
             <LicenseReqsRenderer />
-        </AdminWrapperWithSideBar>
+        </PageRequestPermission>
     );
 };
 

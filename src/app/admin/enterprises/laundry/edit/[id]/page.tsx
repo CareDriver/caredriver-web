@@ -1,12 +1,12 @@
 import EnterpriseEditByAdmin from "@/components/enterprises/admin/EnterpriseEditByAdmin";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+import PageEnterprisePermission from "@/components/permission/page/concrets/PageEnterprisePermission";
 
-const EditCranceByAdminPage = ({ params }: { params: any }) => {
+const EditLaundryByAdminPage = ({ params }: { params: any }) => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageEnterprisePermission>
             <EnterpriseEditByAdmin id={params.id} type="laundry" />;
-        </AdminWrapperWithSideBar>
+        </PageEnterprisePermission>
     );
 };
 
-export default EditCranceByAdminPage;
+export default EditLaundryByAdminPage;

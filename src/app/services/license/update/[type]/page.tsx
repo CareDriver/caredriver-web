@@ -1,11 +1,14 @@
+import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 import LicenseUpdater from "@/components/services/LicenseUpdater";
-import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+import ServiceWrapper from "@/components/services/ServiceWrapper";
 
 const UpdateLicensePage = ({ params }: { params: any }) => {
     return (
-        <WrapperWithSideBar>
-            <LicenseUpdater type={params.type} />
-        </WrapperWithSideBar>
+        <PageServerUserPermission>
+            <ServiceWrapper>
+                <LicenseUpdater type={params.type} />
+            </ServiceWrapper>
+        </PageServerUserPermission>
     );
 };
 

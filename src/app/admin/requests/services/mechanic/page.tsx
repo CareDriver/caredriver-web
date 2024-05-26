@@ -1,11 +1,11 @@
+import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import ServiceReqsRenderer from "@/components/requests/services/ServiceReqsRenderer";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const ReqsMechanicServicePage = () => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageRequestPermission>
             <ServiceReqsRenderer type="mechanic" />
-        </AdminWrapperWithSideBar>
+        </PageRequestPermission>
     );
 };
 

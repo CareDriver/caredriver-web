@@ -1,14 +1,14 @@
+import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 import LaundryService from "@/components/services/laundry/LaundryService";
 import ServiceWrapper from "@/components/services/ServiceWrapper";
-import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
 
 const MechanicPage = () => {
     return (
-        <WrapperWithSideBar>
+        <PageServerUserPermission>
             <ServiceWrapper>
                 <LaundryService />
             </ServiceWrapper>
-        </WrapperWithSideBar>
+        </PageServerUserPermission>
     );
 };
 

@@ -1,11 +1,11 @@
 import CraneRegistrationByAdmin from "@/components/enterprises/crane/CraneRegistrationByAdmin";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+import PageEnterprisePermission from "@/components/permission/page/concrets/PageEnterprisePermission";
 
 const RegisterCraneByAdminPage = () => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageEnterprisePermission>
             <CraneRegistrationByAdmin />;
-        </AdminWrapperWithSideBar>
+        </PageEnterprisePermission>
     );
 };
 

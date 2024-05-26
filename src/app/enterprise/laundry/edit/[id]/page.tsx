@@ -1,12 +1,12 @@
 import EnterpriseEditData from "@/components/enterprises/EnterpriseEditData";
-import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 
-const EditCrangePage = ({ params }: { params: any }) => {
+const EditLaundryEnterprisePage = ({ params }: { params: any }) => {
     return (
-        <WrapperWithSideBar>
+        <PageServerUserPermission>
             <EnterpriseEditData type="laundry" id={params.id} />
-        </WrapperWithSideBar>
+        </PageServerUserPermission>
     );
 };
 
-export default EditCrangePage;
+export default EditLaundryEnterprisePage;

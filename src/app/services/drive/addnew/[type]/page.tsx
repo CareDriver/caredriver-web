@@ -1,11 +1,11 @@
+import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 import AddNewVehicle from "@/components/services/drive/registration/AddNewVehicle";
-import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
 
 const AddNewDrivePage = ({ params }: { params: any }) => {
     return (
-        <WrapperWithSideBar>
+        <PageServerUserPermission>
             <AddNewVehicle type={params.type} />
-        </WrapperWithSideBar>
+        </PageServerUserPermission>
     );
 };
 

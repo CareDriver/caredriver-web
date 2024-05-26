@@ -1,11 +1,11 @@
 import EnterpriseEditByAdmin from "@/components/enterprises/admin/EnterpriseEditByAdmin";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+import PageEnterprisePermission from "@/components/permission/page/concrets/PageEnterprisePermission";
 
 const EditCranceByAdminPage = ({ params }: { params: any }) => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageEnterprisePermission>
             <EnterpriseEditByAdmin id={params.id} type="tow" />;
-        </AdminWrapperWithSideBar>
+        </PageEnterprisePermission>
     );
 };
 

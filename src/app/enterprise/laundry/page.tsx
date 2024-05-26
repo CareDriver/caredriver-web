@@ -1,11 +1,11 @@
 import LaundryPanel from "@/components/enterprises/laundry/LaundryPanel";
-import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 
 const CraneworkshopPage = () => {
     return (
-        <WrapperWithSideBar>
+        <PageServerUserPermission>
             <LaundryPanel />
-        </WrapperWithSideBar>
+        </PageServerUserPermission>
     );
 };
 

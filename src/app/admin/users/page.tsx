@@ -1,11 +1,15 @@
+import PagePermissionValidator from "@/components/permission/page/PagePermissionValidator";
 import UsersRenderer from "@/components/users/UsersRenderer";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+import { ROLES_TO_VIEW_USERS } from "@/utils/validator/roles/RoleValidator";
 
 const ListOfUsersOntheApplicationPage = () => {
     return (
-        <AdminWrapperWithSideBar>
-            <UsersRenderer />
-        </AdminWrapperWithSideBar>
+        <PagePermissionValidator roles={ROLES_TO_VIEW_USERS}>
+            <WrapperWithSideBar>
+                <UsersRenderer />
+            </WrapperWithSideBar>
+        </PagePermissionValidator>
     );
 };
 

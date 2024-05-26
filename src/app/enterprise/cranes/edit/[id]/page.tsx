@@ -1,11 +1,11 @@
 import EnterpriseEditData from "@/components/enterprises/EnterpriseEditData";
-import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 
 const EditCrangePage = ({ params }: { params: any }) => {
     return (
-        <WrapperWithSideBar>
+        <PageServerUserPermission>
             <EnterpriseEditData type="tow" id={params.id} />
-        </WrapperWithSideBar>
+        </PageServerUserPermission>
     );
 };
 

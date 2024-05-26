@@ -11,7 +11,6 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         if (!loadingUser && user.data) {
             toast.info("Ya estas authenticado");
-            window.location.replace("/services/drive");
         }
     }, [loadingUser]);
 

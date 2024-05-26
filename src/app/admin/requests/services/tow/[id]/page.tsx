@@ -1,11 +1,11 @@
+import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import SingleServiceReq from "@/components/requests/services/SingleServiceReq";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const SingleTowReqPage = ({ params }: { params: any }) => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageRequestPermission>
             <SingleServiceReq reqId={params.id} type="tow" />
-        </AdminWrapperWithSideBar>
+        </PageRequestPermission>
     );
 };
 

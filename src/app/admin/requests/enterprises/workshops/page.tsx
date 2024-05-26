@@ -1,11 +1,11 @@
+import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import EnterpriseReqsRender from "@/components/requests/enterprises/EnterpriseReqsRender";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const ListOfWorkhopReqToCreate = () => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageRequestPermission>
             <EnterpriseReqsRender type="mechanical" />
-        </AdminWrapperWithSideBar>
+        </PageRequestPermission>
     );
 };
 

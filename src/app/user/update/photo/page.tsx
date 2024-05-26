@@ -1,11 +1,11 @@
+import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 import ChangePhotoReq from "@/components/user/server_user/ChangePhotoReq";
-import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
 
 const UpdateUserPhoto = () => {
     return (
-        <WrapperWithSideBar>
+        <PageServerUserPermission>
             <ChangePhotoReq />
-        </WrapperWithSideBar>
+        </PageServerUserPermission>
     );
 };
 

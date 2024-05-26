@@ -1,11 +1,11 @@
+import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import EnterpriseUpReqsRender from "@/components/requests/enterprises/edit/EnterpriseUpReqsRender";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const WorkshopUpReqsRenderPage = () => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageRequestPermission>
             <EnterpriseUpReqsRender type="mechanical" />
-        </AdminWrapperWithSideBar>
+        </PageRequestPermission>
     );
 };
 

@@ -1,12 +1,11 @@
 import LaundryRegistrationByAdmin from "@/components/enterprises/laundry/LaundryRegistrationByAdmin";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
-
-const RegisterCraneByAdminPage = () => {
+import PageEnterprisePermission from "@/components/permission/page/concrets/PageEnterprisePermission";
+const RegisterLaundryByAdminPage = () => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageEnterprisePermission>
             <LaundryRegistrationByAdmin />;
-        </AdminWrapperWithSideBar>
+        </PageEnterprisePermission>
     );
 };
 
-export default RegisterCraneByAdminPage;
+export default RegisterLaundryByAdminPage;

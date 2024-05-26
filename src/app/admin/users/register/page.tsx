@@ -1,12 +1,16 @@
 import UserRegistration from "@/components/auth/UserRegistration";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+import PagePermissionValidator from "@/components/permission/page/PagePermissionValidator";
+import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+import { ROLES_TO_ADD_USERS } from "@/utils/validator/roles/RoleValidator";
 
-const RegisterNewSupportUserPage = () => {
+const RegisterNewUserPage = () => {
     return (
-        <AdminWrapperWithSideBar>
-            <UserRegistration />
-        </AdminWrapperWithSideBar>
+        <PagePermissionValidator roles={ROLES_TO_ADD_USERS}>
+            <WrapperWithSideBar>
+                <UserRegistration />
+            </WrapperWithSideBar>
+        </PagePermissionValidator>
     );
 };
 
-export default RegisterNewSupportUserPage;
+export default RegisterNewUserPage;

@@ -1,11 +1,11 @@
+import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import SingleUpPhotoReq from "@/components/requests/userinfo/photos/SingleUpPhotoReq";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const SingleNewProfilePhotoReqPage = ({ params }: { params: any }) => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageRequestPermission>
             <SingleUpPhotoReq reqId={params.id} />
-        </AdminWrapperWithSideBar>
+        </PageRequestPermission>
     );
 };
 

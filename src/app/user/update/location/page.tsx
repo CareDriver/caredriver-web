@@ -1,11 +1,11 @@
+import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 import ChangeLocationReq from "@/components/user/server_user/ChangeLocationReq";
-import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
 
 const UserLocationPage = () => {
     return (
-        <WrapperWithSideBar>
+        <PageServerUserPermission>
             <ChangeLocationReq />
-        </WrapperWithSideBar>
+        </PageServerUserPermission>
     );
 };
 

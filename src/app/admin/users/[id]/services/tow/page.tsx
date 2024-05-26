@@ -1,11 +1,11 @@
 import ServicesServedByUser from "@/components/done_services/served/ServicesServedByUser";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+import PageUserInfoPermission from "@/components/permission/page/concrets/PageUserInfoPermission";
 
 const ListOfTowServiceReqsByUser = ({ params }: { params: any }) => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageUserInfoPermission>
             <ServicesServedByUser serviceUserId={params.id} type="tow" />
-        </AdminWrapperWithSideBar>
+        </PageUserInfoPermission>
     );
 };
 

@@ -1,12 +1,12 @@
 import LaundryRegistration from "@/components/enterprises/laundry/LaundryRegistration";
-import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 
-const CraneworkshopRegisterPage = () => {
+const LaundryEnterpriseRegisterPage = () => {
     return (
-        <WrapperWithSideBar>
+        <PageServerUserPermission>
             <LaundryRegistration />
-        </WrapperWithSideBar>
+        </PageServerUserPermission>
     );
 };
 
-export default CraneworkshopRegisterPage;
+export default LaundryEnterpriseRegisterPage;

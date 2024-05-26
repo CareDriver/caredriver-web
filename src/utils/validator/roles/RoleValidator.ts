@@ -1,0 +1,47 @@
+import { UserRole } from "@/interfaces/UserInterface";
+
+export const checkPermission = (
+    role: string | undefined,
+    validRoles: UserRole[],
+): boolean => {
+    if (role) {
+        return validRoles.map((r) => r.toString()).includes(role);
+    } else {
+        return false;
+    }
+};
+
+export const ROLES_TO_REVIEW_REQUESTS: UserRole[] = [UserRole.Admin, UserRole.SupportTwo];
+
+export const ROLES_TO_VIEW_USERS: UserRole[] = [
+    UserRole.Admin,
+    UserRole.Support,
+    UserRole.SupportTwo,
+    UserRole.BalanceRecharge,
+];
+
+export const ROLES_TO_VIEW_USERS_INFO: UserRole[] = [
+    UserRole.Admin,
+    UserRole.Support,
+    UserRole.SupportTwo,
+];
+
+export const ROLES_TO_ADD_USERS: UserRole[] = [UserRole.Admin];
+
+export const ROLES_TO_MANAGEMENT_BALANCE: UserRole[] = [
+    UserRole.Admin,
+    UserRole.Support,
+    UserRole.SupportTwo,
+    UserRole.BalanceRecharge,
+];
+
+export const ROLES_TO_MANAGEMENT_ENTERPRISES: UserRole[] = [UserRole.Admin];
+
+export const ROLES_TO_SEE_NO_USER_PROFILE: UserRole[] = [
+    UserRole.Admin,
+    UserRole.Support,
+    UserRole.SupportTwo,
+    UserRole.BalanceRecharge,
+];
+
+export const ROLES_FOR_SERVER_USER_ACTIONS: UserRole[] = [UserRole.User, UserRole.Admin];

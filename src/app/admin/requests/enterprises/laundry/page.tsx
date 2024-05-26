@@ -1,12 +1,12 @@
+import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import EnterpriseReqsRender from "@/components/requests/enterprises/EnterpriseReqsRender";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
-const ListOfCraneReqToCreate = () => {
+const ListOfLaundryReqToCreate = () => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageRequestPermission>
             <EnterpriseReqsRender type="laundry" />
-        </AdminWrapperWithSideBar>
+        </PageRequestPermission>
     );
 };
 
-export default ListOfCraneReqToCreate;
+export default ListOfLaundryReqToCreate;

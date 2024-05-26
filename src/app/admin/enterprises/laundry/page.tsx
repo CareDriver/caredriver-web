@@ -1,12 +1,12 @@
 import EnterpriseListForAdmins from "@/components/enterprises/admin/EnterpriseListForAdmins";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+import PageEnterprisePermission from "@/components/permission/page/concrets/PageEnterprisePermission";
 
-const CraneListViewerPageForAdmin = () => {
+const LaundryListViewerPageForAdmin = () => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageEnterprisePermission>
             <EnterpriseListForAdmins type="laundry" />;
-        </AdminWrapperWithSideBar>
+        </PageEnterprisePermission>
     );
 };
 
-export default CraneListViewerPageForAdmin;
+export default LaundryListViewerPageForAdmin;
