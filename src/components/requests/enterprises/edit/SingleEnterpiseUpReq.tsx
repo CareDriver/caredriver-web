@@ -8,13 +8,14 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import EnterpriseUpReqRender from "./EnterpriseUpReqRender";
 import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
+import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 
 const SingleEnterpiseUpReq = ({
     reqId,
     type,
 }: {
     reqId: string;
-    type: "mechanical" | "tow";
+    type: "mechanical" | "tow" | "laundry";
 }) => {
     const [serviceReq, setServiceReq] = useState<ReqEditEnterprise | null>(null);
     const [realServiceReq, setRealServiceReq] = useState<Enterprise | null>(null);
@@ -26,20 +27,12 @@ const SingleEnterpiseUpReq = ({
                 if (data) {
                     setServiceReq(data);
                 } else {
-                    router.push(
-                        `/admin/requests/enterprises/edit${
-                            type === "tow" ? "cranes" : "workshops"
-                        }`,
-                    );
+                    router.push(`/admin/requests/enterprises/edit${getRoute(type)}`);
                     toast.error("Peticion no encontrada");
                 }
             })
             .catch((e) => {
-                router.push(
-                    `/admin/requests/enterprises/edit${
-                        type === "tow" ? "cranes" : "workshops"
-                    }`,
-                );
+                router.push(`/admin/requests/enterprises/edit${getRoute(type)}`);
                 toast.error("Peticion no encontrada");
             });
     }, []);
@@ -51,20 +44,12 @@ const SingleEnterpiseUpReq = ({
                     if (data) {
                         setRealServiceReq(data);
                     } else {
-                        router.push(
-                            `/admin/requests/enterprises/edit${
-                                type === "tow" ? "cranes" : "workshops"
-                            }`,
-                        );
+                        router.push(`/admin/requests/enterprises/edit${getRoute(type)}`);
                         toast.error("Peticion no encontrada");
                     }
                 })
                 .catch((e) => {
-                    router.push(
-                        `/admin/requests/enterprises/edit${
-                            type === "tow" ? "cranes" : "workshops"
-                        }`,
-                    );
+                    router.push(`/admin/requests/enterprises/edit${getRoute(type)}`);
                     toast.error("Peticion no encontrada");
                 });
         }

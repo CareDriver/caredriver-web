@@ -11,8 +11,10 @@ import { AuthContext } from "@/context/AuthContext";
 import EnterpriseItem from "./EnterpriseItem";
 import "@/styles/components/pagination.css";
 import InfiniteScroll from "react-infinite-scroll-component";
+import DataLoaderIndicator from "../DataLoaderIndicator";
+import { getEmptyEnterprise, getRoute } from "@/utils/parser/ToSpanishEnterprise";
 
-const EnterpriseListForUsers = ({ type }: { type: string }) => {
+const EnterpriseListForUsers = ({ type }: { type: "mechanical" | "tow" | "laundry" }) => {
     const { loadingUser, user } = useContext(AuthContext);
     const numPerPage = 12;
     const [data, setData] = useState<Enterprise[] | null>(null);
@@ -59,15 +61,13 @@ const EnterpriseListForUsers = ({ type }: { type: string }) => {
                 dataLength={data.length}
                 next={handleNextClick}
                 hasMore={page !== pages}
-                loader={<span className="loader-gray"></span>}
+                loader={<DataLoaderIndicator />}
             >
                 <div className="enterprise-list">
                     {data.map((product, i) => (
                         <EnterpriseItem
                             key={`enterprise-item-${i}`}
-                            route={`/enterprise/${
-                                type === "tow" ? "cranes" : "workshops"
-                            }/edit/${product.id}`}
+                            route={`/enterprise/${getRoute(type)}/edit/${product.id}`}
                             enterprise={product}
                         />
                     ))}
@@ -75,12 +75,7 @@ const EnterpriseListForUsers = ({ type }: { type: string }) => {
             </InfiniteScroll>
         ) : (
             <div className="empty-wrapper | auto-height">
-                <h2>
-                    No tienes{" "}
-                    {type === "tow"
-                        ? "ninguna empresa de grua creada"
-                        : "ningun taller mecanico creado"}
-                </h2>
+                <h2>No tienes {getEmptyEnterprise(type)}</h2>
             </div>
         )
     ) : (

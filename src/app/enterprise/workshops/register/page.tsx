@@ -1,11 +1,11 @@
 import MechanicalWorkshopRegister from "@/components/enterprises/mechanicalworkshop/MechanicalWorkshopRegister";
-import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 
 const MechanicalworkshopRegisterPage = () => {
     return (
-        <WrapperWithSideBar>
+        <PageServerUserPermission>
             <MechanicalWorkshopRegister />
-        </WrapperWithSideBar>
+        </PageServerUserPermission>
     );
 };
 

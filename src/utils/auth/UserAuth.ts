@@ -1,28 +1,177 @@
-import { auth } from "@/firebase/FirebaseConfig";
+import { SignUpInterface, SignUpInterfaceV2 } from "@/components/auth/AuthInterfaces";
+import { Services } from "@/interfaces/Services";
+import { defaultServiceReq, UserInterface, UserRole } from "@/interfaces/UserInterface";
+import { servicesData } from "@/interfaces/ServicesDataInterface";
+import { emptyPhotoWithRef, ImgWithRef } from "@/interfaces/ImageInterface";
+import { InputValidator } from "../validator/InputValidator";
+import { Dispatch, SetStateAction } from "react";
+import { locationList, Locations } from "@/interfaces/Locations";
+import { isPhoneValid } from "../validator/auth/CredentialsValidator";
+import { defaultBalance, defaultMinBalance } from "@/interfaces/Payment";
 
-export const registerWithCredentials = (email: String, password: String) => {
-    
+export const createUserData = (
+    id: string,
+    role: UserRole,
+    credentials: SignUpInterface,
+): UserInterface => {
+    return {
+        id: id,
+        role: role,
+        fullName: credentials.fullName.value,
+        phoneNumber: credentials.phone.value,
+        photoUrl: emptyPhotoWithRef,
+
+        comments: [],
+        vehicles: [],
+        services: [Services.Normal],
+
+        servicesData: servicesData,
+        pickUpLocationsHistory: [],
+        deliveryLocationsHistory: [],
+
+        location: credentials.location,
+        email: credentials.email.value.toLowerCase(),
+
+        serviceRequests: defaultServiceReq,
+
+        disable: false,
+        deleted: false,
+
+        balance: defaultBalance,
+        minimumBalance: defaultMinBalance,
+    };
 };
 
+export const createUserDataWithPhoto = (
+    id: string,
+    role: UserRole,
+    credentials: SignUpInterface,
+    photo: ImgWithRef | null,
+): UserInterface => {
+    var newUser = {
+        id: id,
+        role: role,
+        fullName: credentials.fullName.value,
+        phoneNumber: credentials.phone.value,
+        photoUrl: emptyPhotoWithRef,
 
-/* 
+        comments: [],
+        vehicles: [],
+        services: [Services.Normal],
 
-import { getAuth, signInWithEmailAndPassword, unlink } from "firebase/auth";
+        servicesData: servicesData,
+        pickUpLocationsHistory: [],
+        deliveryLocationsHistory: [],
 
-async function removeEmailAndPasswordAuth(email: string, password: string) {
-  const auth = getAuth();
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  const user = userCredential.user;
+        location: credentials.location,
+        email: credentials.email.value.toLowerCase(),
 
-  if (user) {
-    await unlink(user, 'password');
-    console.log('El método de autenticación por correo electrónico y contraseña se ha eliminado correctamente.');
-  } else {
-    console.log('No se pudo autenticar al usuario.');
-  }
-}
+        serviceRequests: defaultServiceReq,
 
-// Uso de la función
-removeEmailAndPasswordAuth('usuario@example.com', 'password123');
+        disable: false,
+        deleted: false,
 
-*/
+        balance: defaultBalance,
+        minimumBalance: defaultMinBalance,
+    };
+    if (photo) {
+        newUser = {
+            ...newUser,
+            photoUrl: photo,
+        };
+    }
+
+    return newUser;
+};
+
+export const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    validationFunction: InputValidator,
+    credentials: SignUpInterface,
+    setCredentials: Dispatch<SetStateAction<SignUpInterface>>,
+) => {
+    const value = e.target.value;
+    const { isValid, message } = validationFunction(value);
+
+    setCredentials({
+        ...credentials,
+        [e.target.name]: {
+            value: value,
+            errorMessage: isValid ? "" : message,
+        },
+    });
+};
+
+export const handleInputChangeV2 = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    validationFunction: InputValidator,
+    credentials: SignUpInterfaceV2,
+    setCredentials: Dispatch<SetStateAction<SignUpInterfaceV2>>,
+) => {
+    const value = e.target.value;
+    const { isValid, message } = validationFunction(value);
+
+    setCredentials({
+        ...credentials,
+        [e.target.name]: {
+            value: value,
+            errorMessage: isValid ? "" : message,
+        },
+    });
+};
+
+export const validatePhone = (
+    phone: string,
+    credentials: SignUpInterface,
+    setCredentials: Dispatch<SetStateAction<SignUpInterface>>,
+) => {
+    const { isValid, message } = isPhoneValid(phone);
+
+    setCredentials({
+        ...credentials,
+        phone: {
+            ...credentials.phone,
+            value: phone,
+            errorMessage: isValid ? "" : message,
+        },
+    });
+};
+
+export const validatePhoneV2 = (
+    phone: string,
+    credentials: SignUpInterfaceV2,
+    setCredentials: Dispatch<SetStateAction<SignUpInterfaceV2>>,
+) => {
+    const { isValid, message } = isPhoneValid(phone);
+
+    setCredentials({
+        ...credentials,
+        phone: {
+            ...credentials.phone,
+            value: phone,
+            errorMessage: isValid ? "" : message,
+        },
+    });
+};
+
+export const getLocation = (input: string): Locations => {
+    var location = Locations.CochabambaBolivia;
+    locationList.forEach((value) => {
+        if (value === input) {
+            location = value;
+        }
+    });
+
+    return location;
+};
+
+export const getRole = (input: string, roles: UserRole[]): UserRole => {
+    var roleFound = roles[0];
+    roles.forEach((value) => {
+        if (value === input) {
+            roleFound = value;
+        }
+    });
+
+    return roleFound;
+};

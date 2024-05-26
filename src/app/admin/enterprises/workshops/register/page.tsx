@@ -1,11 +1,11 @@
 import WorkshopRegisterByAdmin from "@/components/enterprises/mechanicalworkshop/WorkshopRegisterByAdmin";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+import PageEnterprisePermission from "@/components/permission/page/concrets/PageEnterprisePermission";
 
 const RegisterWorkshopByAdminPage = () => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageEnterprisePermission>
             <WorkshopRegisterByAdmin />;
-        </AdminWrapperWithSideBar>
+        </PageEnterprisePermission>
     );
 };
 

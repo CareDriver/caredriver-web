@@ -7,7 +7,7 @@ import PersonalDataForm from "../../../form/PersonalDataForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
 import { defaultPhoto, PhotoField } from "../../FormModels";
-import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { AuthContext } from "@/context/AuthContext";
 import { VehicleTypeAndMode, Vehicle, driveReqBuilder } from "@/interfaces/UserRequest";
@@ -27,6 +27,9 @@ import {
     verifyNoEmptyData,
 } from "@/utils/validator/service_requests/NewVehicleValidator";
 import { useRouter } from "next/navigation";
+import AntecedentsPdf from "@/components/form/AntecedentsPdf";
+import { PDFField } from "@/components/form/PDFUploader";
+import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 
 const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -40,6 +43,20 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
             value: null,
             message: null,
         },
+        idCard: {
+            frontCard: {
+                value: null,
+                message: null,
+            },
+            backCard: {
+                value: null,
+                message: null,
+            },
+            location: {
+                value: "",
+                message: null,
+            },
+        },
     });
     const vehicleTypeAndMode: VehicleTypeAndMode = {
         type: type === "car" ? VehicleType.CAR : VehicleType.MOTORCYCLE,
@@ -50,12 +67,30 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
         type: vehicleTypeAndMode,
         license: defaultLicense,
     });
+
+    const [pdf, setPdf] = useState<PDFField>({
+        value: null,
+        message: null,
+    });
+
     const [userConfirmation, setUserConfirmation] = useState<PhotoField>(defaultPhoto);
     const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
     const [formState, setFormState] = useState({
         isValid: true,
         loading: false,
     });
+
+    const uploadPDF = async (): Promise<ImgWithRef | null> => {
+        if (pdf.value) {
+            try {
+                return await uploadFileBase64(DirectoryPath.Documents, pdf.value);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        return null;
+    };
 
     const uploadImages = async () => {
         let vehiclesData: Vehicle[] = [];
@@ -70,7 +105,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                 isImageBase64(personalData.photo.value)
             ) {
                 try {
-                    newProfilePhotoImgUrl = await uploadImageBase64(
+                    newProfilePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.TempProfilePhotos,
                         personalData.photo.value,
                     );
@@ -81,11 +116,11 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
 
             if (vehicle.license.frontPhoto.value && vehicle.license.behindPhoto.value) {
                 try {
-                    const frontImgUrl = await uploadImageBase64(
+                    const frontImgUrl = await uploadFileBase64(
                         DirectoryPath.Licenses,
                         vehicle.license.frontPhoto.value,
                     );
-                    const behindImgUrl = await uploadImageBase64(
+                    const behindImgUrl = await uploadFileBase64(
                         DirectoryPath.Licenses,
                         vehicle.license.behindPhoto.value,
                     );
@@ -109,7 +144,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
 
             if (userConfirmation.value) {
                 try {
-                    realTimePhotoImgUrl = await uploadImageBase64(
+                    realTimePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.Selfies,
                         userConfirmation.value,
                     );
@@ -130,6 +165,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
         vehiclesData: Vehicle[],
         newProfilePhotoImgUrl: string | ImgWithRef,
         realTimePhotoImgUrl: ImgWithRef,
+        pdfRef: ImgWithRef,
     ) => {
         if (user.data) {
             var formId = nanoid(30);
@@ -147,6 +183,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                         user.data.location === undefined
                             ? Locations.CochabambaBolivia
                             : user.data.location,
+                        pdfRef,
                     ),
                 );
 
@@ -193,34 +230,53 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
             vehicle,
             userConfirmation,
             acceptedTerms,
+            pdf,
+            personalData.idCard,
         );
         if (isValid) {
-            isValid = isValidForm(personalData, vehicle, userConfirmation, acceptedTerms);
+            isValid = isValidForm(
+                personalData,
+                vehicle,
+                userConfirmation,
+                acceptedTerms,
+                pdf,
+                personalData.idCard,
+            );
             if (isValid && user.data) {
                 try {
+                    await updateIdCard(personalData.idCard, user.data);
                     const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
                         await toast.promise(uploadImages(), {
                             pending: "Subiendo imagenes, por favor espera",
                             success: "Imagenes subidas",
                             error: "Error al subir imagenes, intentalo de nuevo por favor",
                         });
-                    await toast.promise(
-                        uploadForm(
-                            vehiclesData,
-                            newProfilePhotoImgUrl,
-                            realTimePhotoImgUrl,
-                        ),
-                        {
-                            pending: "Enviando el formulario, por favor espera",
-                            success: "Formulario enviado",
-                            error: "Error al enviar el formulario, intentalo de nuevo por favor",
-                        },
-                    );
-                    window.location.replace("/services/drive");
-                    setFormState({
-                        loading: false,
-                        isValid: true,
+
+                    const pdfRef = await toast.promise(uploadPDF(), {
+                        pending: "Subiendo PDF",
+                        success: "PDF subido",
+                        error: "Error al subir el PDF, intentalo de nuevo",
                     });
+                    if (pdfRef) {
+                        await toast.promise(
+                            uploadForm(
+                                vehiclesData,
+                                newProfilePhotoImgUrl,
+                                realTimePhotoImgUrl,
+                                pdfRef,
+                            ),
+                            {
+                                pending: "Enviando el formulario, por favor espera",
+                                success: "Formulario enviado",
+                                error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                            },
+                        );
+                        window.location.replace("/services/drive");
+                        setFormState({
+                            loading: false,
+                            isValid: true,
+                        });
+                    }
                 } catch (e) {
                     setFormState({
                         loading: false,
@@ -257,6 +313,8 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                     vehicle,
                     userConfirmation,
                     acceptedTerms,
+                    pdf,
+                    personalData.idCard,
                 ),
             }),
         [personalData, vehicle, userConfirmation, acceptedTerms],
@@ -310,6 +368,8 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                     setPersonalData={setPersonalData}
                 />
                 <SingleVehicleForm vehicle={vehicle} setVehicle={setVehicle} />
+
+                <AntecedentsPdf file={pdf} setFile={setPdf} />
 
                 <SelfieConfirmer
                     image={userConfirmation}

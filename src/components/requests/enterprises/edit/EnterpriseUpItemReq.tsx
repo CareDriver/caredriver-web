@@ -1,4 +1,5 @@
 import { ReqEditEnterprise } from "@/interfaces/Enterprise";
+import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 import Link from "next/link";
 
 const EnterpriseUpItemReq = ({
@@ -6,13 +7,11 @@ const EnterpriseUpItemReq = ({
     type,
 }: {
     enterprise: ReqEditEnterprise;
-    type: "mechanical" | "tow";
+    type: "mechanical" | "tow" | "laundry";
 }) => {
     return (
         <Link
-            href={`/admin/requests/enterprises/edit${
-                type === "tow" ? "cranes" : "workshops"
-            }/${enterprise.id}`}
+            href={`/admin/requests/enterprises/edit${getRoute(type)}/${enterprise.id}`}
             className="enterprise-req-item | touchable"
         >
             <h3 className="enterprise-req-item-title">{enterprise.name}</h3>

@@ -1,20 +1,23 @@
 "use client";
 
 import { FormEvent, useContext, useEffect, useState } from "react";
-import { EnterpriseField, PersonalDataFormField } from "../../FormModels";
+import {
+    EnterpriseField,
+    FieldStringForm,
+    PersonalDataFormField,
+} from "../../FormModels";
 import PersonalDataForm from "../../../form/PersonalDataForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
 import { defaultPhoto, PhotoField } from "../../FormModels";
-import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import {
     isValidForm,
     verifyNoEmptyData,
 } from "@/utils/validator/service_requests/MechanicValidator";
 import { AuthContext } from "@/context/AuthContext";
-import { Vehicle, driveReqBuilder, mechanicReqBuilder } from "@/interfaces/UserRequest";
-import { saveDriveReq } from "@/utils/requests/services/DriveRequester";
+import { mechanicReqBuilder } from "@/interfaces/UserRequest";
 import { Locations } from "@/interfaces/Locations";
 import { emptyPhotoWithRef, ImgWithRef } from "@/interfaces/ImageInterface";
 import { toast } from "react-toastify";
@@ -28,6 +31,8 @@ import EnterpriseSelector from "../../../enterprises/EnterpriseSelector";
 import Warehouse from "@/icons/Warehouse";
 import { EnterpriseType } from "@/interfaces/Enterprise";
 import { saveMechanicReq } from "@/utils/requests/services/MechanicRequester";
+import { updateIdCard } from "@/utils/requests/IdCardUpdated";
+import MechanicTools from "./MechanicTools";
 
 const MechanicRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -40,6 +45,25 @@ const MechanicRegistration = () => {
             value: null,
             message: null,
         },
+        idCard: {
+            frontCard: {
+                value: null,
+                message: null,
+            },
+            backCard: {
+                value: null,
+                message: null,
+            },
+            location: {
+                value: "",
+                message: null,
+            },
+        },
+    });
+
+    const [mechanicTools, setMechanicTools] = useState<FieldStringForm>({
+        value: "",
+        message: null,
     });
 
     const [mechanicWorkshop, setMechanicWorkshop] = useState<EnterpriseField>({
@@ -66,7 +90,7 @@ const MechanicRegistration = () => {
                 isImageBase64(personalData.photo.value)
             ) {
                 try {
-                    newProfilePhotoImgUrl = await uploadImageBase64(
+                    newProfilePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.TempProfilePhotos,
                         personalData.photo.value,
                     );
@@ -77,7 +101,7 @@ const MechanicRegistration = () => {
 
             if (userConfirmation.value) {
                 try {
-                    realTimePhotoImgUrl = await uploadImageBase64(
+                    realTimePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.Selfies,
                         userConfirmation.value,
                     );
@@ -113,6 +137,7 @@ const MechanicRegistration = () => {
                             ? Locations.CochabambaBolivia
                             : user.data.location,
                         mechanicWorkshop.value,
+                        mechanicTools.value
                     ),
                 );
 
@@ -144,11 +169,24 @@ const MechanicRegistration = () => {
             ...formState,
             loading: true,
         });
-        var isValid = verifyNoEmptyData(personalData, userConfirmation, acceptedTerms);
+        var isValid = verifyNoEmptyData(
+            personalData,
+            userConfirmation,
+            acceptedTerms,
+            personalData.idCard,
+            mechanicTools,
+        );
         if (isValid) {
-            isValid = isValidForm(personalData, userConfirmation, acceptedTerms);
+            isValid = isValidForm(
+                personalData,
+                userConfirmation,
+                acceptedTerms,
+                personalData.idCard,
+                mechanicTools,
+            );
             if (isValid && user.data) {
                 try {
+                    await updateIdCard(personalData.idCard, user.data);
                     const { newProfilePhotoImgUrl, realTimePhotoImgUrl } =
                         await toast.promise(uploadImages(), {
                             pending: "Subiendo imagenes, por favor espera",
@@ -237,7 +275,13 @@ const MechanicRegistration = () => {
         () =>
             setFormState({
                 ...formState,
-                isValid: isValidForm(personalData, userConfirmation, acceptedTerms),
+                isValid: isValidForm(
+                    personalData,
+                    userConfirmation,
+                    acceptedTerms,
+                    personalData.idCard,
+                    mechanicTools,
+                ),
             }),
         [personalData, userConfirmation, acceptedTerms],
     );
@@ -276,6 +320,8 @@ const MechanicRegistration = () => {
                     personalData={personalData}
                     setPersonalData={setPersonalData}
                 />
+
+                <MechanicTools tools={mechanicTools} setTools={setMechanicTools} />
 
                 <div className="form-sub-container | margin-top-25 max-width-90">
                     <h2 className="text icon-wrapper | medium-big bold">

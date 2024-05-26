@@ -77,12 +77,6 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
 
     const deleteImages = async () => {
         if (req) {
-            if (req.backImgUrl) {
-                await deleteFile(req.backImgUrl.ref);
-            }
-            if (req.frontImgUrl) {
-                await deleteFile(req.frontImgUrl.ref);
-            }
             await deleteFile(req.realTimePhotoImgUrl.ref);
         }
     };
@@ -103,6 +97,8 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
                         [req.vehicleType]: {
                             ...userReq.serviceVehicles[req.vehicleType],
                             license: {
+                                frontImgUrl: req.frontImgUrl,
+                                backImgUrl: req.backImgUrl,
                                 licenseNumber: req.licenseNumber,
                                 expiredDateLicense: req.expiredDateLicense,
                             },
@@ -122,9 +118,9 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
             });
             try {
                 await toast.promise(deleteImages, {
-                    pending: "Eliminando imagenes",
-                    success: "Imagenes eliminadas",
-                    error: "Error al eliminar imagenes, intentalo de nuevo por favor",
+                    pending: "Eliminando foto de confirmacion del usario",
+                    success: "Foto eliminada",
+                    error: "Error al eliminar la foto, intentalo de nuevo por favor",
                 });
                 await toast.promise(saveReview(wasApproved), {
                     pending: "Guardando revision",

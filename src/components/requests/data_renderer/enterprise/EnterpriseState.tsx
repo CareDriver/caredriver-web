@@ -1,7 +1,10 @@
 import TriangleExclamation from "@/icons/TriangleExclamation";
-import { Enterprise } from "@/interfaces/Enterprise";
+import { Enterprise, EnterpriseTypeRenderPronoun } from "@/interfaces/Enterprise";
 
 const EnterpriseState = ({ enterprise }: { enterprise: Enterprise }) => {
+    const deleted = enterprise.type === "tow" ? "eliminada" : "eliminado";
+    const disable = enterprise.type === "tow" ? "desabilitada" : "desabilitado";
+
     return (
         (enterprise.deleted === true || enterprise.active === false) && (
             <h2
@@ -11,16 +14,8 @@ const EnterpriseState = ({ enterprise }: { enterprise: Enterprise }) => {
             >
                 <TriangleExclamation />
                 {enterprise.deleted === true
-                    ? `${
-                          enterprise.type === "tow"
-                              ? "Esta empresa fue eliminada"
-                              : "Este taller fue eliminado"
-                      }`
-                    : `${
-                          enterprise.type === "tow"
-                              ? "Esta empresa fue desabilitada"
-                              : "Este taller fue desabilitado"
-                      }`}
+                    ? `${EnterpriseTypeRenderPronoun[enterprise.type]} fue ${deleted}`
+                    : `${EnterpriseTypeRenderPronoun[enterprise.type]} fue ${disable}`}
             </h2>
         )
     );

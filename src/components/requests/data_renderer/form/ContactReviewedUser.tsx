@@ -29,10 +29,10 @@ const ContactReviewedUser = ({
     };
 
     return (
-        <div className="form-sub-container | margin-top-25">
+        <div className="form-sub-container | margin-top-25 margin-bottom-25">
             <h2 className="text icon-wrapper | medium-big bold">
                 <Phone />
-                Datos Personales
+                Formas de contacto con el usuario
             </h2>
             <div className="column-wrapper">
                 <button

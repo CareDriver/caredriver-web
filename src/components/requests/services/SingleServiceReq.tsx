@@ -12,13 +12,15 @@ import { toast } from "react-toastify";
 import DriveServiceReq from "./drive/DriveServiceReq";
 import MechanicServiceReq from "./mechanic/MechanicServiceReq";
 import TowServiceReq from "./tow/TowServiceReq";
+import "@/styles/modules/form.css";
+import LaundryServiceReq from "./laundry/LaundryServiceReq";
 
 const SingleServiceReq = ({
     reqId,
     type,
 }: {
     reqId: string;
-    type: "driver" | "mechanic" | "tow";
+    type: "driver" | "mechanic" | "tow" | "laundry";
 }) => {
     const [serviceReq, setServiceReq] = useState<UserRequest | null>(null);
     const collection: CollectionReference = getServiceCollection(type);
@@ -49,6 +51,8 @@ const SingleServiceReq = ({
                     return <MechanicServiceReq serviceReq={serviceReq} />;
                 case "tow":
                     return <TowServiceReq serviceReq={serviceReq} />;
+                case "laundry":
+                    return <LaundryServiceReq serviceReq={serviceReq} />;
             }
         }
     };

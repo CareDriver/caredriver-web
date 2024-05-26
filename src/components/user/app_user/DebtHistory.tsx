@@ -3,11 +3,11 @@ import { toformatDate } from "@/utils/parser/ForDate";
 
 const DebtHistory = ({ user }: { user: UserInterface }) => {
     return (
-        user.appPaymentHistory && (
+        user.balanceHistory && (
             <div className="margin-top-50">
-                <h2 className="text | bold gray-darker">Historial de pagos</h2>
+                <h2 className="text | bold gray-darker">Historial de las actualizaciones del saldo del usuario</h2>
                 <div className="debt-wrapper">
-                    {user.appPaymentHistory.map((debt, i) => (
+                    {user.balanceHistory.map((debt, i) => (
                         <div key={`debt-item-history-${i}`} className="debt-item">
                             <span className="text | bold medium">
                                 {debt.amount}

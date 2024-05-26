@@ -13,9 +13,19 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Link from "next/link";
 import Plus from "@/icons/Plus";
 import "@/styles/components/enterprise.css";
+import DataLoaderIndicator from "@/components/DataLoaderIndicator";
+import {
+    getEmptyEnterprise,
+    getNewButtonTitle,
+    getRoute,
+    getTitleForRender,
+} from "@/utils/parser/ToSpanishEnterprise";
 
-
-const EnterpriseListForAdmins = ({ type }: { type: string }) => {
+const EnterpriseListForAdmins = ({
+    type,
+}: {
+    type: "mechanical" | "tow" | "laundry";
+}) => {
     const numPerPage = 12;
     const [data, setData] = useState<Enterprise[] | null>(null);
     const [page, setPage] = useState<number>(1);
@@ -52,36 +62,28 @@ const EnterpriseListForAdmins = ({ type }: { type: string }) => {
 
     return data ? (
         <section className="enterprise-main-wrapper">
-            <h1 className="text | big bolder capitalize">
-                {type === "tow"
-                    ? "Empresas de Grua Creadas"
-                    : "Talleres Mecanicos Creados"}
-            </h1>
+            <h1 className="text | big bolder capitalize">{getTitleForRender(type)}</h1>
             <Link
                 className="general-button icon-wrapper | max-20 less-padding no-full center white-icon touchable"
-                href={`/admin/enterprises/${
-                    type === "tow" ? "cranes" : "workshops"
-                }/register`}
+                href={`/admin/enterprises/${getRoute(type)}/register`}
             >
                 <Plus />
-                <span className="text | bold">
-                    {type === "tow" ? "Nueva Empresa" : "Nuevo Taller"}
-                </span>
+                <span className="text | bold">{getNewButtonTitle(type)}</span>
             </Link>
             {data.length > 0 ? (
                 <InfiniteScroll
                     dataLength={data.length}
                     next={handleNextClick}
                     hasMore={page !== pages}
-                    loader={<span className="loader-gray"></span>}
+                    loader={<DataLoaderIndicator />}
                 >
                     <div className="enterprise-list">
                         {data.map((product, i) => (
                             <EnterpriseItem
                                 key={`enterprise-item-${i}`}
-                                route={`/admin/enterprises/${
-                                    type === "tow" ? "cranes" : "workshops"
-                                }/edit/${product.id}`}
+                                route={`/admin/enterprises/${getRoute(type)}/edit/${
+                                    product.id
+                                }`}
                                 enterprise={product}
                             />
                         ))}
@@ -89,12 +91,7 @@ const EnterpriseListForAdmins = ({ type }: { type: string }) => {
                 </InfiniteScroll>
             ) : (
                 <div className="empty-wrapper | auto-height">
-                    <h2>
-                        No hay{" "}
-                        {type === "tow"
-                            ? "ninguna empresa de grua creada"
-                            : "ningun taller mecanico creado"}
-                    </h2>
+                    <h2>No hay {getEmptyEnterprise(type)}</h2>
                 </div>
             )}
         </section>

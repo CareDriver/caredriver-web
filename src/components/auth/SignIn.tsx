@@ -68,7 +68,7 @@ const SignIn = () => {
                             isValid: false,
                             loading: false,
                         });
-                        toast.error("Algo fallo, intentalo de nuevo por favor");
+                        toast.error("Credenciales invalidas, intalo de nuevo");
                     });
             } else {
                 setFormState({

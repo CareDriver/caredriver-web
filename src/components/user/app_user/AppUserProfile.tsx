@@ -5,6 +5,7 @@ import { useContext } from "react";
 import PageLoader from "../../PageLoader";
 import "@/styles/components/profile.css";
 import { DEFAULT_PHOTO } from "@/utils/user/UserData";
+import UserDataUpdater from "./UserDataUpdater";
 
 const AppUserProfile = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -28,11 +29,11 @@ const AppUserProfile = () => {
                     <h2 className="profile-email">{user.data.email}</h2>
                 </div>
             </section>
-
+            <UserDataUpdater user={user.data}/>
             <span className="circles-right-bottomv2 green"></span>
         </section>
     ) : (
-        <h2>User not found</h2>
+        <h2>Usuario no encontrado</h2>
     );
 };
 

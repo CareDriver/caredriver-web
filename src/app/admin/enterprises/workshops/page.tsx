@@ -1,11 +1,11 @@
 import EnterpriseListForAdmins from "@/components/enterprises/admin/EnterpriseListForAdmins";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+import PageEnterprisePermission from "@/components/permission/page/concrets/PageEnterprisePermission";
 
 const WorkshopListViewerPageForAdmin = () => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageEnterprisePermission>
             <EnterpriseListForAdmins type="mechanical" />;
-        </AdminWrapperWithSideBar>
+        </PageEnterprisePermission>
     );
 };
 

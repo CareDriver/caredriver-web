@@ -4,7 +4,7 @@ import PageLoader from "@/components/PageLoader";
 import { UserInterface, UserRole } from "@/interfaces/UserInterface";
 import { getUserById, updateUser } from "@/utils/requests/UserRequester";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ServiceServedByUser from "./ServiceServedByUser";
 import DisableUser from "./options/DisableUser";
@@ -12,12 +12,15 @@ import DeleteUser from "./options/DeleteUser";
 import ServiceReqsByUser from "./ServiceReqsByUser";
 import "@/styles/components/app-user.css";
 import { DEFAULT_PHOTO, getRole } from "@/utils/user/UserData";
-import DebtUser from "./options/DebtUser";
+import BalanceUser from "./options/BalanceUser";
 import DebtHistory from "./DebtHistory";
 import "@/styles/components/debt-user.css";
+import MinBalanceUser from "./options/MinBalanceUser";
+import { AuthContext } from "@/context/AuthContext";
 
 const UserRenderer = ({ userId }: { userId: string }) => {
-    const [user, setUser] = useState<UserInterface | null>(null);
+    const { user } = useContext(AuthContext);
+    const [userData, setUserData] = useState<UserInterface | null>(null);
     const router = useRouter();
     const [formState, setFormState] = useState({
         loading: false,
@@ -37,17 +40,17 @@ const UserRenderer = ({ userId }: { userId: string }) => {
     } | null>(null);
 
     const toggleDisableUser = async () => {
-        if (user) {
+        if (userData) {
             setFormState({
                 ...formState,
                 loading: true,
             });
-            const isDisable = user.disable ? user.disable : false;
-            if (user.id) {
+            const isDisable = userData.disable ? userData.disable : false;
+            if (userData.id) {
                 if (isDisable) {
                     try {
                         await toast.promise(
-                            updateUser(user.id, {
+                            updateUser(userData.id, {
                                 disable: false,
                             }),
                             {
@@ -71,7 +74,7 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                 } else {
                     try {
                         await toast.promise(
-                            updateUser(user.id, {
+                            updateUser(userData.id, {
                                 disable: true,
                             }),
                             {
@@ -98,15 +101,15 @@ const UserRenderer = ({ userId }: { userId: string }) => {
     };
 
     const deleteUser = async () => {
-        if (user) {
+        if (userData) {
             setFormState({
                 ...formState,
                 loading: true,
             });
-            if (user.id) {
+            if (userData.id) {
                 try {
                     await toast.promise(
-                        updateUser(user.id, {
+                        updateUser(userData.id, {
                             deleted: true,
                         }),
                         {
@@ -135,7 +138,7 @@ const UserRenderer = ({ userId }: { userId: string }) => {
         getUserById(userId)
             .then((res) => {
                 if (res) {
-                    setUser(res);
+                    setUserData(res);
                     setRole(getRole(res));
                 } else {
                     toast.error("Usuario no encontrado");
@@ -151,34 +154,41 @@ const UserRenderer = ({ userId }: { userId: string }) => {
 
     const getServicesServed = () => {
         if (
-            user &&
-            (user.role === undefined || user.role !== UserRole.Admin) &&
-            user.services.length > 1
+            userData &&
+            (userData.role === undefined || userData.role !== UserRole.Admin) &&
+            userData.services.length > 1
         ) {
-            return <ServiceServedByUser user={user} />;
+            return <ServiceServedByUser user={userData} />;
         }
     };
 
     const getServicesRequested = () => {
-        if (user && (user.role === undefined || user.role !== UserRole.Admin)) {
-            return <ServiceReqsByUser user={user} />;
+        if (
+            userData &&
+            (userData.role === undefined || userData.role !== UserRole.Admin)
+        ) {
+            return <ServiceReqsByUser user={userData} />;
         }
     };
 
-    return user ? (
+    return userData ? (
         <section className="render-data-wrapper">
             <div className="user-info-wrapper">
                 <img
-                    src={user.photoUrl.url === "" ? DEFAULT_PHOTO : user.photoUrl.url}
+                    src={
+                        userData.photoUrl.url === ""
+                            ? DEFAULT_PHOTO
+                            : userData.photoUrl.url
+                    }
                     alt=""
                     className="user-info-photo"
                 />
                 <div className="user-info-subwrapper">
-                    <h1 className="text | big bolder">{user.fullName}</h1>
-                    <h3 className="text | gray-dark bold">{user.email}</h3>
-                    <h3 className="text | gray-dark bold">{user.location}</h3>
+                    <h1 className="text | big bolder">{userData.fullName}</h1>
+                    <h3 className="text | gray-dark bold">{userData.email}</h3>
+                    <h3 className="text | gray-dark bold">{userData.location}</h3>
                     <h3 className="text | gray-dark bold margin-bottom-15">
-                        {user.phoneNumber}
+                        {userData.phoneNumber}
                     </h3>
                     {role ? (
                         <h3 className={`text | bolder ${role.isHigher && "green"}`}>
@@ -189,8 +199,30 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                     )}
                 </div>
             </div>
-            <DebtUser user={user} />
-            <DebtHistory user={user} />
+            {user.data && (
+                <BalanceUser
+                    loading={formState.loading}
+                    setLoading={(loading: boolean) =>
+                        setFormState({
+                            ...formState,
+                            loading: loading,
+                        })
+                    }
+                    user={userData}
+                    adminUser={user.data}
+                />
+            )}
+            <MinBalanceUser
+                user={userData}
+                loading={formState.loading}
+                setLoading={(loading: boolean) =>
+                    setFormState({
+                        ...formState,
+                        loading: loading,
+                    })
+                }
+            />
+            <DebtHistory user={userData} />
 
             <DisableUser
                 loading={formState.loading}
@@ -199,11 +231,11 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                     setDisableState({
                         ...disableState,
                         confirm: e.target.value,
-                        isValid: e.target.value === user.fullName,
+                        isValid: e.target.value === userData.fullName,
                     })
                 }
                 validToDelete={disableState.isValid}
-                isDisable={user.disable ? user.disable : false}
+                isDisable={userData.disable ? userData.disable : false}
             />
             <DeleteUser
                 loading={formState.loading}
@@ -212,7 +244,7 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                     setDeleteState({
                         ...deleteState,
                         confirm: e.target.value,
-                        isValid: e.target.value === user.fullName,
+                        isValid: e.target.value === userData.fullName,
                     })
                 }
                 validToDelete={deleteState.isValid}

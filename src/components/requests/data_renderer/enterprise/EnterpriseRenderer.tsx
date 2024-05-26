@@ -1,6 +1,6 @@
 import {
     Enterprise,
-    EnterpriseTypeRender,
+    EnterpriseTypeRenderPronounV2,
     ReqEditEnterprise,
 } from "@/interfaces/Enterprise";
 import ImageRenderer from "../form/ImageRenderer";
@@ -13,10 +13,6 @@ const EnterpriseRenderer = ({
 }: {
     enterprise: Enterprise | ReqEditEnterprise;
 }) => {
-    const title = (enterprise.type === "tow" ? "de la " : "del ").concat(
-        EnterpriseTypeRender[enterprise.type],
-    );
-
     return (
         <div className="form-sub-container">
             <EnterpriseState enterprise={enterprise} />
@@ -24,27 +20,33 @@ const EnterpriseRenderer = ({
             <fieldset className="form-section">
                 <InputData
                     content={enterprise.name}
-                    placeholder={`Nombre ${title}
+                    placeholder={`Nombre ${EnterpriseTypeRenderPronounV2[enterprise.type]}
                 `}
                 />
-                <legend className="form-section-legend">Nombre {title}</legend>
+                <legend className="form-section-legend">
+                    Nombre {EnterpriseTypeRenderPronounV2[enterprise.type]}
+                </legend>
             </fieldset>
             <fieldset className="form-section">
                 <InputData
                     content={enterprise.phone}
                     placeholder={"Numero de Telefono"}
                 />
-                <legend className="form-section-legend">Telefono {title}</legend>
+                <legend className="form-section-legend">
+                    Telefono {EnterpriseTypeRenderPronounV2[enterprise.type]}
+                </legend>
             </fieldset>
             <ImageRenderer
                 isCircle={true}
-                placeholder={`Logo ${title}`}
+                placeholder={`Logo ${EnterpriseTypeRenderPronounV2[enterprise.type]}`}
                 url={enterprise.logoImgUrl}
                 noFoundDescr={undefined}
             />
             {enterprise.coordinates && (
                 <fieldset className="form-section">
-                    <span className="text | bold gray-dark">Ubicacion {title}</span>
+                    <span className="text | bold gray-dark">
+                        Ubicacion {EnterpriseTypeRenderPronounV2[enterprise.type]}
+                    </span>
                     <MarkRenderer
                         location={{
                             lat: enterprise.coordinates.latitude,

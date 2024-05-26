@@ -1,11 +1,11 @@
+import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import SingleServiceReq from "@/components/requests/services/SingleServiceReq";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const SingleDriveReqPage = ({ params }: { params: any }) => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageRequestPermission>
             <SingleServiceReq reqId={params.id} type="driver" />
-        </AdminWrapperWithSideBar>
+        </PageRequestPermission>
     );
 };
 

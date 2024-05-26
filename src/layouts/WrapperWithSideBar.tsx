@@ -5,7 +5,6 @@ const WrapperWithSideBar = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="wrapper">
             <SideBar />
-
             {children}
         </div>
     );

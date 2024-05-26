@@ -14,15 +14,22 @@ import {
     getEnterpriseById,
     updateEnterprise,
 } from "@/utils/requests/enterprise/EnterpriseRequester";
-import { Enterprise, EnterpriseType } from "@/interfaces/Enterprise";
+import {
+    Enterprise,
+    EnterpriseType,
+    EnterpriseTypeRender,
+    EnterpriseTypeRenderPronoun,
+    EnterpriseTypeRenderPronounV2,
+} from "@/interfaces/Enterprise";
 import { GeoPoint } from "firebase/firestore";
-import { deleteFile, uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { deleteFile, uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { toast } from "react-toastify";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
 import PageLoader from "../../PageLoader";
 import TriangleExclamation from "@/icons/TriangleExclamation";
+import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 
 interface FormData {
     name: {
@@ -40,7 +47,13 @@ interface FormData {
     };
 }
 
-const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
+const EnterpriseEditByAdmin = ({
+    id,
+    type,
+}: {
+    id: string;
+    type: "mechanical" | "tow" | "laundry";
+}) => {
     const router = useRouter();
     const [enterpriseData, setEnterpriseData] = useState<Enterprise | null>(null);
     const [formState, setFormState] = useState({
@@ -83,8 +96,7 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                     ...formData,
                     coordinates: {
                         value: null,
-                        message:
-                            "Por favor selecciona la ubicacion de la Empresa de Grua",
+                        message: `Por favor selecciona la ubicacion ${EnterpriseTypeRenderPronounV2[type]}`,
                     },
                 });
             } else if (
@@ -100,7 +112,7 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                 };
                 if (isImageBase64(formData.logo.value)) {
                     const imgWithRef = await toast.promise(
-                        uploadImageBase64(DirectoryPath.Enterprises, formData.logo.value),
+                        uploadFileBase64(DirectoryPath.Enterprises, formData.logo.value),
                         {
                             pending: "Cambiando el logo, por favor espera",
                             success: "Logo cambiado",
@@ -129,22 +141,16 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                 };
 
                 await toast.promise(updateEnterprise(enterpriseData.id, enterprise), {
-                    pending: `Editando ${
-                        type === "tow" ? "empresa operadora de grua" : "taller mecanico"
-                    }`,
+                    pending: `Editando ${EnterpriseTypeRender[type]}`,
                     success: "Editado",
-                    error: `Error al editar ${
-                        type === "tow" ? "empresa" : "taller"
-                    }, intentalo de nuevo por favor`,
+                    error: `Error al editar ${EnterpriseTypeRender[type]}, intentalo de nuevo por favor`,
                 });
 
                 setFormState({
                     ...formState,
                     loading: false,
                 });
-                router.push(
-                    `/admin/enterprises/${type === "tow" ? "cranes" : "workshops"}`,
-                );
+                router.push(`/admin/enterprises/${getRoute(type)}`);
             } else {
                 console.log("error");
             }
@@ -207,20 +213,12 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                     setEnterpriseData(data);
                 } else {
                     router.push("/");
-                    toast.error(
-                        (type === "tow" ? "Empresa de grua" : "Taller mecanico").concat(
-                            " no encontrado",
-                        ),
-                    );
+                    toast.error(EnterpriseTypeRender[type].concat(" no encontrado"));
                 }
             })
             .catch(() => {
                 router.push("/");
-                toast.error(
-                    (type === "tow" ? "Empresa de grua" : "Taller mecanico").concat(
-                        " no encontrado",
-                    ),
-                );
+                toast.error(EnterpriseTypeRender[type].concat(" no encontrado"));
             });
     }, []);
 
@@ -245,43 +243,29 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                     loadingEdit: true,
                 });
                 try {
-                    const newState = !enterpriseData.active
-                    const messages = newState ? {
-                        pending: `Habilitando ${
-                            type === EnterpriseType.Mechanical
-                                ? "el Taller"
-                                : "la Empresa"
-                        }`,
-                        success: "Habilitado",
-                        error: `Error al habilitar ${
-                            type === EnterpriseType.Mechanical
-                                ? "el Taller"
-                                : "la Empresa"
-                        }, intentalo de nuevo por favor`,
-                    } : {
-                        pending: `Desabilitando ${
-                            type === EnterpriseType.Mechanical
-                                ? "el Taller"
-                                : "la Empresa"
-                        }`,
-                        success: "Desabilitado",
-                        error: `Error al desabilitar ${
-                            type === EnterpriseType.Mechanical
-                                ? "el Taller"
-                                : "la Empresa"
-                        }, intentalo de nuevo por favor`,
-                    }
+                    const newState = !enterpriseData.active;
+                    const messages = newState
+                        ? {
+                              pending: `Habilitando ${EnterpriseTypeRenderPronoun[type]}`,
+                              success: "Habilitado",
+                              error: `Error al habilitar ${EnterpriseTypeRenderPronoun[type]}, intentalo de nuevo por favor`,
+                          }
+                        : {
+                              pending: `Desabilitando ${EnterpriseTypeRenderPronoun[type]}`,
+                              success: "Desabilitado",
+                              error: `Error al desabilitar ${EnterpriseTypeRenderPronoun[type]}, intentalo de nuevo por favor`,
+                          };
 
                     await toast.promise(
                         updateEnterprise(enterpriseData.id, {
                             active: newState,
                         }),
-                        messages
+                        messages,
                     );
                     setEnterpriseData({
                         ...enterpriseData,
-                        active: newState
-                    })
+                        active: newState,
+                    });
                     setFormState({
                         ...formState,
                         loadingEdit: false,
@@ -306,21 +290,11 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                 });
                 try {
                     await toast.promise(deleteEnterpriseReq(enterpriseData.id), {
-                        pending: `Eliminando ${
-                            type === EnterpriseType.Mechanical
-                                ? "el Taller"
-                                : "la Empresa"
-                        }`,
+                        pending: `Eliminando ${EnterpriseTypeRenderPronoun[type]}`,
                         success: "Eliminado",
-                        error: `Error al eliminar ${
-                            type === EnterpriseType.Mechanical
-                                ? "el Taller"
-                                : "la Empresa"
-                        }, intentalo de nuevo por favor`,
+                        error: `Error al eliminar ${EnterpriseTypeRenderPronoun[type]}, intentalo de nuevo por favor`,
                     });
-                    router.push(
-                        `/admin/enterprises/${type === "tow" ? "cranes" : "workshops"}`,
-                    );
+                    router.push(`/admin/enterprises/${getRoute(type)}`);
                     setFormState({
                         ...formState,
                         loadingRev: false,
@@ -338,11 +312,7 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
 
     return enterpriseData ? (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">
-                {type === "tow"
-                    ? "Editar Empresa Operadora de Grua"
-                    : "Editar Taller Mecanico"}
-            </h1>
+            <h1 className="text | big bolder">Editar {EnterpriseTypeRender[type]}</h1>
             <form
                 className="form-sub-container | margin-top-25"
                 onSubmit={handleSummbit}
@@ -353,11 +323,7 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                 <fieldset className="form-section | max-width-60">
                     <input
                         type="text"
-                        placeholder={`Nombre ${
-                            type === EnterpriseType.Mechanical
-                                ? "del taller"
-                                : "de la empresa"
-                        }`}
+                        placeholder={`Nombre ${EnterpriseTypeRenderPronounV2[type]}`}
                         className="form-section-input"
                         value={formData.name.value}
                         name="fullname"
@@ -389,16 +355,14 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                         }}
                         content={{
                             id: "workshop-uploader-image",
-                            indicator: `Logo ${
-                                type === "tow" ? "de la empresa" : "del Taller"
-                            }`,
+                            indicator: `Logo ${EnterpriseTypeRenderPronounV2[type]}`,
                             isCircle: true,
                         }}
                     />
                 </div>
                 <fieldset className="form-section">
                     <span className="text | bold gray-dark">
-                        Ubicacion {type === "tow" ? "de la Empresa" : "del Taller"}
+                        Ubicacion {EnterpriseTypeRenderPronounV2[type]}
                     </span>
                     <div className="form-section-map | max-width-80">
                         <MapForm
@@ -425,13 +389,9 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                     }
                 >
                     <button
-                        className="general-button touchable | gray "
+                        className="general-button touchable | gray"
                         type="button"
-                        onClick={() =>
-                            router.push(
-                                `/enterprise/${type === "tow" ? "cranes" : "workshops"}`,
-                            )
-                        }
+                        onClick={() => router.push(`/enterprise/${getRoute(type)}`)}
                     >
                         Cancelar
                     </button>
@@ -466,20 +426,13 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                     <p>
                         Esta accion si puede revertir, pero si afectara los datos que
                         estan relacionados con este mientras este desabilitado. Por favor
-                        escribe el nombre{" "}
-                        {type === EnterpriseType.Mechanical
-                            ? "del taller"
-                            : "de la empresa"}{" "}
-                        para confirmar la accion.
+                        escribe el nombre {EnterpriseTypeRenderPronounV2[type]} para
+                        confirmar la accion.
                     </p>
                     <fieldset className="form-section | max-width-60">
                         <input
                             type="text"
-                            placeholder={`Nombre ${
-                                type === EnterpriseType.Mechanical
-                                    ? "del taller"
-                                    : "de la empresa"
-                            }`}
+                            placeholder={`Nombre ${EnterpriseTypeRenderPronounV2[type]}`}
                             className="form-section-input"
                             name="fullname"
                             onChange={(e) =>
@@ -502,7 +455,7 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                             <span className="loader-black"></span>
                         ) : (
                             `${enterpriseData.active ? "Desabilitar" : "Habilitar"} 
-                        ${type === EnterpriseType.Mechanical ? "Taller" : "Empresa"}`
+                        ${EnterpriseTypeRender[type]}`
                         )}
                     </button>
                 </div>
@@ -523,19 +476,13 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                     <p>
                         Esta accion no se puede revertir, aunque no se afectara los datos
                         que estan relacionados con este. Por favor escribe el nombre{" "}
-                        {type === EnterpriseType.Mechanical
-                            ? "del taller"
-                            : "de la empresa"}{" "}
-                        para confirmar su eliminacion.
+                        {EnterpriseTypeRenderPronounV2[type]} para confirmar su
+                        eliminacion.
                     </p>
                     <fieldset className="form-section | max-width-60">
                         <input
                             type="text"
-                            placeholder={`Nombre ${
-                                type === EnterpriseType.Mechanical
-                                    ? "del taller"
-                                    : "de la empresa"
-                            }`}
+                            placeholder={`Nombre ${EnterpriseTypeRenderPronounV2[type]}`}
                             className="form-section-input"
                             name="fullname"
                             onChange={(e) =>
@@ -558,7 +505,7 @@ const EnterpriseEditByAdmin = ({ id, type }: { id: string; type: string }) => {
                             <span className="loader"></span>
                         ) : (
                             `Eliminar 
-                        ${type === EnterpriseType.Mechanical ? "Taller" : "Empresa"}`
+                        ${EnterpriseTypeRender[type]}`
                         )}
                     </button>
                 </div>

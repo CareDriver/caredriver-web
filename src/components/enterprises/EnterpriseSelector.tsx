@@ -1,5 +1,9 @@
 "use client";
-import { Enterprise, EnterpriseType } from "@/interfaces/Enterprise";
+import {
+    Enterprise,
+    EnterpriseType,
+    EnterpriseTypeRenderPronoun,
+} from "@/interfaces/Enterprise";
 import {
     getAllNumPages,
     getAllPaginatedData,
@@ -9,6 +13,7 @@ import { useEffect, useState } from "react";
 import "@/styles/components/enterprise.css";
 import Plus from "@/icons/Plus";
 import { EnterpriseField } from "../services/FormModels";
+import { getEmptyEnterprise } from "@/utils/parser/ToSpanishEnterprise";
 
 const EnterpriseSelector = ({
     type,
@@ -57,7 +62,7 @@ const EnterpriseSelector = ({
                     message:
                         type === EnterpriseType.Mechanical
                             ? null
-                            : "Necesitas indicar la empresa operadora de grua",
+                            : `Necesitas indicar ${EnterpriseTypeRenderPronoun[type]}`,
                 });
             } else {
                 if (enterprise.id) {
@@ -108,11 +113,7 @@ const EnterpriseSelector = ({
             </div>
         ) : (
             <div>
-                <h2>
-                    {type === EnterpriseType.Mechanical
-                        ? "Ningun taller mecanico fue creado"
-                        : "Ninguna empresa operadora de grua fue creada"}
-                </h2>
+                <h2>{getEmptyEnterprise(type)}</h2>
             </div>
         )
     ) : (

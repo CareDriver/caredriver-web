@@ -35,6 +35,10 @@
     gap: 10px;
 }
 
+.row-wrapper.space-between {
+    justify-content: space-between;
+}
+
 .row-wrapper.gap-20 {
     gap: 20px;
 }

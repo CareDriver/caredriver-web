@@ -1,11 +1,11 @@
 import CranesPanel from "@/components/enterprises/crane/CranesPanel";
-import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 
 const CraneworkshopPage = () => {
     return (
-        <WrapperWithSideBar>
+        <PageServerUserPermission>
             <CranesPanel />
-        </WrapperWithSideBar>
+        </PageServerUserPermission>
     );
 };
 

@@ -1,6 +1,5 @@
 import { Collections } from "@/firebase/CollecionNames";
 import { firestore } from "@/firebase/FirebaseConfig";
-import { IMG_DELETED } from "@/interfaces/ImageInterface";
 import { LicenseUpdateReq } from "@/interfaces/PersonalDocumentsInterface";
 import {
     collection,
@@ -19,7 +18,6 @@ import {
     updateDoc,
     where,
 } from "firebase/firestore";
-import { deleteDocument } from "./FileUploader";
 
 const licenseUpdateReqCollection = collection(firestore, Collections.LicenseUpdateReq);
 
@@ -62,7 +60,9 @@ export const updateLicenseUpReq = async (
 };
 
 export const setReviewLicenseReq = async (id: string) => {
-    await deleteDocument(Collections.LicenseUpdateReq, id);
+    await updateLicenseUpReq(id, {
+        active: false,
+    });
 };
 
 export const getLicencesToUpdatePaginated = async (

@@ -1,18 +1,14 @@
 "use client";
 
 import { FormEvent, useContext, useEffect, useState } from "react";
-import {
-    defaultLicense,
-    PersonalDataFormField,
-    VehicleForm,
-} from "../../FormModels";
+import { defaultLicense, PersonalDataFormField, VehicleForm } from "../../FormModels";
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
 import PersonalDataForm from "../../../form/PersonalDataForm";
 import VehiclesForm from "./VehiclesForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
 import { defaultPhoto, PhotoField } from "../../FormModels";
-import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import {
     isValidForm,
@@ -31,6 +27,9 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import ServiceHeader from "../../ServiceHeader";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
+import { PDFField } from "@/components/form/PDFUploader";
+import AntecedentsPdf from "@/components/form/AntecedentsPdf";
+import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 
 const DriverRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -42,6 +41,20 @@ const DriverRegistration = () => {
         photo: {
             value: null,
             message: null,
+        },
+        idCard: {
+            frontCard: {
+                value: null,
+                message: null,
+            },
+            backCard: {
+                value: null,
+                message: null,
+            },
+            location: {
+                value: "",
+                message: null,
+            },
         },
     });
     const [vehicles, setVehicles] = useState<VehicleForm[]>([
@@ -59,6 +72,22 @@ const DriverRegistration = () => {
         isValid: true,
         loading: false,
     });
+    const [pdf, setPdf] = useState<PDFField>({
+        value: null,
+        message: null,
+    });
+
+    const uploadPDF = async (): Promise<ImgWithRef | null> => {
+        if (pdf.value) {
+            try {
+                return await uploadFileBase64(DirectoryPath.Documents, pdf.value);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        return null;
+    };
 
     const uploadImages = async () => {
         let vehiclesData: Vehicle[] = [];
@@ -73,7 +102,7 @@ const DriverRegistration = () => {
                 isImageBase64(personalData.photo.value)
             ) {
                 try {
-                    newProfilePhotoImgUrl = await uploadImageBase64(
+                    newProfilePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.TempProfilePhotos,
                         personalData.photo.value,
                     );
@@ -89,11 +118,11 @@ const DriverRegistration = () => {
                     vehicle.license.behindPhoto.value
                 ) {
                     try {
-                        const frontImgUrl = await uploadImageBase64(
+                        const frontImgUrl = await uploadFileBase64(
                             DirectoryPath.Licenses,
                             vehicle.license.frontPhoto.value,
                         );
-                        const behindImgUrl = await uploadImageBase64(
+                        const behindImgUrl = await uploadFileBase64(
                             DirectoryPath.Licenses,
                             vehicle.license.behindPhoto.value,
                         );
@@ -118,7 +147,7 @@ const DriverRegistration = () => {
 
             if (userConfirmation.value) {
                 try {
-                    realTimePhotoImgUrl = await uploadImageBase64(
+                    realTimePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.Selfies,
                         userConfirmation.value,
                     );
@@ -139,6 +168,7 @@ const DriverRegistration = () => {
         vehiclesData: Vehicle[],
         newProfilePhotoImgUrl: string | ImgWithRef,
         realTimePhotoImgUrl: ImgWithRef,
+        pdfRef: ImgWithRef,
     ) => {
         if (user.data) {
             var formId = nanoid(30);
@@ -156,6 +186,7 @@ const DriverRegistration = () => {
                         user.data.location === undefined
                             ? Locations.CochabambaBolivia
                             : user.data.location,
+                        pdfRef,
                     ),
                 );
 
@@ -218,6 +249,8 @@ const DriverRegistration = () => {
             vehicles,
             userConfirmation,
             acceptedTerms,
+            pdf,
+            personalData.idCard,
         );
         if (isValid) {
             isValid = isValidForm(
@@ -225,32 +258,45 @@ const DriverRegistration = () => {
                 vehicles,
                 userConfirmation,
                 acceptedTerms,
+                pdf,
+                personalData.idCard,
             );
             if (isValid && user.data) {
                 try {
+                    await updateIdCard(personalData.idCard, user.data);
                     const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
                         await toast.promise(uploadImages(), {
                             pending: "Subiendo imagenes, por favor espera",
                             success: "Imagenes subidas",
                             error: "Error al subir imagenes, intentalo de nuevo por favor",
                         });
-                    await toast.promise(
-                        uploadForm(
-                            vehiclesData,
-                            newProfilePhotoImgUrl,
-                            realTimePhotoImgUrl,
-                        ),
-                        {
-                            pending: "Enviando el formulario, por favor espera",
-                            success: "Formulario enviado",
-                            error: "Error al enviar el formulario, intentalo de nuevo por favor",
-                        },
-                    );
-                    window.location.reload();
-                    setFormState({
-                        loading: false,
-                        isValid: true,
+
+                    const pdfRef = await toast.promise(uploadPDF(), {
+                        pending: "Subiendo PDF",
+                        success: "PDF subido",
+                        error: "Error al subir el PDF, intentalo de nuevo",
                     });
+
+                    if (pdfRef) {
+                        await toast.promise(
+                            uploadForm(
+                                vehiclesData,
+                                newProfilePhotoImgUrl,
+                                realTimePhotoImgUrl,
+                                pdfRef,
+                            ),
+                            {
+                                pending: "Enviando el formulario, por favor espera",
+                                success: "Formulario enviado",
+                                error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                            },
+                        );
+                        window.location.reload();
+                        setFormState({
+                            loading: false,
+                            isValid: true,
+                        });
+                    }
                 } catch (e) {
                     setFormState({
                         loading: false,
@@ -287,6 +333,8 @@ const DriverRegistration = () => {
                     vehicles,
                     userConfirmation,
                     acceptedTerms,
+                    pdf,
+                    personalData.idCard,
                 ),
             }),
         [personalData, vehicles, userConfirmation, acceptedTerms],
@@ -391,6 +439,8 @@ const DriverRegistration = () => {
                     setPersonalData={setPersonalData}
                 />
                 <VehiclesForm vehicles={vehicles} setVehicles={setVehicles} />
+
+                <AntecedentsPdf file={pdf} setFile={setPdf} />
 
                 <SelfieConfirmer
                     image={userConfirmation}

@@ -3,6 +3,7 @@ import { UserRequest } from "@/interfaces/UserRequest";
 import {
     deleteImagesIfLimitOfApproves,
     MIN_NUM_OF_APPROVALS,
+    setFirstService,
     updateService,
 } from "@/utils/requests/services/ServicesRequester";
 import PersonalData from "../../data_renderer/personal_data/PersonalData";
@@ -24,6 +25,8 @@ import { mechanicReqCollection } from "@/utils/requests/services/MechanicRequest
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
+import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
+import MechanicToolsRenderer from "../../data_renderer/mechanic/MechanicToolsRenderer";
 
 const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -99,9 +102,19 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             userToUpdate = {
                                 ...userToUpdate,
                                 mechanicalWorkShopId: serviceReq.mechanicalWorkShop,
-                                services: [...userData.services, Services.Mechanic],
                             };
+                            if (!userData.services.includes(Services.Mechanic)) {
+                                userToUpdate = {
+                                    ...userToUpdate,
+                                    services: [...userData.services, Services.Mechanic],
+                                };
+                            }
                         }
+                        userToUpdate = await setFirstService(
+                            userData,
+                            userToUpdate,
+                            user.data.id,
+                        );
                         await updateUser(serviceReq.userId, userToUpdate);
                     } else {
                         toast.error("El usuario no fue encontrado");
@@ -190,49 +203,40 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 name={serviceReq.newFullName}
                 photo={serviceReq.newProfilePhotoImgUrl}
             />
-            {reviewState.reviewed ? (
-                userData && user.data ? (
-                    <ContactReviewedUser
-                        user={userData}
-                        transmitter={user.data.fullName}
-                    />
-                ) : (
-                    <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
-                )
-            ) : (
-                <>
-                    <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                    {enterprise === null ? (
-                        <span className="loader-green"></span>
-                    ) : enterprise === undefined ? (
-                        <FieldDeleted description="No se selecciono el taller mecanico (El campo era opcional)" />
-                    ) : (
-                        <WorkshopRenderer workshop={enterprise} />
-                    )}
 
-                    {userData && <UserStatusIndicatorV2 user={userData} />}
-                    <p className="text | light margin-top-25">
-                        Podras contactarte con el usuario despues de{" "}
-                        <b>aprobar o rechazar</b> la solicitud
-                    </p>
-                    <ReqButtonRes
-                        onApprove={approve}
-                        onDecline={decline}
-                        loading={reviewState.loading || userData === null}
-                        stateB1={true}
-                        stateB2={
-                            userData !== null &&
-                            userData !== undefined &&
-                            !userData.deleted &&
-                            enterprise !== null &&
-                            enterprise !== undefined &&
-                            enterprise.deleted === false &&
-                            enterprise.active === true
-                        }
-                        alreadyReviewed={reviewState.reviewed || !serviceReq.active}
-                    />
-                </>
+            {userData ? (
+                <IdCardRenderer idCard={userData.identityCard} />
+            ) : (
+                <span className="row-wrapper text | bold gray-medium">
+                    <span className="loader-gray-medium | small-loader"></span> Cargando
+                    carnet de identidad
+                </span>
             )}
+            <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+
+            <MechanicToolsRenderer tools={serviceReq.mechanicTools} />
+
+            {enterprise === null ? (
+                <span className="loader-green"></span>
+            ) : (
+                <WorkshopRenderer workshop={enterprise} />
+            )}
+
+            {userData && user.data ? (
+                <ContactReviewedUser user={userData} transmitter={user.data.fullName} />
+            ) : (
+                <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
+            )}
+
+            {userData && <UserStatusIndicatorV2 user={userData} />}
+            <ReqButtonRes
+                onApprove={approve}
+                onDecline={decline}
+                loading={reviewState.loading || userData === null}
+                stateB1={true}
+                stateB2={userData !== null && userData !== undefined && !userData.deleted}
+                alreadyReviewed={reviewState.reviewed || !serviceReq.active}
+            />
         </div>
     );
 };

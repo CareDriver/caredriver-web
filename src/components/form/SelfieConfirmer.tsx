@@ -1,6 +1,6 @@
 import PersonQuestion from "@/icons/PersonQuestion";
-import ImageUploader from "./ImageUploader";
 import { PhotoField } from "../services/FormModels";
+import CameraUploader from "./CameraUploader";
 
 const SelfieConfirmer = ({
     image,
@@ -21,7 +21,7 @@ const SelfieConfirmer = ({
                     aceptada o rechazada
                 </p>
             </div>
-            <ImageUploader
+            <CameraUploader
                 uploader={{
                     image: image,
                     setImage: setImage,

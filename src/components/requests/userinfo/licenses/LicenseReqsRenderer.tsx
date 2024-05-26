@@ -12,6 +12,7 @@ import LicenseUpdateItemReq from "./LicenseUpdateItemReq";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "@/styles/components/personal-data-req.css";
 import MiddleMessage from "@/components/MiddleMessage";
+import DataLoaderIndicator from "@/components/DataLoaderIndicator";
 
 const LicenseReqsRenderer = () => {
     const numPerPage = 15;
@@ -60,7 +61,7 @@ const LicenseReqsRenderer = () => {
                     dataLength={data.length}
                     next={handleNextClick}
                     hasMore={page !== pages}
-                    loader={<span className="loader-gray"></span>}
+                    loader={<DataLoaderIndicator />}
                 >
                     <div className="personal-data-req-wrapper">
                         {data.map((req, i) => (

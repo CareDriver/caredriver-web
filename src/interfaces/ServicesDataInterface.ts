@@ -27,4 +27,5 @@ export const servicesData: ServicesData = {
     [Services.Driver]: { ...defaultServiceData },
     [Services.Mechanic]: { ...defaultServiceData },
     [Services.Tow]: { ...defaultServiceData },
+    [Services.Laundry]: { ...defaultServiceData },
 };

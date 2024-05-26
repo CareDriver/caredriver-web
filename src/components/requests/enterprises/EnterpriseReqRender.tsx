@@ -1,6 +1,11 @@
 "use client";
 
-import { Enterprise, EnterpriseTypeRender } from "@/interfaces/Enterprise";
+import {
+    Enterprise,
+    EnterpriseTypeRender,
+    EnterpriseTypeRenderPronoun,
+    EnterpriseTypeRenderPronounV3,
+} from "@/interfaces/Enterprise";
 import EnterpriseRenderer from "../data_renderer/enterprise/EnterpriseRenderer";
 import ReqButtonRes from "../data_renderer/form/ReqButtonRes";
 import { useContext, useState } from "react";
@@ -12,6 +17,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { deleteFile } from "@/utils/requests/FileUploader";
+import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 
 const EnterpriseReqRender = ({ enterprise }: { enterprise: Enterprise }) => {
     const { user } = useContext(AuthContext);
@@ -31,19 +37,15 @@ const EnterpriseReqRender = ({ enterprise }: { enterprise: Enterprise }) => {
                 await toast.promise(aproveEnterpriseReq(enterprise.id, user.data.id), {
                     pending: `Aprobando ${EnterpriseTypeRender[enterprise.type]}`,
                     success: "Aprobado",
-                    error: `Error al aprobar ${enterprise.type === "tow" ? "la" : "el"} ${
-                        EnterpriseTypeRender[enterprise.type]
+                    error: `Error al aprobar ${
+                        EnterpriseTypeRenderPronoun[enterprise.type]
                     }`,
                 });
                 setReviewState({
                     ...reviewState,
                     loading: false,
                 });
-                router.push(
-                    `/admin/requests/enterprises/${
-                        enterprise.type === "tow" ? "cranes" : "workshops"
-                    }`,
-                );
+                router.push(`/admin/requests/enterprises/${getRoute(enterprise.type)}`);
             } catch (e) {
                 console.log(e);
                 setReviewState({
@@ -71,18 +73,14 @@ const EnterpriseReqRender = ({ enterprise }: { enterprise: Enterprise }) => {
                     pending: `Rechazando ${EnterpriseTypeRender[enterprise.type]}`,
                     success: "Rechazado",
                     error: `Error al rechazar ${
-                        enterprise.type === "tow" ? "la" : "el"
-                    } ${EnterpriseTypeRender[enterprise.type]}`,
+                        EnterpriseTypeRenderPronoun[enterprise.type]
+                    }`,
                 });
                 setReviewState({
                     ...reviewState,
                     loading: false,
                 });
-                router.push(
-                    `/admin/requests/enterprises/${
-                        enterprise.type === "tow" ? "cranes" : "workshops"
-                    }`,
-                );
+                router.push(`/admin/requests/enterprises/${getRoute(enterprise.type)}`);
             } catch (e) {
                 console.log(e);
                 setReviewState({
@@ -96,8 +94,7 @@ const EnterpriseReqRender = ({ enterprise }: { enterprise: Enterprise }) => {
     return (
         <section className="service-form-wrapper | max-width-60">
             <h1 className="text | big-medium bolder margin-bottom-25 capitalize">
-                Solicitud para crear {enterprise.type === "tow" ? "una" : "un"}{" "}
-                {EnterpriseTypeRender[enterprise.type]}
+                Solicitud para crear {EnterpriseTypeRenderPronounV3[enterprise.type]}
             </h1>
             <EnterpriseRenderer enterprise={enterprise} />
             <p className="text | light margin-top-25">

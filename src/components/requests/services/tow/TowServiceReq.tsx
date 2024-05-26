@@ -3,6 +3,7 @@ import { UserRequest, Vehicle } from "@/interfaces/UserRequest";
 import {
     deleteImagesIfLimitOfApproves,
     MIN_NUM_OF_APPROVALS,
+    setFirstService,
     updateService,
 } from "@/utils/requests/services/ServicesRequester";
 import PersonalData from "../../data_renderer/personal_data/PersonalData";
@@ -30,6 +31,7 @@ import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import TowRenderer from "../../data_renderer/enterprise/TowRenderer";
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
+import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
 
 const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -65,21 +67,20 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         url: "",
                     };
 
-                    var vehiclesWithoutImages = serviceReq.vehicles.map((vehicle) => {
-                        return {
-                            ...vehicle,
-                            license: {
-                                ...vehicle.license,
-                                backImgUrl: imgDeleted,
-                                frontImgUrl: imgDeleted,
-                            },
-                        };
-                    });
+                    // var vehiclesWithoutImages = serviceReq.vehicles.map((vehicle) => {
+                    //     return {
+                    //         ...vehicle,
+                    //         license: {
+                    //             ...vehicle.license,
+                    //             backImgUrl: imgDeleted,
+                    //             frontImgUrl: imgDeleted,
+                    //         },
+                    //     };
+                    // });
 
                     toUpdateReq = {
                         ...toUpdateReq,
                         realTimePhotoImgUrl: imgDeleted,
-                        vehicles: vehiclesWithoutImages,
                     };
 
                     if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
@@ -115,6 +116,8 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             tow = {
                                 ...tow,
                                 license: {
+                                    frontImgUrl: tow.license.frontImgUrl,
+                                    backImgUrl: tow.license.backImgUrl,
                                     expiredDateLicense: tow.license.expiredDateLicense,
                                     licenseNumber: tow.license.licenseNumber,
                                 },
@@ -150,10 +153,21 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         if (wasApproved && serviceReq.towEnterprite) {
                             userToUpdate = {
                                 ...userToUpdate,
-                                services: [...userData.services, Services.Tow],
+
                                 towEnterpriteId: serviceReq.towEnterprite,
                             };
+                            if (!userData.services.includes(Services.Tow)) {
+                                userToUpdate = {
+                                    ...userToUpdate,
+                                    services: [...userData.services, Services.Tow],
+                                };
+                            }
                         }
+                        userToUpdate = await setFirstService(
+                            userData,
+                            userToUpdate,
+                            user.data.id,
+                        );
                         await updateUser(serviceReq.userId, userToUpdate);
                     } else {
                         toast.error("El usuario no fue encontrado");
@@ -253,53 +267,49 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 name={serviceReq.newFullName}
                 photo={serviceReq.newProfilePhotoImgUrl}
             />
-            {reviewState.reviewed ? (
-                userData && user.data ? (
-                    <ContactReviewedUser
-                        user={userData}
-                        transmitter={user.data.fullName}
-                    />
-                ) : (
-                    <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
-                )
+            {userData ? (
+                <IdCardRenderer idCard={userData.identityCard} />
             ) : (
-                <>
-                    <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                    {serviceReq.vehicles && (
-                        <VehiclesRenderer vehicles={serviceReq.vehicles} />
-                    )}
-                    {enterprise === null ? (
-                        <span className="loader-green"></span>
-                    ) : enterprise === undefined ? (
-                        <FieldDeleted description="No se encontro la Empresa Operadora de Grua, es posible que fue eliminada" />
-                    ) : (
-                        <TowRenderer tow={enterprise} />
-                    )}
-
-                    {userData && <UserStatusIndicatorV2 user={userData} />}
-
-                    <p className="text | light margin-top-25">
-                        Podras contactarte con el usuario despues de{" "}
-                        <b>aprobar o rechazar</b> la solicitud
-                    </p>
-                    <ReqButtonRes
-                        onApprove={approve}
-                        onDecline={decline}
-                        loading={reviewState.loading || userData === null}
-                        stateB1={true}
-                        stateB2={
-                            userData !== null &&
-                            userData !== undefined &&
-                            !userData.deleted &&
-                            enterprise !== null &&
-                            enterprise !== undefined &&
-                            enterprise.deleted === false &&
-                            enterprise.active === true
-                        }
-                        alreadyReviewed={reviewState.reviewed || !serviceReq.active}
-                    />
-                </>
+                <span className="row-wrapper text | bold gray-medium">
+                    <span className="loader-gray-medium | small-loader"></span> Cargando
+                    carnet de identidad
+                </span>
             )}
+
+            <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+            {serviceReq.vehicles && <VehiclesRenderer vehicles={serviceReq.vehicles} />}
+            {enterprise === null ? (
+                <span className="loader-green"></span>
+            ) : enterprise === undefined ? (
+                <FieldDeleted description="No se encontro la Empresa Operadora de Grua, es posible que fue eliminada" />
+            ) : (
+                <TowRenderer tow={enterprise} />
+            )}
+
+            {userData && user.data ? (
+                <ContactReviewedUser user={userData} transmitter={user.data.fullName} />
+            ) : (
+                <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
+            )}
+
+            {userData && <UserStatusIndicatorV2 user={userData} />}
+
+            <ReqButtonRes
+                onApprove={approve}
+                onDecline={decline}
+                loading={reviewState.loading || userData === null}
+                stateB1={true}
+                stateB2={
+                    userData !== null &&
+                    userData !== undefined &&
+                    !userData.deleted &&
+                    enterprise !== null &&
+                    enterprise !== undefined &&
+                    enterprise.deleted === false &&
+                    enterprise.active === true
+                }
+                alreadyReviewed={reviewState.reviewed || !serviceReq.active}
+            />
         </div>
     );
 };

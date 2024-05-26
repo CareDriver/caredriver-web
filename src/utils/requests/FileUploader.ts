@@ -4,14 +4,14 @@ import { firestore, storage } from "@/firebase/FirebaseConfig";
 import { nanoid } from "nanoid";
 import { ImgWithRef } from "@/interfaces/ImageInterface";
 
-export const uploadImageBase64 = async (
+export const uploadFileBase64 = async (
     location: string,
-    image: string,
+    file: string,
 ): Promise<ImgWithRef> => {
     const uniqueName = nanoid(40);
     const refLocation = `${location.concat(uniqueName)}`;
     const mountainsRef = ref(storage, refLocation);
-    await uploadString(mountainsRef, image, "data_url");
+    await uploadString(mountainsRef, file, "data_url");
     const url = await getDownloadURL(mountainsRef);
     return {
         ref: refLocation,

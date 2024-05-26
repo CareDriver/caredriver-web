@@ -1,11 +1,11 @@
+import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import SingleEnterpiseUpReq from "@/components/requests/enterprises/edit/SingleEnterpiseUpReq";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const SingleTowUpReqPage = ({ params }: { params: any }) => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageRequestPermission>
             <SingleEnterpiseUpReq reqId={params.id} type="tow" />
-        </AdminWrapperWithSideBar>
+        </PageRequestPermission>
     );
 };
 

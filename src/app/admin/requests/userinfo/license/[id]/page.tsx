@@ -1,11 +1,11 @@
+import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import SingleLicenseReq from "@/components/requests/userinfo/licenses/SingleLicenseReq";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
 
 const SingleLicenseReqPage = ({ params }: { params: any }) => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageRequestPermission>
             <SingleLicenseReq reqId={params.id} />
-        </AdminWrapperWithSideBar>
+        </PageRequestPermission>
     );
 };
 

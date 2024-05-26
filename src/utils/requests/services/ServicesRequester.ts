@@ -12,15 +12,19 @@ import {
     orderBy,
     query,
     startAfter,
+    Timestamp,
     updateDoc,
     where,
 } from "firebase/firestore";
 import { driveReqCollection } from "./DriveRequester";
 import { mechanicReqCollection } from "./MechanicRequester";
 import { towReqCollection } from "./TowRequester";
-import { isUrl } from "@/utils/validator/ImageValidator";
 import { deleteFile } from "../FileUploader";
 import { toast } from "react-toastify";
+import { UserInterface } from "@/interfaces/UserInterface";
+import { saveBalanceHistoryItem } from "../BalanceHistoryRequester";
+import { nanoid } from "nanoid";
+import { laundryReqCollection } from "./LaundryRequester";
 
 export const MIN_NUM_OF_APPROVALS = 1;
 
@@ -88,7 +92,7 @@ export const getServiceReqById = async (
     }
 };
 
-export const numOfApprovals = (req: UserRequest): number => {  
+export const numOfApprovals = (req: UserRequest): number => {
     var approvals = 0;
     req.reviewedByHistory?.forEach((history) => {
         if (history.aproved) {
@@ -99,12 +103,17 @@ export const numOfApprovals = (req: UserRequest): number => {
     return approvals;
 };
 
-export const getServiceCollection = (type: "driver" | "mechanic" | "tow") => {
-    return type === "driver"
-        ? driveReqCollection
-        : type === "mechanic"
-        ? mechanicReqCollection
-        : towReqCollection;
+export const getServiceCollection = (type: "driver" | "mechanic" | "tow" | "laundry") => {
+    switch (type) {
+        case "driver":
+            return driveReqCollection;
+        case "mechanic":
+            return mechanicReqCollection;
+        case "tow":
+            return towReqCollection;
+        default:
+            return laundryReqCollection;
+    }
 };
 
 export const deleteImages = async (serviceReq: UserRequest) => {
@@ -113,7 +122,8 @@ export const deleteImages = async (serviceReq: UserRequest) => {
             await deleteFile(serviceReq.newProfilePhotoImgUrl.ref);
         }
         await deleteFile(serviceReq.realTimePhotoImgUrl.ref);
-        if (serviceReq.vehicles) {
+        // Remove vehicle licenses
+        /*         if (serviceReq.vehicles) {
             serviceReq.vehicles.forEach(async (vehicle) => {
                 if (vehicle.license.frontImgUrl) {
                     await deleteFile(vehicle.license.frontImgUrl?.ref);
@@ -122,7 +132,7 @@ export const deleteImages = async (serviceReq: UserRequest) => {
                     await deleteFile(vehicle.license.backImgUrl?.ref);
                 }
             });
-        }
+        } */
     } catch (e) {
         console.log(e);
     }
@@ -155,5 +165,48 @@ export const updateService = async (
         await updateDoc(userRef, newData);
     } catch (error) {
         throw error;
+    }
+};
+
+export const setFirstService = async (
+    user: UserInterface,
+    current: Partial<UserInterface>,
+    adminId: string,
+): Promise<Partial<UserInterface>> => {
+    const balanceGift = 5;
+    if (user.services.length === 1) {
+        current = {
+            ...current,
+            balance: {
+                currency: "Bs. (BOB)",
+                amount: user.balance.amount + balanceGift,
+            },
+        };
+        await toast.promise(saveBalanceGift(user, adminId), {
+            pending: `Regalando ${balanceGift} Bs. de saldo por ser nuevo usuario servidor`,
+            success: `${balanceGift} Bs. de saldo regalado`,
+            error: "Error al regalar saldo, intentalo de nuevo por favor",
+        });
+    }
+
+    return current;
+};
+
+export const saveBalanceGift = async (user: UserInterface, adminId: string) => {
+    try {
+        const balanceHistoryId = nanoid();
+        await saveBalanceHistoryItem(balanceHistoryId, {
+            id: balanceHistoryId,
+            dateTime: Timestamp.fromDate(new Date()),
+            oldBalance: user.balance,
+            previousBalance: {
+                amount: user.balance.amount + 5,
+                currency: "Bs. (BOB)",
+            },
+            userWhoChanged: adminId,
+            modificationReason: "Regalo por ser nuevo usuario servidor",
+        });
+    } catch (e) {
+        console.log(e);
     }
 };

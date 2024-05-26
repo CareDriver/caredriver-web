@@ -1,11 +1,11 @@
-import { GeoPoint } from "firebase/firestore";
+import { GeoPoint, Timestamp } from "firebase/firestore";
 import { VehicleInterface } from "./VehicleInterface";
 import { ServiceReqState, Services } from "./Services";
 import { ServicesData } from "./ServicesDataInterface";
-import { Payment, Price } from "./Payment";
+import { BalanceHistory, Payment, Price } from "./Payment";
 import { Locations } from "./Locations";
 import { ServiceStateRequest, Vehicle } from "./UserRequest";
-import { ImgWithRef } from "./ImageInterface";
+import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
 
 export interface HistoryLocationInterface {
     locationName: string;
@@ -26,7 +26,17 @@ export enum UserRole {
     User = "User",
     Admin = "Admin",
     Support = "Support",
+    SupportTwo = "SupportTwo",
+    BalanceRecharge = "BalanceRecharge",
 }
+
+export const UserRoleRender = {
+    User: "Usuario",
+    Admin: "Administrador",
+    Support: "Soporte",
+    SupportTwo: "Soporte Dos",
+    BalanceRecharge: "Recargador de Saldo",
+};
 
 export interface UserInterface {
     id?: string; // Unique identifier for the user
@@ -34,6 +44,8 @@ export interface UserInterface {
     fullName: string; // Full name of the user
     phoneNumber: string; // Phone number of the user (includes country code, ej: +591 76543218)
     photoUrl: ImgWithRef; // URL of the user's photo
+    email?: string; // User's email
+    identityCard?: IdentityCard; // User's Id card
 
     comments: string[]; // Array of comments given by drivers
     vehicles: VehicleInterface[]; // Array of vehicles associated with the user
@@ -43,24 +55,48 @@ export interface UserInterface {
     pickUpLocationsHistory: HistoryLocationInterface[]; // Array of historical pickup locations
     deliveryLocationsHistory: HistoryLocationInterface[]; // Array of historical delivery locations
 
-    email?: string; // User's email
-    currentDebtWithTheApp?: Price; // current debt of a server user towards the application, will contain the money that the user owes to the application following the services made and last time he/she paid
-    appPaymentHistory?: Payment[]; // Array of the payments made by the service user to the app.
+    balance: Price; // current debt of a server user towards the application, will contain the money that the user owes to the application following the services made and last time he/she paid
+    minimumBalance: Price;
+    balanceHistory?: BalanceHistory[]; // Array of the payments made by the service user to the app.
     location?: Locations; // Location user begins
     disable?: boolean; // true when user did not paid to the app and was disabled.
     deleted: boolean; // used for soft delete
     mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
     towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
+    laundryEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
 
     serviceVehicles?: ServiceVehicles; // vehicles that the user registered
-    serviceRequests?: ServiceRequestsInterface // status of the services that the user made a request
+    serviceRequests?: ServiceRequestsInterface; // status of the services that the user made a request
+
+    branding?: Branding;
 }
+
+export interface Branding {
+    active: boolean;
+    lastBrandingConfirmation: Timestamp;
+    brandingConfirmations: Timestamp[];
+}
+
+export interface IdentityCard {
+    frontCard: ImgWithRef;
+    backCard: ImgWithRef;
+    location: string;
+    updatedDate: Timestamp;
+}
+
+export const emptyIdCard: IdentityCard = {
+    frontCard: emptyPhotoWithRef,
+    backCard: emptyPhotoWithRef,
+    location: "",
+    updatedDate: Timestamp.fromDate(new Date()),
+};
 
 export interface ServiceRequestsInterface {
     driveCar?: ServiceStateRequest;
     driveMotorcycle?: ServiceStateRequest;
     mechanic?: ServiceStateRequest;
     tow?: ServiceStateRequest;
+    laundry?: ServiceStateRequest;
 }
 
 export interface ServiceVehicles {
@@ -83,6 +119,10 @@ export const defaultServiceReq = {
         state: ServiceReqState.NotSent,
     },
     tow: {
+        id: "",
+        state: ServiceReqState.NotSent,
+    },
+    laundry: {
         id: "",
         state: ServiceReqState.NotSent,
     },

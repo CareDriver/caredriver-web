@@ -1,11 +1,11 @@
 import EnterpriseListForAdmins from "@/components/enterprises/admin/EnterpriseListForAdmins";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+import PageEnterprisePermission from "@/components/permission/page/concrets/PageEnterprisePermission";
 
 const CraneListViewerPageForAdmin = () => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageEnterprisePermission>
             <EnterpriseListForAdmins type="tow" />;
-        </AdminWrapperWithSideBar>
+        </PageEnterprisePermission>
     );
 };
 

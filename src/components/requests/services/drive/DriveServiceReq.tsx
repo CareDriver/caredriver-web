@@ -3,6 +3,7 @@ import { UserRequest, Vehicle } from "@/interfaces/UserRequest";
 import {
     deleteImagesIfLimitOfApproves,
     MIN_NUM_OF_APPROVALS,
+    setFirstService,
     updateService,
 } from "@/utils/requests/services/ServicesRequester";
 import PersonalData from "../../data_renderer/personal_data/PersonalData";
@@ -27,6 +28,8 @@ import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import FieldDeleted from "../../data_renderer/form/FieldDeleted";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
+import PoliceRecords from "../../data_renderer/vehicle/PoliceRecords";
+import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
 
 const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -61,7 +64,8 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         url: "",
                     };
 
-                    var vehiclesWithoutImages = serviceReq.vehicles.map((vehicle) => {
+                    // Delete vehicle licenses images
+                    /* var vehiclesWithoutImages = serviceReq.vehicles.map((vehicle) => {
                         return {
                             ...vehicle,
                             license: {
@@ -70,12 +74,11 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 frontImgUrl: imgDeleted,
                             },
                         };
-                    });
+                    }); */
 
                     toUpdateReq = {
                         ...toUpdateReq,
                         realTimePhotoImgUrl: imgDeleted,
-                        vehicles: vehiclesWithoutImages,
                     };
 
                     if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
@@ -113,6 +116,8 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             car = {
                                 ...car,
                                 license: {
+                                    frontImgUrl: car.license.frontImgUrl,
+                                    backImgUrl: car.license.backImgUrl,
                                     expiredDateLicense: car.license.expiredDateLicense,
                                     licenseNumber: car.license.licenseNumber,
                                 },
@@ -122,6 +127,8 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             motorcycle = {
                                 ...motorcycle,
                                 license: {
+                                    frontImgUrl: motorcycle.license.frontImgUrl,
+                                    backImgUrl: motorcycle.license.backImgUrl,
                                     expiredDateLicense:
                                         motorcycle.license.expiredDateLicense,
                                     licenseNumber: motorcycle.license.licenseNumber,
@@ -158,7 +165,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         }
 
                         var userToUpdate: Partial<UserInterface> = {};
-                        if (wasApproved) {
+                        if (wasApproved && !userData.services.includes(Services.Driver)) {
                             userToUpdate = {
                                 ...userToUpdate,
                                 services: [...userData.services, Services.Driver],
@@ -177,6 +184,12 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 serviceRequests: newReqState,
                             };
                         }
+                        userToUpdate = await setFirstService(
+                            userData,
+                            userToUpdate,
+                            user.data.id,
+                        );
+
                         await updateUser(serviceReq.userId, userToUpdate);
                     } else {
                         toast.error("El usuario no fue encontrado");
@@ -257,42 +270,37 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 name={serviceReq.newFullName}
                 photo={serviceReq.newProfilePhotoImgUrl}
             />
-            {reviewState.reviewed ? (
-                userData && user.data ? (
-                    <ContactReviewedUser
-                        user={userData}
-                        transmitter={user.data.fullName}
-                    />
-                ) : (
-                    <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
-                )
+
+            {userData ? (
+                <IdCardRenderer idCard={userData.identityCard} />
             ) : (
-                <>
-                    <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                    {serviceReq.vehicles && (
-                        <VehiclesRenderer vehicles={serviceReq.vehicles} />
-                    )}
-
-                    {userData && <UserStatusIndicatorV2 user={userData} />}
-
-                    <p className="text | light margin-top-25">
-                        Podras contactarte con el usuario despues de{" "}
-                        <b>aprobar o rechazar</b> la solicitud
-                    </p>
-                    <ReqButtonRes
-                        onApprove={approve}
-                        onDecline={decline}
-                        loading={reviewState.loading || userData === null}
-                        stateB1={true}
-                        stateB2={
-                            userData !== null &&
-                            userData !== undefined &&
-                            !userData.deleted
-                        }
-                        alreadyReviewed={reviewState.reviewed || !serviceReq.active}
-                    />
-                </>
+                <span className="row-wrapper text | bold gray-medium">
+                    <span className="loader-gray-medium | small-loader"></span> Cargando
+                    carnet de identidad
+                </span>
             )}
+
+            <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+            {serviceReq.vehicles && <VehiclesRenderer vehicles={serviceReq.vehicles} />}
+
+            <PoliceRecords pdf={serviceReq.policeRecordsPdf} />
+
+            {userData && user.data ? (
+                <ContactReviewedUser user={userData} transmitter={user.data.fullName} />
+            ) : (
+                <FieldDeleted description="No se encontraron los medios de comunicacion para comunicarse con el usuario solicitante" />
+            )}
+
+            {userData && <UserStatusIndicatorV2 user={userData} />}
+
+            <ReqButtonRes
+                onApprove={approve}
+                onDecline={decline}
+                loading={reviewState.loading || userData === null}
+                stateB1={true}
+                stateB2={userData !== null && userData !== undefined && !userData.deleted}
+                alreadyReviewed={reviewState.reviewed || !serviceReq.active}
+            />
         </div>
     );
 };

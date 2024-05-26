@@ -1,5 +1,6 @@
 "use client";
 
+import DataLoaderIndicator from "@/components/DataLoaderIndicator";
 import PageLoader from "@/components/PageLoader";
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import { userReqTypes } from "@/interfaces/UserRequest";
@@ -249,7 +250,7 @@ const ServicesServedByUser = ({
                     dataLength={dataState.data.length}
                     next={handleNextClick}
                     hasMore={dataState.page !== dataState.pages}
-                    loader={<span className="loader-gray"></span>}
+                    loader={<DataLoaderIndicator />}
                 >
                     {dataState.data.map((req, i) => (
                         <div key={`service-served-by-user-${i}`}>

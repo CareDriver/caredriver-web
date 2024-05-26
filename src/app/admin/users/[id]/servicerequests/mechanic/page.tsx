@@ -1,11 +1,11 @@
 import ServicesRequestedByUser from "@/components/done_services/requested/ServicesRequestedByUser";
-import AdminWrapperWithSideBar from "@/layouts/AdminWrapperWithSideBar";
+import PageUserInfoPermission from "@/components/permission/page/concrets/PageUserInfoPermission";
 
 const ListOfMechanicServiceDoneByUser = ({ params }: { params: any }) => {
     return (
-        <AdminWrapperWithSideBar>
+        <PageUserInfoPermission>
             <ServicesRequestedByUser serviceUserId={params.id} type="mechanic" />
-        </AdminWrapperWithSideBar>
+        </PageUserInfoPermission>
     );
 };
 

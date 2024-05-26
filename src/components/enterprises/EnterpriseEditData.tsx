@@ -14,10 +14,17 @@ import {
     deleteEnterpriseReq,
     getEnterpriseById,
 } from "@/utils/requests/enterprise/EnterpriseRequester";
-import { Enterprise, EnterpriseType, ReqEditEnterprise } from "@/interfaces/Enterprise";
+import {
+    Enterprise,
+    EnterpriseType,
+    EnterpriseTypeRender,
+    EnterpriseTypeRenderPronoun,
+    EnterpriseTypeRenderPronounV2,
+    ReqEditEnterprise,
+} from "@/interfaces/Enterprise";
 import { nanoid } from "nanoid";
 import { GeoPoint } from "firebase/firestore";
-import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { toast } from "react-toastify";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
@@ -25,6 +32,8 @@ import { isImageBase64 } from "@/utils/validator/ImageValidator";
 import PageLoader from "../PageLoader";
 import TriangleExclamation from "@/icons/TriangleExclamation";
 import { sendEditEnterpriseReq } from "@/utils/requests/enterprise/EditEnterpriseReq";
+import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
+import EnterpriseRenderer from "../requests/data_renderer/enterprise/EnterpriseRenderer";
 
 interface FormData {
     name: {
@@ -42,7 +51,13 @@ interface FormData {
     };
 }
 
-const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
+const EnterpriseEditData = ({
+    id,
+    type,
+}: {
+    id: string;
+    type: "mechanical" | "tow" | "laundry";
+}) => {
     const { user, loadingUser } = useContext(AuthContext);
     const router = useRouter();
     const [enterpriseData, setEnterpriseData] = useState<Enterprise | null>(null);
@@ -84,8 +99,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                     ...formData,
                     coordinates: {
                         value: null,
-                        message:
-                            "Por favor selecciona la ubicacion de la Empresa de Grua",
+                        message: `Por favor selecciona la ubicacion ${EnterpriseTypeRenderPronounV2[type]}`,
                     },
                 });
             } else if (!loadingUser && user.data && user.data.id) {
@@ -101,7 +115,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                     };
                     if (isImageBase64(formData.logo.value)) {
                         const imgWithRef = await toast.promise(
-                            uploadImageBase64(
+                            uploadFileBase64(
                                 DirectoryPath.Enterprises,
                                 formData.logo.value,
                             ),
@@ -118,7 +132,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                     const enterprise: ReqEditEnterprise = {
                         id: reqId,
                         enterpriseId: id,
-                        type: type === "tow" ? "tow" : "mechanical",
+                        type: type,
                         name: formData.name.value,
                         logoImgUrl: image,
                         coordinates: new GeoPoint(
@@ -145,7 +159,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                         loading: false,
                     });
                     toast.info("Tu solicitud sera revisada, por favor se paciente");
-                    router.push(`/enterprise/${type === "tow" ? "cranes" : "workshops"}`);
+                    router.push(`/enterprise/${getRoute(type)}`);
                 } else {
                     console.log("error");
                 }
@@ -209,20 +223,12 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                     setEnterpriseData(data);
                 } else {
                     router.push("/");
-                    toast.error(
-                        (type === "tow" ? "Empresa de grua" : "Taller mecanico").concat(
-                            " no encontrado",
-                        ),
-                    );
+                    toast.error(EnterpriseTypeRender[type].concat(" no encontrado"));
                 }
             })
             .catch(() => {
                 router.push("/");
-                toast.error(
-                    (type === "tow" ? "Empresa de grua" : "Taller mecanico").concat(
-                        " no encontrado",
-                    ),
-                );
+                toast.error(EnterpriseTypeRender[type].concat(" no encontrado"));
             });
     }, []);
 
@@ -248,19 +254,11 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                 });
                 try {
                     await toast.promise(deleteEnterpriseReq(enterpriseData.id), {
-                        pending: `Eliminando ${
-                            type === EnterpriseType.Mechanical
-                                ? "el Taller"
-                                : "la Empresa"
-                        }`,
+                        pending: `Eliminando ${EnterpriseTypeRenderPronoun[type]}`,
                         success: "Eliminado",
-                        error: `Error al eliminar ${
-                            type === EnterpriseType.Mechanical
-                                ? "el Taller"
-                                : "la Empresa"
-                        }, intentalo de nuevo por favor`,
+                        error: `Error al eliminar ${EnterpriseTypeRenderPronoun[type]}, intentalo de nuevo por favor`,
                     });
-                    router.push(`/enterprise/${type === "tow" ? "cranes" : "workshops"}`);
+                    router.push(`/enterprise/${getRoute(type)}`);
                     setFormState({
                         ...formState,
                         loadingRev: false,
@@ -278,15 +276,10 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
 
     return enterpriseData ? (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">
-                {type === "tow"
-                    ? "Editar Empresa Operadora de Gruas"
-                    : "Editar Taller Mecanico"}
-            </h1>
+            <h1 className="text | big bolder">Editar {EnterpriseTypeRender[type]}</h1>
             <p>
-                {type === "tow"
-                    ? "Necesitamos verificar que los nuevos datos de la Empresa sean validos antes de editarlo."
-                    : "Necesitamos verificar que los nuevos datos del taller mecanico son validos antes de editarlo."}
+                Necesitamos verificar que los nuevos datos{" "}
+                {EnterpriseTypeRenderPronounV2[type]} sean validos antes de editarlo.
             </p>
             <form
                 className="form-sub-container | margin-top-25"
@@ -298,11 +291,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                 <fieldset className="form-section | max-width-60">
                     <input
                         type="text"
-                        placeholder={`Nombre ${
-                            type === EnterpriseType.Mechanical
-                                ? "del taller"
-                                : "de la empresa"
-                        }`}
+                        placeholder={`Nombre ${EnterpriseTypeRenderPronounV2[type]}`}
                         className="form-section-input"
                         value={formData.name.value}
                         name="fullname"
@@ -334,16 +323,14 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                         }}
                         content={{
                             id: "workshop-uploader-image",
-                            indicator: `Logo ${
-                                type === "tow" ? "de la empresa" : "del Taller"
-                            }`,
+                            indicator: `Logo ${EnterpriseTypeRenderPronounV2[type]}`,
                             isCircle: true,
                         }}
                     />
                 </div>
                 <fieldset className="form-section">
                     <span className="text | bold gray-dark">
-                        Ubicacion {type === "tow" ? "de la Empresa" : "del Taller"}
+                        Ubicacion {EnterpriseTypeRenderPronounV2[type]}
                     </span>
                     <div className="form-section-map | max-width-80">
                         <MapForm
@@ -372,11 +359,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                     <button
                         className="general-button touchable | gray "
                         type="button"
-                        onClick={() =>
-                            router.push(
-                                `/enterprise/${type === "tow" ? "cranes" : "workshops"}`,
-                            )
-                        }
+                        onClick={() => router.push(`/enterprise/${getRoute(type)}`)}
                     >
                         Cancelar
                     </button>
@@ -413,19 +396,13 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                     <p>
                         Esta accion no se puede revertir, aunque no se afectara los datos
                         que estan relacionados con este. Por favor escribe el nombre{" "}
-                        {type === EnterpriseType.Mechanical
-                            ? "del taller"
-                            : "de la empresa"}{" "}
-                        para confirmar su eliminacion.
+                        {EnterpriseTypeRenderPronounV2[type]} para confirmar su
+                        eliminacion.
                     </p>
                     <fieldset className="form-section | max-width-60">
                         <input
                             type="text"
-                            placeholder={`Nombre ${
-                                type === EnterpriseType.Mechanical
-                                    ? "del taller"
-                                    : "de la empresa"
-                            }`}
+                            placeholder={`Nombre ${EnterpriseTypeRenderPronounV2[type]}`}
                             className="form-section-input"
                             name="fullname"
                             onChange={(e) =>
@@ -447,8 +424,7 @@ const EnterpriseEditData = ({ id, type }: { id: string; type: string }) => {
                         {formState.loadingRev ? (
                             <span className="loader"></span>
                         ) : (
-                            `Eliminar 
-                        ${type === EnterpriseType.Mechanical ? "Taller" : "Empresa"}`
+                            `Eliminar ${EnterpriseTypeRender[type]}`
                         )}
                     </button>
                 </div>

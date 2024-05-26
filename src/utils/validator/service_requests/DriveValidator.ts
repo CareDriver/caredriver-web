@@ -1,6 +1,11 @@
-import { PersonalDataFormField, VehicleForm } from "@/components/services/FormModels";
+import {
+    IdCardForm,
+    PersonalDataFormField,
+    VehicleForm,
+} from "@/components/services/FormModels";
 import { InputState } from "../InputValidator";
 import { PhotoField } from "@/components/services/FormModels";
+import { PDFField } from "@/components/form/PDFUploader";
 
 export const isValidLicenseNumber = (licenseNumber: string): InputState => {
     const regex: RegExp = /^[a-zA-Z0-9\s]+$/;
@@ -51,8 +56,17 @@ export const isValidForm = (
     vehicles: VehicleForm[],
     userConfirmation: PhotoField,
     acceptedTerms: boolean,
+    pdf: PDFField,
+    idCardForm: IdCardForm,
 ): boolean => {
     var isValid = !personalData.fullname.message && !personalData.photo.message;
+
+    if (isValid) {
+        isValid =
+            !idCardForm.backCard.message &&
+            !idCardForm.frontCard.message &&
+            !idCardForm.location.message;
+    }
 
     if (isValid) {
         vehicles.forEach((vehicle) => {
@@ -69,6 +83,10 @@ export const isValidForm = (
     }
 
     if (isValid) {
+        isValid = !pdf.message;
+    }
+
+    if (isValid) {
         isValid = !userConfirmation.message && acceptedTerms;
     }
 
@@ -80,10 +98,19 @@ export const verifyNoEmptyData = (
     vehicles: VehicleForm[],
     userConfirmation: PhotoField,
     acceptedTerms: boolean,
+    pdf: PDFField,
+    idCardForm: IdCardForm,
 ): boolean => {
     var isNotEmpty =
         personalData.fullname.value.trim().length > 0 &&
         personalData.photo.value !== null;
+
+    if (isNotEmpty) {
+        isNotEmpty =
+            idCardForm.backCard.value !== null &&
+            idCardForm.frontCard.value !== null &&
+            idCardForm.location.value.trim().length > 0;
+    }
 
     if (isNotEmpty) {
         vehicles.forEach((vehicle) => {
@@ -97,6 +124,10 @@ export const verifyNoEmptyData = (
                 return false;
             }
         });
+    }
+
+    if (isNotEmpty) {
+        isNotEmpty = pdf.value !== null;
     }
 
     if (isNotEmpty) {

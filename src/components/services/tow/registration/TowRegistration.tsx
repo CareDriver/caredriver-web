@@ -12,7 +12,7 @@ import PersonalDataForm from "../../../form/PersonalDataForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
 import { defaultPhoto, PhotoField } from "../../FormModels";
-import { uploadImageBase64 } from "@/utils/requests/FileUploader";
+import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import {
     isValidForm,
@@ -35,6 +35,7 @@ import EnterpriseSelector from "@/components/enterprises/EnterpriseSelector";
 import { EnterpriseType } from "@/interfaces/Enterprise";
 import { saveTowReq } from "@/utils/requests/services/TowRequester";
 import Building from "@/icons/Building";
+import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 
 const TowRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -46,6 +47,20 @@ const TowRegistration = () => {
         photo: {
             value: null,
             message: null,
+        },
+        idCard: {
+            frontCard: {
+                value: null,
+                message: null,
+            },
+            backCard: {
+                value: null,
+                message: null,
+            },
+            location: {
+                value: "",
+                message: null,
+            },
         },
     });
     const [vehicle, setVehicle] = useState<VehicleForm>({
@@ -81,7 +96,7 @@ const TowRegistration = () => {
                 isImageBase64(personalData.photo.value)
             ) {
                 try {
-                    newProfilePhotoImgUrl = await uploadImageBase64(
+                    newProfilePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.TempProfilePhotos,
                         personalData.photo.value,
                     );
@@ -92,11 +107,11 @@ const TowRegistration = () => {
 
             if (vehicle.license.frontPhoto.value && vehicle.license.behindPhoto.value) {
                 try {
-                    const frontImgUrl = await uploadImageBase64(
+                    const frontImgUrl = await uploadFileBase64(
                         DirectoryPath.Licenses,
                         vehicle.license.frontPhoto.value,
                     );
-                    const behindImgUrl = await uploadImageBase64(
+                    const behindImgUrl = await uploadFileBase64(
                         DirectoryPath.Licenses,
                         vehicle.license.behindPhoto.value,
                     );
@@ -120,7 +135,7 @@ const TowRegistration = () => {
 
             if (userConfirmation.value) {
                 try {
-                    realTimePhotoImgUrl = await uploadImageBase64(
+                    realTimePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.Selfies,
                         userConfirmation.value,
                     );
@@ -202,6 +217,7 @@ const TowRegistration = () => {
             userConfirmation,
             acceptedTerms,
             towEnterprise,
+            personalData.idCard,
         );
         if (isValid) {
             isValid = isValidForm(
@@ -210,9 +226,11 @@ const TowRegistration = () => {
                 userConfirmation,
                 acceptedTerms,
                 towEnterprise,
+                personalData.idCard,
             );
             if (isValid && user.data) {
                 try {
+                    await updateIdCard(personalData.idCard, user.data);
                     const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
                         await toast.promise(uploadImages(), {
                             pending: "Subiendo imagenes, por favor espera",
@@ -311,6 +329,7 @@ const TowRegistration = () => {
                     userConfirmation,
                     acceptedTerms,
                     towEnterprise,
+                    personalData.idCard,
                 ),
             }),
         [personalData, vehicle, userConfirmation, acceptedTerms],

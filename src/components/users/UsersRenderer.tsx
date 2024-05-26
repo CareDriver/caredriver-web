@@ -17,6 +17,9 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import "@/styles/modules/search.css";
 import "@/styles/components/users.css";
 import Search from "@/icons/Search";
+import Link from "next/link";
+import DataLoaderIndicator from "../DataLoaderIndicator";
+import UserPlus from "@/icons/UserPlus";
 
 const UsersRenderer = () => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -249,7 +252,7 @@ const UsersRenderer = () => {
             <h1 className="text | big-medium bolder margin-bottom-25 capitalize">
                 Usuarios
             </h1>
-            <div className="row-wrapper | margin-bottom-50">
+            <div className="row-wrapper | space-between | margin-bottom-50">
                 <form className="search-wrapper" onSubmit={(e) => search(e)}>
                     <input
                         type="text"
@@ -267,13 +270,22 @@ const UsersRenderer = () => {
                         <Search />
                     </button>
                 </form>
+                <div>
+                    <Link
+                        href="/admin/users/register"
+                        className="icon-wrapper small-general-button text | bolder white-icon touchable"
+                    >
+                        <UserPlus />
+                        Nuevo Usuario
+                    </Link>
+                </div>
             </div>
             {dataState.data.length > 0 ? (
                 <InfiniteScroll
                     dataLength={dataState.data.length}
                     next={handleNextClick}
                     hasMore={dataState.page !== dataState.pages}
-                    loader={<span className="loader-gray"></span>}
+                    loader={<DataLoaderIndicator />}
                 >
                     <div className="users-wrapper">
                         {dataState.data.map((req, i) => (

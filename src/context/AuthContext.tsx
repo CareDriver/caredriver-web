@@ -7,6 +7,7 @@ import { getUserById } from "@/utils/requests/UserRequester";
 import { servicesData } from "@/interfaces/ServicesDataInterface";
 import { toast } from "react-toastify";
 import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
+import { defaultBalance, defaultMinBalance } from "@/interfaces/Payment";
 
 interface UserInfo {
     data: UserInterface | null;
@@ -60,12 +61,17 @@ const buildUser = (
                     ? defaultServiceReq
                     : userData.serviceRequests,
             location: userData?.location,
-            currentDebtWithTheApp: userData?.currentDebtWithTheApp,
-            appPaymentHistory: userData?.appPaymentHistory,
+            balance: userData?.balance === undefined ? defaultBalance : userData.balance,
+            balanceHistory: userData?.balanceHistory,
             disable: userData?.disable,
             deleted: userData.deleted,
             serviceVehicles: userData?.serviceVehicles,
             role: userData?.role === undefined ? UserRole.User : userData.role,
+            identityCard: userData.identityCard ? userData.identityCard : undefined,
+            minimumBalance:
+                userData.minimumBalance === undefined
+                    ? defaultMinBalance
+                    : userData.minimumBalance,
         };
     }
 

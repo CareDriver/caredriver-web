@@ -1,14 +1,14 @@
 import TowService from "@/components/services/tow/TowService";
 import ServiceWrapper from "@/components/services/ServiceWrapper";
-import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
+import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 
 const TowPage = () => {
     return (
-        <WrapperWithSideBar>
+        <PageServerUserPermission>
             <ServiceWrapper>
                 <TowService />
             </ServiceWrapper>
-        </WrapperWithSideBar>
+        </PageServerUserPermission>
     );
 };
 
