@@ -20,6 +20,7 @@ import Search from "@/icons/Search";
 import Link from "next/link";
 import Plus from "@/icons/Plus";
 import DataLoaderIndicator from "../DataLoaderIndicator";
+import UserPlus from "@/icons/UserPlus";
 
 const UsersRenderer = () => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -272,11 +273,11 @@ const UsersRenderer = () => {
                 </form>
                 <div>
                     <Link
-                        href="/admin/users/register/support"
+                        href="/admin/users/register"
                         className="icon-wrapper small-general-button text | bolder white-icon touchable"
                     >
-                        <Plus />
-                        Nuevo Usuario Soporte
+                        <UserPlus />
+                        Nuevo Usuario
                     </Link>
                 </div>
             </div>

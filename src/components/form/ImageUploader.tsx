@@ -1,6 +1,5 @@
 "use client";
 import Trash from "@/icons/Trash";
-import Upload from "@/icons/Upload";
 import React, { useState } from "react";
 import { PhotoField } from "@/components/services/FormModels";
 import FileImage from "@/icons/FileImage";
@@ -15,7 +14,7 @@ interface UploaderProps {
     setImage: ImageSetter;
 }
 
-type ImageSetter = (data: PhotoField) => void;
+export type ImageSetter = (data: PhotoField) => void;
 
 interface DragAndDropContent {
     id: string,

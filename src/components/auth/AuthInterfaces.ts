@@ -1,4 +1,6 @@
 import { Locations } from "@/interfaces/Locations";
+import { UserRole } from "@/interfaces/UserInterface";
+import { PhotoField } from "../services/FormModels";
 
 export interface SignUpInterface {
     fullName: {
@@ -25,7 +27,12 @@ export interface SignUpInterface {
     location: Locations;
 }
 
-export const defaultSignUpValues = {
+export interface SignUpInterfaceV2 extends SignUpInterface {
+    role: UserRole;
+    photo: PhotoField;
+}
+
+export const defaultSignUpValues: SignUpInterface = {
     fullName: {
         value: "",
         errorMessage: null,
@@ -48,4 +55,13 @@ export const defaultSignUpValues = {
         errorMessage: null,
     },
     location: Locations.CochabambaBolivia,
+};
+
+export const defaultSignUpV2Values: SignUpInterfaceV2 = {
+    ...defaultSignUpValues,
+    role: UserRole.Support,
+    photo: {
+        value: null,
+        message: null,
+    },
 };

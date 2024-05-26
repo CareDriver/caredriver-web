@@ -22,6 +22,7 @@ import Users from "@/icons/Users";
 import { UserRole } from "@/interfaces/UserInterface";
 import UserTie from "@/icons/UserTie";
 import Soap from "@/icons/Soap";
+import UserPlus from "@/icons/UserPlus";
 const AdminSideBar = () => {
     const { logout } = useContext(AuthContext);
     const pathname = usePathname();
@@ -178,11 +179,22 @@ const AdminSideBar = () => {
                     <Link
                         href={"/admin/users"}
                         className={`sidebar-option ${
-                            pathname.includes("users") && "selected"
+                            pathname.includes("users") &&
+                            !pathname.includes("register") &&
+                            "selected"
                         }`}
                     >
                         <Users />
                         <span>Usuarios</span>
+                    </Link>
+                    <Link
+                        href={"/admin/users/register"}
+                        className={`sidebar-option ${
+                            pathname.includes("users/register") && "selected"
+                        }`}
+                    >
+                        <UserPlus />
+                        <span>Nuevo usuario</span>
                     </Link>
                 </li>
                 <div>

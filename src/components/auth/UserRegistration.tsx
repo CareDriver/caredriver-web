@@ -2,15 +2,15 @@
 
 import "react-international-phone/style.css";
 import { FormEvent, useEffect, useState } from "react";
-import SignUpForm from "./SignUpForm";
 import { useRouter } from "next/navigation";
-import { defaultSignUpValues, SignUpInterface } from "./AuthInterfaces";
+import { defaultSignUpV2Values, SignUpInterfaceV2 } from "./AuthInterfaces";
 import { InputValidator } from "@/utils/validator/InputValidator";
 import {
-    createUserData,
+    createUserDataWithPhoto,
     getLocation,
-    handleInputChange,
-    validatePhone,
+    getRole,
+    handleInputChangeV2,
+    validatePhoneV2,
 } from "@/utils/auth/UserAuth";
 import {
     isValidEmail,
@@ -22,25 +22,49 @@ import {
     thereAreNotErrorsSignUp,
 } from "@/utils/validator/auth/SignUpValidator";
 import { toast } from "react-toastify";
-import { UserInterface, UserRole } from "@/interfaces/UserInterface";
+import { UserInterface, UserRole, UserRoleRender } from "@/interfaces/UserInterface";
 import { checkEmailExists, saveUser } from "@/utils/requests/UserRequester";
+import SignUpFormV2 from "./SignUpFormV2";
+import { PhotoField } from "../services/FormModels";
+import { uploadFileBase64 } from "@/utils/requests/FileUploader";
+import { DirectoryPath } from "@/firebase/StoragePaths";
 
-const SupportUser = () => {
+const UserRegistration = () => {
     const router = useRouter();
     const [formState, setFormState] = useState({
         loading: false,
         isValid: true,
     });
-    const [credentials, setCredentials] = useState<SignUpInterface>(defaultSignUpValues);
+    const [credentials, setCredentials] =
+        useState<SignUpInterfaceV2>(defaultSignUpV2Values);
+    const rolesToRegister = [
+        UserRole.Support,
+        UserRole.SupportTwo,
+        UserRole.BalanceRecharge,
+    ];
 
     const createData = async (id: string) => {
-        const emptyUserData: UserInterface = createUserData(
+        var photoRef = null;
+
+        if (credentials.photo.value && !credentials.photo.message) {
+            photoRef = await toast.promise(
+                uploadFileBase64(DirectoryPath.Users, credentials.photo.value),
+                {
+                    pending: "Subiendo foto de perfil",
+                    success: "Foto de perfil subido",
+                    error: "Error al subir la foto de perfil, intentalo de nuevo por favor",
+                },
+            );
+        }
+
+        const newUserData: UserInterface = createUserDataWithPhoto(
             id,
-            UserRole.Support,
+            credentials.role,
             credentials,
+            photoRef,
         );
 
-        saveUser(id, emptyUserData)
+        saveUser(id, newUserData)
             .then(() => {
                 setFormState({
                     ...formState,
@@ -106,9 +130,13 @@ const SupportUser = () => {
                         });
                         if (userId) {
                             await toast.promise(createData(userId), {
-                                pending: "Creando al usuario soporte",
-                                success: "Usuario soporte creado",
-                                error: "Error al crear el usuario soporte, intentalo de nuevo",
+                                pending: `Creando nuevo usuario ${
+                                    UserRoleRender[credentials.role]
+                                }`,
+                                success: `Usuario ${
+                                    UserRoleRender[credentials.role]
+                                } creado`,
+                                error: "Error al crear el nuevo usuario, intentalo de nuevo por favor",
                             });
                             router.push("/admin/users");
                         } else {
@@ -144,7 +172,7 @@ const SupportUser = () => {
         e: React.ChangeEvent<HTMLInputElement>,
         validationFunction: InputValidator,
     ) => {
-        return handleInputChange(e, validationFunction, credentials, setCredentials);
+        return handleInputChangeV2(e, validationFunction, credentials, setCredentials);
     };
 
     useEffect(() => {
@@ -157,9 +185,9 @@ const SupportUser = () => {
     return (
         <div className="render-data-wrapper | max-width-60">
             <h1 className="text | big bolder margin-bottom-50">
-                Registrar Usuario Soporte
+                Registrar Nuevo Usuario
             </h1>
-            <SignUpForm
+            <SignUpFormV2
                 email={{
                     value: credentials.email.value,
                     message: credentials.email.errorMessage,
@@ -179,7 +207,7 @@ const SupportUser = () => {
                     value: credentials.phone.value,
                     message: credentials.phone.errorMessage,
                     onChange: (str: string) =>
-                        validatePhone(str, credentials, setCredentials),
+                        validatePhoneV2(str, credentials, setCredentials),
                 }}
                 location={{
                     value: credentials.location,
@@ -188,6 +216,25 @@ const SupportUser = () => {
                             ...credentials,
                             location: getLocation(e.target.value),
                         }),
+                }}
+                userRole={{
+                    value: credentials.role,
+                    onChange: (e) =>
+                        setCredentials({
+                            ...credentials,
+                            role: getRole(e.target.value, rolesToRegister),
+                        }),
+                }}
+                roles={rolesToRegister}
+                image={{
+                    value: credentials.photo.value,
+                    message: credentials.photo.message,
+                    onChange: (data: PhotoField) => {
+                        setCredentials({
+                            ...credentials,
+                            photo: data,
+                        });
+                    },
                 }}
                 handleSummit={handleSummit}
                 formState={{
@@ -202,4 +249,4 @@ const SupportUser = () => {
     );
 };
 
-export default SupportUser;
+export default UserRegistration;

@@ -26,7 +26,17 @@ export enum UserRole {
     User = "User",
     Admin = "Admin",
     Support = "Support",
+    SupportTwo = "SupportTwo",
+    BalanceRecharge = "BalanceRecharge",
 }
+
+export const UserRoleRender = {
+    User: "Usuario",
+    Admin: "Administrador",
+    Support: "Soporte",
+    SupportTwo: "Soporte Dos",
+    BalanceRecharge: "Recargador de Saldo",
+};
 
 export interface UserInterface {
     id?: string; // Unique identifier for the user

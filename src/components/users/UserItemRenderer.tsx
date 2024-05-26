@@ -1,4 +1,4 @@
-import { UserInterface } from "@/interfaces/UserInterface";
+import { UserInterface, UserRoleRender } from "@/interfaces/UserInterface";
 import { DEFAULT_PHOTO, getRole } from "@/utils/user/UserData";
 import Link from "next/link";
 

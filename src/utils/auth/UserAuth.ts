@@ -1,8 +1,8 @@
-import { SignUpInterface } from "@/components/auth/AuthInterfaces";
+import { SignUpInterface, SignUpInterfaceV2 } from "@/components/auth/AuthInterfaces";
 import { Services } from "@/interfaces/Services";
 import { defaultServiceReq, UserInterface, UserRole } from "@/interfaces/UserInterface";
 import { servicesData } from "@/interfaces/ServicesDataInterface";
-import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
+import { emptyPhotoWithRef, ImgWithRef } from "@/interfaces/ImageInterface";
 import { InputValidator } from "../validator/InputValidator";
 import { Dispatch, SetStateAction } from "react";
 import { locationList, Locations } from "@/interfaces/Locations";
@@ -42,11 +42,71 @@ export const createUserData = (
     };
 };
 
+export const createUserDataWithPhoto = (
+    id: string,
+    role: UserRole,
+    credentials: SignUpInterface,
+    photo: ImgWithRef | null,
+): UserInterface => {
+    var newUser = {
+        id: id,
+        role: role,
+        fullName: credentials.fullName.value,
+        phoneNumber: credentials.phone.value,
+        photoUrl: emptyPhotoWithRef,
+
+        comments: [],
+        vehicles: [],
+        services: [Services.Normal],
+
+        servicesData: servicesData,
+        pickUpLocationsHistory: [],
+        deliveryLocationsHistory: [],
+
+        location: credentials.location,
+        email: credentials.email.value.toLowerCase(),
+
+        serviceRequests: defaultServiceReq,
+
+        disable: false,
+        deleted: false,
+
+        balance: defaultBalance,
+        minimumBalance: defaultMinBalance,
+    };
+    if (photo) {
+        newUser = {
+            ...newUser,
+            photoUrl: photo,
+        };
+    }
+
+    return newUser;
+};
+
 export const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     validationFunction: InputValidator,
     credentials: SignUpInterface,
     setCredentials: Dispatch<SetStateAction<SignUpInterface>>,
+) => {
+    const value = e.target.value;
+    const { isValid, message } = validationFunction(value);
+
+    setCredentials({
+        ...credentials,
+        [e.target.name]: {
+            value: value,
+            errorMessage: isValid ? "" : message,
+        },
+    });
+};
+
+export const handleInputChangeV2 = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    validationFunction: InputValidator,
+    credentials: SignUpInterfaceV2,
+    setCredentials: Dispatch<SetStateAction<SignUpInterfaceV2>>,
 ) => {
     const value = e.target.value;
     const { isValid, message } = validationFunction(value);
@@ -77,6 +137,23 @@ export const validatePhone = (
     });
 };
 
+export const validatePhoneV2 = (
+    phone: string,
+    credentials: SignUpInterfaceV2,
+    setCredentials: Dispatch<SetStateAction<SignUpInterfaceV2>>,
+) => {
+    const { isValid, message } = isPhoneValid(phone);
+
+    setCredentials({
+        ...credentials,
+        phone: {
+            ...credentials.phone,
+            value: phone,
+            errorMessage: isValid ? "" : message,
+        },
+    });
+};
+
 export const getLocation = (input: string): Locations => {
     var location = Locations.CochabambaBolivia;
     locationList.forEach((value) => {
@@ -86,4 +163,15 @@ export const getLocation = (input: string): Locations => {
     });
 
     return location;
+};
+
+export const getRole = (input: string, roles: UserRole[]): UserRole => {
+    var roleFound = roles[0];
+    roles.forEach((value) => {
+        if (value === input) {
+            roleFound = value;
+        }
+    });
+
+    return roleFound;
 };
