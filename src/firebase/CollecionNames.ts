@@ -13,4 +13,5 @@ export enum Collections {
     ChangePhotoRequests = "change-photo-requests",
     BalanceHistory = "balance-history",
     CarWashRequests = "car-wash-requests",
+    ReasonsForInformation = "reasons-to-see-information",
 }

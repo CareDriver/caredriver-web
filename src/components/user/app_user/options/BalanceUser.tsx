@@ -9,7 +9,6 @@ import { Timestamp } from "firebase/firestore";
 import { SyntheticEvent, useState } from "react";
 import { toast } from "react-toastify";
 import BalanceHistoryForm, { BalanceHistoryItemForm } from "./BalanceHistoryForm";
-import "@/styles/modules/popup.css";
 import PopupForm from "@/components/form/PopupForm";
 import { nanoid } from "nanoid";
 import { saveBalanceHistoryItem } from "@/utils/requests/BalanceHistoryRequester";
@@ -181,6 +180,7 @@ const BalanceUser = ({
                     !balanceHistory.reason.message &&
                     balanceHistory.reason.value.trim().length > 0
                 }
+                doSomethingText="Cambiar saldo"
             >
                 <BalanceHistoryForm
                     loading={loading}

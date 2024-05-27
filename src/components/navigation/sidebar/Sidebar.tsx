@@ -20,9 +20,7 @@ const SideBar = () => {
     const pathname = usePathname();
 
     const getSideBar = () => {
-        if (user.data) {
-            console.log(user.data);
-            
+        if (user.data) {            
             switch (user.data.role) {
                 case UserRole.Admin:
                     return <AdminSideBar logout={logout} pathname={pathname} />;

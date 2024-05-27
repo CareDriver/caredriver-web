@@ -1,10 +1,13 @@
 import SingleServiceDone from "@/components/done_services/SingleServiceDone";
+import FormToSeeInfo from "@/components/permission/FormToSeeInfo";
 import PageUserInfoPermission from "@/components/permission/page/concrets/PageUserInfoPermission";
 
 const SingleTowServiceDidByUserPage = ({ params }: { params: any }) => {
     return (
         <PageUserInfoPermission>
-            <SingleServiceDone id={params.serviceid} type="tow" />
+            <FormToSeeInfo target="usertowserreq" id={params.serviceid}>
+                <SingleServiceDone id={params.serviceid} type="tow" />
+            </FormToSeeInfo>
         </PageUserInfoPermission>
     );
 };

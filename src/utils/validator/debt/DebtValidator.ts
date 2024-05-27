@@ -66,7 +66,7 @@ export const isValidChangeReason = (reason: string): InputState => {
             isValid: false,
             message: "Justificacion invalida",
         };
-    } else if (reason.length > 100) {
+    } else if (reason.length > 500) {
         return {
             isValid: false,
             message: "No puedes ingresar mas de 500 caracteres para tu justificatorio",
@@ -75,6 +75,32 @@ export const isValidChangeReason = (reason: string): InputState => {
         return {
             isValid: true,
             message: "Justificatorio valido",
+        };
+    }
+};
+
+export const isValidComplainId = (reason: string): InputState => {
+    const reasonRegex: RegExp = /^[A-Za-z0-9_-]+$/;
+
+    if (reason.trim() === "") {
+        return {
+            isValid: false,
+            message: "Tienes que ingresar un ID de queja por favor",
+        };
+    } else if (!reasonRegex.test(reason)) {
+        return {
+            isValid: false,
+            message: "ID de queja invalido",
+        };
+    } else if (reason.length > 100) {
+        return {
+            isValid: false,
+            message: "El ID no puede tener mas de 100 caracteres",
+        };
+    } else {
+        return {
+            isValid: true,
+            message: "ID valido",
         };
     }
 };

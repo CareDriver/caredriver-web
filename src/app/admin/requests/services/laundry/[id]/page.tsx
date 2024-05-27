@@ -1,12 +1,15 @@
+import FormToSeeInfo from "@/components/permission/FormToSeeInfo";
 import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import SingleServiceReq from "@/components/requests/services/SingleServiceReq";
 
-const SingleMechanicReqPage = ({ params }: { params: any }) => {
+const SingleLaundryReqPage = ({ params }: { params: any }) => {
     return (
         <PageRequestPermission>
-            <SingleServiceReq reqId={params.id} type="laundry" />
+            <FormToSeeInfo target="laundryservicereq" id={params.id}>
+                <SingleServiceReq reqId={params.id} type="laundry" />
+            </FormToSeeInfo>
         </PageRequestPermission>
     );
 };
 
-export default SingleMechanicReqPage;
+export default SingleLaundryReqPage;

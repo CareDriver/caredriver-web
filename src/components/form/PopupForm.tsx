@@ -1,10 +1,12 @@
 import React, { SyntheticEvent } from "react";
 import CancelAndDoSomething from "./CancelAndDoSomething";
+import "@/styles/modules/popup.css";
 
 const PopupForm = ({
     isOpen,
     close,
     onSummit,
+    doSomethingText,
     children,
     loading,
     isSecondButtonAble,
@@ -12,6 +14,7 @@ const PopupForm = ({
     isOpen: boolean;
     close: () => void;
     onSummit: (e: SyntheticEvent) => Promise<void>;
+    doSomethingText: string;
     children: React.ReactNode;
     loading: boolean;
     isSecondButtonAble: boolean;
@@ -25,7 +28,7 @@ const PopupForm = ({
                         onCancel={close}
                         onDoSomething={onSummit}
                         loading={loading}
-                        doSomethingText="Cambiar saldo"
+                        doSomethingText={doSomethingText}
                         isSecondButtonAble={isSecondButtonAble}
                     />
                 </div>
