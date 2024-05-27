@@ -6,6 +6,8 @@ import PageLoader from "../../PageLoader";
 import "@/styles/components/profile.css";
 import { DEFAULT_PHOTO } from "@/utils/user/UserData";
 import UserDataUpdater from "./UserDataUpdater";
+import CompPermissionValidator from "@/components/permission/component/CompPermissionValidator";
+import { ROLES_TO_EDIT_USER_PROFILE } from "@/utils/validator/roles/RoleValidator";
 
 const AppUserProfile = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -29,7 +31,9 @@ const AppUserProfile = () => {
                     <h2 className="profile-email">{user.data.email}</h2>
                 </div>
             </section>
-            <UserDataUpdater user={user.data}/>
+            <CompPermissionValidator user={user.data} roles={ROLES_TO_EDIT_USER_PROFILE}>
+                <UserDataUpdater user={user.data} />
+            </CompPermissionValidator>
             <span className="circles-right-bottomv2 green"></span>
         </section>
     ) : (

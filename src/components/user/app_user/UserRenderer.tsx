@@ -1,22 +1,26 @@
 "use client";
 
 import PageLoader from "@/components/PageLoader";
-import { UserInterface, UserRole } from "@/interfaces/UserInterface";
+import { UserInterface } from "@/interfaces/UserInterface";
 import { getUserById, updateUser } from "@/utils/requests/UserRequester";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import ServiceServedByUser from "./ServiceServedByUser";
 import DisableUser from "./options/DisableUser";
 import DeleteUser from "./options/DeleteUser";
-import ServiceReqsByUser from "./ServiceReqsByUser";
 import "@/styles/components/app-user.css";
 import { DEFAULT_PHOTO, getRole } from "@/utils/user/UserData";
-import BalanceUser from "./options/BalanceUser";
-import DebtHistory from "./DebtHistory";
 import "@/styles/components/debt-user.css";
-import MinBalanceUser from "./options/MinBalanceUser";
 import { AuthContext } from "@/context/AuthContext";
+import CompPermissionValidator from "@/components/permission/component/CompPermissionValidator";
+import {
+    ROLES_FOR_DELETE_USERS,
+    ROLES_FOR_DISABLE_USERS,
+    ROLES_FOR_SERVER_USER_ACTIONS,
+    ROLES_TO_VIEW_CONTACT_USERS,
+} from "@/utils/validator/roles/RoleValidator";
+import UserHistoryRenderer from "./concrets/UserHistoryRenderer";
+import UserContacts from "./options/UserContacts";
 
 const UserRenderer = ({ userId }: { userId: string }) => {
     const { user } = useContext(AuthContext);
@@ -152,25 +156,6 @@ const UserRenderer = ({ userId }: { userId: string }) => {
             });
     }, []);
 
-    const getServicesServed = () => {
-        if (
-            userData &&
-            (userData.role === undefined || userData.role !== UserRole.Admin) &&
-            userData.services.length > 1
-        ) {
-            return <ServiceServedByUser user={userData} />;
-        }
-    };
-
-    const getServicesRequested = () => {
-        if (
-            userData &&
-            (userData.role === undefined || userData.role !== UserRole.Admin)
-        ) {
-            return <ServiceReqsByUser user={userData} />;
-        }
-    };
-
     return userData ? (
         <section className="render-data-wrapper">
             <div className="user-info-wrapper">
@@ -199,56 +184,59 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                     )}
                 </div>
             </div>
+
             {user.data && (
-                <BalanceUser
+                <CompPermissionValidator
+                    user={userData}
+                    roles={ROLES_TO_VIEW_CONTACT_USERS}
+                >
+                    <UserContacts reviewUserName={user.data.fullName} user={userData} />
+                </CompPermissionValidator>
+            )}
+
+            {user.data && (
+                <CompPermissionValidator
+                    user={userData}
+                    roles={ROLES_FOR_SERVER_USER_ACTIONS}
+                >
+                    <UserHistoryRenderer
+                        formState={formState}
+                        setFormState={setFormState}
+                        reviewUser={user.data}
+                        userData={userData}
+                    />
+                </CompPermissionValidator>
+            )}
+
+            <CompPermissionValidator user={userData} roles={ROLES_FOR_DISABLE_USERS}>
+                <DisableUser
                     loading={formState.loading}
-                    setLoading={(loading: boolean) =>
-                        setFormState({
-                            ...formState,
-                            loading: loading,
+                    onAction={toggleDisableUser}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setDisableState({
+                            ...disableState,
+                            confirm: e.target.value,
+                            isValid: e.target.value === userData.fullName,
                         })
                     }
-                    user={userData}
-                    adminUser={user.data}
+                    validToDelete={disableState.isValid}
+                    isDisable={userData.disable ? userData.disable : false}
                 />
-            )}
-            <MinBalanceUser
-                user={userData}
-                loading={formState.loading}
-                setLoading={(loading: boolean) =>
-                    setFormState({
-                        ...formState,
-                        loading: loading,
-                    })
-                }
-            />
-            <DebtHistory user={userData} />
-
-            <DisableUser
-                loading={formState.loading}
-                onAction={toggleDisableUser}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setDisableState({
-                        ...disableState,
-                        confirm: e.target.value,
-                        isValid: e.target.value === userData.fullName,
-                    })
-                }
-                validToDelete={disableState.isValid}
-                isDisable={userData.disable ? userData.disable : false}
-            />
-            <DeleteUser
-                loading={formState.loading}
-                onAction={deleteUser}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setDeleteState({
-                        ...deleteState,
-                        confirm: e.target.value,
-                        isValid: e.target.value === userData.fullName,
-                    })
-                }
-                validToDelete={deleteState.isValid}
-            />
+            </CompPermissionValidator>
+            <CompPermissionValidator user={userData} roles={ROLES_FOR_DELETE_USERS}>
+                <DeleteUser
+                    loading={formState.loading}
+                    onAction={deleteUser}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        setDeleteState({
+                            ...deleteState,
+                            confirm: e.target.value,
+                            isValid: e.target.value === userData.fullName,
+                        })
+                    }
+                    validToDelete={deleteState.isValid}
+                />
+            </CompPermissionValidator>
         </section>
     ) : (
         <PageLoader />

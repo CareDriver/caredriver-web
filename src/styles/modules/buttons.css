@@ -76,7 +76,6 @@
     color: var(--second-dark);
 }
 
-
 .double-button-wrapper {
     overflow: hidden;
     display: flex;
@@ -99,7 +98,6 @@
     background-color: var(--second-dark);
     color: white;
 }
-
 
 .circle-button {
     border-radius: 50%;
@@ -153,9 +151,17 @@
     color: var(--second-dark);
 }
 
+.circle-button,
 .small-general-button.red {
     background-color: var(--red);
     color: var(--white);
+    border: none;
+}
+
+.circle-button.green {
+    background-color: var(--main-light);
+    color: white;
+    border: none;
 }
 
 .pointer-option {

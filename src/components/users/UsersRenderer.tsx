@@ -20,6 +20,8 @@ import Search from "@/icons/Search";
 import Link from "next/link";
 import DataLoaderIndicator from "../DataLoaderIndicator";
 import UserPlus from "@/icons/UserPlus";
+import CompPermissionValidator from "../permission/component/CompPermissionValidator";
+import { ROLES_TO_ADD_USERS } from "@/utils/validator/roles/RoleValidator";
 
 const UsersRenderer = () => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -271,13 +273,20 @@ const UsersRenderer = () => {
                     </button>
                 </form>
                 <div>
-                    <Link
-                        href="/admin/users/register"
-                        className="icon-wrapper small-general-button text | bolder white-icon touchable"
-                    >
-                        <UserPlus />
-                        Nuevo Usuario
-                    </Link>
+                    {user.data && (
+                        <CompPermissionValidator
+                            user={user.data}
+                            roles={ROLES_TO_ADD_USERS}
+                        >
+                            <Link
+                                href="/admin/users/register"
+                                className="icon-wrapper small-general-button text | bolder white-icon touchable"
+                            >
+                                <UserPlus />
+                                Nuevo Usuario
+                            </Link>
+                        </CompPermissionValidator>
+                    )}
                 </div>
             </div>
             {dataState.data.length > 0 ? (
