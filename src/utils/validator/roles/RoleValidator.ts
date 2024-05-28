@@ -62,6 +62,19 @@ export const ROLES_FOR_SERVER_USER_ACTIONS: UserRole[] = [UserRole.User];
 export const ROLES_FOR_DISABLE_USERS: UserRole[] = [UserRole.Admin, UserRole.SupportTwo];
 export const ROLES_FOR_DELETE_USERS: UserRole[] = [UserRole.Admin];
 
+export const ROLES_TO_SET_USER_BALANCE: UserRole[] = [
+    UserRole.Admin,
+    UserRole.Support,
+    UserRole.SupportTwo,
+    UserRole.BalanceRecharge,
+];
+
+export const ROLES_TO_SET_MIN_USER_BALANCE: UserRole[] = [
+    UserRole.Admin,
+    UserRole.Support,
+    UserRole.SupportTwo,
+];
+
 export const ROLES_TO_VIEW_USERS_HISTORY: UserRole[] = [
     UserRole.Admin,
     UserRole.Support,

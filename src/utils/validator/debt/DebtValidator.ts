@@ -6,9 +6,35 @@ export const isValidAmount = (num: string): InputState => {
     if (num.trim() === "") {
         return {
             isValid: false,
-            message: "Tienes que ingresar el valor del saldo",
+            message: "Tienes que ingresar el monto del saldo",
         };
     } else if (!regex.test(num)) {
+        return {
+            isValid: false,
+            message: "Saldo invalido",
+        };
+    } else if (num.length > 150) {
+        return {
+            isValid: false,
+            message: "Limite del saldo sobrepasado",
+        };
+    } else {
+        return {
+            isValid: true,
+            message: "Monto valido",
+        };
+    }
+};
+
+export const isValidIncreaseAmount = (num: string): InputState => {
+    const regex: RegExp = /^\d+(\.\d+)?$/;
+
+    if (num.trim() === "") {
+        return {
+            isValid: false,
+            message: "Tienes que ingresar el monto del saldo para aumentar al usuario",
+        };
+    } else if (!regex.test(num) || parseFloat(num) <= 0) {
         return {
             isValid: false,
             message: "Saldo invalido",

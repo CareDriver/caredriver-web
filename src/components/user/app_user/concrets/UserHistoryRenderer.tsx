@@ -5,7 +5,11 @@ import ServiceServedByUser from "../ServiceServedByUser";
 import BalanceUser from "../options/BalanceUser";
 import MinBalanceUser from "../options/MinBalanceUser";
 import DebtHistory from "../DebtHistory";
-import { ROLES_TO_VIEW_USERS_HISTORY } from "@/utils/validator/roles/RoleValidator";
+import {
+    ROLES_TO_SET_MIN_USER_BALANCE,
+    ROLES_TO_SET_USER_BALANCE,
+    ROLES_TO_VIEW_USERS_HISTORY,
+} from "@/utils/validator/roles/RoleValidator";
 
 const UserHistoryRenderer = ({
     reviewUser,
@@ -29,7 +33,33 @@ const UserHistoryRenderer = ({
     return (
         <>
             {reviewUser && (
-                <BalanceUser
+                <CompPermissionValidator
+                    user={reviewUser}
+                    roles={ROLES_TO_SET_USER_BALANCE}
+                >
+                    <>
+                        <BalanceUser
+                            loading={formState.loading}
+                            setLoading={(loading: boolean) =>
+                                setFormState({
+                                    ...formState,
+                                    loading: loading,
+                                })
+                            }
+                            user={userData}
+                            adminUser={reviewUser}
+                        />
+                        <DebtHistory user={userData} />
+                    </>
+                </CompPermissionValidator>
+            )}
+
+            <CompPermissionValidator
+                user={userData}
+                roles={ROLES_TO_SET_MIN_USER_BALANCE}
+            >
+                <MinBalanceUser
+                    user={userData}
                     loading={formState.loading}
                     setLoading={(loading: boolean) =>
                         setFormState({
@@ -37,21 +67,8 @@ const UserHistoryRenderer = ({
                             loading: loading,
                         })
                     }
-                    user={userData}
-                    adminUser={reviewUser}
                 />
-            )}
-            <MinBalanceUser
-                user={userData}
-                loading={formState.loading}
-                setLoading={(loading: boolean) =>
-                    setFormState({
-                        ...formState,
-                        loading: loading,
-                    })
-                }
-            />
-            <DebtHistory user={userData} />
+            </CompPermissionValidator>
 
             <CompPermissionValidator user={userData} roles={ROLES_TO_VIEW_USERS_HISTORY}>
                 <>
