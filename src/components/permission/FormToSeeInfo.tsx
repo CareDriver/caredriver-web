@@ -10,6 +10,11 @@ import {
 } from "@/utils/validator/debt/DebtValidator";
 import { UserRole } from "@/interfaces/UserInterface";
 import { setVisitedToday, wasAlreadyVisited } from "@/utils/temp_storage/VisitedHandler";
+import { saveReasonForInfo } from "@/utils/requests/ReasonForInfoRequester";
+import { ReasonForInformationInterface } from "@/interfaces/ReasonsForInformation";
+import { nanoid } from "nanoid";
+import { Timestamp } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 const FormToSeeInfo = ({
     target,
@@ -55,15 +60,59 @@ const FormToSeeInfo = ({
         router.back();
     };
 
+    const saveReq = async (infoDoc: ReasonForInformationInterface) => {
+        await saveReasonForInfo(infoDoc.id, infoDoc);
+        setVisitedToday(target, id);
+    };
+
     const continuar = async (e: SyntheticEvent) => {
         e.preventDefault();
-        setFormState({
-            ...formState,
-            loading: true,
-        });
-        setVisitedToday(target, id);
-        console.log("\nchecking....");
-        console.log(wasAlreadyVisited(target, id));
+        if (!formState.loading) {
+            setFormState({
+                ...formState,
+                loading: true,
+            });
+
+            const validReason = isValidReason();
+            const validId = isValidID();
+
+            if ((validReason || validId) && user.data && user.data.id) {
+                const docId = nanoid();
+                var infoDoc: ReasonForInformationInterface = {
+                    id: docId,
+                    userId: user.data.id,
+                    informationViewDate: Timestamp.fromDate(new Date()),
+                };
+
+                if (validReason) {
+                    infoDoc = {
+                        ...infoDoc,
+                        justification: formData.reason.value,
+                    };
+                }
+
+                if (validId) {
+                    infoDoc = {
+                        ...infoDoc,
+                        complaintId: formData.complaintId.value,
+                    };
+                }
+
+                try {
+                    await toast.promise(saveReq(infoDoc), {
+                        pending: "Guardando justificatorio",
+                        success: "Justificatorio guardado",
+                        error: "Error al guardar el justificatorio, intentalo de nuevo por favor",
+                    });
+                    setAbleToSee({
+                        isChecking: false,
+                        isAbleToContinue: true,
+                    });
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        }
     };
 
     const verifyComplaintId = (e: ChangeEvent<HTMLInputElement>) => {
