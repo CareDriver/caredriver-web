@@ -162,7 +162,7 @@ const FormToSeeInfo = ({
 
     useEffect(() => {
         if (!loadingUser && user.data) {
-            if (user.data.role === UserRole.Admin || wasAlreadyVisited(target, id)) {
+            if (user.data.role !== UserRole.SupportTwo || wasAlreadyVisited(target, id)) {
                 setAbleToSee({
                     isChecking: false,
                     isAbleToContinue: true,
@@ -200,9 +200,10 @@ const FormToSeeInfo = ({
                             campos.
                         </p>
                         <p className="text | light">
-                            Solo necesitas llenar esta informacion{" "}
-                            <b>una sola vez por dia</b> para ver esta informacion
-                            especifica.
+                            <b>
+                                Podras ver esta informacion hasta el final del dia de hoy
+                                o hasta salgas de tu cuenta
+                            </b>
                         </p>
                     </div>
 

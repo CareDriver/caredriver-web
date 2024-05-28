@@ -30,3 +30,11 @@ export const doesCookieMatch = (name: string, expectValue: string): boolean => {
 
     return cookie === expectValue;
 };
+
+export const deleteAllCookies = (): void => {
+    const allCookies = Cookies.get();
+
+    Object.keys(allCookies).forEach((cookieName) => {
+        Cookies.remove(cookieName);
+    });
+};

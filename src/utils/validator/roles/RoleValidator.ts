@@ -24,6 +24,7 @@ export const ROLES_TO_VIEW_USERS_INFO: UserRole[] = [
     UserRole.Admin,
     UserRole.Support,
     UserRole.SupportTwo,
+    UserRole.BalanceRecharge,
 ];
 
 export const ROLES_TO_ADD_USERS: UserRole[] = [UserRole.Admin];
@@ -62,6 +63,12 @@ export const ROLES_TO_VIEW_USERS_HISTORY: UserRole[] = [
 ];
 
 export const ROLES_TO_VIEW_CONTACT_USERS: UserRole[] = [
+    UserRole.Admin,
+    UserRole.Support,
+    UserRole.SupportTwo,
+];
+
+export const ROLES_TO_VIEW_USER_CREDENTIALS: UserRole[] = [
     UserRole.Admin,
     UserRole.Support,
     UserRole.SupportTwo,

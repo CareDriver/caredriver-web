@@ -18,6 +18,7 @@ import {
     ROLES_FOR_DISABLE_USERS,
     ROLES_FOR_SERVER_USER_ACTIONS,
     ROLES_TO_VIEW_CONTACT_USERS,
+    ROLES_TO_VIEW_USER_CREDENTIALS,
 } from "@/utils/validator/roles/RoleValidator";
 import UserHistoryRenderer from "./concrets/UserHistoryRenderer";
 import UserContacts from "./options/UserContacts";
@@ -168,20 +169,32 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                     alt=""
                     className="user-info-photo"
                 />
+
                 <div className="user-info-subwrapper">
                     <h1 className="text | big bolder">{userData.fullName}</h1>
                     <h3 className="text | gray-dark bold">{userData.email}</h3>
-                    <h3 className="text | gray-dark bold">{userData.location}</h3>
-                    <h3 className="text | gray-dark bold margin-bottom-15">
-                        {userData.phoneNumber}
-                    </h3>
-                    {role ? (
-                        <h3 className={`text | bolder ${role.isHigher && "green"}`}>
-                            {role.value}
-                        </h3>
-                    ) : (
-                        <span className="loader-gray-medium"></span>
-                    )}
+                    <CompPermissionValidator
+                        user={userData}
+                        roles={ROLES_TO_VIEW_USER_CREDENTIALS}
+                    >
+                        <>
+                            <h3 className="text | gray-dark bold">{userData.location}</h3>
+                            <h3 className="text | gray-dark bold margin-bottom-15">
+                                {userData.phoneNumber}
+                            </h3>
+                            {role ? (
+                                <h3
+                                    className={`text | bolder ${
+                                        role.isHigher && "green"
+                                    }`}
+                                >
+                                    {role.value}
+                                </h3>
+                            ) : (
+                                <span className="loader-gray-medium"></span>
+                            )}
+                        </>
+                    </CompPermissionValidator>
                 </div>
             </div>
 
