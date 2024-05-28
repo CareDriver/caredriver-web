@@ -13,6 +13,10 @@ import ServerUserSideBar from "./concrets/ServerUserSideBar";
 import SupportSideBar from "./concrets/SupportSideBar";
 import SupportTwoSideBar from "./concrets/SupportTwoSideBar";
 import BalanceChargeSideBar from "./concrets/BalanceChargeSideBar";
+import {
+    checkPermission,
+    ROLES_FOR_SERVER_USER_ACTIONS,
+} from "@/utils/validator/roles/RoleValidator";
 
 const SideBar = () => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -20,18 +24,27 @@ const SideBar = () => {
     const pathname = usePathname();
 
     const getSideBar = () => {
-        if (user.data) {            
-            switch (user.data.role) {
-                case UserRole.Admin:
-                    return <AdminSideBar logout={logout} pathname={pathname} />;
-                case UserRole.Support:
-                    return <SupportSideBar logout={logout} pathname={pathname} />;
-                case UserRole.SupportTwo:
-                    return <SupportTwoSideBar logout={logout} pathname={pathname} />;
-                case UserRole.BalanceRecharge:
-                    return <BalanceChargeSideBar logout={logout} pathname={pathname} />;
-                default:
-                    return <ServerUserSideBar logout={logout} pathname={pathname} />;
+        if (user.data) {
+            if (
+                !pathname.includes("admin") &&
+                checkPermission(user.data.role, ROLES_FOR_SERVER_USER_ACTIONS)
+            ) {
+                return <ServerUserSideBar logout={logout} pathname={pathname} />;
+            } else {
+                switch (user.data.role) {
+                    case UserRole.Admin:
+                        return <AdminSideBar logout={logout} pathname={pathname} />;
+                    case UserRole.Support:
+                        return <SupportSideBar logout={logout} pathname={pathname} />;
+                    case UserRole.SupportTwo:
+                        return <SupportTwoSideBar logout={logout} pathname={pathname} />;
+                    case UserRole.BalanceRecharge:
+                        return (
+                            <BalanceChargeSideBar logout={logout} pathname={pathname} />
+                        );
+                    default:
+                        return <ServerUserSideBar logout={logout} pathname={pathname} />;
+                }
             }
         }
     };

@@ -57,7 +57,12 @@ export const ROLES_TO_EDIT_USER_PROFILE: UserRole[] = [
     UserRole.SupportTwo,
 ];
 
-export const ROLES_FOR_SERVER_USER_ACTIONS: UserRole[] = [UserRole.User];
+export const ROLES_FOR_SERVER_USER_ACTIONS: UserRole[] = [
+    UserRole.User,
+    UserRole.Admin,
+    UserRole.Support,
+    UserRole.SupportTwo,
+];
 
 export const ROLES_FOR_DISABLE_USERS: UserRole[] = [UserRole.Admin, UserRole.SupportTwo];
 export const ROLES_FOR_DELETE_USERS: UserRole[] = [UserRole.Admin];
