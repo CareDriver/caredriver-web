@@ -48,6 +48,7 @@ const UsersRenderer = () => {
         if (user.data && user.data.email && dataState.isSearching) {
             try {
                 var pages = await getSearchUsersNumPages(
+                    user.data.role,
                     user.data.email,
                     numPerPage,
                     dataState.value,
@@ -65,7 +66,11 @@ const UsersRenderer = () => {
     const calculateNormalNumPages = async () => {
         if (user.data && user.data.email) {
             try {
-                var pages = await getAllUsersNumPages(user.data.email, numPerPage);
+                var pages = await getAllUsersNumPages(
+                    user.data.role,
+                    user.data.email,
+                    numPerPage,
+                );
                 setDataState({
                     ...dataState,
                     pages,
@@ -82,6 +87,7 @@ const UsersRenderer = () => {
                 const startAfterDoc = dataState.lastDoc;
                 const endBeforeDoc = undefined;
                 var result = await getSearchUsersPaginated(
+                    user.data.role,
                     user.data.email,
                     dataState.value,
                     "next",
@@ -112,6 +118,7 @@ const UsersRenderer = () => {
                 const startAfterDoc = dataState.lastDoc;
                 const endBeforeDoc = undefined;
                 var result = await getAllUsersPaginated(
+                    user.data.role,
                     user.data.email,
                     "next",
                     startAfterDoc,
@@ -171,6 +178,7 @@ const UsersRenderer = () => {
                         const startAfterDoc = dataState.lastDoc;
                         const endBeforeDoc = undefined;
                         var result = await getSearchUsersPaginated(
+                            user.data.role,
                             user.data.email,
                             dataState.value,
                             "next",
@@ -198,6 +206,7 @@ const UsersRenderer = () => {
                         const startAfterDoc = dataState.lastDoc;
                         const endBeforeDoc = undefined;
                         var result = await getAllUsersPaginated(
+                            user.data.role,
                             user.data.email,
                             "next",
                             startAfterDoc,
@@ -249,6 +258,7 @@ const UsersRenderer = () => {
             }
         }
     }, [dataState.data]);
+
     return dataState.data ? (
         <div className="render-data-wrapper">
             <h1 className="text | big-medium bolder margin-bottom-25 capitalize">
@@ -298,7 +308,11 @@ const UsersRenderer = () => {
                 >
                     <div className="users-wrapper">
                         {dataState.data.map((req, i) => (
-                            <UserItemRenderer req={req} key={`user-item-${i}`} />
+                            <UserItemRenderer
+                                user={user.data}
+                                req={req}
+                                key={`user-item-${i}`}
+                            />
                         ))}
                     </div>
                 </InfiniteScroll>

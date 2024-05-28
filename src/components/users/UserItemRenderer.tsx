@@ -1,12 +1,23 @@
-import { UserInterface, UserRoleRender } from "@/interfaces/UserInterface";
+import { UserInterface } from "@/interfaces/UserInterface";
 import { DEFAULT_PHOTO, getRole } from "@/utils/user/UserData";
 import Link from "next/link";
+import CompPermissionValidator from "../permission/component/CompPermissionValidator";
+import { ROLES_TO_VIEW_USER_STATE } from "@/utils/validator/roles/RoleValidator";
 
-const UserItemRenderer = ({ req }: { req: UserInterface }) => {
+const UserItemRenderer = ({
+    user,
+    req,
+}: {
+    user: UserInterface | null;
+    req: UserInterface;
+}) => {
     var role = getRole(req);
 
     return (
-        <Link href={`/admin/users/${req.id}`} className={`users-item | touchable ${req.disable && "users-disable"}`}>
+        <Link
+            href={`/admin/users/${req.id}`}
+            className={`users-item | touchable ${req.disable && "users-disable"}`}
+        >
             <img
                 src={req.photoUrl.url === "" ? DEFAULT_PHOTO : req.photoUrl.url}
                 alt=""
@@ -19,17 +30,23 @@ const UserItemRenderer = ({ req }: { req: UserInterface }) => {
                 <h4 className="text | light margin-bottom-50">
                     {req.services.toString().replaceAll(",", " | ")}
                 </h4>
-                <div className="row-wrapper">
-                    {req.disable && <h4 className="text | bold yellow">Desabilitado</h4>}
+                {user && (
+                    <CompPermissionValidator user={user} roles={ROLES_TO_VIEW_USER_STATE}>
+                        <div className="row-wrapper">
+                            {req.disable && (
+                                <h4 className="text | bold yellow">Desabilitado</h4>
+                            )}
 
-                    <h4
-                        className={`users-item-role text | right bold ${
-                            role.isHigher && "green"
-                        }`}
-                    >
-                        {role.value}
-                    </h4>
-                </div>
+                            <h4
+                                className={`users-item-role text | right bold ${
+                                    role.isHigher && "green"
+                                }`}
+                            >
+                                {role.value}
+                            </h4>
+                        </div>
+                    </CompPermissionValidator>
+                )}
             </div>
         </Link>
     );
