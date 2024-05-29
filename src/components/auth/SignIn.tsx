@@ -62,13 +62,20 @@ const SignIn = () => {
 
                         window.location.replace("/redirector");
                     })
-                    .catch(() => {
+                    .catch((e) => {
+                        let message: string = e.message;
+                        if (message.includes("user-disabled")) {
+                            toast.warning(
+                                "Tu cuenta fue desabilitada, por favor contactate con uno de nuestros administradores",
+                            );
+                        } else {
+                            toast.error("Credenciales invalidas, intalo de nuevo");
+                        }
                         setFormState({
                             ...formState,
                             isValid: false,
                             loading: false,
                         });
-                        toast.error("Credenciales invalidas, intalo de nuevo");
                     });
             } else {
                 setFormState({

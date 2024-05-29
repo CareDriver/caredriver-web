@@ -70,7 +70,6 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                             ...formState,
                             loading: false,
                         });
-                        window.location.reload();
                     } catch (e) {
                         setFormState({
                             ...formState,
@@ -94,7 +93,6 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                             ...formState,
                             loading: false,
                         });
-                        window.location.reload();
                     } catch (e) {
                         setFormState({
                             ...formState,
@@ -102,6 +100,34 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                         });
                         console.log(e);
                     }
+                }
+
+                try {
+                    await toast.promise(
+                        fetch("/api/userstate", {
+                            method: "POST",
+                            body: JSON.stringify({
+                                userId: userData.id,
+                                state: !isDisable,
+                            }),
+                            headers: {
+                                Accept: "application/json",
+                                "Content-Type": "application/json",
+                            },
+                        }),
+                        {
+                            pending: isDisable
+                                ? "Habilitando la authenticacion del usuario"
+                                : "Desabilitando la autenticacion del usuario",
+                            success: isDisable ? "Habilitado" : "Desabilitado",
+                            error: isDisable
+                                ? "Error al habilitar la autenticacion del usuario, intentalo de nuevo por favor"
+                                : "Error al desabilitar la autenticacion del usuario, intentalo de nuevo por favor",
+                        },
+                    );
+                    window.location.reload();
+                } catch (e) {
+                    console.log(e);
                 }
             }
         }
