@@ -1,7 +1,7 @@
 import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import ServiceReqsRenderer from "@/components/requests/services/ServiceReqsRenderer";
 
-const ReqsMechanicServicePage = () => {
+const ReqsLaundryServicePage = () => {
     return (
         <PageRequestPermission>
             <ServiceReqsRenderer type="laundry" />
@@ -9,4 +9,4 @@ const ReqsMechanicServicePage = () => {
     );
 };
 
-export default ReqsMechanicServicePage;
+export default ReqsLaundryServicePage;

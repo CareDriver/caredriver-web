@@ -8,6 +8,7 @@ import { servicesData } from "@/interfaces/ServicesDataInterface";
 import { toast } from "react-toastify";
 import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
 import { defaultBalance, defaultMinBalance } from "@/interfaces/Payment";
+import { deleteAllCookies } from "@/utils/temp_storage/CookiesHandler";
 
 interface UserInfo {
     data: UserInterface | null;
@@ -166,6 +167,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const logout = () => {
         auth.signOut()
             .then(() => {
+                deleteAllCookies();
                 setUser({
                     data: null,
                     hasPhoto: false,

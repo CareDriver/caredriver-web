@@ -2,14 +2,16 @@
 
 import MoneyBillWave from "@/icons/MoneyBillWave";
 import { BalanceHistory, BalanceHistoryItem, Price } from "@/interfaces/Payment";
-import { UserInterface } from "@/interfaces/UserInterface";
+import { UserInterface, UserRole } from "@/interfaces/UserInterface";
 import { updateUser } from "@/utils/requests/UserRequester";
-import { isValidAmount } from "@/utils/validator/debt/DebtValidator";
+import {
+    isValidAmount,
+    isValidIncreaseAmount,
+} from "@/utils/validator/debt/DebtValidator";
 import { Timestamp } from "firebase/firestore";
 import { SyntheticEvent, useState } from "react";
 import { toast } from "react-toastify";
 import BalanceHistoryForm, { BalanceHistoryItemForm } from "./BalanceHistoryForm";
-import "@/styles/modules/popup.css";
 import PopupForm from "@/components/form/PopupForm";
 import { nanoid } from "nanoid";
 import { saveBalanceHistoryItem } from "@/utils/requests/BalanceHistoryRequester";
@@ -25,6 +27,7 @@ const BalanceUser = ({
     loading: boolean;
     setLoading: (loading: boolean) => void;
 }) => {
+    const isBalancer: boolean = adminUser.role === UserRole.BalanceRecharge;
     const [formState, setFormState] = useState<{
         newDebt: string;
         message: string | null;
@@ -46,15 +49,21 @@ const BalanceUser = ({
     const perform = async () => {
         if (user.id && adminUser.id) {
             try {
+                const debt: Price = isBalancer
+                    ? {
+                          amount: user.balance.amount + parseFloat(formState.newDebt),
+                          currency: "Bs. (BOB)",
+                      }
+                    : {
+                          amount: parseFloat(formState.newDebt),
+                          currency: "Bs. (BOB)",
+                      };
                 const balanceHistoryId = nanoid();
                 var balanceItem: BalanceHistoryItem = {
                     id: balanceHistoryId,
                     dateTime: Timestamp.fromDate(new Date()),
                     oldBalance: user.balance,
-                    previousBalance: {
-                        amount: parseFloat(formState.newDebt),
-                        currency: "Bs. (BOB)",
-                    },
+                    previousBalance: debt,
                     userWhoChanged: adminUser.id,
                 };
                 if (balanceHistory.reasonType === "bankTransactionNumber") {
@@ -77,10 +86,7 @@ const BalanceUser = ({
                         error: "Error al guardar tu justificatio, intentalo de nuevo por favor",
                     },
                 );
-                const debt: Price = {
-                    amount: parseFloat(formState.newDebt),
-                    currency: "Bs. (BOB)",
-                };
+
                 const newHistory: BalanceHistory[] = user.balanceHistory
                     ? [
                           ...user.balanceHistory,
@@ -132,7 +138,9 @@ const BalanceUser = ({
                 {user.balance ? user.balance.amount + " " + user.balance.currency : "0"}
             </h2>
             <p className="text | gray-dark">
-                Ingresa el nuevo monto de saldo del usuario.
+                {isBalancer
+                    ? " Ingresa el monto que pago el usuario para aumentar su saldo (Solo puedes aumentar el saldo del usuario)"
+                    : "Ingresa el nuevo monto de saldo del usuario."}
             </p>
 
             <div
@@ -148,7 +156,9 @@ const BalanceUser = ({
                         value={formState.newDebt}
                         onChange={(e) => {
                             var newDebt = e.target.value;
-                            const { isValid, message } = isValidAmount(newDebt);
+                            const { isValid, message } = isBalancer
+                                ? isValidIncreaseAmount(newDebt)
+                                : isValidAmount(newDebt);
                             setFormState({
                                 ...formState,
                                 newDebt,
@@ -157,7 +167,9 @@ const BalanceUser = ({
                         }}
                     />
                     <legend className="form-section-legend">
-                        Nuevo saldo {user.balance.currency}
+                        {isBalancer
+                            ? `Saldo que pago el usuario en ${user.balance.currency}`
+                            : `Nuevo saldo en ${user.balance.currency}`}
                     </legend>
                     {formState.message && <small>{formState.message}</small>}
                 </fieldset>
@@ -169,7 +181,7 @@ const BalanceUser = ({
                 disabled={!(!formState.message && formState.newDebt.trim().length > 0)}
                 className="small-general-button text | medium bold touchable green"
             >
-                Establecer nuevo saldo
+                {isBalancer ? "Aumentar saldo" : "Establecer nuevo saldo"}
             </button>
 
             <PopupForm
@@ -181,6 +193,7 @@ const BalanceUser = ({
                     !balanceHistory.reason.message &&
                     balanceHistory.reason.value.trim().length > 0
                 }
+                doSomethingText={isBalancer ? "Aumentar saldo" : "Cambiar saldo"}
             >
                 <BalanceHistoryForm
                     loading={loading}

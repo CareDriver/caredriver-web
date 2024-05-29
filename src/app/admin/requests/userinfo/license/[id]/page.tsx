@@ -1,10 +1,13 @@
+import FormToSeeInfo from "@/components/permission/FormToSeeInfo";
 import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import SingleLicenseReq from "@/components/requests/userinfo/licenses/SingleLicenseReq";
 
 const SingleLicenseReqPage = ({ params }: { params: any }) => {
     return (
         <PageRequestPermission>
-            <SingleLicenseReq reqId={params.id} />
+            <FormToSeeInfo target="editlicensereq" id={params.id}>
+                <SingleLicenseReq reqId={params.id} />
+            </FormToSeeInfo>
         </PageRequestPermission>
     );
 };

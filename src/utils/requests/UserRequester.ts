@@ -19,7 +19,7 @@ import {
     and,
     or,
 } from "firebase/firestore";
-import { UserInterface } from "../../interfaces/UserInterface";
+import { UserInterface, UserRole } from "../../interfaces/UserInterface";
 
 const usersCollection = collection(firestore, "users");
 
@@ -101,23 +101,42 @@ const checkEmailExists = async (email: string): Promise<number> => {
 // GET ALL USERS WITH PAGINATION
 
 export const getAllUsersPaginated = async (
+    adminRole: UserRole | undefined,
     adminEmail: string,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
     endBeforeDoc?: DocumentSnapshot,
     numPerPage: number = 8,
 ) => {
-    let dataQuery = query(
-        usersCollection,
-        orderBy("fullName"),
-        limit(numPerPage),
-        where("deleted", "==", false),
-        where("email", "!=", adminEmail),
-    );
+    let dataQuery;
+
+    if (adminRole && adminRole === UserRole.BalanceRecharge) {
+        dataQuery = query(
+            usersCollection,
+            orderBy("fullName"),
+            limit(numPerPage),
+            where("deleted", "==", false),
+            where("email", "!=", adminEmail),
+            where("services", "array-contains-any", [
+                "Conductor",
+                "Mecánico",
+                "Remolque",
+                "Lavadero",
+            ]),
+        );
+    } else {
+        dataQuery = query(
+            usersCollection,
+            orderBy("fullName"),
+            limit(numPerPage),
+            where("deleted", "==", false),
+            where("email", "!=", adminEmail),
+        );
+    }
 
     if (direction === "next" && startAfterDoc) {
         dataQuery = query(dataQuery, startAfter(startAfterDoc));
-    } else if (direction === "prev" && endBeforeDoc) {
+    } /* else if (direction === "prev" && endBeforeDoc) {
         dataQuery = query(
             usersCollection,
             orderBy("fullName"),
@@ -126,7 +145,7 @@ export const getAllUsersPaginated = async (
             where("deleted", "==", false),
             where("email", "!=", adminEmail),
         );
-    }
+    } */
 
     const productsSnapshot = await getDocs(dataQuery);
     const products = productsSnapshot.docs.map((doc) => doc.data());
@@ -139,16 +158,32 @@ export const getAllUsersPaginated = async (
 };
 
 export const getAllUsersNumPages = async (
+    adminRole: UserRole | undefined,
     adminEmail: string,
     numPerPages: number,
 ): Promise<number> => {
-    const count = await getCountFromServer(
-        query(
+    var dataQuery;
+    if (adminRole && adminRole === UserRole.BalanceRecharge) {
+        dataQuery = query(
             usersCollection,
             where("deleted", "==", false),
             where("email", "!=", adminEmail),
-        ),
-    );
+            where("services", "array-contains-any", [
+                "Conductor",
+                "Mecánico",
+                "Remolque",
+                "Lavadero",
+            ]),
+        );
+    } else {
+        dataQuery = query(
+            usersCollection,
+            where("deleted", "==", false),
+            where("email", "!=", adminEmail),
+        );
+    }
+
+    const count = await getCountFromServer(dataQuery);
     const numPages = Math.ceil(count.data().count / numPerPages);
     return numPages;
 };
@@ -156,6 +191,7 @@ export const getAllUsersNumPages = async (
 // GET ALL SEARCH USERS PAGINATED
 
 export const getSearchUsersPaginated = async (
+    adminRole: UserRole | undefined,
     adminEmail: string,
     searchField: string,
     direction: "next" | "prev" | undefined,
@@ -163,26 +199,53 @@ export const getSearchUsersPaginated = async (
     endBeforeDoc?: DocumentSnapshot,
     numPerPage: number = 8,
 ) => {
-    let dataQuery = query(
-        usersCollection,
-        and(
-            where("deleted", "==", false),
-            where("email", "!=", adminEmail),
-            or(
-                where("fullName", "==", searchField),
-                where("email", "==", searchField),
-                where("phoneNumber", "==", "+591" + searchField),
-                where("phoneNumber", "==", "+" + searchField),
-                where("phoneNumber", "==", searchField),
+    let dataQuery;
+
+    if (adminRole && adminRole === UserRole.BalanceRecharge) {
+        dataQuery = query(
+            usersCollection,
+            and(
+                where("deleted", "==", false),
+                where("email", "!=", adminEmail),
+                where("services", "array-contains-any", [
+                    "Conductor",
+                    "Mecánico",
+                    "Remolque",
+                    "Lavadero",
+                ]),
+                or(
+                    where("fullName", "==", searchField),
+                    where("email", "==", searchField),
+                    where("phoneNumber", "==", "+591" + searchField),
+                    where("phoneNumber", "==", "+" + searchField),
+                    where("phoneNumber", "==", searchField),
+                ),
             ),
-        ),
-        orderBy("fullName"),
-        limit(numPerPage),
-    );
+            orderBy("fullName"),
+            limit(numPerPage),
+        );
+    } else {
+        dataQuery = query(
+            usersCollection,
+            and(
+                where("deleted", "==", false),
+                where("email", "!=", adminEmail),
+                or(
+                    where("fullName", "==", searchField),
+                    where("email", "==", searchField),
+                    where("phoneNumber", "==", "+591" + searchField),
+                    where("phoneNumber", "==", "+" + searchField),
+                    where("phoneNumber", "==", searchField),
+                ),
+            ),
+            orderBy("fullName"),
+            limit(numPerPage),
+        );
+    }
 
     if (direction === "next" && startAfterDoc) {
         dataQuery = query(dataQuery, startAfter(startAfterDoc));
-    } else if (direction === "prev" && endBeforeDoc) {
+    } /*  else if (direction === "prev" && endBeforeDoc) {
         dataQuery = query(
             usersCollection,
             and(
@@ -200,7 +263,7 @@ export const getSearchUsersPaginated = async (
             endBefore(endBeforeDoc),
             limitToLast(numPerPage),
         );
-    }
+    } */
 
     const productsSnapshot = await getDocs(dataQuery);
     const products = productsSnapshot.docs.map((doc) => doc.data());
@@ -213,12 +276,35 @@ export const getSearchUsersPaginated = async (
 };
 
 export const getSearchUsersNumPages = async (
+    adminRole: UserRole | undefined,
     adminEmail: string,
     numPerPages: number,
     searchField: string,
 ): Promise<number> => {
-    const count = await getCountFromServer(
-        query(
+    let dataQuery;
+    if (adminRole && adminRole === UserRole.BalanceRecharge) {
+        dataQuery = query(
+            usersCollection,
+            and(
+                where("deleted", "==", false),
+                where("email", "!=", adminEmail),
+                where("services", "array-contains-any", [
+                    "Conductor",
+                    "Mecánico",
+                    "Remolque",
+                    "Lavadero",
+                ]),
+                or(
+                    where("fullName", "==", searchField),
+                    where("email", "==", searchField),
+                    where("phoneNumber", "==", "+591" + searchField),
+                    where("phoneNumber", "==", "+" + searchField),
+                    where("phoneNumber", "==", searchField),
+                ),
+            ),
+        );
+    } else {
+        dataQuery = query(
             usersCollection,
             and(
                 where("deleted", "==", false),
@@ -231,8 +317,10 @@ export const getSearchUsersNumPages = async (
                     where("phoneNumber", "==", searchField),
                 ),
             ),
-        ),
-    );
+        );
+    }
+
+    const count = await getCountFromServer(dataQuery);
     const numPages = Math.ceil(count.data().count / numPerPages);
     return numPages;
 };

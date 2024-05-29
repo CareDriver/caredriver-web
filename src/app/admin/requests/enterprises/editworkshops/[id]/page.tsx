@@ -1,10 +1,13 @@
+import FormToSeeInfo from "@/components/permission/FormToSeeInfo";
 import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
 import SingleEnterpiseUpReq from "@/components/requests/enterprises/edit/SingleEnterpiseUpReq";
 
 const SingleWorkshopUpReqPage = ({ params }: { params: any }) => {
     return (
         <PageRequestPermission>
-            <SingleEnterpiseUpReq reqId={params.id} type="mechanical" />
+            <FormToSeeInfo target="editworkshopreq" id={params.id}>
+                <SingleEnterpiseUpReq reqId={params.id} type="mechanical" />
+            </FormToSeeInfo>
         </PageRequestPermission>
     );
 };

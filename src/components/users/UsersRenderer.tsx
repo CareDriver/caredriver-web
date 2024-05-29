@@ -20,6 +20,8 @@ import Search from "@/icons/Search";
 import Link from "next/link";
 import DataLoaderIndicator from "../DataLoaderIndicator";
 import UserPlus from "@/icons/UserPlus";
+import CompPermissionValidator from "../permission/component/CompPermissionValidator";
+import { ROLES_TO_ADD_USERS } from "@/utils/validator/roles/RoleValidator";
 
 const UsersRenderer = () => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -46,6 +48,7 @@ const UsersRenderer = () => {
         if (user.data && user.data.email && dataState.isSearching) {
             try {
                 var pages = await getSearchUsersNumPages(
+                    user.data.role,
                     user.data.email,
                     numPerPage,
                     dataState.value,
@@ -63,7 +66,11 @@ const UsersRenderer = () => {
     const calculateNormalNumPages = async () => {
         if (user.data && user.data.email) {
             try {
-                var pages = await getAllUsersNumPages(user.data.email, numPerPage);
+                var pages = await getAllUsersNumPages(
+                    user.data.role,
+                    user.data.email,
+                    numPerPage,
+                );
                 setDataState({
                     ...dataState,
                     pages,
@@ -80,6 +87,7 @@ const UsersRenderer = () => {
                 const startAfterDoc = dataState.lastDoc;
                 const endBeforeDoc = undefined;
                 var result = await getSearchUsersPaginated(
+                    user.data.role,
                     user.data.email,
                     dataState.value,
                     "next",
@@ -110,6 +118,7 @@ const UsersRenderer = () => {
                 const startAfterDoc = dataState.lastDoc;
                 const endBeforeDoc = undefined;
                 var result = await getAllUsersPaginated(
+                    user.data.role,
                     user.data.email,
                     "next",
                     startAfterDoc,
@@ -169,6 +178,7 @@ const UsersRenderer = () => {
                         const startAfterDoc = dataState.lastDoc;
                         const endBeforeDoc = undefined;
                         var result = await getSearchUsersPaginated(
+                            user.data.role,
                             user.data.email,
                             dataState.value,
                             "next",
@@ -196,6 +206,7 @@ const UsersRenderer = () => {
                         const startAfterDoc = dataState.lastDoc;
                         const endBeforeDoc = undefined;
                         var result = await getAllUsersPaginated(
+                            user.data.role,
                             user.data.email,
                             "next",
                             startAfterDoc,
@@ -247,6 +258,7 @@ const UsersRenderer = () => {
             }
         }
     }, [dataState.data]);
+
     return dataState.data ? (
         <div className="render-data-wrapper">
             <h1 className="text | big-medium bolder margin-bottom-25 capitalize">
@@ -271,13 +283,20 @@ const UsersRenderer = () => {
                     </button>
                 </form>
                 <div>
-                    <Link
-                        href="/admin/users/register"
-                        className="icon-wrapper small-general-button text | bolder white-icon touchable"
-                    >
-                        <UserPlus />
-                        Nuevo Usuario
-                    </Link>
+                    {user.data && (
+                        <CompPermissionValidator
+                            user={user.data}
+                            roles={ROLES_TO_ADD_USERS}
+                        >
+                            <Link
+                                href="/admin/users/register"
+                                className="icon-wrapper small-general-button text | bolder white-icon touchable"
+                            >
+                                <UserPlus />
+                                Nuevo Usuario
+                            </Link>
+                        </CompPermissionValidator>
+                    )}
                 </div>
             </div>
             {dataState.data.length > 0 ? (
@@ -289,7 +308,11 @@ const UsersRenderer = () => {
                 >
                     <div className="users-wrapper">
                         {dataState.data.map((req, i) => (
-                            <UserItemRenderer req={req} key={`user-item-${i}`} />
+                            <UserItemRenderer
+                                user={user.data}
+                                req={req}
+                                key={`user-item-${i}`}
+                            />
                         ))}
                     </div>
                 </InfiniteScroll>
