@@ -14,6 +14,7 @@ import "@/styles/components/debt-user.css";
 import { AuthContext } from "@/context/AuthContext";
 import CompPermissionValidator from "@/components/permission/component/CompPermissionValidator";
 import {
+    checkPermission,
     ROLES_FOR_DELETE_USERS,
     ROLES_FOR_DISABLE_USERS,
     ROLES_FOR_SERVER_USER_ACTIONS,
@@ -22,6 +23,7 @@ import {
 } from "@/utils/validator/roles/RoleValidator";
 import UserHistoryRenderer from "./concrets/UserHistoryRenderer";
 import UserContacts from "./options/UserContacts";
+import UserRoleSeter from "./options/UserRoleSeter";
 
 const UserRenderer = ({ userId }: { userId: string }) => {
     const { user } = useContext(AuthContext);
@@ -174,7 +176,7 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                     <h1 className="text | big bolder">{userData.fullName}</h1>
                     <h3 className="text | gray-dark bold">{userData.email}</h3>
                     <CompPermissionValidator
-                        user={userData}
+                        user={user.data}
                         roles={ROLES_TO_VIEW_USER_CREDENTIALS}
                     >
                         <>
@@ -200,28 +202,38 @@ const UserRenderer = ({ userId }: { userId: string }) => {
 
             {user.data && (
                 <CompPermissionValidator
-                    user={userData}
+                    user={user.data}
                     roles={ROLES_TO_VIEW_CONTACT_USERS}
                 >
                     <UserContacts reviewUserName={user.data.fullName} user={userData} />
                 </CompPermissionValidator>
             )}
 
-            {user.data && (
-                <CompPermissionValidator
-                    user={userData}
-                    roles={ROLES_FOR_SERVER_USER_ACTIONS}
-                >
+            {user.data &&
+                checkPermission(userData.role, ROLES_FOR_SERVER_USER_ACTIONS) && (
                     <UserHistoryRenderer
                         formState={formState}
                         setFormState={setFormState}
                         reviewUser={user.data}
                         userData={userData}
                     />
+                )}
+
+            {user.data && (
+                <CompPermissionValidator
+                    user={user.data}
+                    roles={ROLES_FOR_SERVER_USER_ACTIONS}
+                >
+                    <UserRoleSeter
+                        user={userData}
+                        loading={formState.loading}
+                        setLoading={(s: boolean) =>
+                            setFormState({ ...formState, loading: s })
+                        }
+                    />
                 </CompPermissionValidator>
             )}
-
-            <CompPermissionValidator user={userData} roles={ROLES_FOR_DISABLE_USERS}>
+            <CompPermissionValidator user={user.data} roles={ROLES_FOR_DISABLE_USERS}>
                 <DisableUser
                     loading={formState.loading}
                     onAction={toggleDisableUser}
@@ -236,7 +248,7 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                     isDisable={userData.disable ? userData.disable : false}
                 />
             </CompPermissionValidator>
-            <CompPermissionValidator user={userData} roles={ROLES_FOR_DELETE_USERS}>
+            <CompPermissionValidator user={user.data} roles={ROLES_FOR_DELETE_USERS}>
                 <DeleteUser
                     loading={formState.loading}
                     onAction={deleteUser}

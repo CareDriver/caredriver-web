@@ -6,11 +6,11 @@ const CompPermissionValidator = ({
     roles,
     children,
 }: {
-    user: UserInterface;
+    user: UserInterface | null;
     roles: UserRole[];
     children: React.ReactNode;
 }) => {
-    return checkPermission(user.role, roles) && <>{children}</>;
+    return user && checkPermission(user.role, roles) && <>{children}</>;
 };
 
 export default CompPermissionValidator;

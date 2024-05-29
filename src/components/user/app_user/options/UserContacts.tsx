@@ -28,18 +28,18 @@ const UserContacts = ({
     };
 
     return (
-        <div className="column-wrapper">
+        <div className="row-wrapper margin-top-50">
             <button
                 type="button"
                 onClick={contactByWhatsapp}
-                className="icon-wrapper text circle-button | green white-icon lb"
+                className="icon-wrapper text circle-button | green white-icon lb touchable"
             >
                 <Whatsapp />
             </button>
             <button
                 type="button"
                 onClick={contactByEmail}
-                className="icon-wrapper text circle-button | red white-icon bolder lb"
+                className="icon-wrapper text circle-button | red white-icon bolder lb touchable"
             >
                 <Envelope />
             </button>

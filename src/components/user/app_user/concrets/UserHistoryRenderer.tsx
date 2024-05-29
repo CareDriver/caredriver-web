@@ -1,11 +1,13 @@
 import CompPermissionValidator from "@/components/permission/component/CompPermissionValidator";
-import { UserInterface } from "@/interfaces/UserInterface";
+import { UserInterface, UserRole } from "@/interfaces/UserInterface";
 import ServiceReqsByUser from "../ServiceReqsByUser";
 import ServiceServedByUser from "../ServiceServedByUser";
 import BalanceUser from "../options/BalanceUser";
 import MinBalanceUser from "../options/MinBalanceUser";
 import DebtHistory from "../DebtHistory";
 import {
+    checkPermission,
+    ROLES_FOR_SERVER_USER_ACTIONS,
     ROLES_TO_SET_MIN_USER_BALANCE,
     ROLES_TO_SET_USER_BALANCE,
     ROLES_TO_VIEW_USERS_HISTORY,
@@ -55,7 +57,7 @@ const UserHistoryRenderer = ({
             )}
 
             <CompPermissionValidator
-                user={userData}
+                user={reviewUser}
                 roles={ROLES_TO_SET_MIN_USER_BALANCE}
             >
                 <MinBalanceUser
@@ -70,10 +72,13 @@ const UserHistoryRenderer = ({
                 />
             </CompPermissionValidator>
 
-            <CompPermissionValidator user={userData} roles={ROLES_TO_VIEW_USERS_HISTORY}>
+            <CompPermissionValidator
+                user={reviewUser}
+                roles={ROLES_TO_VIEW_USERS_HISTORY}
+            >
                 <>
                     {getServicesServed()}
-                    <ServiceReqsByUser user={userData} />
+                    <ServiceReqsByUser user={reviewUser} />
                 </>
             </CompPermissionValidator>
         </>

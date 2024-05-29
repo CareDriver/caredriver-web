@@ -38,6 +38,14 @@ export const UserRoleRender = {
     BalanceRecharge: "Recargador de Saldo",
 };
 
+export const userRoles = [
+    UserRole.User,
+    UserRole.BalanceRecharge,
+    UserRole.Support,
+    UserRole.SupportTwo,
+    UserRole.Admin,
+];
+
 export interface UserInterface {
     id?: string; // Unique identifier for the user
     role?: UserRole; // the role that the user has in the application
