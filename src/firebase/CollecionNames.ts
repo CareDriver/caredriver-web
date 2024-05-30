@@ -14,4 +14,5 @@ export enum Collections {
     BalanceHistory = "balance-history",
     CarWashRequests = "car-wash-requests",
     ReasonsForInformation = "reasons-to-see-information",
+    BrandingRequests = "branding-requests",
 }

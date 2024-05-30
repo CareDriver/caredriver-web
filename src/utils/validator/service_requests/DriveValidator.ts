@@ -32,6 +32,11 @@ export const isValidLicenseNumber = (licenseNumber: string): InputState => {
     }
 };
 
+export const isValidTodayDate = (finalDate: Date) => {
+    const currentDate = new Date();
+    
+}
+
 export const isValidLicenseDate = (finalDate: Date): InputState => {
     const currentDate = new Date();
 

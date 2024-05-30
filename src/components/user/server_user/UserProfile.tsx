@@ -12,6 +12,8 @@ import { getGreeting } from "@/utils/contact/Content";
 import { sendWhatsapp } from "@/utils/contact/Sender";
 import { DEFAULT_PHOTO } from "@/utils/user/UserData";
 import { PHONE_BUSINESS } from "@/database/Business";
+import Bullhorn from "@/icons/Bullhorn";
+import { differenceOnDays } from "@/utils/parser/ForDate";
 
 const UserProfile = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -56,13 +58,33 @@ const UserProfile = () => {
                 </Link>
             </section>
 
+            {user.data.branding &&
+                differenceOnDays(user.data.branding.lastBrandingConfirmation.toDate()) >
+                    0 && (
+                    <section className="profile-info-wrapper | margin-top-50 margin-bottom-25 max-width-50">
+                        <h2 className="profile-subtitle icon-wrapper">
+                            <Bullhorn />
+                            Branding
+                        </h2>
+                        <span className="location-field">
+                            Valido hasta el{" "}
+                            {
+                                user.data.branding.lastBrandingConfirmation
+                                    .toDate()
+                                    .toISOString()
+                                    .split("T")[0]
+                            }
+                        </span>
+                    </section>
+                )}
+
             <section className="profile-info-wrapper | margin-top-50 margin-bottom-25 max-width-50">
                 <h2 className="profile-subtitle icon-wrapper">
                     <LocationDot />
                     Mi ubicacion
                 </h2>
                 <span className="location-field">{user.data.location}</span>
-                <div className="margin-top-15">
+                <div className="margin-top-5">
                     <Link
                         className="icon-wrapper small-general-button text | gray gray-icon bolder touchable"
                         href="/user/update/location"
@@ -92,7 +114,7 @@ const UserProfile = () => {
                               .replace("-", "")} ${user.data.minimumBalance.currency}`}
                 </p>
                 {
-                    <div className="margin-top-15">
+                    <div className="margin-top-5">
                         <button
                             type="button"
                             onClick={sendMessageToPay}

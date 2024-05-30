@@ -8,6 +8,7 @@ import SackDollar from "@/icons/SackDollar";
 import { ServiceReqState } from "@/interfaces/Services";
 import { ServiceVehicles, UserInterface } from "@/interfaces/UserInterface";
 import { vehicleModeRenderV2, VehicleTransmission } from "@/interfaces/VehicleInterface";
+import { differenceOnDays, getFormatDate } from "@/utils/parser/ForDate";
 import { updateUser } from "@/utils/requests/UserRequester";
 import Link from "next/link";
 import { useContext, useState } from "react";
@@ -16,30 +17,6 @@ import { toast } from "react-toastify";
 const DrivePanel = () => {
     const { user, loadingUser } = useContext(AuthContext);
     const [addingNew, setAddingNew] = useState(false);
-
-    const getFormatDate = (fecha: Date): string => {
-        const day: number = fecha.getDate();
-        const mothn: number = fecha.getMonth() + 1;
-        const year: number = fecha.getFullYear();
-
-        const formatDay: string = day < 10 ? "0" + day : day.toString();
-        const formatMoth: string = mothn < 10 ? "0" + mothn : mothn.toString();
-
-        return `${formatDay}/${formatMoth}/${year}`;
-    };
-
-    const differenceOnDays = (fecha: Date): number => {
-        const fechaActual: Date = new Date();
-        const fechaActualTimestamp: number = fechaActual.getTime();
-        const fechaTimestamp: number = fecha.getTime();
-        const diferenciaEnMilisegundos: number = fechaTimestamp - fechaActualTimestamp;
-        const unDiaEnMilisegundos: number = 1000 * 60 * 60 * 24;
-        const diferenciaEnDias: number = Math.round(
-            diferenciaEnMilisegundos / unDiaEnMilisegundos,
-        );
-
-        return diferenciaEnDias;
-    };
 
     const getColorButtonLicense = (date: Date) => {
         var difference = differenceOnDays(date);

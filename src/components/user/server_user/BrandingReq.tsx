@@ -1,0 +1,160 @@
+"use client";
+
+import ImageUploader from "@/components/form/ImageUploader";
+import PageLoader from "@/components/PageLoader";
+import { PhotoField } from "@/components/services/FormModels";
+import { AuthContext } from "@/context/AuthContext";
+import { DirectoryPath } from "@/firebase/StoragePaths";
+import { saveBrandingRequest } from "@/utils/requests/BrandingReqs";
+import { uploadFileBase64 } from "@/utils/requests/FileUploader";
+import { isImageBase64 } from "@/utils/validator/ImageValidator";
+import { nanoid } from "nanoid";
+import { useRouter } from "next/navigation";
+import { FormEvent, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
+const BrandingReq = () => {
+    const { loadingUser, user } = useContext(AuthContext);
+    const router = useRouter();
+    const [formState, setFormState] = useState({
+        loading: false,
+        isValid: false,
+    });
+    const [image, setImage] = useState<PhotoField>({
+        value: null,
+        message: null,
+    });
+
+    const submit = async (e: FormEvent) => {
+        e.preventDefault();
+        if (!formState.loading) {
+            setFormState({
+                ...formState,
+                loading: true,
+            });
+            if (
+                formState.isValid &&
+                image.value !== null &&
+                isImageBase64(image.value) &&
+                user.data &&
+                user.data.id
+            ) {
+                try {
+                    const imgRef = await toast.promise(
+                        uploadFileBase64(DirectoryPath.BrandingReqs, image.value),
+                        {
+                            pending: "Subiendo la foto, por favor espera",
+                            success: "Foto subida",
+                            error: "Error al subir la foto, intentalo de nuevo por favor",
+                        },
+                    );
+
+                    const brandingReqId = nanoid();
+                    await toast.promise(
+                        saveBrandingRequest(brandingReqId, {
+                            id: brandingReqId,
+                            active: true,
+                            aproved: false,
+                            brandingImage: imgRef,
+                            userId: user.data.id,
+                            userName: user.data.fullName,
+                        }),
+                        {
+                            pending: "Enviando la peticion, por favor espera",
+                            success: "Peticion enviada",
+                            error: "Error al enviar la peticion, intentalo de nuevo por favor",
+                        },
+                    );
+
+                    toast.info(
+                        "Uno de nuestros administradores revisara tu solicitud, se paciente",
+                    );
+                    setFormState({
+                        ...formState,
+                        loading: false,
+                    });
+                    router.push("/user/profile");
+                } catch (e) {
+                    setFormState({
+                        ...formState,
+                        loading: false,
+                    });
+                }
+            } else {
+                toast.error("Por favor llena los campos con datos validos");
+                setFormState({
+                    ...formState,
+                    loading: false,
+                });
+            }
+        }
+    };
+
+    useEffect(() => {
+        setFormState({
+            ...formState,
+            isValid: image.value !== null && !image.message,
+        });
+    }, [image]);
+
+    return loadingUser ? (
+        <PageLoader />
+    ) : (
+        <section className="service-form-wrapper | max-height-100">
+            <h1 className="text | big bolder">Branding</h1>
+            <p className="text | light">
+                Por favor sube una foto de tu vehiculo con el logo de nuestra aplicacion
+                pegado a tu vehiculo
+            </p>
+            <form
+                className="max-width-60 margin-top-50"
+                data-state={formState.loading ? "loading" : "loaded"}
+                onSubmit={submit}
+            >
+                <ImageUploader
+                    content={{
+                        id: "branding-user-uploader",
+                        indicator: "Foto de tu vehiculo",
+                        isCircle: false,
+                    }}
+                    uploader={{
+                        image,
+                        setImage,
+                    }}
+                />
+                <div
+                    className="row-wrapper | gap-20 | margin-top-25 loading-section"
+                    data-state={formState.loading ? "loading" : "loaded"}
+                >
+                    <button
+                        className="general-button | gray "
+                        type="button"
+                        onClick={() => router.push("/user/profile")}
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        className={`general-button | touchable max-width-60 ${
+                            formState.loading && "loading-section"
+                        }`}
+                        title={
+                            !formState.isValid
+                                ? "Por favor completa los campos con datos validos"
+                                : ""
+                        }
+                        disabled={!formState.isValid}
+                    >
+                        {formState.loading ? (
+                            <span className="loader"></span>
+                        ) : (
+                            "Solicitar revision"
+                        )}
+                    </button>
+                </div>
+            </form>
+            <span className="circles-right-bottomv2 green"></span>
+        </section>
+    );
+};
+
+export default BrandingReq;

@@ -8,6 +8,7 @@ import Warehouse from "@/icons/Warehouse";
 import Wrench from "@/icons/Wrench";
 import Link from "next/link";
 import LogoutOption from "../sidebar_options/LogoutOption";
+import Bullhorn from "@/icons/Bullhorn";
 
 const ServerUserSideBar = ({
     pathname,
@@ -103,6 +104,15 @@ const ServerUserSideBar = ({
                 >
                     <UserIcon />
                     <span>Mi Perfil</span>
+                </Link>
+                <Link
+                    href={"/user/branding"}
+                    className={`sidebar-option ${
+                        pathname.includes("branding") && "selected"
+                    }`}
+                >
+                    <Bullhorn />
+                    <span>Branding</span>
                 </Link>
                 <Link
                     href={"/user/update/location"}
