@@ -13,13 +13,11 @@ import {
     limit,
     startAfter,
     endBefore,
-    limitToLast,
     getDocs,
     getCountFromServer,
 } from "firebase/firestore";
 import { Collections } from "@/firebase/CollecionNames";
 import { ChangePhotoReqInterface } from "@/interfaces/ChangePhotoReq";
-import { deleteDocument } from "./FileUploader";
 
 const changePhotoReqCollection = collection(firestore, Collections.ChangePhotoRequests);
 
@@ -58,7 +56,7 @@ export const getUpPhotoReqById = async (
     }
 };
 
-export const updateLicenseUpReq = async (
+export const updateUpPhotoReq = async (
     id: string,
     newData: Partial<ChangePhotoReqInterface>,
 ): Promise<void> => {
@@ -71,7 +69,9 @@ export const updateLicenseUpReq = async (
 };
 
 export const deleteChangePhotoReq = async (id: string) => {
-    await deleteDocument(Collections.ChangePhotoRequests, id);
+    await updateUpPhotoReq(id, {
+        active: false,
+    });
 };
 
 export const getChangePhotoReqPaginated = async (

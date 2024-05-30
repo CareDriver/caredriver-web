@@ -6,6 +6,7 @@ import { BalanceHistory, Payment, Price } from "./Payment";
 import { Locations } from "./Locations";
 import { ServiceStateRequest, Vehicle } from "./UserRequest";
 import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
+import { Branding } from "./BrandingInterface";
 
 export interface HistoryLocationInterface {
     locationName: string;
@@ -77,12 +78,6 @@ export interface UserInterface {
     serviceRequests?: ServiceRequestsInterface; // status of the services that the user made a request
 
     branding?: Branding;
-}
-
-export interface Branding {
-    active: boolean;
-    lastBrandingConfirmation: Timestamp;
-    brandingConfirmations: Timestamp[];
 }
 
 export interface IdentityCard {

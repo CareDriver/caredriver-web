@@ -15,6 +15,7 @@ import {
     query,
     setDoc,
     startAfter,
+    updateDoc,
     where,
 } from "firebase/firestore";
 
@@ -41,6 +42,18 @@ export const getEditEnterpriseReqById = async (
             return enterpriseDoc.data() as ReqEditEnterprise;
         }
         return undefined;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const updateUpdateEnterprise = async (
+    id: string,
+    newData: Partial<ReqEditEnterprise>,
+): Promise<void> => {
+    try {
+        const enterpriseRef = doc(EditEnterpriseCollection, id);
+        await updateDoc(enterpriseRef, newData);
     } catch (error) {
         throw error;
     }
