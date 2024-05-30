@@ -36,3 +36,9 @@ export const differenceOnDays = (fecha: Date): number => {
 
     return diferenciaEnDias;
 };
+
+export const getOneMonthAhead = (date = new Date()): Date => {
+    const newDate = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+    newDate.setDate(Math.min(newDate.getDate(), date.getDate()));
+    return newDate;
+};

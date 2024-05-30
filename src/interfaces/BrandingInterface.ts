@@ -2,7 +2,7 @@ import { Timestamp } from "firebase/firestore";
 import { ImgWithRef } from "./ImageInterface";
 
 export interface Branding {
-    active: boolean;
+    dateLimit: Timestamp;
     lastBrandingConfirmation: Timestamp;
     brandingConfirmations: Timestamp[];
 }
@@ -10,7 +10,7 @@ export interface Branding {
 export interface BrandingRequest {
     id: string;
     brandingImage: ImgWithRef;
-    userName: string,
+    userName: string;
     userId: string;
     reviewedId?: string;
     aproved: boolean;

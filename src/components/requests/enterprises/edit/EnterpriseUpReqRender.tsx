@@ -22,6 +22,7 @@ import { deleteDocument, deleteFile } from "@/utils/requests/FileUploader";
 import { Collections } from "@/firebase/CollecionNames";
 import EnterpriseState from "../../data_renderer/enterprise/EnterpriseState";
 import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
+import { updateUpdateEnterprise } from "@/utils/requests/enterprise/EditEnterpriseReq";
 
 const EnterpriseUpReqRender = ({
     enterprise,
@@ -47,7 +48,9 @@ const EnterpriseUpReqRender = ({
         });
 
         if (enterprise.id) {
-            await deleteDocument(Collections.EditEnterprises, enterprise.id);
+            await updateUpdateEnterprise(enterprise.id, {
+                active: false,
+            });
         }
     };
 
@@ -116,7 +119,9 @@ const EnterpriseUpReqRender = ({
                         oldEnterprise.logoImgUrl.url !== enterprise.logoImgUrl.url;
 
                     await toast.promise(
-                        deleteDocument(Collections.EditEnterprises, enterprise.id),
+                        updateUpdateEnterprise(enterprise.id, {
+                            active: false,
+                        }),
                         {
                             pending: `Rechazando la edicion ${
                                 EnterpriseTypeRenderPronounV2[enterprise.type]

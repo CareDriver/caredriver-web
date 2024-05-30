@@ -73,6 +73,7 @@ const buildUser = (
                 userData.minimumBalance === undefined
                     ? defaultMinBalance
                     : userData.minimumBalance,
+            branding: userData.branding
         };
     }
 

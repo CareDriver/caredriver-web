@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthContext } from "@/context/AuthContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import PageLoader from "../../PageLoader";
 import "@/styles/components/profile.css";
 import Link from "next/link";
@@ -14,6 +14,8 @@ import { DEFAULT_PHOTO } from "@/utils/user/UserData";
 import { PHONE_BUSINESS } from "@/database/Business";
 import Bullhorn from "@/icons/Bullhorn";
 import { differenceOnDays } from "@/utils/parser/ForDate";
+import { updateUser } from "@/utils/requests/UserRequester";
+import { UserInterface } from "@/interfaces/UserInterface";
 
 const UserProfile = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -58,42 +60,52 @@ const UserProfile = () => {
                 </Link>
             </section>
 
-            {user.data.branding &&
-                differenceOnDays(user.data.branding.lastBrandingConfirmation.toDate()) >
-                    0 && (
-                    <section className="profile-info-wrapper | margin-top-50 margin-bottom-25 max-width-50">
-                        <h2 className="profile-subtitle icon-wrapper">
-                            <Bullhorn />
-                            Branding
-                        </h2>
-                        <span className="location-field">
-                            Valido hasta el{" "}
-                            {
-                                user.data.branding.lastBrandingConfirmation
-                                    .toDate()
-                                    .toISOString()
-                                    .split("T")[0]
-                            }
-                        </span>
-                    </section>
-                )}
-
-            <section className="profile-info-wrapper | margin-top-50 margin-bottom-25 max-width-50">
-                <h2 className="profile-subtitle icon-wrapper">
-                    <LocationDot />
-                    Mi ubicacion
-                </h2>
-                <span className="location-field">{user.data.location}</span>
-                <div className="margin-top-5">
-                    <Link
-                        className="icon-wrapper small-general-button text | gray gray-icon bolder touchable"
-                        href="/user/update/location"
-                    >
-                        <PenToSquare />
-                        Cambiar mi ubicacion
-                    </Link>
-                </div>
-            </section>
+            <div className="row-wrapper | top-align gap-20 | margin-top-50 margin-bottom-25 max-width-80">
+                <section className="profile-info-wrapper | row-wrapper-item">
+                    <h2 className="profile-subtitle icon-wrapper">
+                        <LocationDot />
+                        Mi ubicacion
+                    </h2>
+                    <span className="location-field">{user.data.location}</span>
+                    <div className="margin-top-5">
+                        <Link
+                            className="icon-wrapper small-general-button text | gray gray-icon bolder touchable"
+                            href="/user/update/location"
+                        >
+                            <PenToSquare />
+                            Cambiar mi ubicacion
+                        </Link>
+                    </div>
+                </section>
+                {user.data.branding &&
+                    (differenceOnDays(user.data.branding.dateLimit.toDate()) > 0 ? (
+                        <section className="profile-info-wrapper | row-wrapper-item">
+                            <h2 className="profile-subtitle icon-wrapper">
+                                <Bullhorn />
+                                Branding
+                            </h2>
+                            <span className="location-field">
+                                Valido hasta el{" "}
+                                {
+                                    user.data.branding.dateLimit
+                                        .toDate()
+                                        .toISOString()
+                                        .split("T")[0]
+                                }
+                            </span>
+                        </section>
+                    ) : (
+                        <section className="profile-info-wrapper | row-wrapper-item">
+                            <h2 className="profile-subtitle icon-wrapper">
+                                <Bullhorn />
+                                Branding
+                            </h2>
+                            <span className="location-field | red">
+                                Expiro tu fecha limite!
+                            </span>
+                        </section>
+                    ))}
+            </div>
 
             <i className="separator-horizontal | max-width-80"></i>
 

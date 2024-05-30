@@ -1,8 +1,13 @@
 .personal-data-req-wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(300px, 1fr));
+
     grid-auto-rows: auto;
     gap: 20px;
+}
+
+.personal-data-req-wrapper.two-rows {
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
 }
 
 .personal-data-req-item {
@@ -14,9 +19,18 @@
     gap: 5px;
 
     padding: 40px 20px;
+    max-height: 300px;
     border: 2px solid var(--gray-medium);
     border-radius: 15px;
     transition: all ease-in 150ms;
+}
+
+.personal-data-req-item.fill-image > img {
+    height: 90% !important;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-top: 20px;
 }
 
 .personal-data-req-item.left {

@@ -1,4 +1,5 @@
 import AddressCar from "@/icons/AddressCar";
+import Bullhorn from "@/icons/Bullhorn";
 import Camera from "@/icons/Camera";
 import Car from "@/icons/Car";
 import MechanicReq from "@/icons/MechanicReq";
@@ -57,7 +58,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <MechanicReq />
-                    <span>Crear Talleres</span>
+                    <span>Nuevos Talleres</span>
                 </Link>
                 <Link
                     href={"/admin/requests/enterprises/editworkshops"}
@@ -76,7 +77,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <TowReq />
-                    <span>Crear Empresas de Grua</span>
+                    <span>Nuevas Emp. de Grua</span>
                 </Link>
                 <Link
                     href={"/admin/requests/enterprises/editcranes"}
@@ -85,7 +86,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <TowReq />
-                    <span>Editar Empresas de Grua</span>
+                    <span>Editar Emp. de Grua</span>
                 </Link>
                 <Link
                     href={"/admin/requests/enterprises/laundry"}
@@ -94,7 +95,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <Soap />
-                    <span>Crear Lavaderos</span>
+                    <span>Nuevos Lavaderos</span>
                 </Link>
                 <Link
                     href={"/admin/requests/enterprises/editlaundry"}
@@ -127,6 +128,15 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                 >
                     <AddressCar />
                     <span>Renovacion de Licencias</span>
+                </Link>
+                <Link
+                    href={"/admin/requests/userinfo/branding"}
+                    className={`sidebar-option ${
+                        pathname.includes("branding") && "selected"
+                    }`}
+                >
+                    <Bullhorn />
+                    <span>Verificacion de Branding</span>
                 </Link>
             </li>
         </>

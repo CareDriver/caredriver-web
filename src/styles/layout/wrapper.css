@@ -35,12 +35,25 @@
     gap: 10px;
 }
 
+.row-wrapper.top-align {
+    align-items: flex-start;
+}
+
+.row-wrapper-item {
+    flex-grow: 1;
+    max-width: 50%;
+}
+
 .row-wrapper.space-between {
     justify-content: space-between;
 }
 
 .row-wrapper.gap-20 {
     gap: 20px;
+}
+
+.row-wrapper.gap-40 {
+    gap: 40px;
 }
 
 .column-wrapper {
