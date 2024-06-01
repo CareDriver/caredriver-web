@@ -21,7 +21,7 @@ const ServicesServedByUser = ({
     type,
 }: {
     serviceUserId: string;
-    type: "driver" | "mechanic" | "tow";
+    type: "driver" | "mechanic" | "tow" | "laundry";
 }) => {
     const collection: CollectionReference = getServiceDoneCollection(type);
     const numPerPage = 10;

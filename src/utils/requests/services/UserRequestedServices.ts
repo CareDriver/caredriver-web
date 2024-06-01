@@ -23,13 +23,21 @@ const mechanicRequestedServicesColl = collection(
     Collections.MechanicalServices,
 );
 const towRequestedServicesColl = collection(firestore, Collections.TowsServices);
+const laundryRequestedServicesColl = collection(firestore, Collections.CarWashServices);
 
-export const getServiceRequestedCollection = (type: "driver" | "mechanic" | "tow") => {
-    return type === "driver"
-        ? driveRequestedServicesColl
-        : type === "mechanic"
-        ? mechanicRequestedServicesColl
-        : towRequestedServicesColl;
+export const getServiceRequestedCollection = (
+    type: "driver" | "mechanic" | "tow" | "laundry",
+) => {
+    switch (type) {
+        case "driver":
+            return driveRequestedServicesColl;
+        case "mechanic":
+            return mechanicRequestedServicesColl;
+        case "tow":
+            return towRequestedServicesColl;
+        default:
+            return laundryRequestedServicesColl;
+    }
 };
 
 export const getServicerRequestedById = async (

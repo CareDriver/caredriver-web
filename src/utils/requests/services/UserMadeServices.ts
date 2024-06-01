@@ -20,13 +20,19 @@ import {
 const driveDoneServicesColl = collection(firestore, Collections.DriverServices);
 const mechanicDoneServicesColl = collection(firestore, Collections.MechanicalServices);
 const towDoneServicesColl = collection(firestore, Collections.TowsServices);
+const laundryDoneServicesColl = collection(firestore, Collections.CarWashServices);
 
-export const getServiceDoneCollection = (type: "driver" | "mechanic" | "tow") => {
-    return type === "driver"
-        ? driveDoneServicesColl
-        : type === "mechanic"
-        ? mechanicDoneServicesColl
-        : towDoneServicesColl;
+export const getServiceDoneCollection = (type: "driver" | "mechanic" | "tow" | "laundry") => {
+    switch (type) {
+        case "driver":
+            return driveDoneServicesColl;
+        case "mechanic":
+            return mechanicDoneServicesColl;
+        case "tow":
+            return towDoneServicesColl;
+        default:
+            return laundryDoneServicesColl;
+    }
 };
 
 export const getServiceDoneById = async (

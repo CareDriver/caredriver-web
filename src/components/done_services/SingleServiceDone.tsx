@@ -22,7 +22,7 @@ const SingleServiceDone = ({
     type,
 }: {
     id: string;
-    type: "driver" | "mechanic" | "tow";
+    type: "driver" | "mechanic" | "tow" | "laundry";
 }) => {
     const [service, setService] = useState<ServiceRequestInterface | null>(null);
     const collection: CollectionReference = getServiceDoneCollection(type);

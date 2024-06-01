@@ -1,4 +1,3 @@
-import Warehouse from "@/icons/Warehouse";
 import { Enterprise } from "@/interfaces/Enterprise";
 import EnterpriseRenderer from "./EnterpriseRenderer";
 import FieldDeleted from "../form/FieldDeleted";

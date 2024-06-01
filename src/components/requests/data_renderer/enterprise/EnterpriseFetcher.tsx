@@ -1,0 +1,51 @@
+"use client";
+
+import { Enterprise } from "@/interfaces/Enterprise";
+import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
+import { useEffect } from "react";
+import LaundryRenderer from "./LaundryRenderer";
+import WorkshopRenderer from "./WorkshopRenderer";
+import TowRenderer from "./TowRenderer";
+
+const EnterpriseFetcher = ({
+    enterprise,
+    setEnterprise,
+    enterpriseId,
+    type,
+}: {
+    enterprise: Enterprise | null | undefined;
+    setEnterprise: (enterprise: Enterprise | undefined) => void;
+    enterpriseId: string | undefined;
+    type: "laundry" | "tow" | "mechanic";
+}) => {
+    useEffect(() => {
+        if (enterpriseId) {
+            if (!enterprise) {
+                getEnterpriseById(enterpriseId)
+                    .then((res) => setEnterprise(res))
+                    .catch(() => setEnterprise(undefined));
+            }
+        } else {
+            setEnterprise(undefined);
+        }
+    }, []);
+
+    const getEnterprise = (enterpriseData: Enterprise | undefined) => {
+        switch (type) {
+            case "laundry":
+                return <LaundryRenderer laundry={enterpriseData} />;
+            case "mechanic":
+                return <WorkshopRenderer workshop={enterpriseData} />;
+            default:
+                return <TowRenderer tow={enterpriseData} />;
+        }
+    };
+
+    return enterprise === null ? (
+        <span className="loader-green | big-loader"></span>
+    ) : (
+        getEnterprise(enterprise)
+    );
+};
+
+export default EnterpriseFetcher;
