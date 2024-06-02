@@ -6,6 +6,14 @@ export enum Services {
     Laundry = "Lavadero",
 }
 
+export const ServicesRender = {
+    normal: "Normal",
+    driver: "Chofer",
+    mechanic: "Mecánico",
+    tow: "Remolque", // servicios de grúa
+    laundry: "Lavadero",
+};
+
 export enum ServiceReqState {
     Reviewing = "Reviewing",
     Refused = "Refused",

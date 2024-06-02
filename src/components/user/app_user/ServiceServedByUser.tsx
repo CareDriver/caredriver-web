@@ -170,9 +170,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             </Popup>
                         </>
                     ) : (
-                        <span className="service-user-wrapper text | medium-big bolder">
-                            Auto - No registrado
-                        </span>
+                        <span>Auto - No registrado</span>
                     )}
                     {user.serviceVehicles?.motorcycle ? (
                         <>
@@ -354,8 +352,9 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             user.serviceRequests?.laundry?.state === ServiceReqState.Approved ? (
                 <div className="service-user-wrapper  | with-data">
                     <>
+                        <h3 className="text | medium-big bolder">Lavadero</h3>
                         <button className="service-user-option" onClick={openLaundry}>
-                            Lavadero
+                            Lavadero registrado
                         </button>
                         <Popup
                             isOpen={isViewLaundry.isOpen}

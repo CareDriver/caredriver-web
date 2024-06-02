@@ -15,6 +15,10 @@ import {
 import { CollectionReference, DocumentSnapshot, Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import FullLocationServiceItem from "../items/FullLocationServiceItem";
+import ReasonAndLocationServiceItem from "../items/ReasonAndLocationServiceItem";
+import { ServicesRender } from "@/interfaces/Services";
+import "@/styles/components/user-services-served.css";
 
 const ServicesServedByUser = ({
     serviceUserId,
@@ -228,12 +232,36 @@ const ServicesServedByUser = ({
         }
     }, [dataState.data]);
 
+    const getServiceItem = (
+        link: string,
+        service: ServiceRequestInterface,
+        key: string,
+    ) => {
+        if (type === "driver" || type === "tow") {
+            return <FullLocationServiceItem link={link} service={service} key={key} />;
+        } else {
+            return (
+                <ReasonAndLocationServiceItem link={link} service={service} key={key} />
+            );
+        }
+    };
+
     return dataState.data ? (
-        <div>
-            <div>
-                <fieldset>
+        <div className="render-data-wrapper">
+            <h2 className="text | bolder big margin-bottom-25">
+                Servicios hechos como {ServicesRender[type]}
+            </h2>
+            <div className="margin-bottom-50">
+                <fieldset className="filter-date-wrapper">
+                    <button className="filter-date-button" onClick={search}>
+                        Filtrar:
+                    </button>
+                    <span className="text | gray-dark medium-big">
+                        Servicios hechos hasta el{" "}
+                    </span>
                     <input
                         type="date"
+                        className="filter-date-input"
                         value={toformatDate(dataState.value.toDate())}
                         onChange={(e) => {
                             setDataState({
@@ -242,7 +270,6 @@ const ServicesServedByUser = ({
                             });
                         }}
                     />
-                    <button onClick={search}>Filtrar</button>
                 </fieldset>
             </div>
             {dataState.data.length > 0 ? (
@@ -252,11 +279,13 @@ const ServicesServedByUser = ({
                     hasMore={dataState.page !== dataState.pages}
                     loader={<DataLoaderIndicator />}
                 >
-                    {dataState.data.map((req, i) => (
-                        <div key={`service-served-by-user-${i}`}>
-                            <h2>{req.requestReason}</h2>
-                        </div>
-                    ))}
+                    {dataState.data.map((req, i) =>
+                        getServiceItem(
+                            `/admin/users/${serviceUserId}/services/${type}/${req.id}`,
+                            req,
+                            `service-by-user-${i}`,
+                        ),
+                    )}
                 </InfiniteScroll>
             ) : (
                 <div className="empty-wrapper | auto-height">
