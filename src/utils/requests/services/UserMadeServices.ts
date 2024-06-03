@@ -22,7 +22,9 @@ const mechanicDoneServicesColl = collection(firestore, Collections.MechanicalSer
 const towDoneServicesColl = collection(firestore, Collections.TowsServices);
 const laundryDoneServicesColl = collection(firestore, Collections.CarWashServices);
 
-export const getServiceDoneCollection = (type: "driver" | "mechanic" | "tow" | "laundry") => {
+export const getServiceDoneCollection = (
+    type: "driver" | "mechanic" | "tow" | "laundry",
+) => {
     switch (type) {
         case "driver":
             return driveDoneServicesColl;
@@ -32,6 +34,21 @@ export const getServiceDoneCollection = (type: "driver" | "mechanic" | "tow" | "
             return towDoneServicesColl;
         default:
             return laundryDoneServicesColl;
+    }
+};
+
+export const getNameServiceCollection = (
+    type: "driver" | "mechanic" | "tow" | "laundry",
+) => {
+    switch (type) {
+        case "driver":
+            return Collections.DriverServices;
+        case "mechanic":
+            return Collections.MechanicalServices;
+        case "tow":
+            return Collections.TowsServices;
+        default:
+            return Collections.CarWashServices;
     }
 };
 

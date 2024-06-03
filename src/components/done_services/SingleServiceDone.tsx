@@ -4,10 +4,11 @@ import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import { useEffect, useState } from "react";
 import PageLoader from "../PageLoader";
 import {
+    getNameServiceCollection,
     getServiceDoneById,
     getServiceDoneCollection,
 } from "@/utils/requests/services/UserMadeServices";
-import { CollectionReference } from "firebase/firestore";
+import { CollectionReference, doc, onSnapshot } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { usePathname, useRouter } from "next/navigation";
 import { removeLastRoute } from "@/utils/parser/ForPahtname";
@@ -16,6 +17,7 @@ import UserIcon from "@/icons/UserIcon";
 import HelmetSafety from "@/icons/HelmetSafety";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { getUserById } from "@/utils/requests/UserRequester";
+import { firestore } from "@/firebase/FirebaseConfig";
 
 const SingleServiceDone = ({
     id,
@@ -24,8 +26,28 @@ const SingleServiceDone = ({
     id: string;
     type: "driver" | "mechanic" | "tow" | "laundry";
 }) => {
-    const [service, setService] = useState<ServiceRequestInterface | null>(null);
-    const collection: CollectionReference = getServiceDoneCollection(type);
+    // const collection: CollectionReference = getServiceDoneCollection(type);
+    const collectionPath = getNameServiceCollection(type);
+    const [data, setData] = useState<ServiceRequestInterface | null>(null);
+
+    useEffect(() => {
+        const unsubscribe = onSnapshot(doc(firestore, collectionPath, id), (doc) => {
+            setData(doc.data() as ServiceRequestInterface);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    return data ? (
+        <div>
+            {data.price?.price}
+            {data.price?.currency} - {data.price?.method}
+        </div>
+    ) : (
+        <PageLoader />
+    );
+
+    /* const [service, setService] = useState<ServiceRequestInterface | null>(null);
     const router = useRouter();
     const pathname = usePathname();
     const [userReq, setUserReq] = useState<UserInterface | null | undefined>(null);
@@ -161,7 +183,7 @@ const SingleServiceDone = ({
         </section>
     ) : (
         <PageLoader />
-    );
+    ); */
 };
 
 export default SingleServiceDone;
