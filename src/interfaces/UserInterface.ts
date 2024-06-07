@@ -9,6 +9,8 @@ import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
 import { Branding } from "./BrandingInterface";
 
 export interface HistoryLocationInterface {
+    latitude?: number,
+    longitude?: number,
     locationName: string;
     // This interface was created for in the future add more attributes or options for users to save their locations, for example custom names as "Home", etc
     coordinates: GeoPoint | null; // Geographical coordinates for a location

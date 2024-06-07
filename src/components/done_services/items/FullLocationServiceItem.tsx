@@ -11,23 +11,38 @@ const FullLocationServiceItem = ({
 }) => {
     const getStatus = () => {
         if (service.canceled) {
-            return <span>Estado : Cancelado</span>;
+            return (
+                <span className="service-item-state text | canceled-state | bolder">
+                    Estado : Cancelado
+                </span>
+            );
         } else if (service.finished) {
-            return <span>Estado : Finalizado</span>;
+            return (
+                <span className="service-item-state text | bolder">
+                    Estado : Finalizado
+                </span>
+            );
         } else if (service.isRequestActive) {
-            return <span>Estado : Activo</span>;
+            return (
+                <span className="service-item-state text | bolder">Estado : Activo</span>
+            );
         }
     };
 
     return (
         service.id && (
-            <Link href={link}>
+            <Link
+                href={link}
+                className={`service-item-wrapper | touchable ${
+                    service.canceled && "canceled-service"
+                }`}
+            >
                 {service.createdAt && (
-                    <h3 className="text | medium-big bold">
+                    <h3 className="text | medium-big bolder">
                         {getFormatDate(service.createdAt.toDate())}
                     </h3>
                 )}
-                <h3 className="text | bold margin-bottom-25">
+                <h3 className="text | bolder margin-bottom-25">
                     {service.price?.price} {service.price?.currency}
                 </h3>
 

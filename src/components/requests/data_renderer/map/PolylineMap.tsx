@@ -14,11 +14,19 @@ example:
 ]
 */
 
-const PolylineMap = ({ coordinates }: { coordinates: Location[] }) => {
+const PolylineMap = ({
+    start,
+    end,
+    coordinates,
+}: {
+    start: Location;
+    end: Location;
+    coordinates: Location[];
+}) => {
     const mapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (coordinates.length > 0) {
+        if (true) {
             const initMap = async () => {
                 const loader = new Loader({
                     apiKey: GOOGLEMAPS_TOKEN,
@@ -27,16 +35,30 @@ const PolylineMap = ({ coordinates }: { coordinates: Location[] }) => {
 
                 const { Map } = await loader.importLibrary("maps");
 
-                const position: Location = coordinates[0];
+                const position: Location = start;
 
                 const mapOptions: google.maps.MapOptions = {
                     center: position,
-                    zoom: 17,
+                    zoom: 16,
                     mapId: "GOOGLEMAP_FORM_ID",
                 };
 
                 const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
-                const flightPath = new google.maps.Polyline({
+                const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+                    "marker",
+                )) as google.maps.MarkerLibrary;
+
+                new AdvancedMarkerElement({
+                    map,
+                    position: start,
+                });
+
+                new AdvancedMarkerElement({
+                    map,
+                    position: end,
+                });
+
+                /* const flightPath = new google.maps.Polyline({
                     path: coordinates,
                     geodesic: true,
                     strokeColor: "#3bb770",
@@ -44,7 +66,7 @@ const PolylineMap = ({ coordinates }: { coordinates: Location[] }) => {
                     strokeWeight: 8,
                 });
 
-                flightPath.setMap(map);
+                flightPath.setMap(map); */
             };
 
             initMap();
@@ -52,11 +74,12 @@ const PolylineMap = ({ coordinates }: { coordinates: Location[] }) => {
     }, []);
 
     return (
-        coordinates.length > 0 && (
+        true && (
             <div
                 style={{
-                    height: "50vh",
+                    height: "80vh",
                     width: "100%",
+                    borderRadius: "15px"
                 }}
                 ref={mapRef}
             ></div>

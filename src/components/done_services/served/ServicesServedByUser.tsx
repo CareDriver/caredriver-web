@@ -257,7 +257,7 @@ const ServicesServedByUser = ({
                         Filtrar:
                     </button>
                     <span className="text | gray-dark medium-big">
-                        Servicios hechos hasta el{" "}
+                        Servicios creados hasta el{" "}
                     </span>
                     <input
                         type="date"
@@ -279,13 +279,15 @@ const ServicesServedByUser = ({
                     hasMore={dataState.page !== dataState.pages}
                     loader={<DataLoaderIndicator />}
                 >
-                    {dataState.data.map((req, i) =>
-                        getServiceItem(
-                            `/admin/users/${serviceUserId}/services/${type}/${req.id}`,
-                            req,
-                            `service-by-user-${i}`,
-                        ),
-                    )}
+                    <div className="service-req-wrapper">
+                        {dataState.data.map((req, i) =>
+                            getServiceItem(
+                                `/admin/users/${serviceUserId}/services/${type}/${req.id}`,
+                                req,
+                                `service-by-user-${i}`,
+                            ),
+                        )}
+                    </div>
                 </InfiniteScroll>
             ) : (
                 <div className="empty-wrapper | auto-height">

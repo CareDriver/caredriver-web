@@ -21,6 +21,18 @@
     box-shadow: 0 0 40px var(--gray-light);
 }
 
+.user-info-photo-size-v2 {
+    --size: 200px;
+    width: var(--size);
+    height: var(--size);
+
+    border-radius: 50%;
+
+    object-fit: cover;
+    background-color: #fcfffe;
+    box-shadow: 0 0 40px var(--gray-light);
+}
+
 .service-user-wrapper {
     display: flex;
     flex-direction: column;

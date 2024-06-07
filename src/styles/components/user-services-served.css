@@ -1,3 +1,29 @@
+.service-item-wrapper {
+    display: block;
+
+    padding: 30px;
+    border: 3px solid var(--main-light);
+    border-radius: 15px;
+
+    transition: all ease 200ms;
+}
+
+.service-item-wrapper.canceled-service {
+    border-color: var(--gray-medium);
+}
+
+.service-item-state {
+    color: var(--main-light);
+}
+
+.service-item-state.canceled-state {
+    color: var(--gray-darker);
+}
+
+.service-item-wrapper:hover {
+    border-radius: 20px;
+}
+
 .filter-date-wrapper {
     display: flex;
     align-items: center;
