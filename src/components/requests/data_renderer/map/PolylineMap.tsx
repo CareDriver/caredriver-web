@@ -26,7 +26,7 @@ const PolylineMap = ({
     const mapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (true) {
+        if (coordinates.length > 0) {
             const initMap = async () => {
                 const loader = new Loader({
                     apiKey: GOOGLEMAPS_TOKEN,
@@ -58,7 +58,7 @@ const PolylineMap = ({
                     position: end,
                 });
 
-                /* const flightPath = new google.maps.Polyline({
+                const flightPath = new google.maps.Polyline({
                     path: coordinates,
                     geodesic: true,
                     strokeColor: "#3bb770",
@@ -66,7 +66,7 @@ const PolylineMap = ({
                     strokeWeight: 8,
                 });
 
-                flightPath.setMap(map); */
+                flightPath.setMap(map);
             };
 
             initMap();
@@ -74,12 +74,12 @@ const PolylineMap = ({
     }, []);
 
     return (
-        true && (
+        coordinates.length > 0 && (
             <div
                 style={{
                     height: "80vh",
                     width: "100%",
-                    borderRadius: "15px"
+                    borderRadius: "15px",
                 }}
                 ref={mapRef}
             ></div>

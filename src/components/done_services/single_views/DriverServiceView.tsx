@@ -62,7 +62,7 @@ const DriverServiceView = ({ service }: { service: ServiceRequestInterface }) =>
                 )}
             </div>
 
-            <div className="max-width-50">
+            <div className="max-width-50 margin-bottom-50">
                 <div>
                     <h3 className="text | medium bolder">Desde:</h3>
                     <p className="text | medium">{service.pickupLocation.locationName}</p>
@@ -81,24 +81,29 @@ const DriverServiceView = ({ service }: { service: ServiceRequestInterface }) =>
             </div>
 
             {service.pickupLocation.latitude &&
-                service.pickupLocation.longitude &&
-                service.deliveryLocation &&
-                service.deliveryLocation.latitude &&
-                service.deliveryLocation.longitude && (
-                    <fieldset className="form-section margin-top-50">
-                        <PolylineMap
-                            start={{
-                                lat: service.pickupLocation.latitude,
-                                lng: service.pickupLocation.longitude,
-                            }}
-                            end={{
-                                lat: service.deliveryLocation.latitude,
-                                lng: service.deliveryLocation.longitude,
-                            }}
-                            coordinates={[]}
-                        />
-                    </fieldset>
-                )}
+            service.pickupLocation.longitude &&
+            service.deliveryLocation &&
+            service.deliveryLocation.latitude &&
+            service.deliveryLocation.longitude &&
+            (false) ? (
+                <fieldset className="form-section">
+                    <PolylineMap
+                        start={{
+                            lat: service.pickupLocation.latitude,
+                            lng: service.pickupLocation.longitude,
+                        }}
+                        end={{
+                            lat: service.deliveryLocation.latitude,
+                            lng: service.deliveryLocation.longitude,
+                        }}
+                        coordinates={[]}
+                    />
+                </fieldset>
+            ) : (
+                <div className="max-width-60">
+                    <FieldDeleted description={"No hay registro del la navegacion"} />
+                </div>
+            )}
         </section>
     );
 };
