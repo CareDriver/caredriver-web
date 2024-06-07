@@ -36,22 +36,22 @@ const ReasonAndLocationServiceItem = ({
                 className={`service-item-wrapper | touchable ${
                     service.canceled && "canceled-service"
                 }`}
-            >
+            >  
                 {service.requestReason && service.requestReason.length > 0 && (
-                    <h3 className="text | bolder margin-bottom-25">
+                    <h3 className="text | big-medium-v4 bolder">
                         {service.requestReason}
                     </h3>
                 )}
                 {service.createdAt && (
-                    <h3 className="text | medium-big bolder">
+                    <h3 className="text | bolder">
                         {getFormatDate(service.createdAt.toDate())}
                     </h3>
                 )}
 
-                <div className="margin-bottom-15">
+                <div className="margin-top-25 margin-bottom-15">
                     <h4 className="text | bold gray-dark">Ubicacion</h4>
                     <p className="text | gray-dark">
-                        {service.deliveryLocation?.locationName}
+                        {service.pickupLocation.locationName}
                     </p>
                 </div>
 

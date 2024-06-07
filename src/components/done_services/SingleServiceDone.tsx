@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { removeLastRoute } from "@/utils/parser/ForPahtname";
 import { usePathname } from "next/navigation";
 import DriverServiceView from "./single_views/DriverServiceView";
+import MechanicServiceView from "./single_views/MechanicServiceView";
 
 const SingleServiceDone = ({
     id,
@@ -40,6 +41,8 @@ const SingleServiceDone = ({
         switch (type) {
             case "driver":
                 return <DriverServiceView service={service} />;
+            case "mechanic":
+                return <MechanicServiceView service={service} />;
         }
     };
 

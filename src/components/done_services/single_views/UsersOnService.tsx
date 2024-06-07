@@ -94,7 +94,7 @@ const UsersOnService = ({ service }: { service: ServiceRequestInterface }) => {
 
     return (
         <>
-            <div className="margin-top-50">
+            <div className="margin-top-50 | max-width-80">
                 <h2 className="text icon-wrapper | big-medium-v4 bold nb margin-bottom-15">
                     <HelmetSafety /> Usuario servidor
                 </h2>
@@ -102,12 +102,12 @@ const UsersOnService = ({ service }: { service: ServiceRequestInterface }) => {
                 {serverUser === null ? (
                     <span className="loader"></span>
                 ) : serverUser === undefined ? (
-                    <FieldDeleted description={"El usuario servidor no fue encontrado"} />
+                    <FieldDeleted description={"El usuario servidor no fue asignado"} />
                 ) : (
                     renderUser(serverUser)
                 )}
             </div>
-            <div className="margin-top-25 margin-bottom-50">
+            <div className="margin-top-25 margin-bottom-50 | max-width-80">
                 <h2 className="text icon-wrapper | big-medium-v4 bold nb margin-bottom-15">
                     <UserIcon /> Usuario solicitador del servicio
                 </h2>

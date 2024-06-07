@@ -88,10 +88,14 @@ export const getServicesDonePaginated = async (
     }
 
     const reqsSnapshot = await getDocs(dataQuery);
-    const reqs = reqsSnapshot.docs.map((doc) => doc.data());
+    const reqs = reqsSnapshot.docs.map((doc) => {
+        var serviceDone = doc.data() as ServiceRequestInterface;
+        serviceDone.id = doc.id;
+        return serviceDone;
+    });
 
     return {
-        result: reqs as ServiceRequestInterface[],
+        result: reqs,
         lastDoc: reqsSnapshot.docs[reqsSnapshot.docs.length - 1],
         firstDoc: reqsSnapshot.docs[0],
     };
@@ -132,10 +136,14 @@ export const getServicesDoneFilterPaginated = async (
     }
 
     const reqsSnapshot = await getDocs(dataQuery);
-    const reqs = reqsSnapshot.docs.map((doc) => doc.data());
+    const reqs = reqsSnapshot.docs.map((doc) => {
+        var serviceDone = doc.data() as ServiceRequestInterface;
+        serviceDone.id = doc.id;
+        return serviceDone;
+    });
 
     return {
-        result: reqs as ServiceRequestInterface[],
+        result: reqs,
         lastDoc: reqsSnapshot.docs[reqsSnapshot.docs.length - 1],
         firstDoc: reqsSnapshot.docs[0],
     };

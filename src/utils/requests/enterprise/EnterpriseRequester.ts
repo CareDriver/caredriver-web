@@ -144,10 +144,14 @@ export const getPaginatedData = async (
     }
 
     const productsSnapshot = await getDocs(dataQuery);
-    const products = productsSnapshot.docs.map((doc) => doc.data());
+    const products = productsSnapshot.docs.map((doc) => {
+        var data = doc.data() as Enterprise;
+        data.id = doc.id;
+        return data;
+    });
 
     return {
-        result: products as Enterprise[],
+        result: products,
         lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
         firstDoc: productsSnapshot.docs[0],
     };
@@ -206,10 +210,14 @@ export const getAllPaginatedData = async (
     }
 
     const productsSnapshot = await getDocs(dataQuery);
-    const products = productsSnapshot.docs.map((doc) => doc.data());
+    const products = productsSnapshot.docs.map((doc) => {
+        var data = doc.data() as Enterprise;
+        data.id = doc.id;
+        return data;
+    });
 
     return {
-        result: products as Enterprise[],
+        result: products,
         lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
         firstDoc: productsSnapshot.docs[0],
     };
@@ -267,10 +275,14 @@ export const getEnterpriseReqs = async (
     }
 
     const productsSnapshot = await getDocs(dataQuery);
-    const products = productsSnapshot.docs.map((doc) => doc.data());
+    const products = productsSnapshot.docs.map((doc) => {
+        var data = doc.data() as Enterprise;
+        data.id = doc.id;
+        return data;
+    });
 
     return {
-        result: products as Enterprise[],
+        result: products,
         lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
         firstDoc: productsSnapshot.docs[0],
     };
@@ -292,7 +304,6 @@ export const getEnterpriseReqsNumPages = async (
     const numPages = Math.ceil(count.data().count / numPerPages);
     return numPages;
 };
-
 
 // PAGINATE ENTERPRISE DATA FOR ALL USERS, USED FOR MECHANIC AND TOW REQS
 
@@ -327,10 +338,14 @@ export const getEnterprisesAdminPaginated = async (
     }
 
     const productsSnapshot = await getDocs(dataQuery);
-    const products = productsSnapshot.docs.map((doc) => doc.data());
+    const products = productsSnapshot.docs.map((doc) => {
+        var data = doc.data() as Enterprise;
+        data.id = doc.id;
+        return data;
+    });
 
     return {
-        result: products as Enterprise[],
+        result: products,
         lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
         firstDoc: productsSnapshot.docs[0],
     };

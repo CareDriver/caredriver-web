@@ -16,8 +16,9 @@ import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FullLocationServiceItem from "../items/FullLocationServiceItem";
 import ReasonAndLocationServiceItem from "../items/ReasonAndLocationServiceItem";
-import "@/styles/components/user-services-served.css";
 import { ServicesRender } from "@/interfaces/Services";
+import "@/styles/components/user-services-served.css";
+import "@/styles/components/service-req.css"
 
 const ServicesRequestedByUser = ({
     serviceUserId,
@@ -282,13 +283,15 @@ const ServicesRequestedByUser = ({
                         </span>
                     }
                 >
-                    {dataState.data.map((req, i) =>
-                        getServiceItem(
-                            `/admin/users/${serviceUserId}/servicerequests/${type}/${req.id}`,
-                            req,
-                            `servie-requested-${i}`,
-                        ),
-                    )}
+                    <div className="service-req-wrapper">
+                        {dataState.data.map((req, i) =>
+                            getServiceItem(
+                                `/admin/users/${serviceUserId}/servicerequests/${type}/${req.id}`,
+                                req,
+                                `servie-requested-${i}`,
+                            ),
+                        )}
+                    </div>
                 </InfiniteScroll>
             ) : (
                 <div className="empty-wrapper | auto-height">

@@ -19,6 +19,7 @@ import FullLocationServiceItem from "../items/FullLocationServiceItem";
 import ReasonAndLocationServiceItem from "../items/ReasonAndLocationServiceItem";
 import { ServicesRender } from "@/interfaces/Services";
 import "@/styles/components/user-services-served.css";
+import "@/styles/components/service-req.css";
 
 const ServicesServedByUser = ({
     serviceUserId,
@@ -96,6 +97,8 @@ const ServicesServedByUser = ({
                     newData = result.result;
                 }
 
+                console.log(newData);
+
                 setDataState({
                     ...dataState,
                     data: newData,
@@ -123,6 +126,8 @@ const ServicesServedByUser = ({
                 } else {
                     newData = result.result;
                 }
+
+                console.log(newData);
 
                 setDataState({
                     ...dataState,
@@ -284,7 +289,7 @@ const ServicesServedByUser = ({
                             getServiceItem(
                                 `/admin/users/${serviceUserId}/services/${type}/${req.id}`,
                                 req,
-                                `service-by-user-${i}`,
+                                `service-req-by-user-${i}`,
                             ),
                         )}
                     </div>

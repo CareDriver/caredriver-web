@@ -100,10 +100,14 @@ export const getChangePhotoReqPaginated = async (
     }
 
     const productsSnapshot = await getDocs(dataQuery);
-    const products = productsSnapshot.docs.map((doc) => doc.data());
+    const products = productsSnapshot.docs.map((doc) => {
+        var reqPhoto = doc.data() as ChangePhotoReqInterface;
+        reqPhoto.id = doc.id;
+        return reqPhoto;
+    });
 
     return {
-        result: products as ChangePhotoReqInterface[],
+        result: products,
         lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
         firstDoc: productsSnapshot.docs[0],
     };

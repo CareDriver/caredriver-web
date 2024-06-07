@@ -148,10 +148,14 @@ export const getAllUsersPaginated = async (
     } */
 
     const productsSnapshot = await getDocs(dataQuery);
-    const products = productsSnapshot.docs.map((doc) => doc.data());
+    const products: UserInterface[] = productsSnapshot.docs.map((doc) => {
+        var user = doc.data() as UserInterface;
+        user.id = doc.id;
+        return user;
+    });
 
     return {
-        result: products as UserInterface[],
+        result: products,
         lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
         firstDoc: productsSnapshot.docs[0],
     };
@@ -266,10 +270,14 @@ export const getSearchUsersPaginated = async (
     } */
 
     const productsSnapshot = await getDocs(dataQuery);
-    const products = productsSnapshot.docs.map((doc) => doc.data());
+    const products: UserInterface[] = productsSnapshot.docs.map((doc) => {
+        var user = doc.data() as UserInterface;
+        user.id = doc.id;
+        return user;
+    });
 
     return {
-        result: products as UserInterface[],
+        result: products,
         lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
         firstDoc: productsSnapshot.docs[0],
     };
