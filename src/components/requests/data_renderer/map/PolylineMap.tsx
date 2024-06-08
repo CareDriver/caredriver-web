@@ -20,44 +20,46 @@ const PolylineMap = ({
     coordinates,
 }: {
     start: Location;
-    end: Location;
+    end: Location | undefined;
     coordinates: Location[];
 }) => {
     const mapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (coordinates.length > 0) {
-            const initMap = async () => {
-                const loader = new Loader({
-                    apiKey: GOOGLEMAPS_TOKEN,
-                    version: "weekly",
-                });
+        const initMap = async () => {
+            const loader = new Loader({
+                apiKey: GOOGLEMAPS_TOKEN,
+                version: "weekly",
+            });
 
-                const { Map } = await loader.importLibrary("maps");
+            const { Map } = await loader.importLibrary("maps");
 
-                const position: Location = start;
+            const position: Location = start;
 
-                const mapOptions: google.maps.MapOptions = {
-                    center: position,
-                    zoom: 16,
-                    mapId: "GOOGLEMAP_FORM_ID",
-                };
+            const mapOptions: google.maps.MapOptions = {
+                center: position,
+                zoom: 16,
+                mapId: "GOOGLEMAP_FORM_ID",
+            };
 
-                const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
-                const { AdvancedMarkerElement } = (await google.maps.importLibrary(
-                    "marker",
-                )) as google.maps.MarkerLibrary;
+            const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
+            const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+                "marker",
+            )) as google.maps.MarkerLibrary;
 
-                new AdvancedMarkerElement({
-                    map,
-                    position: start,
-                });
+            new AdvancedMarkerElement({
+                map,
+                position: start,
+            });
 
+            if (end) {
                 new AdvancedMarkerElement({
                     map,
                     position: end,
                 });
+            }
 
+            if (coordinates.length > 0) {
                 const flightPath = new google.maps.Polyline({
                     path: coordinates,
                     geodesic: true,
@@ -65,25 +67,23 @@ const PolylineMap = ({
                     strokeOpacity: 1.0,
                     strokeWeight: 8,
                 });
-
+    
                 flightPath.setMap(map);
-            };
+            }
+        };
 
-            initMap();
-        }
+        initMap();
     }, []);
 
     return (
-        coordinates.length > 0 && (
-            <div
-                style={{
-                    height: "80vh",
-                    width: "100%",
-                    borderRadius: "15px",
-                }}
-                ref={mapRef}
-            ></div>
-        )
+        <div
+            style={{
+                height: "80vh",
+                width: "100%",
+                borderRadius: "15px",
+            }}
+            ref={mapRef}
+        ></div>
     );
 };
 

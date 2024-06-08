@@ -38,7 +38,7 @@ const ReasonAndLocationServiceItem = ({
                 }`}
             >  
                 {service.requestReason && service.requestReason.length > 0 && (
-                    <h3 className="text | big-medium-v4 bolder">
+                    <h3 className="text | big-medium-v3 bolder">
                         {service.requestReason}
                     </h3>
                 )}

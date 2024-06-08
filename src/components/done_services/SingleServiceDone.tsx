@@ -11,6 +11,8 @@ import { removeLastRoute } from "@/utils/parser/ForPahtname";
 import { usePathname } from "next/navigation";
 import DriverServiceView from "./single_views/DriverServiceView";
 import MechanicServiceView from "./single_views/MechanicServiceView";
+import TowServiceView from "./single_views/TowServiceView";
+import LaundryServiceView from "./single_views/LaundryServiceView";
 
 const SingleServiceDone = ({
     id,
@@ -43,6 +45,10 @@ const SingleServiceDone = ({
                 return <DriverServiceView service={service} />;
             case "mechanic":
                 return <MechanicServiceView service={service} />;
+            case "tow":
+                return <TowServiceView service={service} />;
+            case "laundry":
+                return <LaundryServiceView service={service} />;
         }
     };
 

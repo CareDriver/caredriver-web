@@ -6,11 +6,11 @@ import UsersOnService from "./UsersOnService";
 import Car from "@/icons/Car";
 import { vehicleModeRenderV2, vehicleTypeRender } from "@/interfaces/VehicleInterface";
 import FieldDeleted from "@/components/requests/data_renderer/form/FieldDeleted";
-import PolylineMap from "@/components/requests/data_renderer/map/PolylineMap";
 import { toLocation } from "@/utils/parser/ToCoordinates";
+import PolylineMap from "@/components/requests/data_renderer/map/PolylineMap";
 import SericeDonePrice from "./Price";
 
-const DriverServiceView = ({ service }: { service: ServiceRequestInterface }) => {
+const TowServiceView = ({ service }: { service: ServiceRequestInterface }) => {
     const getState = (service: ServiceRequestInterface) => {
         if (service.finished) {
             return <h2 className="text | medium-big bolder green">Finalizado</h2>;
@@ -28,20 +28,22 @@ const DriverServiceView = ({ service }: { service: ServiceRequestInterface }) =>
                 {service.createdAt &&
                     `hecho el ${toformatDate(service.createdAt?.toDate())}`}
             </h1>
-            <div className="row-wrapper">
+            <div className="row-wrapper | text">
                 <h2>
-                    {service.price?.price} {service.price?.currency} -
+                    Servicio{" "}
+                    {service.createdAt &&
+                        `hecho el ${toformatDate(service.createdAt?.toDate())}`}{" "}
+                    -
                 </h2>
                 {getState(service)}
             </div>
-            <p className="text | light">{service.requestReason}</p>
 
             <UsersOnService service={service} />
 
             <div className="margin-bottom-50">
                 <h2 className="text icon-wrapper | big-medium-v4 bold nb margin-bottom-15">
                     <Car />
-                    Vehiculo de Transporte -{" "}
+                    Vehiculo remolcado -{" "}
                     {service.vehicle?.type && vehicleTypeRender[service.vehicle.type]}
                 </h2>
                 <p className="text | medium gray-dark">
@@ -49,9 +51,6 @@ const DriverServiceView = ({ service }: { service: ServiceRequestInterface }) =>
                 </p>
                 <p className="text | medium gray-dark">
                     <b>Descripcion:</b> {service.vehicle?.description}
-                </p>
-                <p className="text | medium gray-dark">
-                    <b>Veces usadas:</b> {service.vehicle?.usedTimes}
                 </p>
                 {service.vehicle?.transmission && (
                     <p className="text | medium gray-dark">
@@ -64,14 +63,14 @@ const DriverServiceView = ({ service }: { service: ServiceRequestInterface }) =>
             <SericeDonePrice service={service} />
 
             <div className="max-width-50 margin-bottom-50">
-                <div>
+                <div className="margin-bottom-25">
                     <h3 className="text | medium bolder">Desde:</h3>
                     <p className="text | medium">{service.pickupLocation.locationName}</p>
                 </div>
 
                 {service.deliveryLocation ? (
                     <div>
-                        <h3 className="text | medium bolder | margin-top-25">Hasta:</h3>
+                        <h3 className="text | medium bolder">Hasta:</h3>
                         <p className="text | medium">
                             {service.deliveryLocation.locationName}
                         </p>
@@ -102,4 +101,4 @@ const DriverServiceView = ({ service }: { service: ServiceRequestInterface }) =>
     );
 };
 
-export default DriverServiceView;
+export default TowServiceView;
