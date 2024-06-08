@@ -10,6 +10,7 @@ const EnterpriseRegistersSection = ({ pathname }: { pathname: string }) => {
                 href={"/admin/enterprises/workshops"}
                 className={`sidebar-option ${
                     pathname.includes("workshops") &&
+                    !pathname.includes("users") &&
                     !pathname.includes("requests") &&
                     "selected"
                 }`}
@@ -21,6 +22,7 @@ const EnterpriseRegistersSection = ({ pathname }: { pathname: string }) => {
                 href={"/admin/enterprises/cranes"}
                 className={`sidebar-option ${
                     pathname.includes("cranes") &&
+                    !pathname.includes("users") &&
                     !pathname.includes("requests") &&
                     "selected"
                 }`}
@@ -32,6 +34,7 @@ const EnterpriseRegistersSection = ({ pathname }: { pathname: string }) => {
                 href={"/admin/enterprises/laundry"}
                 className={`sidebar-option ${
                     pathname.includes("laundry") &&
+                    !pathname.includes("users") &&
                     !pathname.includes("requests") &&
                     "selected"
                 }`}

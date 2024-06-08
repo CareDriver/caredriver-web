@@ -88,7 +88,11 @@ export const getEditEnterpriseReqs = async (
     }
 
     const productsSnapshot = await getDocs(dataQuery);
-    const products = productsSnapshot.docs.map((doc) => doc.data());
+    const products = productsSnapshot.docs.map((doc) => {
+        var data = doc.data() as ReqEditEnterprise;
+        data.id = doc.id;
+        return data;
+    });
 
     return {
         result: products as ReqEditEnterprise[],

@@ -45,7 +45,13 @@ type VehicleTransmissionOption = {
 export const vehicleTypeRender = {
     car: "Auto",
     motorcycle: "Moto",
-    tow: "Grua"
+    tow: "Grua",
+};
+
+export const vehicleTypeRenderV2 = {
+    car: "del auto",
+    motorcycle: "de la moto",
+    tow: "de la grua",
 };
 
 export const vehicleModeRender = {

@@ -15,6 +15,18 @@
     font-size: 50px;
 }
 
+.text.big-medium-v2 {
+    font-size: 40px;
+}
+
+.text.big-medium-v3 {
+    font-size: 30px;
+}
+
+.text.big-medium-v4 {
+    font-size: 25px;
+}
+
 .text.medium-big {
     font-size: 22px;
 }
@@ -53,6 +65,10 @@
 
 .text.underline {
     text-decoration: underline;
+}
+
+.text.underline:hover {
+    color: var(--second-dark);
 }
 
 .text.center {

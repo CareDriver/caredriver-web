@@ -1,0 +1,57 @@
+.service-item-wrapper {
+    display: block;
+
+    padding: 30px;
+    border: 3px solid var(--main-light);
+    border-radius: 15px;
+
+    transition: all ease 200ms;
+}
+
+.service-item-wrapper.canceled-service {
+    border-color: var(--gray-medium);
+}
+
+.service-item-state {
+    color: var(--main-light);
+}
+
+.service-item-state.canceled-state {
+    color: var(--gray-darker);
+}
+
+.service-item-wrapper:hover {
+    border-radius: 20px;
+}
+
+.filter-date-wrapper {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    gap: 10px;
+
+    width: fit-content;
+    border: 2px solid var(--second-dark);
+    border-radius: 10px;
+    padding-right: 20px;
+    font-size: 20px;
+}
+
+.filter-date-input {
+    border: none;
+    background-color: transparent;
+    font-size: 20px;
+}
+
+.filter-date-button {
+    border: none;
+    background-color: transparent;
+    font-size: 20px;
+    padding: 10px 10px 10px 20px;
+    font-weight: 900;
+    background-color: var(--gray-light);
+}
+
+.filter-date-button:hover {
+    background-color: var(--gray-medium);
+}

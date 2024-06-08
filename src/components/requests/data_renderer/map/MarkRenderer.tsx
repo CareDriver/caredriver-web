@@ -8,34 +8,36 @@ const MarkRenderer = ({ location }: { location: Location }) => {
     const mapRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const initMap = async () => {
-            const loader = new Loader({
-                apiKey: GOOGLEMAPS_TOKEN,
-                version: "weekly",
-            });
+        if (mapRef && mapRef.current) {
+            const initMap = async () => {
+                const loader = new Loader({
+                    apiKey: GOOGLEMAPS_TOKEN,
+                    version: "weekly",
+                });
 
-            const { Map } = await loader.importLibrary("maps");
+                const { Map } = await loader.importLibrary("maps");
 
-            const position: Location = location;
+                const position: Location = location;
 
-            const mapOptions: google.maps.MapOptions = {
-                center: position,
-                zoom: 17,
-                mapId: "GOOGLEMAP_FORM_ID",
+                const mapOptions: google.maps.MapOptions = {
+                    center: position,
+                    zoom: 17,
+                    mapId: "GOOGLEMAP_FORM_ID",
+                };
+
+                const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
+                const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+                    "marker",
+                )) as google.maps.MarkerLibrary;
+
+                new AdvancedMarkerElement({
+                    map,
+                    position: location,
+                });
             };
 
-            const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
-            const { AdvancedMarkerElement } = (await google.maps.importLibrary(
-                "marker",
-            )) as google.maps.MarkerLibrary;
-
-            new AdvancedMarkerElement({
-                map,
-                position: location,
-            });
-        };
-
-        initMap();
+            initMap();
+        }
     }, []);
 
     return (

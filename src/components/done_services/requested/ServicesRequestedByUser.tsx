@@ -3,14 +3,7 @@
 import PageLoader from "@/components/PageLoader";
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import { userReqTypes } from "@/interfaces/UserRequest";
-import { inputToDate } from "@/utils/parser/ForDate";
-import {
-    getServiceDoneCollection,
-    getServicesDoneFilterNumPages,
-    getServicesDoneFilterPaginated,
-    getServicesDoneNumPages,
-    getServicesDonePaginated,
-} from "@/utils/requests/services/UserMadeServices";
+import { getFormatDate, inputToDate } from "@/utils/parser/ForDate";
 import {
     getServiceRequestedCollection,
     getServicesRequestedFilterNumPages,
@@ -19,16 +12,20 @@ import {
     getServicesRequestedPaginated,
 } from "@/utils/requests/services/UserRequestedServices";
 import { CollectionReference, DocumentSnapshot, Timestamp } from "firebase/firestore";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import FullLocationServiceItem from "../items/FullLocationServiceItem";
+import ReasonAndLocationServiceItem from "../items/ReasonAndLocationServiceItem";
+import { ServicesRender } from "@/interfaces/Services";
+import "@/styles/components/user-services-served.css";
+import "@/styles/components/service-req.css"
 
 const ServicesRequestedByUser = ({
     serviceUserId,
     type,
 }: {
     serviceUserId: string;
-    type: "driver" | "mechanic" | "tow";
+    type: "driver" | "mechanic" | "tow" | "laundry";
 }) => {
     const collection: CollectionReference = getServiceRequestedCollection(type);
     const numPerPage = 10;
@@ -235,12 +232,36 @@ const ServicesRequestedByUser = ({
         }
     }, [dataState.data]);
 
+    const getServiceItem = (
+        link: string,
+        service: ServiceRequestInterface,
+        key: string,
+    ) => {
+        if (type === "driver" || type === "tow") {
+            return <FullLocationServiceItem link={link} service={service} key={key} />;
+        } else {
+            return (
+                <ReasonAndLocationServiceItem link={link} service={service} key={key} />
+            );
+        }
+    };
+
     return dataState.data ? (
-        <div>
-            <div>
-                <fieldset>
+        <div className="render-data-wrapper">
+            <h2 className="text | bolder big margin-bottom-25">
+                Servicios hechos como {ServicesRender[type]}
+            </h2>
+            <div className="margin-bottom-50">
+                <fieldset className="filter-date-wrapper">
+                    <button className="filter-date-button" onClick={search}>
+                        Filtrar:
+                    </button>
+                    <span className="text | gray-dark medium-big">
+                        Servicios petidos hasta el{" "}
+                    </span>
                     <input
                         type="date"
+                        className="filter-date-input"
                         value={dataState.value.toDate().toISOString().split("T")[0]}
                         onChange={(e) => {
                             setDataState({
@@ -249,7 +270,6 @@ const ServicesRequestedByUser = ({
                             });
                         }}
                     />
-                    <button onClick={search}>Filtrar</button>
                 </fieldset>
             </div>
             {dataState.data.length > 0 ? (
@@ -257,24 +277,29 @@ const ServicesRequestedByUser = ({
                     dataLength={dataState.data.length}
                     next={handleNextClick}
                     hasMore={dataState.page !== dataState.pages}
-                    loader={<span className="text | bolder | margin-top-25">Cargando mas datos...</span>}
+                    loader={
+                        <span className="text | bolder | margin-top-25">
+                            Cargando mas datos...
+                        </span>
+                    }
                 >
-                    {dataState.data.map((req, i) => (
-                        <Link
-                            href={`/admin/users/${serviceUserId}/servicerequests/${type}/${req.id}`}
-                            key={`servie-requested-${i}`}
-                        >
-                            <h2>{req.userId}</h2>
-                        </Link>
-                    ))}
+                    <div className="service-req-wrapper">
+                        {dataState.data.map((req, i) =>
+                            getServiceItem(
+                                `/admin/users/${serviceUserId}/servicerequests/${type}/${req.id}`,
+                                req,
+                                `servie-requested-${i}`,
+                            ),
+                        )}
+                    </div>
                 </InfiniteScroll>
             ) : (
                 <div className="empty-wrapper | auto-height">
                     <h2>
                         {dataState.isSearching
-                            ? `No se encontro ninguna peticion hasta la fecha ${
-                                  dataState.value.toDate().toISOString().split("T")[0]
-                              }`
+                            ? `No se encontro ninguna peticion hasta la fecha ${getFormatDate(
+                                  dataState.value.toDate(),
+                              )}`
                             : `El usuario no ha hecho ninguna peticion por un ${userReqTypes[type]}`}
                     </h2>
                 </div>

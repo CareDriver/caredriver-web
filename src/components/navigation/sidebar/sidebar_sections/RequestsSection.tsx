@@ -17,7 +17,10 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                 <Link
                     href={"/admin/requests/services/driver"}
                     className={`sidebar-option ${
-                        pathname.includes("drive") && "selected"
+                        pathname.includes("drive") &&
+                        !pathname.includes("enterprises") &&
+                        !pathname.includes("users") &&
+                        "selected"
                     }`}
                 >
                     <Car />
@@ -26,7 +29,10 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                 <Link
                     href={"/admin/requests/services/mechanic"}
                     className={`sidebar-option ${
-                        pathname.includes("mechanic") && "selected"
+                        pathname.includes("mechanic") &&
+                        !pathname.includes("enterprises") &&
+                        !pathname.includes("users") &&
+                        "selected"
                     }`}
                 >
                     <Wrench />
@@ -34,7 +40,13 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                 </Link>
                 <Link
                     href={"/admin/requests/services/tow"}
-                    className={`sidebar-option ${pathname.includes("tow") && "selected"}`}
+                    className={`sidebar-option ${
+                        pathname.includes("tow") &&
+                        !pathname.includes("enterprises") &&
+                        !pathname.includes("enterprises") &&
+                        !pathname.includes("users") &&
+                        "selected"
+                    }`}
                 >
                     <Truck />
                     <span>Grua</span>
@@ -42,7 +54,10 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                 <Link
                     href={"/admin/requests/services/laundry"}
                     className={`sidebar-option ${
-                        pathname.includes("laundry") && "selected"
+                        pathname.includes("laundry") &&
+                        !pathname.includes("users") &&
+                        !pathname.includes("enterprises") &&
+                        "selected"
                     }`}
                 >
                     <Soap />

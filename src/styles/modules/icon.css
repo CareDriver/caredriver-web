@@ -51,6 +51,11 @@
     width: 25px;
 }
 
+.icon-wrapper.nb > svg {
+    height: 30px;
+    width: 30px;
+}
+
 .icon-wrapper.mb > svg {
     height: 35px;
     width: 35px;

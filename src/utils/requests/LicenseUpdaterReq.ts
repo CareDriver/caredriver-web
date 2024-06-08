@@ -93,10 +93,14 @@ export const getLicencesToUpdatePaginated = async (
     }
 
     const productsSnapshot = await getDocs(dataQuery);
-    const products = productsSnapshot.docs.map((doc) => doc.data());
+    const products = productsSnapshot.docs.map((doc) => {
+        var license = doc.data() as LicenseUpdateReq;
+        license.id = doc.id;
+        return license;
+    });
 
     return {
-        result: products as LicenseUpdateReq[],
+        result: products,
         lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
         firstDoc: productsSnapshot.docs[0],
     };

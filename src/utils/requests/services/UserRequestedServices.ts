@@ -23,13 +23,21 @@ const mechanicRequestedServicesColl = collection(
     Collections.MechanicalServices,
 );
 const towRequestedServicesColl = collection(firestore, Collections.TowsServices);
+const laundryRequestedServicesColl = collection(firestore, Collections.CarWashServices);
 
-export const getServiceRequestedCollection = (type: "driver" | "mechanic" | "tow") => {
-    return type === "driver"
-        ? driveRequestedServicesColl
-        : type === "mechanic"
-        ? mechanicRequestedServicesColl
-        : towRequestedServicesColl;
+export const getServiceRequestedCollection = (
+    type: "driver" | "mechanic" | "tow" | "laundry",
+) => {
+    switch (type) {
+        case "driver":
+            return driveRequestedServicesColl;
+        case "mechanic":
+            return mechanicRequestedServicesColl;
+        case "tow":
+            return towRequestedServicesColl;
+        default:
+            return laundryRequestedServicesColl;
+    }
 };
 
 export const getServicerRequestedById = async (
@@ -68,10 +76,14 @@ export const getServicesRequestedPaginated = async (
     }
 
     const reqsSnapshot = await getDocs(dataQuery);
-    const reqs = reqsSnapshot.docs.map((doc) => doc.data());
+    const reqs = reqsSnapshot.docs.map((doc) => {
+        var serviceDone = doc.data() as ServiceRequestInterface;
+        serviceDone.id = doc.id;
+        return serviceDone;
+    });
 
     return {
-        result: reqs as ServiceRequestInterface[],
+        result: reqs,
         lastDoc: reqsSnapshot.docs[reqsSnapshot.docs.length - 1],
         firstDoc: reqsSnapshot.docs[0],
     };
@@ -112,10 +124,14 @@ export const getServicesRequestedFilterPaginated = async (
     }
 
     const reqsSnapshot = await getDocs(dataQuery);
-    const reqs = reqsSnapshot.docs.map((doc) => doc.data());
+    const reqs = reqsSnapshot.docs.map((doc) => {
+        var serviceDone = doc.data() as ServiceRequestInterface;
+        serviceDone.id = doc.id;
+        return serviceDone;
+    });
 
     return {
-        result: reqs as ServiceRequestInterface[],
+        result: reqs,
         lastDoc: reqsSnapshot.docs[reqsSnapshot.docs.length - 1],
         firstDoc: reqsSnapshot.docs[0],
     };

@@ -20,13 +20,36 @@ import {
 const driveDoneServicesColl = collection(firestore, Collections.DriverServices);
 const mechanicDoneServicesColl = collection(firestore, Collections.MechanicalServices);
 const towDoneServicesColl = collection(firestore, Collections.TowsServices);
+const laundryDoneServicesColl = collection(firestore, Collections.CarWashServices);
 
-export const getServiceDoneCollection = (type: "driver" | "mechanic" | "tow") => {
-    return type === "driver"
-        ? driveDoneServicesColl
-        : type === "mechanic"
-        ? mechanicDoneServicesColl
-        : towDoneServicesColl;
+export const getServiceDoneCollection = (
+    type: "driver" | "mechanic" | "tow" | "laundry",
+) => {
+    switch (type) {
+        case "driver":
+            return driveDoneServicesColl;
+        case "mechanic":
+            return mechanicDoneServicesColl;
+        case "tow":
+            return towDoneServicesColl;
+        default:
+            return laundryDoneServicesColl;
+    }
+};
+
+export const getNameServiceCollection = (
+    type: "driver" | "mechanic" | "tow" | "laundry",
+) => {
+    switch (type) {
+        case "driver":
+            return Collections.DriverServices;
+        case "mechanic":
+            return Collections.MechanicalServices;
+        case "tow":
+            return Collections.TowsServices;
+        default:
+            return Collections.CarWashServices;
+    }
 };
 
 export const getServiceDoneById = async (
@@ -65,10 +88,14 @@ export const getServicesDonePaginated = async (
     }
 
     const reqsSnapshot = await getDocs(dataQuery);
-    const reqs = reqsSnapshot.docs.map((doc) => doc.data());
+    const reqs = reqsSnapshot.docs.map((doc) => {
+        var serviceDone = doc.data() as ServiceRequestInterface;
+        serviceDone.id = doc.id;
+        return serviceDone;
+    });
 
     return {
-        result: reqs as ServiceRequestInterface[],
+        result: reqs,
         lastDoc: reqsSnapshot.docs[reqsSnapshot.docs.length - 1],
         firstDoc: reqsSnapshot.docs[0],
     };
@@ -109,10 +136,14 @@ export const getServicesDoneFilterPaginated = async (
     }
 
     const reqsSnapshot = await getDocs(dataQuery);
-    const reqs = reqsSnapshot.docs.map((doc) => doc.data());
+    const reqs = reqsSnapshot.docs.map((doc) => {
+        var serviceDone = doc.data() as ServiceRequestInterface;
+        serviceDone.id = doc.id;
+        return serviceDone;
+    });
 
     return {
-        result: reqs as ServiceRequestInterface[],
+        result: reqs,
         lastDoc: reqsSnapshot.docs[reqsSnapshot.docs.length - 1],
         firstDoc: reqsSnapshot.docs[0],
     };

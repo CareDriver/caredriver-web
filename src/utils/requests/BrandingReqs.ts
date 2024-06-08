@@ -89,7 +89,11 @@ export const getBrandingReqPaginated = async (
     }
 
     const productsSnapshot = await getDocs(dataQuery);
-    const products = productsSnapshot.docs.map((doc) => doc.data());
+    const products = productsSnapshot.docs.map((doc) => {
+        var brandingReq = doc.data() as BrandingRequest;
+        brandingReq.id = doc.id;
+        return brandingReq;
+    });
 
     return {
         result: products as BrandingRequest[],

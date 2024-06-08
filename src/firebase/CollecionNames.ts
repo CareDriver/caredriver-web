@@ -13,6 +13,7 @@ export enum Collections {
     ChangePhotoRequests = "change-photo-requests",
     BalanceHistory = "balance-history",
     CarWashRequests = "car-wash-requests",
+    CarWashServices = "car-wash-services",
     ReasonsForInformation = "reasons-to-see-information",
     BrandingRequests = "branding-requests",
 }

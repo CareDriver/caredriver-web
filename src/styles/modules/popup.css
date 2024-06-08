@@ -17,8 +17,21 @@
 }
 
 .popup-wrapper {
-    padding: 30px;
+    padding: 50px;
+    max-height: 90vh;
+    overflow-y: auto;
 
     border-radius: 15px;
     background-color: var(--white);
+}
+
+.popup-close-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all ease-out 200ms;
+}
+
+.popup-close-button:hover {
+    transform: scale(1.1);
 }

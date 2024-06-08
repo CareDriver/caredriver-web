@@ -57,10 +57,14 @@ export const getPaginatedData = async (
     }
 
     const reqsSnapshot = await getDocs(dataQuery);
-    const reqs = reqsSnapshot.docs.map((doc) => doc.data());
+    const reqs = reqsSnapshot.docs.map((doc) => {
+        var userReq = doc.data() as UserRequest;
+        userReq.id = doc.id;
+        return userReq;
+    });
 
     return {
-        result: reqs as UserRequest[],
+        result: reqs,
         lastDoc: reqsSnapshot.docs[reqsSnapshot.docs.length - 1],
         firstDoc: reqsSnapshot.docs[0],
     };

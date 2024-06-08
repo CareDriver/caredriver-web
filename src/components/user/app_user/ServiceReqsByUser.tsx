@@ -5,29 +5,52 @@ import Link from "next/link";
 
 const ServiceReqsByUser = ({ user }: { user: UserInterface }) => {
     return (
-        <div>
-            <h2 className="text icon-wrapper | medium-big bold">
+        <div className="form-sub-container | margin-top-25 margin-bottom-25 max-width-60">
+            <h2 className="icon-wrapper profile-subtitle">
                 <UserIcon />
                 Servicios solicitados como usuario normal
             </h2>
-            <p>Puedes monitorear los servicios que este usuario ha requerido</p>
-            <Link href={`/admin/users/${user.id}/servicerequests/driver`}>
-                <h3>Solicitudes para Choferes</h3>
-                <span className="icon-wrapper | gray-icon">
+            <p className="text | light">
+                Puedes monitorear los servicios que este usuario ha requerido
+            </p>
+            <Link
+                className="service-user-wrapper  | with-data touchable"
+                href={`/admin/users/${user.id}/servicerequests/driver`}
+            >
+                <h3 className="text | medium-big bolder">Solicitudes de Choferes</h3>
+                <span className="icon-wrapper text | underline gray-dark gray-icon | margin-top-15">
                     <Eye />
                     Click para ver mas informacion
                 </span>
             </Link>
-            <Link href={`/admin/users/${user.id}/servicerequests/mechanic`}>
-                <h3>Solicitudes para Mecanicos</h3>
-                <span className="icon-wrapper | gray-icon">
+            <Link
+                className="service-user-wrapper  | with-data touchable"
+                href={`/admin/users/${user.id}/servicerequests/mechanic`}
+            >
+                <h3 className="text | medium-big bolder">Solicitudes de Mecanicos</h3>
+                <span className="icon-wrapper text | underline gray-dark gray-icon | margin-top-15">
                     <Eye />
                     Click para ver mas informacion
                 </span>
             </Link>
-            <Link href={`/admin/users/${user.id}/servicerequests/tow`}>
-                <h3>Solicitudes para Operadores de Gruas</h3>
-                <span className="icon-wrapper | gray-icon">
+            <Link
+                className="service-user-wrapper  | with-data touchable"
+                href={`/admin/users/${user.id}/servicerequests/tow`}
+            >
+                <h3 className="text | medium-big bolder">
+                    Solicitudes de Operadores de Gruas
+                </h3>
+                <span className="icon-wrapper text | underline gray-dark gray-icon | margin-top-15">
+                    <Eye />
+                    Click para ver mas informacion
+                </span>
+            </Link>
+            <Link
+                className="service-user-wrapper  | with-data touchable"
+                href={`/admin/users/${user.id}/servicerequests/laundry`}
+            >
+                <h3 className="text | medium-big bolder">Solicitudes de Lavadores</h3>
+                <span className="icon-wrapper text | underline gray-dark gray-icon | margin-top-15">
                     <Eye />
                     Click para ver mas informacion
                 </span>
