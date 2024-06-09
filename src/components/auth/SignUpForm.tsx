@@ -47,7 +47,7 @@ const SignUpForm = ({
     handleSummit: (e: FormEvent) => Promise<void>;
 }) => {
     return (
-        <form onSubmit={handleSummit} className="form-container">
+        <form onSubmit={handleSummit} className="form-container | full-form">
             <fieldset className="form-section">
                 <input
                     type="email"

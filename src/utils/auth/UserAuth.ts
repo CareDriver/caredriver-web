@@ -8,6 +8,17 @@ import { Dispatch, SetStateAction } from "react";
 import { locationList, Locations } from "@/interfaces/Locations";
 import { isPhoneValid } from "../validator/auth/CredentialsValidator";
 import { defaultBalance, defaultMinBalance } from "@/interfaces/Payment";
+import { getUserById, saveUser } from "../requests/UserRequester";
+import { toast } from "react-toastify";
+import {
+    GoogleAuthProvider,
+    signInWithPopup,
+    signInWithRedirect,
+    User,
+    UserCredential,
+} from "firebase/auth";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { auth } from "@/firebase/FirebaseConfig";
 
 export const createUserData = (
     id: string,
@@ -174,4 +185,88 @@ export const getRole = (input: string, roles: UserRole[]): UserRole => {
     });
 
     return roleFound;
+};
+
+export const signUpWithGoogle = async (
+    router: AppRouterInstance,
+    verifiyingGoogle: boolean,
+    setVerifier: (verifiyingGoogle: boolean) => void,
+) => {
+    if (!verifiyingGoogle) {
+        const provider = new GoogleAuthProvider();
+        try {
+            const result = await signInWithPopup(auth, provider);
+            // const resAuth = await signInWithRedirect(auth, provider);
+            // const result: UserCredential = resAuth;
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            if (credential) {
+                // const token = credential.accessToken;
+                const user = result.user;
+                await registerUserFromGoogleAuth(user, setVerifier, router);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+};
+
+export const registerUserFromGoogleAuth = async (
+    user: User,
+    setVerifier: (verifiyingGoogle: boolean) => void,
+    router: AppRouterInstance,
+) => {
+    setVerifier(true);
+    const userFound = await toast.promise(getUserById(user.uid), {
+        pending: "Verificando datos, espera por favor",
+        success: "Datos validos",
+        error: "Error al verificar tus datos, intentalo de nuevo por favor",
+    });
+    if (!userFound) {
+        var emptyUserData: UserInterface = createUserData(user.uid, UserRole.User, {
+            email: {
+                value: user.email ? user.email : "",
+                errorMessage: null,
+            },
+            fullName: {
+                value: user.displayName ? user.displayName : "",
+                errorMessage: null,
+            },
+            location: Locations.CochabambaBolivia,
+            password: {
+                value: "",
+                errorMessage: null,
+            },
+            phone: {
+                value: "",
+                errorMessage: null,
+            },
+            code: {
+                sent: "string",
+                toVerify: "string",
+                errorMessage: null,
+            },
+        });
+        emptyUserData = {
+            ...emptyUserData,
+            photoUrl: {
+                url: user.photoURL ? user.photoURL : "",
+                ref: "",
+            },
+        };
+        try {
+            await toast.promise(saveUser(user.uid, emptyUserData), {
+                pending: "Creando nueva cuenta",
+                success: "Cuenta creada",
+                error: "Error al crear la cuenta, intentalo de nuevo por favor",
+            });
+            window.location.replace("/redirector");
+            setVerifier(false);
+        } catch (e) {
+            console.log(e);
+            setVerifier(false);
+        }
+    } else {
+        setVerifier(false);
+        window.location.replace("/redirector");
+    }
 };

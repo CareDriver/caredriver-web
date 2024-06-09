@@ -25,8 +25,10 @@ import {
     createUserData,
     getLocation,
     handleInputChange,
+    signUpWithGoogle,
     validatePhone,
 } from "@/utils/auth/UserAuth";
+import AuthProviders from "./AuthProviders";
 
 const SignUpAsNew = () => {
     const router = useRouter();
@@ -34,6 +36,7 @@ const SignUpAsNew = () => {
         loading: false,
         isValid: true,
         isVerifyingCode: false,
+        verifiyingProvider: false,
     });
     const [credentials, setCredentials] = useState<SignUpInterface>(defaultSignUpValues);
 
@@ -69,7 +72,7 @@ const SignUpAsNew = () => {
                                         loading: false,
                                     });
                                     toast.success("Registro exitoso");
-                                    router.push("/services/drive");
+                                    window.location.replace("/redirector");
                                 })
                                 .catch(() => {
                                     setFormState({
@@ -262,9 +265,25 @@ const SignUpAsNew = () => {
     };
 
     return (
-        <div className="form-container margin-top-50">
+        <div
+            className="form-container margin-top-50"
+            data-state={
+                formState.verifiyingProvider || formState.loading ? "loading" : ""
+            }
+        >
+            <AuthProviders
+                router={router}
+                setVerifier={(s: boolean) =>
+                    setFormState({
+                        ...formState,
+                        verifiyingProvider: s,
+                    })
+                }
+                verifiyingProvider={formState.verifiyingProvider}
+            />
+
             {formState.isVerifyingCode ? (
-                <form onSubmit={signUp} className="form-container">
+                <form onSubmit={signUp} className="form-container | full-form">
                     <fieldset className="form-section">
                         <input
                             type="text"
