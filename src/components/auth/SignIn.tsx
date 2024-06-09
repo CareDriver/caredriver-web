@@ -10,6 +10,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import Link from "next/link";
 import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import AuthProviders from "./AuthProviders";
+import { useRouter } from "next/navigation";
 
 interface FormData {
     email: {
@@ -26,7 +28,9 @@ const SignIn = () => {
     const [formState, setFormState] = useState({
         loading: false,
         isValid: true,
+        verifiyingProvider: false,
     });
+    const router = useRouter();
     const [credentials, setCredentials] = useState<FormData>({
         email: {
             value: "",
@@ -120,9 +124,26 @@ const SignIn = () => {
     }, [credentials]);
 
     return (
-        <section className="form-container | center">
+        <section
+            className="form-container | center"
+            data-state={
+                formState.verifiyingProvider || formState.loading ? "loading" : ""
+            }
+        >
             <h1 className="text | bigger bold | margin-bottom-50">Iniciar Sesion</h1>
-            <form onSubmit={login} className="form-container">
+
+            <AuthProviders
+                router={router}
+                setVerifier={(s: boolean) =>
+                    setFormState({
+                        ...formState,
+                        verifiyingProvider: s,
+                    })
+                }
+                verifiyingProvider={formState.verifiyingProvider}
+            />
+
+            <form onSubmit={login} className="form-container | full-form">
                 <fieldset className="form-section">
                     <input
                         type="email"
