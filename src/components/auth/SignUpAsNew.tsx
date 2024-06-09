@@ -25,7 +25,6 @@ import {
     createUserData,
     getLocation,
     handleInputChange,
-    signUpWithGoogle,
     validatePhone,
 } from "@/utils/auth/UserAuth";
 import AuthProviders from "./AuthProviders";
@@ -184,29 +183,34 @@ const SignUpAsNew = () => {
                                 type: "string",
                             });
                         try {
-                            const url = "https://gate.whapi.cloud/messages/text";
-                            const options = {
-                                method: "POST",
-                                headers: {
-                                    accept: "application/json",
-                                    "content-type": "application/json",
-                                    authorization:
-                                        "Bearer yRU7YFfWWJeDot5OE1Arx7ElJ0oVwcjD",
-                                },
-                                body: JSON.stringify({
-                                    typing_time: 0,
-                                    to: credentials.phone.value.replace("+", ""),
-                                    body: JSON.stringify(
-                                        `Tu codigo de verificacion es ${codeToSent}`,
-                                    ),
-                                }),
-                            };
+                            /* 
+                            Cross-Origin Request Warning: The Same Origin 
+                            Policy will disallow reading the remote resource 
+                            at https://gate.whapi.cloud/messages/text soon. 
+                            (Reason: When the `Access-Control-Allow-Headers` is `*`, 
+                            the `Authorization` header is not covered. To include the 
+                            `Authorization` header, it must be explicitly listed 
+                            in CORS header `Access-Control-Allow-Headers`).
+                            */
 
-                            const res = await toast.promise(fetch(url, options), {
-                                pending: "Enviando codigo de verificacion a tu celular",
-                                success: "Codigo enviado",
-                                error: "Error al enviar el codigo, intentalo de nuevo por favor",
-                            });
+                            await toast.promise(
+                                fetch("/api/sms", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify({
+                                        phone: credentials.phone.value,
+                                        code: codeToSent,
+                                    }),
+                                }),
+                                {
+                                    pending:
+                                        "Enviando codigo de verificacion a tu celular",
+                                    success: "Codigo enviado",
+                                    error: "Error al enviar el codigo, intentalo de nuevo por favor",
+                                },
+                            );
 
                             setCredentials({
                                 ...credentials,
