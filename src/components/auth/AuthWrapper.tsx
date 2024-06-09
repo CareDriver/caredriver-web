@@ -18,6 +18,9 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
         <PageLoader />
     ) : (
         <main className="auth-wrapper">
+            <div className="top-middle-cicle auth-circle-image">
+                <img src="/images/car.png" alt="" />
+            </div>
             <img src="/images/image1.png" className="auth-image" alt="" />
             {children}
         </main>

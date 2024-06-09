@@ -1,7 +1,7 @@
 .loader {
-    width: 40px;
-    height: 40px;
-    border: 6px solid var(--white);
+    width: 2.222222222rem;
+    height: 2.222222222rem;
+    border: 0.375rem solid var(--white);
     border-bottom-color: transparent;
     border-radius: 50%;
     display: inline-block;
@@ -11,9 +11,9 @@
 
 
 .loader-gray {
-    width: 40px;
-    height: 40px;
-    border: 6px solid var(--gray-dark);
+    width: 2.222222222rem;
+    height: 2.222222222rem;
+    border: 0.375rem solid var(--gray-dark);
     border-bottom-color: transparent;
     border-radius: 50%;
     display: inline-block;
@@ -22,9 +22,9 @@
 }
 
 .loader-gray-medium {
-    width: 40px;
-    height: 40px;
-    border: 6px solid var(--gray-medium);
+    width: 2.222222222rem;
+    height: 2.222222222rem;
+    border: 0.375rem solid var(--gray-medium);
     border-bottom-color: transparent;
     border-radius: 50%;
     display: inline-block;
@@ -33,9 +33,9 @@
 }
 
 .loader-green {
-    width: 40px;
-    height: 40px;
-    border: 6px solid var(--main-light);
+    width: 2.222222222rem;
+    height: 2.222222222rem;
+    border: 0.375rem solid var(--main-light);
     border-bottom-color: transparent;
     border-radius: 50%;
     display: inline-block;
@@ -44,9 +44,9 @@
 }
 
 .loader-black {
-    width: 40px;
-    height: 40px;
-    border: 6px solid var(--second-dark);
+    width: 2.222222222rem;
+    height: 2.222222222rem;
+    border: 0.375rem solid var(--second-dark);
     border-bottom-color: transparent;
     border-radius: 50%;
     display: inline-block;
@@ -59,9 +59,9 @@
 .loader-gray-medium.small-loader,
 .loader-gray.small-loader,
 .loader-green.small-loader {
-    width: 25px;
-    height: 25px;
-    border-width: 4px;
+    width: 1.388888889rem;
+    height: 1.388888889rem;
+    border-width: 0.25rem;
 }
 
 .loader.big-loader,
@@ -69,9 +69,9 @@
 .loader-gray.big-loader,
 .loader-gray-medium.big-loader,
 .loader-green.big-loader {
-    width: 60px;
-    height: 60px;
-    border-width: 8px;
+    width: 3.333333333rem;
+    height: 3.333333333rem;
+    border-width: 0.5rem;
 }
 
 @keyframes rotation {

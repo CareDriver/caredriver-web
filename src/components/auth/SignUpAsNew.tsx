@@ -270,7 +270,7 @@ const SignUpAsNew = () => {
 
     return (
         <div
-            className="form-container margin-top-50"
+            className="form-container form-auth margin-top-50"
             data-state={
                 formState.verifiyingProvider || formState.loading ? "loading" : ""
             }

@@ -1,8 +1,8 @@
 .action-button {
-    padding: 20px 100px;
+    padding: 1.25rem 6.25rem;
 
-    border-radius: 40px;
-    font-size: 25px;
+    border-radius: 2.5rem;
+    font-size: 1.388888889rem;
     font-weight: bold;
 
     background-color: var(--white);
@@ -16,11 +16,11 @@
 
 .general-button {
     width: 100%;
-    font-size: 22px;
+    font-size: 1.222222222rem;
     font-weight: bold;
-    padding: 18px;
+    padding: 1.125rem;
     border: none;
-    border-radius: 10px;
+    border-radius: 0.625rem;
 
     background-color: var(--main-light);
     color: var(--white);
@@ -28,15 +28,15 @@
 }
 
 .general-button:hover {
-    border-radius: 20px;
+    border-radius: 1.25rem;
 }
 
 .general-button.no-full {
     display: inline-flex;
     justify-content: center;
 
-    padding: 14px;
-    font-size: 16px;
+    padding: 0.875rem;
+    font-size: 0.888888889rem;
     max-width: 40%;
     width: auto;
 }
@@ -46,7 +46,7 @@
 }
 
 .general-button.less-padding {
-    padding: 10px;
+    padding: 0.625rem;
 }
 
 .general-button.max-20 {
@@ -60,7 +60,7 @@
 }
 
 .general-button.gray {
-    border: 2px solid var(--gray-medium);
+    border: 0.125rem solid var(--gray-medium);
     background-color: var(--gray-lighter);
     color: var(--gray-dark);
 }
@@ -80,8 +80,8 @@
     overflow: hidden;
     display: flex;
 
-    border-radius: 25px;
-    border: 1px solid var(--second-dark);
+    border-radius: 1.5625rem;
+    border: 0.0625rem solid var(--second-dark);
 }
 
 .option-button {
