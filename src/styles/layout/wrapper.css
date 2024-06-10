@@ -35,6 +35,10 @@
     gap: 10px;
 }
 
+.row-wrapper.baseline {
+    align-items: baseline;
+}
+
 .row-wrapper.top-align {
     align-items: flex-start;
 }
@@ -109,4 +113,12 @@
     overflow: hidden;
 
     height: 100vh;
+}
+
+@media only screen and (max-width: 1150px) {
+    .wrapper {
+        flex-direction: column;
+        gap: 0;
+        margin-top: 3vh;
+    }
 }
