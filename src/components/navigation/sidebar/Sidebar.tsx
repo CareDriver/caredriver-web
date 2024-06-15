@@ -83,7 +83,7 @@ const SideBar = () => {
                     </Link>
                     <button
                         onClick={openNav}
-                        className="icon-wrapper nav-open-button | white-icon touchable"
+                        className="icon-wrapper nav-open-button | white-icon lb touchable"
                     >
                         <Bars />
                     </button>

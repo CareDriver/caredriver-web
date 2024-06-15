@@ -1,6 +1,6 @@
 .wrapper {
     display: flex;
-    gap: 40px;
+    gap: 2.222222222rem;
 
     width: 100%;
 }
@@ -10,7 +10,7 @@
     flex-direction: column;
 
     width: 100%;
-    padding: 50px 20px;
+    padding: 2.777777778rem 1.111111111rem;
 }
 
 .user-page-wrapper {
@@ -119,6 +119,90 @@
     .wrapper {
         flex-direction: column;
         gap: 0;
-        margin-top: 3vh;
+        margin-top: 3rem;
+    }
+}
+
+@media only screen and (max-width: 1150px) {
+    .max-width-40 {
+        max-width: 50%;
+    }
+
+    .max-width-50 {
+        max-width: 60%;
+    }
+
+    .max-width-60 {
+        max-width: 70%;
+    }
+
+    .max-width-80 {
+        max-width: 90%;
+    }
+
+    .max-width-90 {
+        max-width: 100%;
+    }
+
+    .service-form-wrapper {
+        padding: 4.444444444rem;
+    }
+}
+
+@media only screen and (max-width: 950px) {
+    .max-width-40 {
+        max-width: 60%;
+    }
+
+    .max-width-50 {
+        max-width: 70%;
+    }
+
+    .max-width-60 {
+        max-width: 80%;
+    }
+
+    .max-width-80 {
+        max-width: 100%;
+    }
+
+    .service-form-wrapper {
+        padding: 3.5rem;
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    .max-width-40 {
+        max-width: 70%;
+    }
+
+    .max-width-50 {
+        max-width: 80%;
+    }
+
+    .max-width-60 {
+        max-width: 90%;
+    }
+
+    .service-form-wrapper {
+        padding: 2.5rem;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .max-width-40 {
+        max-width: 80%;
+    }
+
+    .max-width-50 {
+        max-width: 90%;
+    }
+
+    .max-width-60 {
+        max-width: 100%;
+    }
+
+    .service-form-wrapper {
+        padding: 1.5rem;
     }
 }

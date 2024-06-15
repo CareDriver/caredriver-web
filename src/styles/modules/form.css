@@ -109,8 +109,8 @@
     right: var(--padding-field);
     fill: black;
 
-    height: 15px;
-    width: 15px;
+    height: 0.833333333rem;
+    width: 0.833333333rem;
 }
 
 .form-section-uploader {
@@ -120,9 +120,9 @@
     gap: 0px !important;
     position: relative;
 
-    padding: 60px 20px;
-    border-radius: 15px;
-    border: 3px solid var(--border-color);
+    padding: 3.333333333rem 1.111111111rem;
+    border-radius: 0.833333333rem;
+    border: 0.166666667rem solid var(--border-color);
 
     border-style: dashed;
     background-color: var(--background-color);
@@ -148,22 +148,22 @@
     justify-content: center;
     position: relative;
 
-    border-radius: 15px;
-    border: 1px solid var(--gray-medium);
+    border-radius: 0.833333333rem;
+    border: 0.055555556rem solid var(--gray-medium);
     background-color: var(--gray-lighter);
 }
 
 .form-section-uploaded-image {
     width: 100%;
-    border-radius: 15px;
+    border-radius: 0.833333333rem;
 
     object-fit: cover;
 }
 
 .form-section-uploaded-button {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 1.111111111rem;
+    right: 1.111111111rem;
 
     background-color: transparent;
     border: none;
@@ -175,16 +175,16 @@
 }
 
 .form-section-uploaded-button > svg {
-    width: 22px;
-    height: 22px;
+    width: 1.222222222rem;
+    height: 1.222222222rem;
     fill: var(--gray-medium);
 }
 
 .deleted-field {
-    padding: 20px;
-    border: 3px solid var(--red);
+    padding: 1.111111111rem;
+    border: 0.166666667rem solid var(--red);
     border-style: dotted;
-    border-radius: 15px;
+    border-radius: 0.833333333rem;
 }
 
 .form-section-camera-uploader {
@@ -195,8 +195,8 @@
     overflow: hidden;
 
     height: 30vh;
-    border-radius: 15px;
-    border: 5px double var(--border-color);
+    border-radius: 0.833333333rem;
+    border: 0.277777778rem double var(--border-color);
 
     background-color: var(--background-color);
 }
@@ -225,7 +225,7 @@
     transform: translateX(-50%);
 
     background-color: var(--white-opacity);
-    padding: 20px;
+    padding: 1.111111111rem;
     border: none;
     border-radius: 50%;
     transition: all ease-out 250ms;
@@ -237,13 +237,13 @@
 
 .form-section-uploaded.circle,
 .form-section-camera-uploader.circle {
-    padding: 20px 0;
+    padding: 1.111111111rem 0;
 }
 
 .form-section-uploaded.circle > .form-section-uploaded-image,
 .form-section-camera-uploader.circle > .form-section-uploaded-image {
-    width: 280px;
-    height: 280px;
+    width: 15.555555556rem;
+    height: 15.555555556rem;
 
     object-fit: cover;
     border-radius: 50%;
@@ -252,7 +252,7 @@
 .form-section-uploaded-file-pdf {
     width: 100%;
     min-height: 40vh;
-    border-radius: 15px;
+    border-radius: 0.833333333rem;
 }
 
 .form-section-uploaded-file-pdf.renderer-pdf {

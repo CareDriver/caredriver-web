@@ -112,7 +112,7 @@
 }
 
 .sidebar-wrapper-responsive {
-    --border-radius: 50px;
+    --border-radius: 2.777777778rem;
     
     display: none;
     align-items: center;
@@ -130,6 +130,7 @@
     border-bottom-right-radius: var(--border-radius);
 
     background-color: var(--second-dark);
+    box-shadow: 0 5px 10px var(--second-dark-opacity);
 }
 
 @media only screen and (max-width: 1150px) {

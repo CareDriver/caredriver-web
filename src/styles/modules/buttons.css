@@ -86,8 +86,8 @@
 
 .option-button {
     flex-grow: 1;
-    font-size: 18px;
-    padding: 10px 20px;
+    font-size: 1rem;
+    padding: 0.555555556rem 1.111111111rem;
 
     border: none;
     background-color: transparent;
@@ -103,9 +103,9 @@
     width: min-content;
 
     border-radius: 50%;
-    padding: 10px;
+    padding: 0.555555556rem;
 
-    border: 2px solid var(--main-light);
+    border: 0.111111111rem solid var(--main-light);
     cursor: pointer;
     transition: all ease-in-out 200ms;
 }
@@ -124,22 +124,22 @@
     align-items: center;
     justify-content: center;
 
-    padding: 10px 50px;
+    padding: 0.555555556rem 2.777777778rem;
     width: max-content;
 
     background-color: var(--main-light);
     color: var(--white);
     border: none;
-    border-radius: 15px;
+    border-radius: 0.833333333rem;
     transition: all ease-in-out 200ms;
 }
 
 .small-general-button:hover {
-    border-radius: 25px;
+    border-radius: 1.388888889rem;
 }
 
 .small-general-button.gray {
-    border: 2px solid var(--gray-medium);
+    border: 0.111111111rem solid var(--gray-medium);
     background-color: var(--white);
     color: var(--gray-dark);
 }

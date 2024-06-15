@@ -1,7 +1,7 @@
 .icon-wrapper {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0.666666667rem;
 }
 
 .icon-wrapper.center {
@@ -42,26 +42,26 @@
 }
 
 .icon-wrapper > svg {
-    height: 20px;
-    width: 20px;
+    height: 1.111111111rem;
+    width: 1.111111111rem;
 }
 
 .icon-wrapper.lb > svg {
-    height: 25px;
-    width: 25px;
+    height: 1.388888889rem;
+    width: 1.388888889rem;
 }
 
 .icon-wrapper.nb > svg {
-    height: 30px;
-    width: 30px;
+    height: 1.666666667rem;
+    width: 1.666666667rem;
 }
 
 .icon-wrapper.mb > svg {
-    height: 35px;
-    width: 35px;
+    height: 1.944444444rem;
+    width: 1.944444444rem;
 }
 
 .icon-wrapper.bg > svg {
-    height: 50px;
-    width: 50px;
+    height: 2.777777778rem;
+    width: 2.777777778rem;
 }
