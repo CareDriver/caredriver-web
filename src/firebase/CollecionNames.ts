@@ -16,4 +16,5 @@ export enum Collections {
     CarWashServices = "car-wash-services",
     ReasonsForInformation = "reasons-to-see-information",
     BrandingRequests = "branding-requests",
+    ActionOnUsers = "action-on-users",
 }

@@ -88,6 +88,10 @@
     color: var(--red);
 }
 
+.text.white {
+    color: var(--white);
+}
+
 .yellow {
     color: var(--yellow);
 }

@@ -252,6 +252,7 @@ const UserRenderer = ({ userId }: { userId: string }) => {
                 >
                     <UserRoleSeter
                         user={userData}
+                        adminUser={user.data}
                         loading={formState.loading}
                         setLoading={(s: boolean) =>
                             setFormState({ ...formState, loading: s })
