@@ -100,7 +100,9 @@ export const getEnterpriseById = async (id: string): Promise<Enterprise | undefi
     try {
         const enterpriseDoc = await getDoc(doc(enterpriseCollection, id));
         if (enterpriseDoc.exists()) {
-            return enterpriseDoc.data() as Enterprise;
+            var data = enterpriseDoc.data() as Enterprise;
+            data.id = id;
+            return data;
         }
         return undefined;
     } catch (error) {

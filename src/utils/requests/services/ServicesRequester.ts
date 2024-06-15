@@ -88,7 +88,9 @@ export const getServiceReqById = async (
     try {
         const reqDoc = await getDoc(doc(collection, id));
         if (reqDoc.exists()) {
-            return reqDoc.data() as UserRequest;
+            var data = reqDoc.data() as UserRequest;
+            data.id = id;
+            return data;
         }
         return undefined;
     } catch (error) {

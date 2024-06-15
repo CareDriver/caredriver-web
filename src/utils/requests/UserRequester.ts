@@ -13,8 +13,6 @@ import {
     orderBy,
     limit,
     startAfter,
-    endBefore,
-    limitToLast,
     getCountFromServer,
     and,
     or,

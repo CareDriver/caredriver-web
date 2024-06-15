@@ -47,7 +47,9 @@ export const getServicerRequestedById = async (
     try {
         const reqDoc = await getDoc(doc(collection, id));
         if (reqDoc.exists()) {
-            return reqDoc.data() as ServiceRequestInterface;
+            var data = reqDoc.data() as ServiceRequestInterface;
+            data.id = id;
+            return data;
         }
         return undefined;
     } catch (error) {
