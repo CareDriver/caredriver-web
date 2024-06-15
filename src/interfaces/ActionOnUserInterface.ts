@@ -13,6 +13,7 @@ export interface ActionOnUserInterface {
 export enum ActionOnUserPerformed {
     Deleted = "deleted",
     Disabled = "disabled",
+    Enable = "enable",
     User = "changeRolToUser",
     BalanceRecharge = "changeRolToBalanceRecharge",
     Support = "changeRolToSupport",
