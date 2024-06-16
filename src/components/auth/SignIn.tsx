@@ -125,12 +125,12 @@ const SignIn = () => {
 
     return (
         <section
-            className="form-container | center"
+            className="form-container | form-auth center"
             data-state={
                 formState.verifiyingProvider || formState.loading ? "loading" : ""
             }
         >
-            <h1 className="text | bigger bold | margin-bottom-50">Iniciar Sesion</h1>
+            <h1 className="text | bigger bold center | margin-bottom-50">Iniciar Sesion</h1>
 
             <AuthProviders
                 router={router}

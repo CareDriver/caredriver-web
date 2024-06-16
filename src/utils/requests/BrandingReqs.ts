@@ -39,7 +39,9 @@ export const getBrandingReqById = async (
     try {
         const reqDoc = await getDoc(doc(brandingCollection, reqId));
         if (reqDoc.exists()) {
-            return reqDoc.data() as BrandingRequest;
+            var data = reqDoc.data() as BrandingRequest;
+            data.id = reqId;
+            return data;
         }
         return undefined;
     } catch (error) {

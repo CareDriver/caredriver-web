@@ -39,7 +39,9 @@ export const getEditEnterpriseReqById = async (
     try {
         const enterpriseDoc = await getDoc(doc(EditEnterpriseCollection, id));
         if (enterpriseDoc.exists()) {
-            return enterpriseDoc.data() as ReqEditEnterprise;
+            var data = enterpriseDoc.data() as ReqEditEnterprise;
+            data.id = id;
+            return data;
         }
         return undefined;
     } catch (error) {

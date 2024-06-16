@@ -64,7 +64,7 @@ const BrandingReqsRenderer = () => {
                     hasMore={page !== pages}
                     loader={<DataLoaderIndicator />}
                 >
-                    <div className="personal-data-req-wrapper | two-rows">
+                    <div className="personal-data-req-wrapper">
                         {data.map((req, i) => (
                             <BrandingItemReq
                                 brandingReq={req}

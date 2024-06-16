@@ -254,11 +254,8 @@ const ServicesRequestedByUser = ({
             <div className="margin-bottom-50">
                 <fieldset className="filter-date-wrapper">
                     <button className="filter-date-button" onClick={search}>
-                        Filtrar:
+                        Filtrar por petidos hasta el:{" "}
                     </button>
-                    <span className="text | gray-dark medium-big">
-                        Servicios petidos hasta el{" "}
-                    </span>
                     <input
                         type="date"
                         className="filter-date-input"

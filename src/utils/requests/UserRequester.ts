@@ -13,8 +13,6 @@ import {
     orderBy,
     limit,
     startAfter,
-    endBefore,
-    limitToLast,
     getCountFromServer,
     and,
     or,
@@ -54,7 +52,9 @@ const getUserById = async (userId: string): Promise<UserInterface | undefined> =
     try {
         const userDoc = await getDoc(doc(usersCollection, userId));
         if (userDoc.exists()) {
-            return userDoc.data() as UserInterface;
+            let user = userDoc.data() as UserInterface;
+            user.id = userId;
+            return user;
         }
         return undefined;
     } catch (error) {

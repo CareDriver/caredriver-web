@@ -1,7 +1,7 @@
 .form-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1.111111111rem;
 
     width: 95%;
 }
@@ -18,7 +18,7 @@
 .form-sub-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 1.111111111rem;
 }
 
 .form-sub-container.row {
@@ -40,7 +40,7 @@
 
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 0.277777778rem;
 
     width: 100%;
 
@@ -50,29 +50,29 @@
 .form-section-map {
     overflow: hidden;
 
-    border-radius: 15px;
-    border: 1px solid #ddd;
+    border-radius: 0.9375rem;
+    border: 0.0625rem solid #ddd;
 }
 
 .form-section-input {
     width: 100%;
-    font-size: 20px;
+    font-size: 1.111111111rem;
     padding: var(--padding-field);
 
-    border: 1px solid #ddd;
-    border-radius: 15px;
+    border: 0.0625rem solid #ddd;
+    border-radius: 0.9375rem;
     background-color: var(--white);
 }
 
 .form-section > small,
 .form-section-message {
     color: var(--red);
-    font-size: 17px;
+    font-size: 0.944444444rem;
     font-weight: bold;
 }
 
 .form-section-input:is(:focus) {
-    border: 1px solid #000;
+    border: 0.0625rem solid #000;
 }
 
 .form-section-legend {
@@ -81,9 +81,9 @@
     top: var(--padding-field);
     z-index: 1000;
 
-    font-size: 1.125rem;
+    font-size: 1.111111111rem;
     padding: 0 0.25rem;
-    border-radius: 5px;
+    border-radius: 0.3125rem;
 
     color: gray;
     background-color: white;
@@ -94,7 +94,7 @@
 .form-section-input:is(:focus, :not(:placeholder-shown)) ~ legend,
 .form-section-legend.focused {
     top: calc(-1 * (var(--padding-field) - 0.5125rem));
-    font-size: 15px;
+    font-size: 0.833333333rem;
     font-weight: 700;
     color: var(--focus-color);
 }
@@ -105,12 +105,12 @@
 
 .form-section.select-item > svg {
     position: absolute;
-    bottom: calc(var(--padding-field) + 5px);
+    bottom: calc(var(--padding-field) + 0.3125rem);
     right: var(--padding-field);
     fill: black;
 
-    height: 15px;
-    width: 15px;
+    height: 0.833333333rem;
+    width: 0.833333333rem;
 }
 
 .form-section-uploader {
@@ -120,9 +120,9 @@
     gap: 0px !important;
     position: relative;
 
-    padding: 60px 20px;
-    border-radius: 15px;
-    border: 3px solid var(--border-color);
+    padding: 3.333333333rem 1.111111111rem;
+    border-radius: 0.833333333rem;
+    border: 0.166666667rem solid var(--border-color);
 
     border-style: dashed;
     background-color: var(--background-color);
@@ -148,22 +148,22 @@
     justify-content: center;
     position: relative;
 
-    border-radius: 15px;
-    border: 1px solid var(--gray-medium);
+    border-radius: 0.833333333rem;
+    border: 0.055555556rem solid var(--gray-medium);
     background-color: var(--gray-lighter);
 }
 
 .form-section-uploaded-image {
     width: 100%;
-    border-radius: 15px;
+    border-radius: 0.833333333rem;
 
     object-fit: cover;
 }
 
 .form-section-uploaded-button {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 1.111111111rem;
+    right: 1.111111111rem;
 
     background-color: transparent;
     border: none;
@@ -175,16 +175,16 @@
 }
 
 .form-section-uploaded-button > svg {
-    width: 22px;
-    height: 22px;
+    width: 1.222222222rem;
+    height: 1.222222222rem;
     fill: var(--gray-medium);
 }
 
 .deleted-field {
-    padding: 20px;
-    border: 3px solid var(--red);
+    padding: 1.111111111rem;
+    border: 0.166666667rem solid var(--red);
     border-style: dotted;
-    border-radius: 15px;
+    border-radius: 0.833333333rem;
 }
 
 .form-section-camera-uploader {
@@ -195,8 +195,8 @@
     overflow: hidden;
 
     height: 30vh;
-    border-radius: 15px;
-    border: 5px double var(--border-color);
+    border-radius: 0.833333333rem;
+    border: 0.277777778rem double var(--border-color);
 
     background-color: var(--background-color);
 }
@@ -225,7 +225,7 @@
     transform: translateX(-50%);
 
     background-color: var(--white-opacity);
-    padding: 20px;
+    padding: 1.111111111rem;
     border: none;
     border-radius: 50%;
     transition: all ease-out 250ms;
@@ -237,13 +237,13 @@
 
 .form-section-uploaded.circle,
 .form-section-camera-uploader.circle {
-    padding: 20px 0;
+    padding: 1.111111111rem 0;
 }
 
 .form-section-uploaded.circle > .form-section-uploaded-image,
 .form-section-camera-uploader.circle > .form-section-uploaded-image {
-    width: 280px;
-    height: 280px;
+    width: 15.555555556rem;
+    height: 15.555555556rem;
 
     object-fit: cover;
     border-radius: 50%;
@@ -252,7 +252,7 @@
 .form-section-uploaded-file-pdf {
     width: 100%;
     min-height: 40vh;
-    border-radius: 15px;
+    border-radius: 0.833333333rem;
 }
 
 .form-section-uploaded-file-pdf.renderer-pdf {
@@ -260,21 +260,23 @@
 }
 
 .form-provider-auth-img {
-    width: 35px;
-    height: 35px;
+    width: 6vw;
+    height: 6vw;
+    max-width: 2.1875rem;
+    max-height: 2.1875rem;
     object-fit: contain;
 }
 
 .form-provider-auth-button {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
 }
 
 .form-provider-auth-button-content {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 0.625rem;
 
     font-weight: 500;
 }
@@ -289,11 +291,36 @@
 }
 
 .form-provider-option-o {
-    padding: 0 10px;
+    padding: 0 0.625rem;
     font-weight: 700;
 }
 
 .form-provider-option-separator {
-    height: 1px;
-    background-color: var(--second-dark);
+    height: 0.125rem;
+    background-color: var(--gray-dark);
+}
+
+
+@media only screen and (max-width: 1150px) {
+    .form-auth {
+        width: 60%;
+    }
+}
+
+@media only screen and (max-width: 950px) {
+    .form-auth {
+        width: 70%;
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    .form-auth {
+        width: 80%;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .form-auth {
+        width: 95%;
+    }
 }

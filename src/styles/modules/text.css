@@ -1,34 +1,35 @@
 .text {
     font-size: 1rem;
     font-weight: 500;
+    color: var(--second-dark);
 }
 
 .text.bigger {
-    font-size: 70px;
+    font-size: 3.89rem;
 }
 
 .text.big {
-    font-size: 60px;
+    font-size: 3.333333333rem;
 }
 
 .text.big-medium {
-    font-size: 50px;
+    font-size: 2.777777778rem;
 }
 
 .text.big-medium-v2 {
-    font-size: 40px;
+    font-size: 2.222222222rem;
 }
 
 .text.big-medium-v3 {
-    font-size: 30px;
+    font-size: 1.666666667rem;
 }
 
 .text.big-medium-v4 {
-    font-size: 25px;
+    font-size: 1.388888889rem;
 }
 
 .text.medium-big {
-    font-size: 22px;
+    font-size: 1.222222222rem;
 }
 
 .text.medium {
@@ -36,11 +37,11 @@
 }
 
 .text.small {
-    font-size: 16px;
+    font-size: 0.888888889rem;
 }
 
 .text.smaller {
-    font-size: 14px;
+    font-size: 0.777777778rem;
 }
 
 .text.bolder {
@@ -85,6 +86,10 @@
 
 .text.red {
     color: var(--red);
+}
+
+.text.white {
+    color: var(--white);
 }
 
 .yellow {

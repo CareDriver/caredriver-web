@@ -1,13 +1,9 @@
 .personal-data-req-wrapper {
     display: grid;
-    grid-template-columns: repeat(3, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
 
     grid-auto-rows: auto;
-    gap: 20px;
-}
-
-.personal-data-req-wrapper.two-rows {
-    grid-template-columns: repeat(2, minmax(300px, 1fr));
+    gap: 1.111111111rem;
 }
 
 .personal-data-req-item {
@@ -16,12 +12,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 0.277777778rem;
 
-    padding: 40px 20px;
-    max-height: 300px;
-    border: 2px solid var(--gray-medium);
-    border-radius: 15px;
+    padding: 2.222222222rem 1.111111111rem;
+    max-height: 16.666666667;
+    border: 0.111111111rem solid var(--gray-medium);
+    border-radius: 0.833333333rem;
     transition: all ease-in 150ms;
 }
 
@@ -29,13 +25,13 @@
     height: 90% !important;
     width: 100%;
     object-fit: cover;
-    border-radius: 15px;
-    margin-top: 20px;
+    border-radius: 0.833333333rem;
+    margin-top: 1.111111111rem;
 }
 
 .personal-data-req-item.left {
     align-items: flex-start;
-    padding: 30px;
+    padding: 1.666666667rem;
 }
 
 .personal-data-req-item:hover {
@@ -43,16 +39,16 @@
 }
 
 .personal-data-req-item-name {
-    font-size: 25px;
+    font-size: 1.388888889rem;
     font-weight: 700;
 }
 
 .personal-data-req-item-photo {
-    --size: 250px;
+    --size: 11.111111111rem;
 
     width: var(--size);
     height: var(--size);
-    margin-top: 15px;
+    margin-top: 0.833333333rem;
 
     border-radius: 50%;
     object-fit: cover;
@@ -62,6 +58,12 @@
 
 .personal-data-req-item-aprove {
     position: absolute;
-    bottom: 30px;
-    right: 30px;
+    bottom: 1.666666667rem;
+    right: 1.666666667rem;
+}
+
+@media only screen and (max-width: 493px) {
+    .personal-data-req-wrapper {
+        grid-template-columns: 1fr;
+    }
 }

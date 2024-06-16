@@ -4,10 +4,27 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 40px;
+    gap: 2.222222222rem;
     overflow: hidden;
 
     height: 100vh;
 
     background-color: var(--second-dark);
 }
+
+.home-image {
+    width: 27.777777778rem;
+}
+
+@media only screen and (max-width: 435px) {
+    .home-image {
+        width: 25rem;
+    }
+}
+
+@media only screen and (max-width: 375px) {
+    .home-image {
+        width: 22rem;
+    }
+}
+

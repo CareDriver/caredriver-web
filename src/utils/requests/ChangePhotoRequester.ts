@@ -48,7 +48,9 @@ export const getUpPhotoReqById = async (
     try {
         const reqDoc = await getDoc(doc(changePhotoReqCollection, reqId));
         if (reqDoc.exists()) {
-            return reqDoc.data() as ChangePhotoReqInterface;
+            var data = reqDoc.data() as ChangePhotoReqInterface;
+            data.id = reqId;
+            return data;
         }
         return undefined;
     } catch (error) {

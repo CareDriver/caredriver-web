@@ -324,7 +324,9 @@ const VehiclesForm = ({
                             onChange={(e) => updateDateLicense(i, e)}
                             className="form-section-input"
                         />
-                        <legend className="form-section-legend">Fecha de expiración</legend>
+                        <legend className="form-section-legend">
+                            Fecha de expiración
+                        </legend>
                         {vehicle.license.expirationDate.message && (
                             <small>{vehicle.license.expirationDate.message}</small>
                         )}

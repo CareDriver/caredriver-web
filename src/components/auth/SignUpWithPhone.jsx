@@ -9,7 +9,6 @@ import {
     signInWithPhoneNumber,
 } from "firebase/auth";
 import { useState } from "react";
-import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import { toast } from "react-toastify";
 import PhoneForm from "@/components/form/PhoneForm";

@@ -39,7 +39,9 @@ export const getLicenceUpdateReqById = async (
     try {
         const reqDoc = await getDoc(doc(licenseUpdateReqCollection, reqId));
         if (reqDoc.exists()) {
-            return reqDoc.data() as LicenseUpdateReq;
+            var data = reqDoc.data() as LicenseUpdateReq;
+            data.id = reqId;
+            return data;
         }
         return undefined;
     } catch (error) {

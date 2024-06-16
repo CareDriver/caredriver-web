@@ -23,17 +23,22 @@ const UserContacts = ({
     };
 
     const contactByWhatsapp = () => {
-        const message = `${getGreeting()}\n\n soy el administrador ${reviewUserName} de la aplicacion CAReDriver, me comunico con usted para `;
-        sendWhatsapp(user.phoneNumber, message);
+        if (user.phoneNumber.trim().length > 0) {
+            const message = `${getGreeting()}\n\n soy el administrador ${reviewUserName} de la aplicacion CAReDriver, me comunico con usted para `;
+            sendWhatsapp(user.phoneNumber, message);
+        } else {
+            toast.error("El usuario no tiene registrado su numero");
+        }
     };
 
     return (
-        <div className="row-wrapper margin-top-50">
+        <div className="use-circle-rcontacts row-wrapper margin-top-25">
             <button
                 type="button"
                 onClick={contactByWhatsapp}
                 className="icon-wrapper text circle-button | green white-icon lb touchable"
             >
+                <div className="triangle green"></div>
                 <Whatsapp />
             </button>
             <button
@@ -41,6 +46,7 @@ const UserContacts = ({
                 onClick={contactByEmail}
                 className="icon-wrapper text circle-button | red white-icon bolder lb touchable"
             >
+                <div className="triangle red"></div>
                 <Envelope />
             </button>
         </div>

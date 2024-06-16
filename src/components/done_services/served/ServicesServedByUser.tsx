@@ -126,9 +126,6 @@ const ServicesServedByUser = ({
                 } else {
                     newData = result.result;
                 }
-
-                console.log(newData);
-
                 setDataState({
                     ...dataState,
                     data: newData,
@@ -259,11 +256,8 @@ const ServicesServedByUser = ({
             <div className="margin-bottom-50">
                 <fieldset className="filter-date-wrapper">
                     <button className="filter-date-button" onClick={search}>
-                        Filtrar:
+                        Filtrar por servicios creados hasta el:{" "}
                     </button>
-                    <span className="text | gray-dark medium-big">
-                        Servicios creados hasta el{" "}
-                    </span>
                     <input
                         type="date"
                         className="filter-date-input"

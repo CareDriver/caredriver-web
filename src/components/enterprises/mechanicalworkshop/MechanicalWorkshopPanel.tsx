@@ -6,13 +6,18 @@ import "@/styles/components/enterprise.css";
 const MechanicalworkshopPanel = () => {
     return (
         <section className="enterprise-main-wrapper">
-            <h1 className="text | big bolder">Talleres mecanicos que registraste</h1>
+            <div>
+                <h1 className="text | big bolder">Talleres mecanicos</h1>
+                <p className="text | light">
+                    Estas son los talleres mecanicos que registraste.
+                </p>
+            </div>
             <Link
-                className="general-button icon-wrapper | max-20 less-padding no-full center white-icon touchable"
+                className="small-general-button icon-wrapper | max-20 less-padding no-full center white-icon touchable"
                 href={"/enterprise/workshops/register"}
             >
                 <Plus />
-                <span className="text | bold">Nuevo Taller</span>
+                <span className="text | white bold">Nuevo Taller</span>
             </Link>
             <EnterpriseListForUsers type="mechanical" />
         </section>

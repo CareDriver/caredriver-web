@@ -1,5 +1,6 @@
 "use client";
 
+import PopupForm from "@/components/form/PopupForm";
 import ChevronDown from "@/icons/ChevronDown";
 import UserLock from "@/icons/UserLock";
 import {
@@ -9,20 +10,35 @@ import {
     userRoles,
 } from "@/interfaces/UserInterface";
 import { updateUser } from "@/utils/requests/UserRequester";
-import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import ActionUserSetterForm, { ActionUserForm } from "./ActionUserSetterForm";
+import { saveActionOnUser } from "@/utils/requests/ActionOnUserRegister";
+import { nanoid } from "nanoid";
+import { Timestamp } from "firebase/firestore";
+import { ActionOnUserPerformed } from "@/interfaces/ActionOnUserInterface";
 
 const UserRoleSeter = ({
     user,
+    adminUser,
     loading,
     setLoading,
 }: {
     user: UserInterface;
+    adminUser: UserInterface;
     loading: boolean;
     setLoading: (loading: boolean) => void;
 }) => {
+    const [isOpenPopup, setOpenPopup] = useState(false);
     const [formState, setFormState] = useState({
         isValid: false,
+    });
+
+    const [balanceHistory, setBalanceHistory] = useState<ActionUserForm>({
+        reason: {
+            value: "",
+            message: null,
+        },
     });
 
     const [roleState, setRoleState] = useState<{
@@ -51,15 +67,26 @@ const UserRoleSeter = ({
         if (!loading) {
             setLoading(true);
 
-            var button = e.target as HTMLButtonElement;
-            const text = button.innerHTML;
-            button.innerHTML = "";
-            button.classList.add("loading-section");
-            var loader = document.createElement("span");
-            loader.classList.add("loader");
-            button.appendChild(loader);
+            if (user.id && adminUser.id) {
+                const actionOnUserDoc = nanoid(25);
 
-            if (user.id) {
+                await toast.promise(
+                    saveActionOnUser(actionOnUserDoc, {
+                        id: actionOnUserDoc,
+                        action: ActionOnUserPerformed[roleState.value],
+                        datetime: Timestamp.now(),
+                        performedById: adminUser.id,
+                        userId: user.id,
+                        traceId: nanoid(),
+                        reason: balanceHistory.reason.value,
+                    }),
+                    {
+                        pending: "Registrando accion",
+                        success: "Accion en el usuario registrada",
+                        error: "Error al registrar accion en el usuario",
+                    },
+                );
+
                 await toast.promise(updateUser(user.id, { role: roleState.value }), {
                     pending: "Cambiando el rol del usuario",
                     success: "Rol del usuario cambiado",
@@ -71,10 +98,6 @@ const UserRoleSeter = ({
                 toast.error("No se puede encontrar al usuario");
                 setLoading(false);
             }
-
-            button.removeChild(loader);
-            button.innerHTML = text;
-            button.classList.remove("loading-section");
         }
     };
 
@@ -134,11 +157,28 @@ const UserRoleSeter = ({
                     }
                     disabled={!formState.isValid}
                     type="button"
-                    onClick={handleSubmit}
+                    onClick={() => setOpenPopup(true)}
                 >
-                    <span className="text | bold">Cambiar rol</span>
+                    <span className="text | bold white">Cambiar rol</span>
                 </button>
             </div>
+            <PopupForm
+                isOpen={isOpenPopup}
+                close={() => setOpenPopup(false)}
+                loading={loading}
+                onSummit={handleSubmit}
+                isSecondButtonAble={
+                    !balanceHistory.reason.message &&
+                    balanceHistory.reason.value.trim().length > 0
+                }
+                doSomethingText={"Cambiar rol"}
+            >
+                <ActionUserSetterForm
+                    loading={loading}
+                    actionUser={balanceHistory}
+                    setActionUser={setBalanceHistory}
+                />
+            </PopupForm>
         </section>
     );
 };

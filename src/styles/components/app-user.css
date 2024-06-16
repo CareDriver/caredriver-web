@@ -1,6 +1,6 @@
 .user-info-wrapper {
     display: flex;
-    gap: 40px;
+    gap: 2.222222222rem;
 }
 
 .user-info-subwrapper {
@@ -10,7 +10,7 @@
 }
 
 .user-info-photo {
-    --size: 220px;
+    --size: 12.222222222rem;
     width: var(--size);
     height: var(--size);
 
@@ -22,7 +22,7 @@
 }
 
 .user-info-photo-size-v2 {
-    --size: 200px;
+    --size: 11.111111111rem;
     width: var(--size);
     height: var(--size);
 
@@ -30,22 +30,22 @@
 
     object-fit: cover;
     background-color: #fcfffe;
-    box-shadow: 0 0 40px var(--gray-light);
+    box-shadow: 0 0 2.222222222rem var(--gray-light);
 }
 
 .service-user-wrapper {
     display: flex;
     flex-direction: column;
 
-    padding: 35px;
-    border-radius: 15px;
-    border: 2px solid var(--gray-medium);
+    padding: 1.944444444rem;
+    border-radius: 0.833333333rem;
+    border: 0.111111111rem solid var(--gray-medium);
     transition: all ease 200ms;
 }
 
 .service-user-wrapper.with-data:hover {
     border-color: var(--main-light);
-    border-radius: 20px;
+    border-radius: 1.111111111rem;
 }
 
 .service-user-option {
@@ -57,4 +57,32 @@
 
 .service-user-option:hover {
     text-decoration: underline;
+}
+
+@media only screen and (max-width: 500px) {
+    .user-info-wrapper {
+        flex-direction: column;
+        align-content: center;
+        justify-content: center;
+    }
+
+    .user-info-wrapper > * {
+        text-align: center;
+    }
+
+    .user-info-subwrapper {
+        align-items: center;
+    }
+
+    .user-info-photo, .user-info-photo-size-v2 {
+        margin: auto;
+    }
+
+    .user-title-responsive {
+        justify-content: center;
+    }
+
+    .use-circle-rcontacts {
+        justify-content: center;
+    }
 }

@@ -1,4 +1,3 @@
-import { BalanceHistoryItem } from "@/interfaces/Payment";
 import {
     isValidBankNumber,
     isValidChangeReason,

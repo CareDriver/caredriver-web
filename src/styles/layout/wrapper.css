@@ -1,7 +1,5 @@
 .wrapper {
     display: flex;
-    gap: 40px;
-
     width: 100%;
 }
 
@@ -10,15 +8,25 @@
     flex-direction: column;
 
     width: 100%;
-    padding: 50px 20px;
+    padding: 2.777777778rem 1.111111111rem;
 }
 
 .user-page-wrapper {
+    position: relative;
     display: flex;
     flex-direction: column;
 
     width: 100%;
-    padding: 80px 50px;
+    height: 100vh;
+    overflow: hidden;
+    padding: 4.444444444rem 2.777777778rem;
+}
+
+@media only screen and (max-width: 1150px) {
+    .user-page-wrapper {
+        height: auto;
+        overflow: initial;
+    }
 }
 
 .render-data-wrapper {
@@ -26,13 +34,22 @@
     flex-direction: column;
 
     width: 100%;
-    padding: 80px 90px 80px 50px;
+    padding: 4rem 2rem;
 }
 
 .row-wrapper {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 0.555555556rem;
+}
+
+.row-wrapper.row-responsive {
+    flex-wrap: wrap;
+    row-gap: 1rem;
+}
+
+.row-wrapper.baseline {
+    align-items: baseline;
 }
 
 .row-wrapper.top-align {
@@ -49,17 +66,17 @@
 }
 
 .row-wrapper.gap-20 {
-    gap: 20px;
+    gap: 1.111111111rem;
 }
 
 .row-wrapper.gap-40 {
-    gap: 40px;
+    gap: 2.222222222rem;
 }
 
 .column-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 0.555555556rem;
 }
 
 .empty-wrapper {
@@ -109,4 +126,103 @@
     overflow: hidden;
 
     height: 100vh;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.fit-width {
+    width: fit-content;
+}
+
+@media only screen and (max-width: 1150px) {
+    .wrapper {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+@media only screen and (max-width: 1150px) {
+    .max-width-40 {
+        max-width: 50%;
+    }
+
+    .max-width-50 {
+        max-width: 60%;
+    }
+
+    .max-width-60 {
+        max-width: 70%;
+    }
+
+    .max-width-80 {
+        max-width: 90%;
+    }
+
+    .max-width-90 {
+        max-width: 100%;
+    }
+
+    .service-form-wrapper {
+        padding: 4.444444444rem;
+    }
+}
+
+@media only screen and (max-width: 950px) {
+    .max-width-40 {
+        max-width: 60%;
+    }
+
+    .max-width-50 {
+        max-width: 70%;
+    }
+
+    .max-width-60 {
+        max-width: 80%;
+    }
+
+    .max-width-80 {
+        max-width: 100%;
+    }
+
+    .service-form-wrapper {
+        padding: 3.5rem;
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    .max-width-40 {
+        max-width: 70%;
+    }
+
+    .max-width-50 {
+        max-width: 80%;
+    }
+
+    .max-width-60 {
+        max-width: 90%;
+    }
+
+    .service-form-wrapper {
+        padding: 2.5rem;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .max-width-40 {
+        max-width: 80%;
+    }
+
+    .max-width-50 {
+        max-width: 90%;
+    }
+
+    .max-width-60 {
+        max-width: 100%;
+    }
+
+    .service-form-wrapper {
+        padding: 1.5rem;
+    }
 }
