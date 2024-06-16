@@ -42,9 +42,11 @@ const FullLocationServiceItem = ({
                         {getFormatDate(service.createdAt.toDate())}
                     </h3>
                 )}
-                <h3 className="text | bolder margin-bottom-25">
-                    {service.price?.price} {service.price?.currency}
-                </h3>
+                {service.price && service.price.price && (
+                    <h3 className="text | bolder margin-bottom-25">
+                        {service.price.price} {service.price.currency}
+                    </h3>
+                )}
 
                 <div className="margin-bottom-15">
                     <h4 className="text | bold gray-dark">Desde</h4>

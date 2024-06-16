@@ -93,8 +93,6 @@ const UserDataUpdater = ({ user }: { user: UserInterface }) => {
             const credentialsChanged: boolean =
                 (user.email && user.email !== email.value) ||
                 password.value.trim().length > 0;
-            console.log(password.value);
-            console.log(password.value.trim().length > 0);
             const fullNameChanged: boolean = user.fullName !== fullName.value;
             if (credentialsChanged) {
                 await toast.promise(editCredentials(), {
