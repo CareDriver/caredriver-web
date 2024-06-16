@@ -14,11 +14,21 @@
 }
 
 .user-page-wrapper {
+    position: relative;
     display: flex;
     flex-direction: column;
 
     width: 100%;
-    padding: 80px 50px;
+    height: 100vh;
+    overflow: hidden;
+    padding: 4.444444444rem 2.777777778rem;
+}
+
+@media only screen and (max-width: 1150px) {
+    .user-page-wrapper {
+        height: auto;
+        overflow: initial;
+    }
 }
 
 .render-data-wrapper {
@@ -31,6 +41,7 @@
 
 .row-wrapper {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.555555556rem;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { AuthContext } from "@/context/AuthContext";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import PageLoader from "../../PageLoader";
 import "@/styles/components/profile.css";
 import Link from "next/link";
@@ -14,8 +14,6 @@ import { DEFAULT_PHOTO } from "@/utils/user/UserData";
 import { PHONE_BUSINESS } from "@/database/Business";
 import Bullhorn from "@/icons/Bullhorn";
 import { differenceOnDays } from "@/utils/parser/ForDate";
-import { updateUser } from "@/utils/requests/UserRequester";
-import { UserInterface } from "@/interfaces/UserInterface";
 
 const UserProfile = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -33,7 +31,7 @@ const UserProfile = () => {
     return loadingUser ? (
         <PageLoader />
     ) : user.data ? (
-        <section className="user-page-wrapper | max-height-100">
+        <section className="user-page-wrapper">
             <section className="profile-wrapper">
                 <img
                     src={
@@ -61,7 +59,7 @@ const UserProfile = () => {
             </section>
 
             <div className="row-wrapper | top-align gap-20 | margin-top-50 margin-bottom-25 max-width-80">
-                <section className="profile-info-wrapper | row-wrapper-item">
+                <section className="profile-info-wrapper | fit-width row-wrapper-item">
                     <h2 className="profile-subtitle icon-wrapper">
                         <LocationDot />
                         Mi ubicacion
@@ -79,7 +77,7 @@ const UserProfile = () => {
                 </section>
                 {user.data.branding &&
                     (differenceOnDays(user.data.branding.dateLimit.toDate()) > 0 ? (
-                        <section className="profile-info-wrapper | row-wrapper-item">
+                        <section className="profile-info-wrapper | fit-width row-wrapper-item">
                             <h2 className="profile-subtitle icon-wrapper">
                                 <Bullhorn />
                                 Branding
