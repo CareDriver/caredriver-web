@@ -3,24 +3,19 @@
     flex-direction: column;
     gap: 1.388888889rem;
 
-    padding: 2.777777778rem 1.111111111rem;
+    padding: 3rem;
+    width: 100%;
 }
 
 .enterprise-list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 17.222222222rem);
+    grid-template-columns: repeat(auto-fill, minmax(17.222222222rem, 1fr));
     gap: 1.111111111rem;
 
     width: 100%;
 }
 
-@media only screen and (max-width: 550px) {
-    .enterprise-list {
-        grid-template-columns: repeat(auto-fill, 15rem);
-    }
-}
-
-@media only screen and (max-width: 410px) {
+@media only screen and (max-width: 490px) {
     .enterprise-list {
         grid-template-columns: 1fr;
     }

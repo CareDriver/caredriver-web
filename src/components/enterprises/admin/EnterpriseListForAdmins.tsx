@@ -64,11 +64,11 @@ const EnterpriseListForAdmins = ({
         <section className="enterprise-main-wrapper">
             <h1 className="text | big bolder capitalize">{getTitleForRender(type)}</h1>
             <Link
-                className="general-button icon-wrapper | max-20 less-padding no-full center white-icon touchable"
+                className="small-general-button icon-wrapper | max-20 less-padding no-full center white-icon touchable"
                 href={`/admin/enterprises/${getRoute(type)}/register`}
             >
                 <Plus />
-                <span className="text | bold">{getNewButtonTitle(type)}</span>
+                <span className="text | white bold">{getNewButtonTitle(type)}</span>
             </Link>
             {data.length > 0 ? (
                 <InfiniteScroll

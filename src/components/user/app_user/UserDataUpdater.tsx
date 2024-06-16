@@ -1,5 +1,5 @@
 "use client";
-import ReqButtonRes from "@/components/requests/data_renderer/form/ReqButtonRes";
+import CancelAndDoSomething from "@/components/form/CancelAndDoSomething";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { updateUser } from "@/utils/requests/UserRequester";
 import {
@@ -81,6 +81,10 @@ const UserDataUpdater = ({ user }: { user: UserInterface }) => {
     };
 
     const editData = async () => {
+        if (fullName.value === user.fullName && email.value === user.email) {
+            return;
+        }
+
         setEditState({
             ...editState,
             loading: true,
@@ -145,7 +149,7 @@ const UserDataUpdater = ({ user }: { user: UserInterface }) => {
     }, [email, password, fullName]);
 
     return (
-        <div className="form-container | margin-top-50 max-width-60">
+        <div className="form-container | full-form margin-top-50 max-width-60">
             <div className="margin-bottom-15">
                 <h2 className="text | bold medium-big">Actualizacion de datos</h2>
                 <p className="text | light small">
@@ -213,13 +217,12 @@ const UserDataUpdater = ({ user }: { user: UserInterface }) => {
                 {password.message && <small>{password.message}</small>}
             </fieldset>
 
-            <ReqButtonRes
-                onApprove={editData}
-                onDecline={cancelEdit}
+            <CancelAndDoSomething
+                doSomethingText="Actualizar"
+                isSecondButtonAble={editState.valid}
                 loading={editState.loading}
-                stateB1={true}
-                stateB2={editState.valid}
-                alreadyReviewed={false}
+                onCancel={cancelEdit}
+                onDoSomething={editData}
             />
         </div>
     );

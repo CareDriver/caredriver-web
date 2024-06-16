@@ -1,6 +1,6 @@
 .enterprise-req-wrapper {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 18rem);
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
     grid-auto-rows: auto;
     gap: 1.111111111rem;
 }
