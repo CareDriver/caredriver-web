@@ -1,17 +1,23 @@
 .service-req-wrapper {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 1.111111111rem;
 }
 
 .service-req-item {
     display: block;
-    padding: 30px;
-    border: 2px solid var(--gray-medium);
-    border-radius: 15px;
+    padding: 1.666666667rem;
+    border: 0.111111111rem solid var(--gray-medium);
+    border-radius: 0.833333333rem;
     transition: all ease-in 150ms;
 }
 
 .service-req-item:hover {
     border-color: var(--main-light);
+}
+
+@media only screen and (max-width: 550px) {
+    .service-req-wrapper {
+        grid-template-columns: 1fr;
+    }
 }

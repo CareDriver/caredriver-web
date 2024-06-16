@@ -1,8 +1,8 @@
 .enterprise-req-wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, 18rem);
     grid-auto-rows: auto;
-    gap: 20px;
+    gap: 1.111111111rem;
 }
 
 .enterprise-req-item {
@@ -11,11 +11,11 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 0.277777778rem;
 
-    padding: 40px 20px;
-    border: 2px solid var(--gray-medium);
-    border-radius: 15px;
+    padding: 2.222222222rem 1.111111111rem;
+    border: 0.111111111rem solid var(--gray-medium);
+    border-radius: 0.833333333rem;
     transition: all ease-in 150ms;
 }
 
@@ -24,16 +24,16 @@
 }
 
 .enterprise-req-item-title {
-    font-size: 25px;
+    font-size: 1.388888889rem;
     font-weight: 700;
 }
 
 .enterprise-req-item-logo {
-    --size: 270px;
+    --size: 12.5rem;
 
     width: var(--size);
     height: var(--size);
-    margin-top: 15px;
+    margin-top: 0.833333333rem;
 
     border-radius: 50%;
     object-fit: cover;
@@ -43,6 +43,12 @@
 
 .enterprise-req-item-aprove {
     position: absolute;
-    bottom: 30px;
-    right: 30px;
+    bottom: 1.666666667rem;
+    right: 1.666666667rem;
+}
+
+@media only screen and (max-width: 493px) {
+    .enterprise-req-wrapper {
+        grid-template-columns: 1fr;
+    }
 }

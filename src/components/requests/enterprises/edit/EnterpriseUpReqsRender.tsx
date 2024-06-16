@@ -5,7 +5,6 @@ import { DocumentSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import "@/styles/components/pagination.css";
 import {
-    EnterpriseTypeRender,
     EnterpriseTypeRenderPronounV3,
     ReqEditEnterprise,
 } from "@/interfaces/Enterprise";
