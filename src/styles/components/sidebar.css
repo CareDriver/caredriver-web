@@ -117,10 +117,7 @@
     display: none;
     align-items: center;
     justify-content: space-between;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+
     align-items: center;
 
     width: 100%;

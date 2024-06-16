@@ -74,12 +74,12 @@ const EnterpriseListForUsers = ({ type }: { type: "mechanical" | "tow" | "laundr
                 </div>
             </InfiniteScroll>
         ) : (
-            <div className="empty-wrapper | auto-height">
-                <h2>No tienes {getEmptyEnterprise(type)}</h2>
+            <div className="auto-height">
+                <h2 className="text | medium-big">No tienes {getEmptyEnterprise(type)}</h2>
             </div>
         )
     ) : (
-        <div className="empty-wrapper | auto-height">
+        <div className="auto-height">
             <span className="loader-green | big-loader"></span>
         </div>
     );

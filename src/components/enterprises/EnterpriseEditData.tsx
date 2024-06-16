@@ -416,7 +416,7 @@ const EnterpriseEditData = ({
                     <button
                         type="button"
                         onClick={deleteEnterprise}
-                        className={`general-button | red no-full touchable ${
+                        className={`small-general-button | red touchable ${
                             formState.loadingRev && "loading-section"
                         }`}
                         disabled={!validToDelete}
@@ -424,7 +424,9 @@ const EnterpriseEditData = ({
                         {formState.loadingRev ? (
                             <span className="loader"></span>
                         ) : (
-                            `Eliminar ${EnterpriseTypeRender[type]}`
+                            <span className="text | white bold">
+                                Eliminar {EnterpriseTypeRender[type]}
+                            </span>
                         )}
                     </button>
                 </div>
