@@ -1,65 +1,73 @@
 .circles {
+    font-size: 16px;
+
     position: absolute;
     top: -50%;
     left: -50%;
 
-    width: 900px;
-    height: 900px;
+    width: 50vw;
+    height: 50vw;
 
     border-radius: 50%;
     opacity: 0.3;
-    box-shadow: 800px 300px 0 rgba(69, 96, 121, 0.1), 850px -50px 0 rgba(69, 96, 121, 0.1),
-        500px 300px 0 rgba(69, 96, 121, 0.1);
+    box-shadow: 50em 18.75em 0 rgba(69, 96, 121, 0.1),
+        53.125em -3.125em 0 rgba(69, 96, 121, 0.1),
+        31.25em 18.75em 0 rgba(69, 96, 121, 0.1);
 }
 
 .circles-right-bottom {
+    font-size: 16px;
     position: absolute;
     bottom: -50%;
     right: -50%;
 
-    width: 900px;
-    height: 900px;
+    width: 50vw;
+    height: 50vw;
 
     border-radius: 50%;
     opacity: 0.3;
-    box-shadow: -800px -300px 0 rgba(69, 96, 121, 0.1),
-        -850px -50px 0 rgba(69, 96, 121, 0.1), -500px -300px 0 rgba(69, 96, 121, 0.1);
+    box-shadow: -50em -18.75em 0 rgba(69, 96, 121, 0.1),
+        -53.125em -3.125em 0 rgba(69, 96, 121, 0.1),
+        -31.25em -18.75em 0 rgba(69, 96, 121, 0.1);
 }
 
 .circles-right-bottom.green {
-    box-shadow: -800px -300px 0 var(--main-light-opacity),
-        -850px -50px 0 var(--main-light-opacity),
-        -500px -300px 0 var(--main-light-opacity);
+    box-shadow: -50em -18.75em 0 var(--main-light-opacity),
+        -53.125em -3.125em 0 var(--main-light-opacity),
+        -31.25em -18.75em 0 var(--main-light-opacity);
 }
 
 .separator-horizontal {
     display: block;
 
     width: 100%;
-    height: 1px;
+    height: 0.0625rem;
     background-color: var(--gray-medium);
 
-    margin: 15px 0;
+    margin: 0.833333333rem 0;
 }
 
 .circles-right-bottomv2 {
+    font-size: 16px;
+
     position: absolute;
     bottom: -60%;
     right: -60%;
 
-    width: 900px;
-    height: 900px;
+    width: 50vw;
+    height: 50vw;
 
     border-radius: 50%;
     opacity: 0.3;
-    box-shadow: -800px -300px 0 rgba(69, 96, 121, 0.1),
-        -850px -50px 0 rgba(69, 96, 121, 0.1), -500px -300px 0 rgba(69, 96, 121, 0.1);
+    box-shadow: -50em -18.75em 0 rgba(69, 96, 121, 0.1),
+        -53.125em -3.125em 0 rgba(69, 96, 121, 0.1),
+        -31.25em -18.75em 0 rgba(69, 96, 121, 0.1);
 }
 
 .circles-right-bottomv2.green {
-    box-shadow: -800px -300px 0 var(--main-light-opacity),
-        -850px -50px 0 var(--main-light-opacity),
-        -500px -300px 0 var(--main-light-opacity);
+    box-shadow: -50em -18.75em 0 var(--main-light-opacity),
+        -53.125em -3.125em 0 var(--main-light-opacity),
+        -31.25em -18.75em 0 var(--main-light-opacity);
 }
 
 .top-middle-cicle {
