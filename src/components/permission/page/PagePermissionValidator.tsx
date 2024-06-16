@@ -19,7 +19,7 @@ const PagePermissionValidator = ({
     const router = useRouter();
 
     const redirectToHome = () => {
-        router.push("/redirector");
+        window.location.replace("/redirector");
         toast.warning("Permiso denegado", {
             toastId: "check-permition-validator-page",
         });

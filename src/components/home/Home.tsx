@@ -20,7 +20,7 @@ const Home = () => {
     return (
         <main className="home-container">
             <span className="circles"></span>
-            <img src="/images/logowithname.png" alt="" />
+            <img src="/images/logowithname.png" alt="" className="home-image"/>
             <Link href={"/auth/signin"} className="action-button touchable">
                 Comenzar
             </Link>

@@ -58,7 +58,7 @@ const UserProfile = () => {
                 </Link>
             </section>
 
-            <div className="row-wrapper | top-align gap-20 | margin-top-50 margin-bottom-25 max-width-80">
+            <div className="row-wrapper | row-responsive top-align gap-20 | margin-top-50 margin-bottom-25 max-width-80">
                 <section className="profile-info-wrapper | fit-width row-wrapper-item">
                     <h2 className="profile-subtitle icon-wrapper">
                         <LocationDot />
