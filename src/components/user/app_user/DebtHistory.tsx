@@ -6,7 +6,7 @@ const DebtHistory = ({ user }: { user: UserInterface }) => {
         user.balanceHistory && (
             <div className="margin-top-50">
                 <h2 className="text | bold gray-darker">Historial de las actualizaciones del saldo del usuario</h2>
-                <div className="debt-wrapper">
+                <div className="debt-wrapper max-width-80">
                     {user.balanceHistory.map((debt, i) => (
                         <div key={`debt-item-history-${i}`} className="debt-item">
                             <span className="text | bold medium">

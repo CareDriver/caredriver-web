@@ -1,13 +1,11 @@
 import CompPermissionValidator from "@/components/permission/component/CompPermissionValidator";
-import { UserInterface, UserRole } from "@/interfaces/UserInterface";
+import { UserInterface } from "@/interfaces/UserInterface";
 import ServiceReqsByUser from "../ServiceReqsByUser";
 import ServiceServedByUser from "../ServiceServedByUser";
 import BalanceUser from "../options/BalanceUser";
 import MinBalanceUser from "../options/MinBalanceUser";
 import DebtHistory from "../DebtHistory";
 import {
-    checkPermission,
-    ROLES_FOR_SERVER_USER_ACTIONS,
     ROLES_TO_SET_MIN_USER_BALANCE,
     ROLES_TO_SET_USER_BALANCE,
     ROLES_TO_VIEW_USERS_HISTORY,

@@ -23,12 +23,16 @@ const UserContacts = ({
     };
 
     const contactByWhatsapp = () => {
-        const message = `${getGreeting()}\n\n soy el administrador ${reviewUserName} de la aplicacion CAReDriver, me comunico con usted para `;
-        sendWhatsapp(user.phoneNumber, message);
+        if (user.phoneNumber.trim().length > 0) {
+            const message = `${getGreeting()}\n\n soy el administrador ${reviewUserName} de la aplicacion CAReDriver, me comunico con usted para `;
+            sendWhatsapp(user.phoneNumber, message);
+        } else {
+            toast.error("El usuario no tiene registrado su numero");
+        }
     };
 
     return (
-        <div className="row-wrapper margin-top-50">
+        <div className="use-circle-rcontacts row-wrapper margin-top-25">
             <button
                 type="button"
                 onClick={contactByWhatsapp}

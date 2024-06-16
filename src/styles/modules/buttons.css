@@ -79,6 +79,7 @@
 .double-button-wrapper {
     overflow: hidden;
     display: flex;
+    flex-wrap: wrap;
 
     border-radius: 1.5625rem;
     border: 0.0625rem solid var(--second-dark);

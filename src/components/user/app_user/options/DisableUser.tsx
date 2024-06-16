@@ -150,7 +150,7 @@ const DisableUser = ({
             <fieldset className="form-section | max-width-60">
                 <input
                     type="text"
-                    placeholder="Nombre del usuario"
+                    placeholder=""
                     className="form-section-input"
                     name="fullname"
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -162,6 +162,7 @@ const DisableUser = ({
                     }
                     autoComplete="off"
                 />
+                <legend className="form-section-legend">Nombre del usuario</legend>
             </fieldset>
             <button
                 type="button"

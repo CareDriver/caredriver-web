@@ -17,12 +17,25 @@
 }
 
 .popup-wrapper {
-    padding: 50px;
+    max-width: 95%;
+    padding: 2.777777778rem;
     max-height: 90vh;
     overflow-y: auto;
 
-    border-radius: 15px;
+    border-radius: 0.833333333rem;
     background-color: var(--white);
+}
+
+@media only screen and (max-width: 700px) {
+    .popup-wrapper {
+        padding: 2rem;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .popup-wrapper {
+        padding: 1.5rem;
+    }
 }
 
 .popup-close-button {

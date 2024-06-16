@@ -132,6 +132,10 @@
     width: 100%;
 }
 
+.fit-width {
+    width: fit-content;
+}
+
 @media only screen and (max-width: 1150px) {
     .wrapper {
         flex-direction: column;
