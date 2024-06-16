@@ -1,4 +1,3 @@
-import CircleCheck from "@/icons/CircleCheck";
 import TriangleExclamation from "@/icons/TriangleExclamation";
 import { UserInterface } from "@/interfaces/UserInterface";
 import Link from "next/link";
@@ -20,8 +19,7 @@ const UserStatusIndicatorV2 = ({ user }: { user: UserInterface }) => {
                 >
                     <TriangleExclamation />
                     El usuario esta desabilitado, deberias considerar rechazar la
-                    solicitud o{" "}
-                    <b>hacer click aqui para mas informacion sobre el usuario</b>
+                    solicitud o hacer click aqui para mas informacion sobre el usuario
                 </Link>
             );
         }

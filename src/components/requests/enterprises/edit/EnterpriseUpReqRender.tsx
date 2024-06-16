@@ -18,8 +18,7 @@ import {
 import { AuthContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { deleteDocument, deleteFile } from "@/utils/requests/FileUploader";
-import { Collections } from "@/firebase/CollecionNames";
+import { deleteFile } from "@/utils/requests/FileUploader";
 import EnterpriseState from "../../data_renderer/enterprise/EnterpriseState";
 import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 import { updateUpdateEnterprise } from "@/utils/requests/enterprise/EditEnterpriseReq";
@@ -181,10 +180,8 @@ const EnterpriseUpReqRender = ({
                 onDecline={decline}
                 loading={reviewState.loading}
                 stateB1={true}
-                stateB2={true}
-                alreadyReviewed={
-                    reviewState.reviewed || !realEnteprise.active || realEnteprise.deleted
-                }
+                stateB2={!realEnteprise.deleted}
+                alreadyReviewed={reviewState.reviewed}
             />
         </section>
     );

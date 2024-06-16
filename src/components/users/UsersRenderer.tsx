@@ -264,7 +264,7 @@ const UsersRenderer = () => {
             <h1 className="text | big-medium bolder margin-bottom-25 capitalize">
                 Usuarios
             </h1>
-            <div className="row-wrapper | space-between | margin-bottom-50">
+            <div className="row-wrapper | row-responsive space-between | margin-bottom-50">
                 <form className="search-wrapper" onSubmit={(e) => search(e)}>
                     <input
                         type="text"
