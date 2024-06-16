@@ -38,6 +38,7 @@ const UserContacts = ({
                 onClick={contactByWhatsapp}
                 className="icon-wrapper text circle-button | green white-icon lb touchable"
             >
+                <div className="triangle green"></div>
                 <Whatsapp />
             </button>
             <button
@@ -45,6 +46,7 @@ const UserContacts = ({
                 onClick={contactByEmail}
                 className="icon-wrapper text circle-button | red white-icon bolder lb touchable"
             >
+                <div className="triangle red"></div>
                 <Envelope />
             </button>
         </div>

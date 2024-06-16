@@ -88,3 +88,21 @@
 
     height: 130%;
 }
+
+.triangle {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 40%;
+    width: 40%;
+    z-index: -1;
+}
+
+.triangle.green {
+    background-color: var(--main-light);
+}
+
+.triangle.red {
+    background-color: var(--red);
+}
