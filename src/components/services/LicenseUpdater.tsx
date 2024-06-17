@@ -311,7 +311,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                 <fieldset className="form-section | max-width-60">
                     <input
                         type="text"
-                        placeholder="Numero"
+                        placeholder="número"
                         name="number"
                         value={license.number.value}
                         onChange={(e) => updateNumberLicense(e)}

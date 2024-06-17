@@ -43,7 +43,7 @@ const UserVehicleDetails = ({
                             placeholder="Localizacion"
                         />
                         <legend className="form-section-legend">
-                            Numero de licencia
+                            número de licencia
                         </legend>
                     </fieldset>
                     <fieldset className="form-section">

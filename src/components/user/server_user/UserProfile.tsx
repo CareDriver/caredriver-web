@@ -62,7 +62,7 @@ const UserProfile = () => {
                 <section className="profile-info-wrapper | fit-width row-wrapper-item">
                     <h2 className="profile-subtitle icon-wrapper">
                         <LocationDot />
-                        Mi ubicacion
+                        Mi Ubicación
                     </h2>
                     <span className="location-field">{user.data.location}</span>
                     <div className="margin-top-5">
@@ -71,7 +71,7 @@ const UserProfile = () => {
                             href="/user/update/location"
                         >
                             <PenToSquare />
-                            Cambiar mi ubicacion
+                            Cambiar mi ubicación
                         </Link>
                     </div>
                 </section>

@@ -25,7 +25,7 @@ const LicenseRenderer = ({
             <fieldset className="form-section">
                 <InputData
                     content={license.licenseNumber}
-                    placeholder="Numero de la licencia"
+                    placeholder="número de la licencia"
                 />
                 <legend className="form-section-legend">Número</legend>
             </fieldset>

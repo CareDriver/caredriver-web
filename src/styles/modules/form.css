@@ -58,10 +58,20 @@
     width: 100%;
     font-size: 1.111111111rem;
     padding: var(--padding-field);
+    padding-right: calc(3 * var(--padding-field));
 
     border: 0.0625rem solid #ddd;
     border-radius: 0.9375rem;
     background-color: var(--white);
+}
+
+.form-hide-password-button {
+    position: absolute;
+    top: var(--padding-field);
+    right: var(--padding-field);
+
+    background-color: transparent;
+    border: none;
 }
 
 .form-section > small,
@@ -69,6 +79,10 @@
     color: var(--red);
     font-size: 0.944444444rem;
     font-weight: bold;
+}
+
+input[type="password"] {
+    letter-spacing: 4px;
 }
 
 .form-section-input:is(:focus) {

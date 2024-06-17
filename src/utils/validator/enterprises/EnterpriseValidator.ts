@@ -13,7 +13,7 @@ export const isValidWorkshopName = (name: string): InputState => {
     } else if (!nameRegex.test(name)) {
         return {
             isValid: false,
-            message: "El nombre solo puede contener letras del alfabeto y numeros",
+            message: "El nombre solo puede contener letras del alfabeto y números",
         };
     } else if (name.length > 150) {
         return {
@@ -39,7 +39,7 @@ export const isValidCraneName = (name: string): InputState => {
     } else if (!nameRegex.test(name)) {
         return {
             isValid: false,
-            message: "El nombre solo puede contener letras del alfabeto y numeros",
+            message: "El nombre solo puede contener letras del alfabeto y números",
         };
     } else if (name.length > 150) {
         return {

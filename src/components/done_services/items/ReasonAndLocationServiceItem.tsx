@@ -49,7 +49,7 @@ const ReasonAndLocationServiceItem = ({
                 )}
 
                 <div className="margin-top-25 margin-bottom-15">
-                    <h4 className="text | bold gray-dark">Ubicacion</h4>
+                    <h4 className="text | bold gray-dark">Ubicación</h4>
                     <p className="text | gray-dark">
                         {service.pickupLocation.locationName}
                     </p>

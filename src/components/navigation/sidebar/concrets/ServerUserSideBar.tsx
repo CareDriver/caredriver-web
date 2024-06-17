@@ -121,7 +121,7 @@ const ServerUserSideBar = ({
                     }`}
                 >
                     <LocationDot />
-                    <span>Ubicacion</span>
+                    <span>Ubicación</span>
                 </Link>
                 <LogoutOption logout={logout} />
             </li>

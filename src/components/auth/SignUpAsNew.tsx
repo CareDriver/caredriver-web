@@ -356,7 +356,7 @@ const SignUpAsNew = () => {
                         loading: formState.loading,
                     }}
                     formInfo={{
-                        message: "Verificar numero",
+                        message: "Verificar número",
                     }}
                 />
             )}

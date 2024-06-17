@@ -82,12 +82,12 @@ export const isPhoneValid = (phone: string): InputState => {
         var isValid = phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(phone));
         return {
             isValid: isValid,
-            message: isValid ? "Numero valido" : "Por favor ingresa un numero valido",
+            message: isValid ? "número válido" : "Por favor ingresa un número válido.",
         };
     } catch (error) {
         return {
             isValid: false,
-            message: "Por favor ingresa un numero valido",
+            message: "Por favor ingresa un número válido.",
         };
     }
 };

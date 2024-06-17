@@ -55,7 +55,7 @@ const MechanicServiceView = ({ service }: { service: ServiceRequestInterface }) 
             <SericeDonePrice service={service} />
 
             <div className="max-width-50 margin-bottom-50">
-                <h3 className="text | medium bolder">Ubicacion</h3>
+                <h3 className="text | medium bolder">Ubicación</h3>
                 <p className="text | medium">{service.pickupLocation.locationName}</p>
             </div>
 

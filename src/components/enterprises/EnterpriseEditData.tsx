@@ -99,7 +99,7 @@ const EnterpriseEditData = ({
                     ...formData,
                     coordinates: {
                         value: null,
-                        message: `Por favor selecciona la ubicacion ${EnterpriseTypeRenderPronounV2[type]}`,
+                        message: `Por favor selecciona la Ubicación ${EnterpriseTypeRenderPronounV2[type]}`,
                     },
                 });
             } else if (!loadingUser && user.data && user.data.id) {
@@ -330,7 +330,7 @@ const EnterpriseEditData = ({
                 </div>
                 <fieldset className="form-section">
                     <span className="text | bold gray-dark">
-                        Ubicacion {EnterpriseTypeRenderPronounV2[type]}
+                        Ubicación {EnterpriseTypeRenderPronounV2[type]}
                     </span>
                     <div className="form-section-map | max-width-80">
                         <MapForm

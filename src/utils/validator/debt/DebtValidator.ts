@@ -74,7 +74,7 @@ export const isValidBankNumber = (number: string): InputState => {
     } else {
         return {
             isValid: true,
-            message: "Numero valido",
+            message: "número valido",
         };
     }
 };
