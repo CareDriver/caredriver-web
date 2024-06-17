@@ -56,8 +56,8 @@ const SignIn = () => {
             if (!credentials.email.errorMessage && !credentials.password.errorMessage) {
                 signInWithEmailAndPassword(
                     auth,
-                    credentials.email.value,
-                    credentials.password.value,
+                    credentials.email.value.toLocaleLowerCase().trim(),
+                    credentials.password.value.trim(),
                 )
                     .then((res) => {
                         setFormState({
@@ -74,7 +74,7 @@ const SignIn = () => {
                                 "Tu cuenta fue desabilitada, por favor contactate con uno de nuestros administradores",
                             );
                         } else {
-                            toast.error("Credenciales invalidas, intalo de nuevo");
+                            toast.error("Credenciales inválidas, intalo de nuevo");
                         }
                         setFormState({
                             ...formState,
@@ -131,7 +131,9 @@ const SignIn = () => {
                 formState.verifiyingProvider || formState.loading ? "loading" : ""
             }
         >
-            <h1 className="text | bigger bold center | margin-bottom-50">Inicia Sesión</h1>
+            <h1 className="text | bigger bold center | margin-bottom-50">
+                Inicia Sesión
+            </h1>
 
             <AuthProviders
                 router={router}
@@ -166,7 +168,7 @@ const SignIn = () => {
                     errorMessage={credentials.password.errorMessage}
                     onChange={(e) => handleInputChange(e, isValidPassword)}
                 />
-                
+
                 <button
                     disabled={!formState.isValid}
                     className="general-button | touchable margin-top-25 touchable"

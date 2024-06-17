@@ -41,7 +41,7 @@ export const createUserData = (
         deliveryLocationsHistory: [],
 
         location: credentials.location,
-        email: credentials.email.value.toLowerCase(),
+        email: credentials.email.value.toLowerCase().trim(),
 
         serviceRequests: defaultServiceReq,
 
