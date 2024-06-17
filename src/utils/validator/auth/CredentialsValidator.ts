@@ -28,8 +28,7 @@ export const isValidName = (name: string): InputState => {
 };
 
 export const isValidEmail = (email: string): InputState => {
-    const emailRegex: RegExp =
-        /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+    const emailRegex = /^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/;
     if (email.trim() === "") {
         return {
             isValid: false,
@@ -38,8 +37,7 @@ export const isValidEmail = (email: string): InputState => {
     } else if (!emailRegex.test(email)) {
         return {
             isValid: false,
-            message:
-                'Por favor ingresa un correo con el formato "example@example.example"',
+            message: 'Por favor ingresa un correo con el formato "nombre@dominio."',
         };
     } else if (email.length > 320) {
         return {
