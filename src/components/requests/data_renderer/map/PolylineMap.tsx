@@ -4,16 +4,6 @@ import { Loader } from "@googlemaps/js-api-loader";
 import { Location } from "@/utils/map/Locator";
 import { GOOGLEMAPS_TOKEN } from "@/map/Config";
 
-/* 
-example:
-[
-    { lat: -3.745, lng: -38.523 },
-    { lat: -3.745, lng: -38.513 },
-    { lat: -3.735, lng: -38.513 },
-    { lat: -3.735, lng: -38.523 },
-]
-*/
-
 const PolylineMap = ({
     start,
     end,
@@ -34,10 +24,8 @@ const PolylineMap = ({
 
             const { Map } = await loader.importLibrary("maps");
 
-            const position: Location = start;
-
             const mapOptions: google.maps.MapOptions = {
-                center: position,
+                center: start,
                 zoom: 16,
                 mapId: "GOOGLEMAP_FORM_ID",
             };
@@ -73,7 +61,7 @@ const PolylineMap = ({
         };
 
         initMap();
-    }, []);
+    }, [start, end, coordinates]); // Dependencias para actualizar el mapa cuando cambian
 
     return (
         <div
