@@ -3,7 +3,7 @@
 import { initializeRealtimeDatabase } from "@/firebase/FirebaseConfig";
 import { useEffect, useState } from "react";
 import { ref, onValue, off } from "firebase/database";
-import { ServiceRoutes } from "@/interfaces/RouteNavigationInterface";
+import { CoordinateRegister, ServiceRoutes } from "@/interfaces/RouteNavigationInterface";
 import PageLoader from "./PageLoader";
 import { Location } from "@/utils/map/Locator";
 import PolylineMap from "./requests/data_renderer/map/PolylineMap";
@@ -16,15 +16,14 @@ const RealTime = ({
     serviceId: string;
 }) => {
     const [data, setData] = useState<ServiceRoutes | null | undefined>(null);
-    const [route, setRoute] = useState<Location[]>([]);
+    const [route, setRoute] = useState<{
+        prior: CoordinateRegister[];
+        inProgress: CoordinateRegister[];
+    }>({
+        prior: [],
+        inProgress: [],
+    });
     const database = initializeRealtimeDatabase(databaseURL);
-
-    const toLocation = (lat: number, lng: number): Location => {
-        return {
-            lat,
-            lng,
-        };
-    };
 
     useEffect(() => {
         const starCountRef = ref(database, "services/" + serviceId);
@@ -36,8 +35,21 @@ const RealTime = ({
                 setData(service);
 
                 if (service.priorArrivalRoute) {
-                    const routes = Object.values(service.priorArrivalRoute).map((v) => toLocation(v.lat, v.long));
-                    setRoute(routes);
+                    const priorPath = Object.values(service.priorArrivalRoute);
+                    var statePaths = {
+                        ...route,
+                        prior: priorPath,
+                    };
+                    if (service.serviceInProgressRoute) {
+                        const inProgressPath = Object.values(
+                            service.serviceInProgressRoute,
+                        );
+                        statePaths = {
+                            ...statePaths,
+                            inProgress: inProgressPath,
+                        };
+                    }
+                    setRoute(statePaths);
                 }
             } else {
                 setData(undefined);
@@ -61,9 +73,8 @@ const RealTime = ({
         <div>
             {JSON.stringify(data)}
             <PolylineMap
-                start={route[0] || { lat: 0, lng: 0 }}
-                end={route[route.length - 1]}
-                coordinates={route}
+                priorArrivalRoute={route.prior}
+                serviceInProgressRoute={route.inProgress}
             />
         </div>
     );
