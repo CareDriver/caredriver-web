@@ -1,5 +1,5 @@
 import { Locations } from "./Locations";
-import { Services } from "./Services";
+import { Services, UserServices } from "./Services";
 
 // Define an enum type for the severity of events
 export enum Severity {
@@ -60,8 +60,8 @@ export const RTDBLocationsCodes: Record<Locations, string> = {
     [Locations.PandoBolivia]: "pd-bolivia",
 };
 
-export const buildUrlDB = (code: string, location: string) => {
-    return `https://caredriver-${code}-${location}.firebaseio.com/`;
+export const buildUrlDB = (service: UserServices, location: Locations) => {
+    return `https://caredriver-${RTDBservicesCodes[service]}-${RTDBLocationsCodes[location]}.firebaseio.com/`;
 };
 
 /* 
@@ -69,17 +69,4 @@ export const buildUrlDB = (code: string, location: string) => {
   https://caredriver-{RTDBservicesCode}-{RTDBLocationsCode}.firebaseio.com/ 
   For example the database for the mechanic services of Tarija, Bolivia would be  
   https://caredriver-mechanic-services-tja-bolivia.firebaseio.com/
-*/
-
-/* 
-services
-    |__ 1aMgTX331lPYqz64Pgaf
-            |__canceled
-            |__finished
-            |__lastPriorArrivalRoute
-            |__lastServiceInProgressRoute
-            |__priorArrivalRoute
-            |__serviceInProgressRoute
-            |__serviceUserArrived
-            |__triggeredEvents
 */

@@ -6,9 +6,11 @@ import UsersOnService from "./UsersOnService";
 import Car from "@/icons/Car";
 import { vehicleModeRenderV2, vehicleTypeRender } from "@/interfaces/VehicleInterface";
 import FieldDeleted from "@/components/requests/data_renderer/form/FieldDeleted";
-import PolylineMap from "@/components/requests/data_renderer/map/PolylineMap";
-import { toLocation } from "@/utils/parser/ToCoordinates";
 import SericeDonePrice from "./Price";
+import MapRealTime from "@/components/requests/data_renderer/map/MapRealTime";
+import { buildUrlDB } from "@/interfaces/RouteNavigationInterface";
+import { UserServices } from "@/interfaces/Services";
+import { Locations } from "@/interfaces/Locations";
 
 const DriverServiceView = ({ service }: { service: ServiceRequestInterface }) => {
     const getState = (service: ServiceRequestInterface) => {
@@ -29,9 +31,11 @@ const DriverServiceView = ({ service }: { service: ServiceRequestInterface }) =>
                     `hecho el ${toformatDate(service.createdAt?.toDate())}`}
             </h1>
             <div className="row-wrapper">
-                <h2>
-                    {service.price?.price} {service.price?.currency} -
-                </h2>
+                {service.price?.price && service.price?.currency && (
+                    <h2>
+                        {service.price?.price} {service.price?.currency} -
+                    </h2>
+                )}
                 {getState(service)}
             </div>
             <p className="text | light">{service.requestReason}</p>
@@ -81,25 +85,17 @@ const DriverServiceView = ({ service }: { service: ServiceRequestInterface }) =>
                 )}
             </div>
 
-            {service.pickupLocation.coordinates ? (
-                <fieldset className="form-section">
-                    <PolylineMap
-                        start={toLocation(service.pickupLocation.coordinates)}
-                        end={
-                            service.deliveryLocation?.coordinates
-                                ? toLocation(service.deliveryLocation.coordinates)
-                                : undefined
-                        }
-                        coordinates={[]}
-                    />
-                </fieldset>
-            ) : (
-                <div className="max-width-60">
-                    <FieldDeleted description={"No hay registro del la navegacion"} />
-                </div>
-            )}
+            <MapRealTime
+                databaseURL={buildUrlDB(
+                    UserServices.Driver,
+                    service.location ? service.location : Locations.CochabambaBolivia,
+                )}
+                serviceId={service.id}
+                isCanceled={service.canceled ? service.canceled : false}
+                isFinished={service.finished ? service.finished : false}
+            />
         </section>
     );
 };
-
+// 1aMgTX331lPYqz64Pga
 export default DriverServiceView;

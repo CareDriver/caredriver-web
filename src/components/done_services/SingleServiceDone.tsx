@@ -28,7 +28,7 @@ const SingleServiceDone = ({
 
     useEffect(() => {
         const unsubscribe = onSnapshot(doc(firestore, collectionPath, id), (doc) => {
-            if (doc) {
+            if (doc.exists()) {
                 setData(doc.data() as ServiceRequestInterface);
             } else {
                 toast.error("Servicio no encontrado");

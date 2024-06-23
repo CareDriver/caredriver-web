@@ -16,7 +16,6 @@ import {
 } from "@/utils/requests/enterprise/EnterpriseRequester";
 import {
     Enterprise,
-    EnterpriseType,
     EnterpriseTypeRender,
     EnterpriseTypeRenderPronoun,
     EnterpriseTypeRenderPronounV2,
@@ -391,7 +390,7 @@ const EnterpriseEditByAdmin = ({
                     <button
                         className="general-button touchable | gray"
                         type="button"
-                        onClick={() => router.push(`/enterprise/${getRoute(type)}`)}
+                        onClick={() => router.push(`/admin/enterprises/${getRoute(type)}`)}
                     >
                         Cancelar
                     </button>
