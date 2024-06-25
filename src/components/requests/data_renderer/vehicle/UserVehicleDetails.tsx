@@ -6,7 +6,7 @@ import InputData from "@/components/requests/data_renderer/form/InputData";
 import AddressCar from "@/icons/AddressCar";
 import Car from "@/icons/Car";
 import { Vehicle } from "@/interfaces/UserRequest";
-import { vehicleModeRender, vehicleTypeRenderV2 } from "@/interfaces/VehicleInterface";
+import { vehicleModeRenderV2, vehicleTypeRenderV2 } from "@/interfaces/VehicleInterface";
 
 const UserVehicleDetails = ({
     vehicle,
@@ -20,16 +20,16 @@ const UserVehicleDetails = ({
             {vehicle ? (
                 <div className="form-sub-container">
                     <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
-                        <Car /> Transmicion
+                        <Car /> Transmisión
                     </h2>
                     {vehicle.type.mode.map((mode, i) => (
                         <fieldset className="form-section" key={`vehicle-mode-${i}`}>
                             <InputData
-                                content={vehicleModeRender[mode]}
+                                content={`Transmisión ${vehicleModeRenderV2[mode]}`}
                                 placeholder={undefined}
                             />
                             <legend className="form-section-legend">
-                                Transmisión {vehicle.type.mode.length > 1 && i + 1}
+                                Transmisión
                             </legend>
                         </fieldset>
                     ))}

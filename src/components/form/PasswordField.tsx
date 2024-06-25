@@ -26,7 +26,7 @@ const PasswordField = ({
                 placeholder=""
                 value={password}
                 onChange={onChange}
-                className="form-section-input"
+                className="form-section-input | extra-padding-right"
             />
             <legend className="form-section-legend">Contraseña</legend>
             {errorMessage && (

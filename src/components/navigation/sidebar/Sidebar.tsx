@@ -77,10 +77,11 @@ const SideBar = () => {
     };
 
     return (
-        !loadingUser && (
+        !loadingUser &&
+        user.data && (
             <>
                 <nav className="sidebar-wrapper-responsive">
-                    <Link href={"/"} className="row-wrapper baseline">
+                    <Link href="/" className="row-wrapper baseline">
                         <img src="/images/logo.png" className="sidebar-logo" alt="" />
                         <span className="sidebar-name">CAReDriver</span>
                     </Link>

@@ -22,7 +22,7 @@ export const isValidLicenseNumber = (licenseNumber: string): InputState => {
     } else if (licenseNumber.length > 50) {
         return {
             isValid: false,
-            message: "No puedes ingresar mas de 50 caracteres para el número de licensia",
+            message: "No puedes ingresar mas de 50 caracteres para el número de licencia",
         };
     } else {
         return {

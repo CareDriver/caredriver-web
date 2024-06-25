@@ -420,9 +420,9 @@ const DriverRegistration = () => {
         }
 
         return {
-            title: "Solicita trabajar como Chofer con nosotros!",
+            title: "¡Solicita trabajar como chofer con nosotros!",
             description:
-                "Por favor llena este formulario con datos reales para que tu solicitud sea aprovada y puedas empezar a trabajar con nosotros.",
+                "Por favor, llena este formulario con datos reales para que tu solicitud sea aprobada y puedas empezar a trabajar con nosotros.",
             state: ServiceReqState.NotSent,
         };
     };

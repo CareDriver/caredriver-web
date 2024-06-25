@@ -299,8 +299,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                 <h1 className="text | big bolder">Actualiza tu licencia de conducir</h1>
                 <p className="text | light">
                     Necesitamos verificar que tu licencia sigue siendo valida para que
-                    continues trabajando con nosotros. Las fotos de tu licencia de
-                    conducir se eliminaran cuando se acepte o rechaze tu solicitud.
+                    continues trabajando con nosotros.
                 </p>
             </div>
             <form
@@ -344,7 +343,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                             },
                         }}
                         content={{
-                            indicator: "Parte Frontal de la Licencia",
+                            indicator: "Parte frontal de la licencia",
                             isCircle: false,
                             id: "tow-license-front-photo",
                         }}
@@ -362,7 +361,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                             },
                         }}
                         content={{
-                            indicator: "Parte Posterior de la Licencia",
+                            indicator: "Parte posteror de la licencia",
                             isCircle: false,
                             id: "tow-license-behind-photo",
                         }}

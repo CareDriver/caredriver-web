@@ -26,6 +26,16 @@
     background-color: var(--white);
 }
 
+.zoom-in {
+    cursor: zoom-in;
+}
+
+.popup-image {
+    min-height: 50vh;
+    width: 100%;
+    object-fit: contain;
+}
+
 @media only screen and (max-width: 700px) {
     .popup-wrapper {
         padding: 2rem;

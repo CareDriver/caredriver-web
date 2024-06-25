@@ -58,11 +58,14 @@
     width: 100%;
     font-size: 1.111111111rem;
     padding: var(--padding-field);
-    padding-right: calc(3 * var(--padding-field));
 
     border: 0.0625rem solid #ddd;
     border-radius: 0.9375rem;
     background-color: var(--white);
+}
+
+.form-section-input.extra-padding-right {
+    padding-right: calc(3 * var(--padding-field));
 }
 
 .form-hide-password-button {
@@ -82,7 +85,7 @@
 }
 
 input[type="password"] {
-    letter-spacing: 4px;
+    letter-spacing: 0.222222222rem;
 }
 
 .form-section-input:is(:focus) {
@@ -169,6 +172,7 @@ input[type="password"] {
 
 .form-section-uploaded-image {
     width: 100%;
+    height: 35vh;
     border-radius: 0.833333333rem;
 
     object-fit: cover;
@@ -176,22 +180,26 @@ input[type="password"] {
 
 .form-section-uploaded-button {
     position: absolute;
-    top: 1.111111111rem;
-    right: 1.111111111rem;
-
-    background-color: transparent;
+    top: 0;
+    right: 0;
+    background: rgba(250, 250, 250, .8);
+    backdrop-filter: blur(1px);
+    border-top-right-radius: 0.833333333rem;
+    border-bottom-left-radius: 0.833333333rem;
+    padding: 0.833333333rem;
     border: none;
 }
 
 .form-section-uploaded-button:hover > svg {
-    transition: all ease-in-out 200ms;
+    transform: scale(1.13);
     fill: var(--red);
 }
 
 .form-section-uploaded-button > svg {
+    transition: all ease-in-out 200ms;
     width: 1.222222222rem;
     height: 1.222222222rem;
-    fill: var(--gray-medium);
+    fill: var(--second-light);
 }
 
 .deleted-field {
@@ -313,7 +321,6 @@ input[type="password"] {
     height: 0.125rem;
     background-color: var(--gray-dark);
 }
-
 
 @media only screen and (max-width: 1150px) {
     .form-auth {

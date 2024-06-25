@@ -59,7 +59,7 @@ const DriverServiceView = ({ service }: { service: ServiceRequestInterface }) =>
                 </p>
                 {service.vehicle?.transmission && (
                     <p className="text | medium gray-dark">
-                        <b>Transmicion:</b>{" "}
+                        <b>Transmisión:</b>{" "}
                         {vehicleModeRenderV2[service.vehicle?.transmission]}
                     </p>
                 )}

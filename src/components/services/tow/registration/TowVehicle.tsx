@@ -5,7 +5,7 @@ import Car from "@/icons/Car";
 import ChevronDown from "@/icons/ChevronDown";
 import Plus from "@/icons/Plus";
 import {
-    vehicleModeRender,
+    vehicleModeRenderV2,
     VehicleTransmission,
     VehicleType,
 } from "@/interfaces/VehicleInterface";
@@ -98,7 +98,7 @@ const TowVehicle = ({
     return (
         <div className="form-sub-container | max-width-60">
             <h2 className="text icon-wrapper | medium-big bold">
-                <Car /> Tipo de Transmision de su Vehiculo
+                <Car /> Transmisión de su vehiculo
             </h2>
             {vehicle.type.mode.length == 1 ? (
                 <fieldset className="form-section | select-item">
@@ -111,7 +111,7 @@ const TowVehicle = ({
                     >
                         {vehiclesModes.map((mode, i) => (
                             <option key={`vehicleMod-${i}`} value={mode}>
-                                {vehicleModeRender[mode]}
+                                Transmisión {vehicleModeRenderV2[mode]}
                             </option>
                         ))}
                     </select>
@@ -125,13 +125,11 @@ const TowVehicle = ({
                             className="form-section"
                         >
                             <input
-                                value={vehicleModeRender[mode]}
+                                value={`Transmisión ${vehicleModeRenderV2[mode]}`}
                                 className="form-section-input"
                                 onChange={() => {}}
                             />
-                            <legend className="form-section-legend">
-                                Transmisión {i + 1}
-                            </legend>
+                            <legend className="form-section-legend">Transmisión</legend>
                         </fieldset>
                     ))}
                 </>
@@ -150,15 +148,9 @@ const TowVehicle = ({
                 </div>
             )}
 
-            <div>
-                <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
-                    <AddressCar /> Licencia
-                </h2>
-                <p className="text | light">
-                    Las fotos de tu licencia de conducir se eliminaran cuando se acepte o
-                    rechaze tu solicitud.
-                </p>
-            </div>
+            <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
+                <AddressCar /> Licencia
+            </h2>
             <fieldset className="form-section">
                 <input
                     type="text"
@@ -201,7 +193,7 @@ const TowVehicle = ({
                     },
                 }}
                 content={{
-                    indicator: "Parte Frontal de la Licencia",
+                    indicator: "Parte frontal de la licencia",
                     isCircle: false,
                     id: "tow-license-front-photo",
                 }}
@@ -220,7 +212,7 @@ const TowVehicle = ({
                     },
                 }}
                 content={{
-                    indicator: "Parte Posterior de la Licencia",
+                    indicator: "Parte posteror de la licencia",
                     isCircle: false,
                     id: "tow-license-behind-photo",
                 }}

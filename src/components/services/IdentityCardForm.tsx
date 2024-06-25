@@ -17,7 +17,8 @@ const IdentityCardForm = ({
                     <IdCard /> Carnet de identidad
                 </h2>
                 <p className="text | light">
-                    Estos datos se guardaran en tu perfil, si los cambias <b>tambien se cambiaran en las solicitudes que ya fueron enviadas</b>.
+                Estos datos se guardarán en tu perfil. Si los cambias,
+                también <b>se cambiarán en las solicitudes que ya fueron enviadas.</b>
                 </p>
             </div>
             <fieldset className="form-section">
@@ -54,7 +55,7 @@ const IdentityCardForm = ({
                     },
                 }}
                 content={{
-                    indicator: "Parte Frontal de tu carnet de Identidad",
+                    indicator: "Parte frontal de tu carnet de identidad",
                     isCircle: false,
                     id: `identify-card-front-image-1`,
                 }}
@@ -70,7 +71,7 @@ const IdentityCardForm = ({
                     },
                 }}
                 content={{
-                    indicator: "Parte de Atras de tu carnet de Identidad",
+                    indicator: "Parte de atrás de tu carnet de identidad",
                     isCircle: false,
                     id: `identify-card-back-image-2`,
                 }}

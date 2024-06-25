@@ -58,18 +58,18 @@ export const isValidBankNumber = (number: string): InputState => {
     if (number.trim() === "") {
         return {
             isValid: false,
-            message: "Tienes que ingresar el número de transaccion",
+            message: "Tienes que ingresar el número de transacción",
         };
     } else if (!numberBankRegex.test(number)) {
         return {
             isValid: false,
-            message: "Número de transaccion invalido",
+            message: "Número de transacción invalido",
         };
     } else if (number.length > 100) {
         return {
             isValid: false,
             message:
-                "No puedes ingresar mas de 100 caracteres para el número de transaccion",
+                "No puedes ingresar mas de 100 caracteres para el número de transacción",
         };
     } else {
         return {
@@ -85,22 +85,22 @@ export const isValidChangeReason = (reason: string): InputState => {
     if (reason.trim() === "") {
         return {
             isValid: false,
-            message: "Tienes que ingresar tu justificatorio por favor",
+            message: "Tienes que ingresar tu justificativo por favor",
         };
     } else if (!reasonRegex.test(reason)) {
         return {
             isValid: false,
-            message: "Justificacion invalida",
+            message: "Justificación invalida",
         };
     } else if (reason.length > 500) {
         return {
             isValid: false,
-            message: "No puedes ingresar mas de 500 caracteres para tu justificatorio",
+            message: "No puedes ingresar mas de 500 caracteres para tu justificativo",
         };
     } else {
         return {
             isValid: true,
-            message: "Justificatorio valido",
+            message: "Justificación valido",
         };
     }
 };

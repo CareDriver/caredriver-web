@@ -18,10 +18,6 @@ const LicenseRenderer = ({
             <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
                 <AddressCar /> Licencia
             </h2>
-            <p className="text | light">
-                Verifica que las fotos de la licencia de conducir sean correctas, porque
-                se eliminaran cuando se acepte o rechaze la solicitud.
-            </p>
             <fieldset className="form-section">
                 <InputData
                     content={license.licenseNumber}
@@ -55,7 +51,7 @@ const LicenseRenderer = ({
                         noFoundDescr={undefined}
                     />
                     <legend className="form-section-legend | focused">
-                        Parte posterior de la licencia
+                        Parte posteror de la licencia
                     </legend>
                 </fieldset>
             )}

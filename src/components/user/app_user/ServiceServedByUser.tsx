@@ -204,7 +204,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             >
                                 <div>
                                     <h2 className="text | bolder big-medium">
-                                        Detalles del usuario como chofer de moto
+                                        Detalles del usuario como chofer de motocicleta
                                     </h2>
                                     <UserVehicleDetails
                                         vehicle={user.serviceVehicles.motorcycle}
