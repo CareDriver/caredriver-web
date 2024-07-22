@@ -34,7 +34,10 @@ import TriangleExclamation from "@/icons/TriangleExclamation";
 import { sendEditEnterpriseReq } from "@/utils/requests/enterprise/EditEnterpriseReq";
 import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 import EnterpriseRenderer from "../requests/data_renderer/enterprise/EnterpriseRenderer";
-import { thereAreActiveReqsFromUser_EditENT } from "@/utils/validator/limit_request/EditEnterpriseLimiter";
+import {
+    EditENT_thereAreActiveReqsFromUser,
+    EditENT_hasChanges,
+} from "@/utils/validator/enterprises/EditEnterpriseLimiter";
 
 interface FormData {
     name: {
@@ -96,9 +99,25 @@ const EnterpriseEditData = ({
                 loading: true,
             });
 
+            if (enterpriseData) {
+                if (!EditENT_hasChanges(formData, enterpriseData)) {
+                    toast.warning(
+                        "No hiciste ningun cambio para solicitar la edicion de este servicio",
+                        {
+                            toastId: "no-changes-edit-ent-warning-toast",
+                        },
+                    );
+                    setFormState({
+                        ...formState,
+                        loading: false,
+                    });
+                    return;
+                }
+            }
+
             if (user.data && user.data.id && enterpriseData && enterpriseData.id) {
                 let thereAreActiveReqs: boolean = await toast.promise(
-                    thereAreActiveReqsFromUser_EditENT(user.data.id, enterpriseData.id),
+                    EditENT_thereAreActiveReqsFromUser(user.data.id, enterpriseData.id),
                     {
                         pending: "Verificando peticiones activas",
                         success: "Verificado",
