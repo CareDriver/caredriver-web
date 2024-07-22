@@ -8,7 +8,7 @@
     flex-direction: column;
 
     width: 100%;
-    padding: 2.777777778rem 1.111111111rem;
+    padding: 2.777777778rem;
 }
 
 .user-page-wrapper {
@@ -34,7 +34,7 @@
     flex-direction: column;
 
     width: 100%;
-    padding: 4rem 2rem;
+    padding: 4rem 2.777777778rem;
 }
 
 .row-wrapper {

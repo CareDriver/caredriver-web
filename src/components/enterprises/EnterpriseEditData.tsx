@@ -34,6 +34,7 @@ import TriangleExclamation from "@/icons/TriangleExclamation";
 import { sendEditEnterpriseReq } from "@/utils/requests/enterprise/EditEnterpriseReq";
 import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 import EnterpriseRenderer from "../requests/data_renderer/enterprise/EnterpriseRenderer";
+import { thereAreActiveReqsFromUser_EditENT } from "@/utils/validator/limit_request/EditEnterpriseLimiter";
 
 interface FormData {
     name: {
@@ -94,6 +95,30 @@ const EnterpriseEditData = ({
                 ...formState,
                 loading: true,
             });
+
+            if (user.data && user.data.id && enterpriseData && enterpriseData.id) {
+                let thereAreActiveReqs: boolean = await toast.promise(
+                    thereAreActiveReqsFromUser_EditENT(user.data.id, enterpriseData.id),
+                    {
+                        pending: "Verificando peticiones activas",
+                        success: "Verificado",
+                        error: "Error verificando peticiones activas, intentalo de nuevo por favor",
+                    },
+                );
+                if (thereAreActiveReqs) {
+                    toast.warning(
+                        "Ya enviaste peticiones para editar este servicio, espera a que las demas se aprueben",
+                    );
+                    setFormState({
+                        ...formState,
+                        loading: false,
+                    });
+                    return;
+                } else {
+                    toast.success("Valido para enviar una nueva peticion de edicion");
+                }
+            }
+
             if (formData.coordinates.value === null) {
                 setFormData({
                     ...formData,
