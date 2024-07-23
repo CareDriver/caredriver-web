@@ -7,6 +7,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { saveBrandingRequest } from "@/utils/requests/BrandingReqs";
 import { uploadFileBase64 } from "@/utils/requests/FileUploader";
+import { ReqBranding_thereAreActiveReqs } from "@/utils/validator/branding/RendingReqLimiter";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
 import { nanoid } from "nanoid";
 import { useRouter } from "next/navigation";
@@ -32,6 +33,30 @@ const BrandingReq = () => {
                 ...formState,
                 loading: true,
             });
+            if (user.data && user.data.id) {
+                let thereAreActiveReqs = await toast.promise(
+                    ReqBranding_thereAreActiveReqs(user.data.id),
+                    {
+                        pending: "Verificando peticiones activas",
+                        success: "Verificado",
+                        error: "Error verificando peticiones activas, intentalo de nuevo por favor",
+                    },
+                );
+                if (thereAreActiveReqs) {
+                    toast.warning(
+                        "Ya enviaste una peticion para verificar el branding con tu vehiculo, espera a que se revise",
+                    );
+                    setFormState({
+                        ...formState,
+                        loading: false,
+                    });
+                    return;
+                } else {
+                    toast.success(
+                        "Valido para enviar una nueva peticion para verificar el branding con tu vehiculo",
+                    );
+                }
+            }
             if (
                 formState.isValid &&
                 image.value !== null &&

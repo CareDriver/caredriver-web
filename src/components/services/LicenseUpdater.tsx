@@ -150,89 +150,100 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        setFormState({
-            ...formState,
-            loading: true,
-        });
-        if (user.data && user.data.id) {
-            let thereAreActiveReqs = await toast.promise(
-                EditLICC_thereAreActiveReqs(user.data.id),
-                {
-                    pending: "Verificando peticiones activas",
-                    success: "Verificado",
-                    error: "Error verificando peticiones activas, intentalo de nuevo por favor",
-                },
-            );
-            if (thereAreActiveReqs) {
-                toast.warning(
-                    "Ya enviaste una peticion para editar tu licencia, espera a que se revise",
+        if (!formState.loading) {
+            setFormState({
+                ...formState,
+                loading: true,
+            });
+            if (user.data && user.data.id) {
+                let thereAreActiveReqs = await toast.promise(
+                    EditLICC_thereAreActiveReqs(user.data.id),
+                    {
+                        pending: "Verificando peticiones activas",
+                        success: "Verificado",
+                        error: "Error verificando peticiones activas, intentalo de nuevo por favor",
+                    },
                 );
-                setFormState({
-                    ...formState,
-                    loading: false,
-                });
-                return;
-            } else {
-                toast.success(
-                    "Valido para enviar una nueva peticion para actualizar tu licencia",
-                );
-            }
-        }
-
-        var isValid = verifyNoEmptyData(license, userConfirmation);
-        if (isValid) {
-            isValid = isValidForm(license, userConfirmation);
-            if (
-                isValid &&
-                user.data &&
-                license &&
-                license.number.value &&
-                license.expirationDate.value &&
-                license.frontPhoto.value &&
-                license.behindPhoto.value
-            ) {
-                try {
-                    const res = await toast.promise(uploadImages(), {
-                        pending: "Subiendo imagenes, por favor espera",
-                        success: "Imagenes subidas",
-                        error: "Error al subir imagenes, intentalo de nuevo por favor",
+                if (thereAreActiveReqs) {
+                    toast.warning(
+                        "Ya enviaste una peticion para editar tu licencia, espera a que se revise",
+                    );
+                    setFormState({
+                        ...formState,
+                        loading: false,
                     });
-                    if (res) {
-                        const { frontImgUrl, behindImgUrl, realTimePhotoImgUrl } = res;
-                        await toast.promise(
-                            uploadForm(
+                    return;
+                } else {
+                    toast.success(
+                        "Valido para enviar una nueva peticion para actualizar tu licencia",
+                    );
+                }
+            }
+
+            var isValid = verifyNoEmptyData(license, userConfirmation);
+            if (isValid) {
+                isValid = isValidForm(license, userConfirmation);
+                if (
+                    isValid &&
+                    user.data &&
+                    license &&
+                    license.number.value &&
+                    license.expirationDate.value &&
+                    license.frontPhoto.value &&
+                    license.behindPhoto.value
+                ) {
+                    try {
+                        const res = await toast.promise(uploadImages(), {
+                            pending: "Subiendo imagenes, por favor espera",
+                            success: "Imagenes subidas",
+                            error: "Error al subir imagenes, intentalo de nuevo por favor",
+                        });
+                        if (res) {
+                            const { frontImgUrl, behindImgUrl, realTimePhotoImgUrl } =
+                                res;
+                            await toast.promise(
+                                uploadForm(
+                                    {
+                                        licenseNumber: license.number.value,
+                                        expiredDateLicense: Timestamp.fromDate(
+                                            license.expirationDate.value,
+                                        ),
+                                        frontImgUrl: frontImgUrl,
+                                        backImgUrl: behindImgUrl,
+                                    },
+                                    realTimePhotoImgUrl,
+                                ),
                                 {
-                                    licenseNumber: license.number.value,
-                                    expiredDateLicense: Timestamp.fromDate(
-                                        license.expirationDate.value,
-                                    ),
-                                    frontImgUrl: frontImgUrl,
-                                    backImgUrl: behindImgUrl,
+                                    pending: "Enviando el formulario, por favor espera",
+                                    success: "Formulario enviado",
+                                    error: "Error al enviar el formulario, intentalo de nuevo por favor",
                                 },
-                                realTimePhotoImgUrl,
-                            ),
-                            {
-                                pending: "Enviando el formulario, por favor espera",
-                                success: "Formulario enviado",
-                                error: "Error al enviar el formulario, intentalo de nuevo por favor",
-                            },
-                        );
-                        toast.info(
-                            "Tu solicitud sera revisada por uno de nuestros administradores",
-                            {
-                                toastId: "toast-info-sent-form-succesful",
-                            },
-                        );
-                        router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
+                            );
+                            toast.info(
+                                "Tu solicitud sera revisada por uno de nuestros administradores",
+                                {
+                                    toastId: "toast-info-sent-form-succesful",
+                                },
+                            );
+                            router.push(`/services/${type === "tow" ? "tow" : "drive"}`);
+                            setFormState({
+                                loading: false,
+                                isValid: true,
+                            });
+                        }
+                    } catch (e) {
                         setFormState({
                             loading: false,
-                            isValid: true,
+                            isValid: false,
                         });
                     }
-                } catch (e) {
+                } else {
                     setFormState({
                         loading: false,
                         isValid: false,
+                    });
+                    toast.error("Por favor llena los campos con datos validos", {
+                        toastId: "toast-error-invalid-form",
                     });
                 }
             } else {
@@ -240,18 +251,10 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                     loading: false,
                     isValid: false,
                 });
-                toast.error("Por favor llena los campos con datos validos", {
-                    toastId: "toast-error-invalid-form",
+                toast.error("Por favor llena los campos que estan vacios", {
+                    toastId: "toast-error-empty-form",
                 });
             }
-        } else {
-            setFormState({
-                loading: false,
-                isValid: false,
-            });
-            toast.error("Por favor llena los campos que estan vacios", {
-                toastId: "toast-error-empty-form",
-            });
         }
     };
 
