@@ -7,7 +7,7 @@ const SelfieRenderer = ({ image }: { image: string | ImgWithRef }) => {
         <div className="form-sub-container | margin-top-25">
             <div>
                 <h2 className="text icon-wrapper | lb medium-big bold">
-                    <PersonQuestion /> Confirmacion del Usuario
+                    <PersonQuestion /> Confirmación del usuario
                 </h2>
             </div>
             <ImageRenderer

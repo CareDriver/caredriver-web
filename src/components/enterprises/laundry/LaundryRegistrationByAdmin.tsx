@@ -223,7 +223,7 @@ const LaundryRegistrationByAdmin = () => {
                     />
                 </div>
                 <fieldset className="form-section">
-                    <span className="text | bold gray-dark">Ubicacion del Lavadero</span>
+                    <span className="text | bold gray-dark">Ubicación del Lavadero</span>
                     <div className="form-section-map | max-width-80">
                         <MapForm
                             location={formData.coordinates.value}

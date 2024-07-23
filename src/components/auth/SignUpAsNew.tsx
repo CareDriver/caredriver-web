@@ -54,8 +54,8 @@ const SignUpAsNew = () => {
                 ) {
                     createUserWithEmailAndPassword(
                         auth,
-                        credentials.email.value,
-                        credentials.password.value,
+                        credentials.email.value.toLocaleLowerCase().trim(),
+                        credentials.password.value.trim(),
                     )
                         .then((res) => {
                             const emptyUserData: UserInterface = createUserData(
@@ -356,7 +356,7 @@ const SignUpAsNew = () => {
                         loading: formState.loading,
                     }}
                     formInfo={{
-                        message: "Verificar numero",
+                        message: "Verificar número",
                     }}
                 />
             )}

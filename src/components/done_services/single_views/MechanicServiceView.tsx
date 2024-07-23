@@ -4,10 +4,11 @@ import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import UsersOnService from "./UsersOnService";
 import Car from "@/icons/Car";
 import { vehicleModeRenderV2, vehicleTypeRender } from "@/interfaces/VehicleInterface";
-import FieldDeleted from "@/components/requests/data_renderer/form/FieldDeleted";
-import { toLocation } from "@/utils/parser/ToCoordinates";
-import MarkRenderer from "@/components/requests/data_renderer/map/MarkRenderer";
 import SericeDonePrice from "./Price";
+import MapRealTime from "@/components/requests/data_renderer/map/MapRealTime";
+import { buildUrlDB } from "@/interfaces/RouteNavigationInterface";
+import { UserServices } from "@/interfaces/Services";
+import { Locations } from "@/interfaces/Locations";
 
 const MechanicServiceView = ({ service }: { service: ServiceRequestInterface }) => {
     const getState = (service: ServiceRequestInterface) => {
@@ -46,7 +47,7 @@ const MechanicServiceView = ({ service }: { service: ServiceRequestInterface }) 
                 </p>
                 {service.vehicle?.transmission && (
                     <p className="text | medium gray-dark">
-                        <b>Transmicion:</b>{" "}
+                        <b>Transmisión:</b>{" "}
                         {vehicleModeRenderV2[service.vehicle?.transmission]}
                     </p>
                 )}
@@ -55,25 +56,19 @@ const MechanicServiceView = ({ service }: { service: ServiceRequestInterface }) 
             <SericeDonePrice service={service} />
 
             <div className="max-width-50 margin-bottom-50">
-                <h3 className="text | medium bolder">Ubicacion</h3>
+                <h3 className="text | medium bolder">Ubicación</h3>
                 <p className="text | medium">{service.pickupLocation.locationName}</p>
             </div>
 
-            {service.pickupLocation.coordinates ? (
-                <fieldset className="form-section">
-                    <MarkRenderer
-                        location={toLocation(service.pickupLocation.coordinates)}
-                    />
-                </fieldset>
-            ) : (
-                <div className="max-width-60">
-                    <FieldDeleted
-                        description={
-                            "No se registro el lugar para realizar el servicio de mecanico"
-                        }
-                    />
-                </div>
-            )}
+            <MapRealTime
+                databaseURL={buildUrlDB(
+                    UserServices.Mechanic,
+                    service.location ? service.location : Locations.CochabambaBolivia,
+                )}
+                serviceId={service.id}
+                isCanceled={service.canceled ? service.canceled : false}
+                isFinished={service.finished ? service.finished : false}
+            />
         </section>
     );
 };

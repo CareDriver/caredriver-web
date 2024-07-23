@@ -14,8 +14,8 @@ const TermsCheckForm = ({
         >
             <input type="checkbox" checked={isAcceptedTerms} onChange={() => {}} />
             <p>
-                Acepto las Politicas de Privacidad, Terminos y Condiciones de Uso, recibir
-                comunicaciones de CaReDriver y chatear con nosotros por WhatsApp
+                Acepto las políticas de privacidad, términos y condiciones de uso, recibir
+                comunicaciones de CaReDriver y chatear con nosotros por WhatsApp.
             </p>
         </div>
     );

@@ -12,6 +12,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AuthProviders from "./AuthProviders";
 import { useRouter } from "next/navigation";
+import PasswordField from "../form/PasswordField";
 
 interface FormData {
     email: {
@@ -55,8 +56,8 @@ const SignIn = () => {
             if (!credentials.email.errorMessage && !credentials.password.errorMessage) {
                 signInWithEmailAndPassword(
                     auth,
-                    credentials.email.value,
-                    credentials.password.value,
+                    credentials.email.value.toLocaleLowerCase().trim(),
+                    credentials.password.value.trim(),
                 )
                     .then((res) => {
                         setFormState({
@@ -73,7 +74,7 @@ const SignIn = () => {
                                 "Tu cuenta fue desabilitada, por favor contactate con uno de nuestros administradores",
                             );
                         } else {
-                            toast.error("Credenciales invalidas, intalo de nuevo");
+                            toast.error("Credenciales inválidas, intalo de nuevo");
                         }
                         setFormState({
                             ...formState,
@@ -130,7 +131,9 @@ const SignIn = () => {
                 formState.verifiyingProvider || formState.loading ? "loading" : ""
             }
         >
-            <h1 className="text | bigger bold center | margin-bottom-50">Iniciar Sesion</h1>
+            <h1 className="text | bigger bold center | margin-bottom-50">
+                Inicia Sesión
+            </h1>
 
             <AuthProviders
                 router={router}
@@ -160,22 +163,11 @@ const SignIn = () => {
                         </small>
                     )}
                 </fieldset>
-                <fieldset className="form-section">
-                    <input
-                        type="text"
-                        name="password"
-                        placeholder=""
-                        value={credentials.password.value}
-                        onChange={(e) => handleInputChange(e, isValidPassword)}
-                        className="form-section-input"
-                    />
-                    <legend className="form-section-legend">Contraseña</legend>
-                    {credentials.password.errorMessage && (
-                        <small className="form-section-message">
-                            {credentials.password.errorMessage}
-                        </small>
-                    )}
-                </fieldset>
+                <PasswordField
+                    password={credentials.password.value}
+                    errorMessage={credentials.password.errorMessage}
+                    onChange={(e) => handleInputChange(e, isValidPassword)}
+                />
 
                 <button
                     disabled={!formState.isValid}
@@ -193,7 +185,7 @@ const SignIn = () => {
                 href={"/auth/signup"}
                 className="text | underline medium normal | margin-top-15"
             >
-                Todavia no tienes cuenta? Registrate ahora
+                ¿Todavía no tienes cuenta? Regístrate ahora
             </Link>
         </section>
     );

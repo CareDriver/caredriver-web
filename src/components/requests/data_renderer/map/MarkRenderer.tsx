@@ -26,13 +26,20 @@ const MarkRenderer = ({ location }: { location: Location }) => {
                 };
 
                 const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
-                const { AdvancedMarkerElement } = (await google.maps.importLibrary(
-                    "marker",
-                )) as google.maps.MarkerLibrary;
-
+                const { AdvancedMarkerElement, PinElement } =
+                    (await google.maps.importLibrary(
+                        "marker",
+                    )) as google.maps.MarkerLibrary;
+                const pin = new PinElement({
+                    scale: 1.6,
+                    background: "#3bb770",
+                    glyphColor: "#fff",
+                    borderColor: "#3bb770",
+                });
                 new AdvancedMarkerElement({
                     map,
                     position: location,
+                    content: pin.element,
                 });
             };
 

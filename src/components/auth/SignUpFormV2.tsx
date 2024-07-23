@@ -115,7 +115,7 @@ const SignUpFormV2 = ({
                         </option>
                     ))}
                 </select>
-                <legend className="form-section-legend">Ubicacion</legend>
+                <legend className="form-section-legend">Ubicación</legend>
             </fieldset>
             <fieldset className="form-section | select-item">
                 <ChevronDown />

@@ -10,6 +10,7 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         if (!loadingUser && user.data) {
+            window.location.replace("/redirector")
             toast.info("Ya estas authenticado");
         }
     }, [loadingUser]);

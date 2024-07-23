@@ -2,6 +2,7 @@ import { Timestamp } from "firebase/firestore";
 import { ServicesDataInterface } from "./ServicesDataInterface";
 import { VehicleInterface } from "./VehicleInterface";
 import { HistoryLocationInterface } from "./UserInterface";
+import { Locations } from "./Locations";
 
 // This will manage services requests the user
 export interface ServiceRequestInterface {
@@ -58,6 +59,7 @@ export interface ServiceRequestInterface {
     proposalId?: string; // the id  of the accepted proposal
     serviceUserAlreadyRated?: boolean; // If the service user was already rated by the normal user
     requestUserAlreadyRated?: boolean; // If the normal user was already rated by the service user
+    location?: Locations
 }
 
 // Type to set a service request definition

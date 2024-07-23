@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
+import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA59UUgknX3dx5_S-3pmBjafe-ogxSAzNE",
@@ -17,6 +18,12 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const firestore = getFirestore(app);
 const storage = getStorage(app);
+
+export const initializeRealtimeDatabase = (databaseURL: string) => {
+    const configWithDatabaseURL = { ...firebaseConfig, databaseURL };
+    const app = initializeApp(configWithDatabaseURL, `realtime-${databaseURL}`);
+    return getDatabase(app);
+};
 
 export { app, auth, firestore, storage };
 

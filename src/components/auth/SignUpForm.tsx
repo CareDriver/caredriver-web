@@ -3,6 +3,7 @@ import { locationList, Locations } from "@/interfaces/Locations";
 import { ChangeEvent, FormEvent } from "react";
 import PhoneForm from "../form/PhoneForm";
 import ChevronDown from "@/icons/ChevronDown";
+import PasswordField from "../form/PasswordField";
 
 interface Field {
     value: string;
@@ -60,18 +61,11 @@ const SignUpForm = ({
                 <legend className="form-section-legend">Correo electrónico</legend>
                 {email.message && <small>{email.message}</small>}
             </fieldset>
-            <fieldset className="form-section">
-                <input
-                    type="text"
-                    name="password"
-                    placeholder=""
-                    value={password.value}
-                    onChange={password.onChange}
-                    className="form-section-input"
-                />
-                <legend className="form-section-legend">Contraseña</legend>
-                {password.message && <small>{password.message}</small>}
-            </fieldset>
+            <PasswordField
+                password={password.value}
+                errorMessage={password.message}
+                onChange={password.onChange}
+            />
             <fieldset className="form-section">
                 <input
                     type="text"
@@ -101,7 +95,7 @@ const SignUpForm = ({
                         </option>
                     ))}
                 </select>
-                <legend className="form-section-legend">Ubicacion</legend>
+                <legend className="form-section-legend">Ubicación</legend>
             </fieldset>
 
             <button

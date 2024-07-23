@@ -75,7 +75,7 @@ const SignUpWithPhone = () => {
             .confirm(code)
             .then(async (res) => {
                 var user = res.user;
-                toast("Numero verificado exitosamente");
+                toast("número verificado exitosamente");
                 console.log(user);
                 setLinkState({
                     ...linkState,
@@ -165,7 +165,7 @@ const SignUpWithPhone = () => {
     ) : (
         <form onSubmit={onSignInSubmit}>
             <p className="text | small center | margin-bottom-25">
-                Podras seguir ingresando a nuestra aplicacion usando tu numero de celular.
+                Podras seguir ingresando a nuestra aplicacion usando tu número de celular.
                 Ademas no se perderan los datos que ya tienes en nuestra aplicacion.
             </p>
 

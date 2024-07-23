@@ -64,11 +64,28 @@
     background-color: var(--white);
 }
 
+.form-section-input.extra-padding-right {
+    padding-right: calc(3 * var(--padding-field));
+}
+
+.form-hide-password-button {
+    position: absolute;
+    top: var(--padding-field);
+    right: var(--padding-field);
+
+    background-color: transparent;
+    border: none;
+}
+
 .form-section > small,
 .form-section-message {
     color: var(--red);
     font-size: 0.944444444rem;
     font-weight: bold;
+}
+
+input[type="password"] {
+    letter-spacing: 0.222222222rem;
 }
 
 .form-section-input:is(:focus) {
@@ -155,6 +172,7 @@
 
 .form-section-uploaded-image {
     width: 100%;
+    height: 35vh;
     border-radius: 0.833333333rem;
 
     object-fit: cover;
@@ -162,22 +180,26 @@
 
 .form-section-uploaded-button {
     position: absolute;
-    top: 1.111111111rem;
-    right: 1.111111111rem;
-
-    background-color: transparent;
+    top: 0;
+    right: 0;
+    background: rgba(250, 250, 250, .8);
+    backdrop-filter: blur(1px);
+    border-top-right-radius: 0.833333333rem;
+    border-bottom-left-radius: 0.833333333rem;
+    padding: 0.833333333rem;
     border: none;
 }
 
 .form-section-uploaded-button:hover > svg {
-    transition: all ease-in-out 200ms;
+    transform: scale(1.13);
     fill: var(--red);
 }
 
 .form-section-uploaded-button > svg {
+    transition: all ease-in-out 200ms;
     width: 1.222222222rem;
     height: 1.222222222rem;
-    fill: var(--gray-medium);
+    fill: var(--second-light);
 }
 
 .deleted-field {
@@ -299,7 +321,6 @@
     height: 0.125rem;
     background-color: var(--gray-dark);
 }
-
 
 @media only screen and (max-width: 1150px) {
     .form-auth {

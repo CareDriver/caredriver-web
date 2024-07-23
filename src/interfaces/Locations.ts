@@ -4,7 +4,7 @@ export enum Locations {
     LaPazBolivia = "La Paz, Bolivia",
     TarijaBolivia = "Tarija, Bolivia",
     ChuquisacaBolivia = "Chuquisaca, Bolivia",
-    PotosiBolivia = "Potosi, Bolivia",
+    PotosiBolivia = "Potosí, Bolivia",
     OruroBolivia = "Oruro, Bolivia",
     BeniBolivia = "Beni, Bolivia",
     PandoBolivia = "Pando, Bolivia",
