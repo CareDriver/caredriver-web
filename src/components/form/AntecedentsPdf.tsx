@@ -6,10 +6,10 @@ const AntecedentsPdf = ({ file, setFile }: { file: PDFField; setFile: FileSetter
         <div className="form-sub-container | margin-top-25 max-width-60">
             <div>
                 <h2 className="text icon-wrapper | lb medium-big bold">
-                    <Landmark /> Antecedentes Policiales
+                    <Landmark /> Antecedentes policiales
                 </h2>
                 <p className="text | light">
-                    Sube un <b>PDF</b> de tus antecedentes policiales.
+                    Sube un <b>PDF</b> de tus Antecedentes policiales.
                 </p>
             </div>
             <PDFUploader

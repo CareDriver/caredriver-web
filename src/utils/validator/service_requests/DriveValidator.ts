@@ -12,17 +12,17 @@ export const isValidLicenseNumber = (licenseNumber: string): InputState => {
     if (licenseNumber.trim().length === 0) {
         return {
             isValid: false,
-            message: "Tienes que ingresar el numero de tu licencia",
+            message: "Tienes que ingresar el número de tu licencia",
         };
     } else if (!regex.test(licenseNumber)) {
         return {
             isValid: false,
-            message: "El numero de licencia no puede contener caracteres especiales",
+            message: "El número de licencia no puede contener caracteres especiales",
         };
     } else if (licenseNumber.length > 50) {
         return {
             isValid: false,
-            message: "No puedes ingresar mas de 50 caracteres para el numero de licensia",
+            message: "No puedes ingresar mas de 50 caracteres para el número de licencia",
         };
     } else {
         return {

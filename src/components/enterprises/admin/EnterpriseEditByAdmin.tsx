@@ -16,7 +16,6 @@ import {
 } from "@/utils/requests/enterprise/EnterpriseRequester";
 import {
     Enterprise,
-    EnterpriseType,
     EnterpriseTypeRender,
     EnterpriseTypeRenderPronoun,
     EnterpriseTypeRenderPronounV2,
@@ -96,7 +95,7 @@ const EnterpriseEditByAdmin = ({
                     ...formData,
                     coordinates: {
                         value: null,
-                        message: `Por favor selecciona la ubicacion ${EnterpriseTypeRenderPronounV2[type]}`,
+                        message: `Por favor selecciona la Ubicación ${EnterpriseTypeRenderPronounV2[type]}`,
                     },
                 });
             } else if (
@@ -362,7 +361,7 @@ const EnterpriseEditByAdmin = ({
                 </div>
                 <fieldset className="form-section">
                     <span className="text | bold gray-dark">
-                        Ubicacion {EnterpriseTypeRenderPronounV2[type]}
+                        Ubicación {EnterpriseTypeRenderPronounV2[type]}
                     </span>
                     <div className="form-section-map | max-width-80">
                         <MapForm
@@ -391,7 +390,7 @@ const EnterpriseEditByAdmin = ({
                     <button
                         className="general-button touchable | gray"
                         type="button"
-                        onClick={() => router.push(`/enterprise/${getRoute(type)}`)}
+                        onClick={() => router.push(`/admin/enterprises/${getRoute(type)}`)}
                     >
                         Cancelar
                     </button>

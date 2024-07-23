@@ -30,7 +30,7 @@ const EnterpriseRenderer = ({
             <fieldset className="form-section">
                 <InputData
                     content={enterprise.phone}
-                    placeholder={"Numero de Telefono"}
+                    placeholder={"número de Telefono"}
                 />
                 <legend className="form-section-legend">
                     Telefono {EnterpriseTypeRenderPronounV2[enterprise.type]}
@@ -45,7 +45,7 @@ const EnterpriseRenderer = ({
             {enterprise.coordinates && (
                 <fieldset className="form-section">
                     <span className="text | bold gray-dark">
-                        Ubicacion {EnterpriseTypeRenderPronounV2[enterprise.type]}
+                        Ubicación {EnterpriseTypeRenderPronounV2[enterprise.type]}
                     </span>
                     <MarkRenderer
                         location={{

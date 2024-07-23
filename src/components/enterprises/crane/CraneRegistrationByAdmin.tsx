@@ -223,7 +223,7 @@ const CraneRegistrationByAdmin = () => {
                     />
                 </div>
                 <fieldset className="form-section">
-                    <span className="text | bold gray-dark">Ubicacion de la Empresa</span>
+                    <span className="text | bold gray-dark">Ubicación de la Empresa</span>
                     <div className="form-section-map | max-width-80">
                         <MapForm
                             location={formData.coordinates.value}

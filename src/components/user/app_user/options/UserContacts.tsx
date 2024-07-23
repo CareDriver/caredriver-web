@@ -27,7 +27,7 @@ const UserContacts = ({
             const message = `${getGreeting()}\n\n soy el administrador ${reviewUserName} de la aplicacion CAReDriver, me comunico con usted para `;
             sendWhatsapp(user.phoneNumber, message);
         } else {
-            toast.error("El usuario no tiene registrado su numero");
+            toast.error("El usuario no tiene registrado su número");
         }
     };
 

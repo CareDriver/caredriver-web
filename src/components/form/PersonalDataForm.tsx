@@ -55,7 +55,7 @@ const PersonalDataForm = ({
                                 : null,
                             message: hasIdCard
                                 ? null
-                                : "No tienes foto frontal de tu carnet de identidad",
+                                : "No has subido la foto frontal de tu carnet de identidad",
                         },
                         backCard: {
                             value: user.data.identityCard
@@ -63,13 +63,13 @@ const PersonalDataForm = ({
                                 : null,
                             message: hasIdCard
                                 ? null
-                                : "No tienes foto de atras de tu carnet de identidad",
+                                : "No has subido la foto de atrás de tu carnet de identidad",
                         },
                         location: {
                             value: user.data.identityCard
                                 ? user.data.identityCard.location
                                 : "",
-                            message: hasIdCard ? null : "No tienes localizacion",
+                            message: hasIdCard ? null : "No tienes localización",
                         },
                     },
                 });
@@ -91,11 +91,11 @@ const PersonalDataForm = ({
                         },
                         backCard: {
                             value: null,
-                            message: "No tienes foto de atras de tu carnet de identidad",
+                            message: "No tienes foto de atrás de tu carnet de identidad",
                         },
                         location: {
                             value: "",
-                            message: "No tienes localizacion",
+                            message: "No tienes localización",
                         },
                     },
                 });
@@ -115,7 +115,7 @@ const PersonalDataForm = ({
                 {loading && (
                     <span className="row-wrapper">
                         <span className="loader | loader-gray small-loader"></span>
-                        <span className="text | bold gray-dark">Cargando Datos</span>
+                        <span className="text | bold gray-dark">Cargando datos</span>
                     </span>
                 )}
                 <div

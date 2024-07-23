@@ -7,10 +7,10 @@ const PoliceRecords = ({ pdf }: { pdf: ImgWithRef | undefined }) => {
         <div className="form-sub-container | margin-top-25">
             <div>
                 <h2 className="text icon-wrapper | lb medium-big bold">
-                    <Landmark /> Antecedentes Policiales
+                    <Landmark /> Antecedentes policiales
                 </h2>
             </div>
-            <PDFRenderer pdf={pdf} indicator="Antecedentes Policiales" />
+            <PDFRenderer pdf={pdf} indicator="Antecedentes policiales" />
         </div>
     );
 };

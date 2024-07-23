@@ -1,5 +1,5 @@
 import {
-    vehicleModeRender,
+    vehicleModeRenderV2,
     VehicleTransmission,
     VehicleType,
     vehicleTypeRender,
@@ -217,7 +217,7 @@ const VehiclesForm = ({
             {vehicles.map((vehicle, i) => (
                 <div className="form-sub-container" key={`vehicle-${i}`}>
                     <h2 className="text icon-wrapper | medium-big bold">
-                        <Car /> Tipo de Vehiculo
+                        <Car /> Tipo de vehículo
                     </h2>
                     <fieldset className="form-section | select-item">
                         <ChevronDown />
@@ -257,7 +257,7 @@ const VehiclesForm = ({
                             >
                                 {vehiclesModes.map((mode, i) => (
                                     <option key={`vehicleMod-${i}`} value={mode}>
-                                        {vehicleModeRender[mode]}
+                                        Transmisión {vehicleModeRenderV2[mode]}
                                     </option>
                                 ))}
                             </select>
@@ -271,12 +271,12 @@ const VehiclesForm = ({
                                     className="form-section"
                                 >
                                     <input
-                                        value={vehicleModeRender[mode]}
+                                        value={`Transmisión ${vehicleModeRenderV2[mode]}`}
                                         className="form-section-input"
                                         onChange={() => {}}
                                     />
                                     <legend className="form-section-legend">
-                                        Transmisión {i + 1}
+                                        Transmisión
                                     </legend>
                                 </fieldset>
                             ))}
@@ -291,20 +291,14 @@ const VehiclesForm = ({
                                 className="icon-wrapper small-general-button text | gray-icon gray touchable"
                             >
                                 <Plus />
-                                Agregar otra Transmisión
+                                Agregar otra transmisión
                             </button>
                         </div>
                     )}
 
-                    <div>
-                        <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
-                            <AddressCar /> Licencia
-                        </h2>
-                        <p className="text | light">
-                            Las fotos de tu licencia de conducir se eliminaran cuando se
-                            acepte o rechaze tu solicitud.
-                        </p>
-                    </div>
+                    <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
+                        <AddressCar /> Licencia
+                    </h2>
                     <fieldset className="form-section">
                         <input
                             type="text"
@@ -339,7 +333,7 @@ const VehiclesForm = ({
                             },
                         }}
                         content={{
-                            indicator: "Parte Frontal de la Licencia",
+                            indicator: "Parte frontal de la licencia",
                             isCircle: false,
                             id: `vehicle-license-front-photo-${i}`,
                         }}
@@ -352,7 +346,7 @@ const VehiclesForm = ({
                             },
                         }}
                         content={{
-                            indicator: "Parte Posterior de la Licencia",
+                            indicator: "Parte posteror de la licencia",
                             isCircle: false,
                             id: `vehicle-license-behind-photo-${i}`,
                         }}

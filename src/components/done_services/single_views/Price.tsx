@@ -11,20 +11,25 @@ const SericeDonePrice = ({ service }: { service: ServiceRequestInterface }) => {
     };
 
     return (
-        service.price && (
+        service.price &&
+        ((service.price.price && service.price.currency) || service.price.method) && (
             <div className="margin-bottom-50 | max-width-80">
                 <h2 className="text icon-wrapper | big-medium-v4 bold nb margin-bottom-15">
                     <MoneyBillWave /> Precio
                 </h2>
 
                 <div className="column-wrapper">
-                    <span className="text | medium-big">
-                        {service.price.price} {service.price.currency}
-                    </span>
-                    <span className="text | medium-big">
-                        <b>Metodo de pago: </b>
-                        {getMethod(service.price.method)}
-                    </span>
+                    {service.price.price && service.price.currency && (
+                        <span className="text | medium-big">
+                            {service.price.price} {service.price.currency}
+                        </span>
+                    )}
+                    {service.price.method && (
+                        <span className="text | medium-big">
+                            <b>Metodo de pago: </b>
+                            {getMethod(service.price.method)}
+                        </span>
+                    )}
                 </div>
             </div>
         )

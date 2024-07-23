@@ -6,7 +6,7 @@ const VehicleTypeRender = ({ type }: { type: VehicleType }) => {
     return (
         <div className="form-sub-container | margin-top-50">
             <h2 className="text icon-wrapper | medium-big bold">
-                <Car /> Tipo de Vehiculo
+                <Car /> Tipo de vehículo
             </h2>
             <fieldset className="form-section">
                 <InputData content={vehicleTypeRender[type]} placeholder={undefined} />

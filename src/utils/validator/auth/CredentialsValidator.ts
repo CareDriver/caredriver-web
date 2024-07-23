@@ -2,17 +2,17 @@ import { PhoneNumberUtil } from "google-libphonenumber";
 import { InputState } from "../InputValidator";
 
 export const isValidName = (name: string): InputState => {
-    const nameRegex: RegExp = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
+    const nameRegex: RegExp = /^\S[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
 
     if (name.trim() === "") {
         return {
             isValid: false,
-            message: "Tienes que ingresar un nombre completo",
+            message: "Por favor, ingresa tu nombre completo",
         };
     } else if (!nameRegex.test(name)) {
         return {
             isValid: false,
-            message: "Tu nombre solo puede contender letras del alfabeto",
+            message: "Por favor, ingresa un nombre valido",
         };
     } else if (name.length > 100) {
         return {
@@ -28,18 +28,17 @@ export const isValidName = (name: string): InputState => {
 };
 
 export const isValidEmail = (email: string): InputState => {
-    const emailRegex: RegExp =
-        /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
+    const emailRegex = /^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$/;
     if (email.trim() === "") {
         return {
             isValid: false,
-            message: "Tienes que ingresar tu correo",
+            message: "Por favor, ingresa tu correo electrónico",
         };
     } else if (!emailRegex.test(email)) {
         return {
             isValid: false,
             message:
-                'Por favor ingresa un correo con el formato "example@example.example"',
+                'Por favor, ingresa un correo electrónico en el formato "nombre@dominio."',
         };
     } else if (email.length > 320) {
         return {
@@ -55,12 +54,12 @@ export const isValidPassword = (password: string): InputState => {
     if (password.trim() === "") {
         return {
             isValid: false,
-            message: "Tienes que ingresar tu contraseña",
+            message: "Por favor, ingresa una contraseña",
         };
     } else if (password.length < 6) {
         return {
             isValid: false,
-            message: "Tu contraseña deberia tener al menos 6 caracteres",
+            message: "Tu contraseña debe tener al menos 6 caracteres",
         };
     } else if (password.length > 150) {
         return {
@@ -82,12 +81,14 @@ export const isPhoneValid = (phone: string): InputState => {
         var isValid = phoneUtil.isValidNumber(phoneUtil.parseAndKeepRawInput(phone));
         return {
             isValid: isValid,
-            message: isValid ? "Numero valido" : "Por favor ingresa un numero valido",
+            message: isValid
+                ? "número válido"
+                : "Por favor, ingresa un número de teléfono válido",
         };
     } catch (error) {
         return {
             isValid: false,
-            message: "Por favor ingresa un numero valido",
+            message: "Por favor, ingresa un número de teléfono válido",
         };
     }
 };

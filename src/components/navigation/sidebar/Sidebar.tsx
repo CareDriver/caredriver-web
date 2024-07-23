@@ -25,26 +25,29 @@ const SideBar = () => {
     const pathname = usePathname();
     const navref = useRef(null);
 
-    const openNav = () => {
+    const toggleNav = () => {
         if (navref.current) {
             const nav = navref.current as HTMLElement;
             if (nav.classList.contains("open")) {
-                nav.classList.remove("open");
+                closeNav(nav);
             } else {
-                nav.classList.add("open");
-                // document.addEventListener("click", closeNav);
+                openNav(nav);
             }
         }
     };
 
-    const closeNav = (e: MouseEvent) => {
-        if (navref.current) {
-            const nav = navref.current as HTMLElement;
-            if (e.target !== navref.current) {
-                nav.classList.remove("open");
-                document.removeEventListener("click", closeNav);
+    const openNav = (nav: HTMLElement) => {
+        nav.classList.add("open");
+        document.body.addEventListener("mousedown", (e) => {
+            let node = e.target as Node;
+            if (node !== nav && node !== nav && node !== nav && !nav.contains(node)) {
+                closeNav(nav);
             }
-        }
+        });
+    };
+
+    const closeNav = (nav: HTMLElement) => {
+        nav.classList.remove("open");
     };
 
     const getSideBar = () => {
@@ -74,15 +77,16 @@ const SideBar = () => {
     };
 
     return (
-        !loadingUser && (
+        !loadingUser &&
+        user.data && (
             <>
                 <nav className="sidebar-wrapper-responsive">
-                    <Link href={"/"} className="row-wrapper baseline">
+                    <Link href="/" className="row-wrapper baseline">
                         <img src="/images/logo.png" className="sidebar-logo" alt="" />
                         <span className="sidebar-name">CAReDriver</span>
                     </Link>
                     <button
-                        onClick={openNav}
+                        onClick={toggleNav}
                         className="icon-wrapper nav-open-button | white-icon lb touchable"
                     >
                         <Bars />

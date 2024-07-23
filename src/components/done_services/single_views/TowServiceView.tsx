@@ -6,9 +6,11 @@ import UsersOnService from "./UsersOnService";
 import Car from "@/icons/Car";
 import { vehicleModeRenderV2, vehicleTypeRender } from "@/interfaces/VehicleInterface";
 import FieldDeleted from "@/components/requests/data_renderer/form/FieldDeleted";
-import { toLocation } from "@/utils/parser/ToCoordinates";
-import PolylineMap from "@/components/requests/data_renderer/map/PolylineMap";
 import SericeDonePrice from "./Price";
+import MapRealTime from "@/components/requests/data_renderer/map/MapRealTime";
+import { buildUrlDB } from "@/interfaces/RouteNavigationInterface";
+import { UserServices } from "@/interfaces/Services";
+import { Locations } from "@/interfaces/Locations";
 
 const TowServiceView = ({ service }: { service: ServiceRequestInterface }) => {
     const getState = (service: ServiceRequestInterface) => {
@@ -54,7 +56,7 @@ const TowServiceView = ({ service }: { service: ServiceRequestInterface }) => {
                 </p>
                 {service.vehicle?.transmission && (
                     <p className="text | medium gray-dark">
-                        <b>Transmicion:</b>{" "}
+                        <b>Transmisión:</b>{" "}
                         {vehicleModeRenderV2[service.vehicle?.transmission]}
                     </p>
                 )}
@@ -80,23 +82,15 @@ const TowServiceView = ({ service }: { service: ServiceRequestInterface }) => {
                 )}
             </div>
 
-            {service.pickupLocation.coordinates ? (
-                <fieldset className="form-section">
-                    <PolylineMap
-                        start={toLocation(service.pickupLocation.coordinates)}
-                        end={
-                            service.deliveryLocation?.coordinates
-                                ? toLocation(service.deliveryLocation.coordinates)
-                                : undefined
-                        }
-                        coordinates={[]}
-                    />
-                </fieldset>
-            ) : (
-                <div className="max-width-60">
-                    <FieldDeleted description={"No hay registro del la navegacion"} />
-                </div>
-            )}
+            <MapRealTime
+                databaseURL={buildUrlDB(
+                    UserServices.Tow,
+                    service.location ? service.location : Locations.CochabambaBolivia,
+                )}
+                serviceId={service.id}
+                isCanceled={service.canceled ? service.canceled : false}
+                isFinished={service.finished ? service.finished : false}
+            />
         </section>
     );
 };

@@ -43,25 +43,25 @@ type VehicleTransmissionOption = {
 };
 
 export const vehicleTypeRender = {
-    car: "Auto",
-    motorcycle: "Moto",
+    car: "Automóvil",
+    motorcycle: "Motocicleta",
     tow: "Grua",
 };
 
 export const vehicleTypeRenderV2 = {
-    car: "del auto",
-    motorcycle: "de la moto",
+    car: "del automóvil",
+    motorcycle: "de la motocicleta",
     tow: "de la grua",
 };
 
 export const vehicleModeRender = {
-    automatic: "Automático",
-    mechanical: "Mecánico",
+    automatic: "automático",
+    mechanical: "mecánico",
 };
 
 export const vehicleModeRenderV2 = {
-    automatic: "Automática",
-    mechanical: "Mecánica",
+    automatic: "automática",
+    mechanical: "mecánica",
 };
 
 // Vehicle types to render
