@@ -251,10 +251,6 @@ const CraneRegistration = () => {
                         <small>{formData.coordinates.message}</small>
                     )}
                 </fieldset>
-                <h1>nosd</h1>
-                <h1>nosd</h1>
-                <h1>nosd</h1>
-                <h1>nosd</h1>
                 <button
                     className={`general-button | margin-top-25 max-width-60 touchable ${
                         formState.loading && "loading-section"

@@ -27,6 +27,7 @@ import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { nanoid } from "nanoid";
 import { Timestamp } from "firebase/firestore";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
+import { EditLICC_thereAreActiveReqs } from "@/utils/validator/license/UpdateLicenceLimiter";
 
 const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
     const router = useRouter();
@@ -153,6 +154,31 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
             ...formState,
             loading: true,
         });
+        if (user.data && user.data.id) {
+            let thereAreActiveReqs = await toast.promise(
+                EditLICC_thereAreActiveReqs(user.data.id),
+                {
+                    pending: "Verificando peticiones activas",
+                    success: "Verificado",
+                    error: "Error verificando peticiones activas, intentalo de nuevo por favor",
+                },
+            );
+            if (thereAreActiveReqs) {
+                toast.warning(
+                    "Ya enviaste una peticion para editar tu licencia, espera a que se apruebe",
+                );
+                setFormState({
+                    ...formState,
+                    loading: false,
+                });
+                return;
+            } else {
+                toast.success(
+                    "Valido para enviar una nueva peticion para actualizar tu licencia",
+                );
+            }
+        }
+
         var isValid = verifyNoEmptyData(license, userConfirmation);
         if (isValid) {
             isValid = isValidForm(license, userConfirmation);

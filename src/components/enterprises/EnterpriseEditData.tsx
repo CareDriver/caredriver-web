@@ -16,7 +16,6 @@ import {
 } from "@/utils/requests/enterprise/EnterpriseRequester";
 import {
     Enterprise,
-    EnterpriseType,
     EnterpriseTypeRender,
     EnterpriseTypeRenderPronoun,
     EnterpriseTypeRenderPronounV2,
@@ -33,7 +32,6 @@ import PageLoader from "../PageLoader";
 import TriangleExclamation from "@/icons/TriangleExclamation";
 import { sendEditEnterpriseReq } from "@/utils/requests/enterprise/EditEnterpriseReq";
 import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
-import EnterpriseRenderer from "../requests/data_renderer/enterprise/EnterpriseRenderer";
 import {
     EditENT_thereAreActiveReqsFromUser,
     EditENT_hasChanges,
@@ -127,7 +125,7 @@ const EnterpriseEditData = ({
                 );
                 if (thereAreActiveReqs) {
                     toast.warning(
-                        "Ya enviaste peticiones para editar este servicio, espera a que las demas se aprueben",
+                        "Ya enviaste una peticion para editar este servicio, espera a que las demas se aprueben",
                     );
                     setFormState({
                         ...formState,
