@@ -97,18 +97,22 @@ const EnterpriseReqRender = ({ enterprise }: { enterprise: Enterprise }) => {
                 Solicitud para crear {EnterpriseTypeRenderPronounV3[enterprise.type]}
             </h1>
             <EnterpriseRenderer enterprise={enterprise} />
-            <p className="text | light margin-top-25">
-                Se eliminaran los datos que ya <b>no seran necesarios</b> si rechazas la
-                solicitud
-            </p>
-            <ReqButtonRes
-                onApprove={approve}
-                onDecline={decline}
-                loading={reviewState.loading}
-                stateB1={true}
-                stateB2={true}
-                alreadyReviewed={reviewState.reviewed || !enterprise.active}
-            />
+            {!enterprise.aproved && enterprise.active && (
+                <p className="text | light margin-top-25">
+                    Se eliminaran los datos que ya <b>no seran necesarios</b> si rechazas
+                    la solicitud
+                </p>
+            )}
+            {!enterprise.aproved && enterprise.active && (
+                <ReqButtonRes
+                    onApprove={approve}
+                    onDecline={decline}
+                    loading={reviewState.loading}
+                    stateB1={true}
+                    stateB2={true}
+                    alreadyReviewed={reviewState.reviewed || !enterprise.active}
+                />
+            )}
         </section>
     );
 };

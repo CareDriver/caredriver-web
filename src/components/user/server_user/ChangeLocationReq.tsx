@@ -50,62 +50,65 @@ const ChangeLocationReq = () => {
 
     const submit = async (e: FormEvent) => {
         e.preventDefault();
-        setFormState({
-            ...formState,
-            loading: true,
-        })
-        if (
-            location.value &&
-            location.default &&
-            user.data &&
-            location.value !== user.data.location
-        ) {
-            if (!location.message) {
-                if (user.data.id && user.data.location) {
-                    try {
-                        await toast.promise(
-                            updateUser(user.data.id, {
-                                location: location.value,
-                            }),
-                            {
-                                pending: "Actualizando localizacion, por favor espera",
-                                success: "Localizacion actualizada",
-                                error: "Error al actualizar tu localizacion, intentalo de nuevo por favor",
-                            },
-                        );
+        if (!formState.loading) {
+            setFormState({
+                ...formState,
+                loading: true,
+            });
+            if (
+                location.value &&
+                location.default &&
+                user.data &&
+                location.value !== user.data.location
+            ) {
+                if (!location.message) {
+                    if (user.data.id && user.data.location) {
+                        try {
+                            await toast.promise(
+                                updateUser(user.data.id, {
+                                    location: location.value,
+                                }),
+                                {
+                                    pending:
+                                        "Actualizando localizacion, por favor espera",
+                                    success: "Localizacion actualizada",
+                                    error: "Error al actualizar tu localizacion, intentalo de nuevo por favor",
+                                },
+                            );
 
-                        setFormState({
-                            loading: false,
-                            isValid: true,
-                        });
-                        sendMessage();
-                        window.location.replace("/user/profile");
-                    } catch (e) {
-                        setFormState({
-                            loading: false,
-                            isValid: true,
-                        });
-                        window.location.reload();
+                            setFormState({
+                                loading: false,
+                                isValid: true,
+                            });
+                            sendMessage();
+                            window.location.replace("/user/profile");
+                        } catch (e) {
+                            setFormState({
+                                loading: false,
+                                isValid: true,
+                            });
+                            window.location.reload();
+                        }
                     }
+                } else {
+                    setFormState({
+                        loading: false,
+                        isValid: false,
+                    });
+                    toast.error("Por favor llena los campos con datos validos", {
+                        toastId: "toast-error-invalid-form",
+                    });
                 }
             } else {
                 setFormState({
                     loading: false,
                     isValid: false,
                 });
-                toast.error("Por favor llena los campos con datos validos", {
-                    toastId: "toast-error-invalid-form",
+                setLocation({
+                    ...location,
+                    message: "Ya tienes establecido esta localizacion",
                 });
             }
-        } else {
-            setFormState({
-                loading: false,
-                isValid: false,
-            });
-            setLocation({
-                ...location,
-                message: "Ya tienes establecido esta localizacion",
-            });
         }
     };
 

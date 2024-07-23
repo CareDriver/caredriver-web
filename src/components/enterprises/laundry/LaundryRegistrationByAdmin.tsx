@@ -67,81 +67,83 @@ const LaundryRegistrationByAdmin = () => {
 
     const handleSummbit = async (e: FormEvent) => {
         e.preventDefault();
-        setFormState({
-            ...formState,
-            loading: true,
-        });
-        if (!loadingUser && user.data && user.data.id) {
-            if (
-                formData.name.value &&
-                formData.logo.value &&
-                formData.phone.value &&
-                formData.coordinates.value
-            ) {
-                if (isValidForm(formData)) {
-                    try {
-                        const imgWithRef = await toast.promise(
-                            uploadFileBase64(
-                                DirectoryPath.Enterprises,
-                                formData.logo.value,
-                            ),
-                            {
-                                pending: "Subiendo el logo, por favor espera",
-                                success: "Logo subido",
-                                error: "Error al subir el logo, intentalo de nuevo por favor",
-                            },
-                        );
+        if (!formState.loading) {
+            setFormState({
+                ...formState,
+                loading: true,
+            });
+            if (!loadingUser && user.data && user.data.id) {
+                if (
+                    formData.name.value &&
+                    formData.logo.value &&
+                    formData.phone.value &&
+                    formData.coordinates.value
+                ) {
+                    if (isValidForm(formData)) {
+                        try {
+                            const imgWithRef = await toast.promise(
+                                uploadFileBase64(
+                                    DirectoryPath.Enterprises,
+                                    formData.logo.value,
+                                ),
+                                {
+                                    pending: "Subiendo el logo, por favor espera",
+                                    success: "Logo subido",
+                                    error: "Error al subir el logo, intentalo de nuevo por favor",
+                                },
+                            );
 
-                        var id = nanoid(25);
-                        const enterprise: Enterprise = {
-                            id,
-                            type: "laundry",
-                            name: formData.name.value,
-                            logoImgUrl: imgWithRef,
-                            coordinates: new GeoPoint(
-                                formData.coordinates.value.lat,
-                                formData.coordinates.value.lng,
-                            ),
-                            latitude: formData.coordinates.value.lat,
-                            longitude: formData.coordinates.value.lng,
-                            phone: formData.phone.value,
-                            userId: user.data.id,
-                            aproved: true,
-                            deleted: false,
-                            active: true,
-                        };
+                            var id = nanoid(25);
+                            const enterprise: Enterprise = {
+                                id,
+                                type: "laundry",
+                                name: formData.name.value,
+                                logoImgUrl: imgWithRef,
+                                coordinates: new GeoPoint(
+                                    formData.coordinates.value.lat,
+                                    formData.coordinates.value.lng,
+                                ),
+                                latitude: formData.coordinates.value.lat,
+                                longitude: formData.coordinates.value.lng,
+                                phone: formData.phone.value,
+                                userId: user.data.id,
+                                aproved: true,
+                                deleted: false,
+                                active: true,
+                            };
 
-                        await toast.promise(sendEnterpriseReq(id, enterprise), {
-                            pending: "Creando lavadero",
-                            success: "Creado",
-                            error: "Error al crear lavadero, intentalo de nuevo por favor",
-                        });
+                            await toast.promise(sendEnterpriseReq(id, enterprise), {
+                                pending: "Creando lavadero",
+                                success: "Creado",
+                                error: "Error al crear lavadero, intentalo de nuevo por favor",
+                            });
 
+                            setFormState({
+                                ...formState,
+                                loading: false,
+                            });
+                            router.push("/admin/enterprises/laundry");
+                        } catch (e) {
+                            window.location.reload();
+                        }
+                    } else {
                         setFormState({
                             ...formState,
                             loading: false,
                         });
-                        router.push("/admin/enterprises/laundry");
-                    } catch (e) {
-                        window.location.reload();
+                        toast.error("Por favor llena los campos con datos validos", {
+                            toastId: "toast-error-invalid-form",
+                        });
                     }
                 } else {
                     setFormState({
                         ...formState,
                         loading: false,
                     });
-                    toast.error("Por favor llena los campos con datos validos", {
-                        toastId: "toast-error-invalid-form",
+                    toast.error("Por favor llena los campos que estan vacios", {
+                        toastId: "toast-error-empty-form",
                     });
                 }
-            } else {
-                setFormState({
-                    ...formState,
-                    loading: false,
-                });
-                toast.error("Por favor llena los campos que estan vacios", {
-                    toastId: "toast-error-empty-form",
-                });
             }
         }
     };
@@ -253,11 +255,7 @@ const LaundryRegistrationByAdmin = () => {
                     }
                     disabled={!formState.isValid}
                 >
-                    {formState.loading ? (
-                        <span className="loader"></span>
-                    ) : (
-                        "Registrar"
-                    )}
+                    {formState.loading ? <span className="loader"></span> : "Registrar"}
                 </button>
             </form>
         </section>

@@ -140,6 +140,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ uploader, content }) => {
                     />
                     <button
                         onClick={removeImage}
+                        type="button"
                         className="form-section-uploaded-button"
                     >
                         <Trash />

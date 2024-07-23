@@ -16,7 +16,6 @@ import {
 } from "@/utils/requests/enterprise/EnterpriseRequester";
 import {
     Enterprise,
-    EnterpriseType,
     EnterpriseTypeRender,
     EnterpriseTypeRenderPronoun,
     EnterpriseTypeRenderPronounV2,
@@ -33,7 +32,11 @@ import PageLoader from "../PageLoader";
 import TriangleExclamation from "@/icons/TriangleExclamation";
 import { sendEditEnterpriseReq } from "@/utils/requests/enterprise/EditEnterpriseReq";
 import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
-import EnterpriseRenderer from "../requests/data_renderer/enterprise/EnterpriseRenderer";
+import {
+    EditENT_thereAreActiveReqsFromUser,
+    EditENT_hasChanges,
+} from "@/utils/validator/enterprises/EditEnterpriseLimiter";
+import FieldDeleted from "../requests/data_renderer/form/FieldDeleted";
 
 interface FormData {
     name: {
@@ -94,6 +97,46 @@ const EnterpriseEditData = ({
                 ...formState,
                 loading: true,
             });
+
+            if (enterpriseData) {
+                if (!EditENT_hasChanges(formData, enterpriseData)) {
+                    toast.warning(
+                        "No hiciste ningun cambio para solicitar la edicion de este servicio",
+                        {
+                            toastId: "no-changes-edit-ent-warning-toast",
+                        },
+                    );
+                    setFormState({
+                        ...formState,
+                        loading: false,
+                    });
+                    return;
+                }
+            }
+
+            if (user.data && user.data.id && enterpriseData && enterpriseData.id) {
+                let thereAreActiveReqs: boolean = await toast.promise(
+                    EditENT_thereAreActiveReqsFromUser(user.data.id, enterpriseData.id),
+                    {
+                        pending: "Verificando peticiones activas",
+                        success: "Verificado",
+                        error: "Error verificando peticiones activas, intentalo de nuevo por favor",
+                    },
+                );
+                if (thereAreActiveReqs) {
+                    toast.warning(
+                        "Ya enviaste una peticion para editar este servicio, espera a que las demas se aprueben",
+                    );
+                    setFormState({
+                        ...formState,
+                        loading: false,
+                    });
+                    return;
+                } else {
+                    toast.success("Valido para enviar una nueva peticion de edicion");
+                }
+            }
+
             if (formData.coordinates.value === null) {
                 setFormData({
                     ...formData,
@@ -281,11 +324,18 @@ const EnterpriseEditData = ({
                 Necesitamos verificar que los nuevos datos{" "}
                 {EnterpriseTypeRenderPronounV2[type]} sean validos antes de editarlo.
             </p>
+            {enterpriseData.deleted && (
+                <div className="margin-top-25 max-width-60">
+                    <FieldDeleted description="Este servicio fue eliminado" />
+                </div>
+            )}
             <form
                 className="form-sub-container | margin-top-25"
                 onSubmit={handleSummbit}
                 data-state={
-                    formState.loading || formState.loadingRev ? "loading" : "loaded"
+                    formState.loading || formState.loadingRev || enterpriseData.deleted
+                        ? "loading"
+                        : "loaded"
                 }
             >
                 <fieldset className="form-section | max-width-60">
@@ -350,86 +400,100 @@ const EnterpriseEditData = ({
                         <small>{formData.coordinates.message}</small>
                     )}
                 </fieldset>
-                <div
-                    className="row-wrapper | gap-20 | margin-top-25 max-width-60 loading-section"
-                    data-state={
-                        formState.loading || formState.loadingRev ? "loading" : "loaded"
-                    }
-                >
-                    <button
-                        className="general-button touchable | gray "
-                        type="button"
-                        onClick={() => router.push(`/enterprise/${getRoute(type)}`)}
-                    >
-                        Cancelar
-                    </button>
-                    <button
-                        className={`general-button touchable ${
-                            formState.loading && "loading-section"
-                        }`}
-                        title={
-                            !formState.isValid
-                                ? "Por favor completa los campos con datos validos"
-                                : ""
-                        }
-                        disabled={!formState.isValid}
-                    >
-                        {formState.loading ? (
-                            <span className="loader"></span>
-                        ) : (
-                            "Solicitar Edicion"
-                        )}
-                    </button>
-                </div>
-                <div
-                    className={`form-sub-container | margin-top-50 max-width-60 ${
-                        formState.loadingRev && "loading-section"
-                    }`}
-                    data-state={
-                        formState.loading || formState.loadingRev ? "loading" : "loaded"
-                    }
-                >
-                    <h2 className="text icon-wrapper | red red-icon medium-big bold">
-                        <TriangleExclamation />
-                        Zona Peligrosa
-                    </h2>
-                    <p>
-                        Esta accion no se puede revertir, aunque no se afectara los datos
-                        que estan relacionados con este. Por favor escribe el nombre{" "}
-                        {EnterpriseTypeRenderPronounV2[type]} para confirmar su
-                        eliminacion.
-                    </p>
-                    <fieldset className="form-section | max-width-60">
-                        <input
-                            type="text"
-                            placeholder={`Nombre ${EnterpriseTypeRenderPronounV2[type]}`}
-                            className="form-section-input"
-                            name="fullname"
-                            onChange={(e) =>
-                                setValidToDelete(e.target.value === enterpriseData.name)
+                {!enterpriseData.deleted && (
+                    <>
+                        <div
+                            className="row-wrapper | gap-20 | margin-top-25 max-width-60 loading-section"
+                            data-state={
+                                formState.loading || formState.loadingRev
+                                    ? "loading"
+                                    : "loaded"
                             }
-                            autoComplete="off"
-                        />
+                        >
+                            <button
+                                className="general-button touchable | gray "
+                                type="button"
+                                onClick={() =>
+                                    router.push(`/enterprise/${getRoute(type)}`)
+                                }
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                className={`general-button touchable ${
+                                    formState.loading && "loading-section"
+                                }`}
+                                title={
+                                    !formState.isValid
+                                        ? "Por favor completa los campos con datos validos"
+                                        : ""
+                                }
+                                disabled={!formState.isValid}
+                            >
+                                {formState.loading ? (
+                                    <span className="loader"></span>
+                                ) : (
+                                    "Solicitar Edicion"
+                                )}
+                            </button>
+                        </div>
+                        <div
+                            className={`form-sub-container | margin-top-50 max-width-60 ${
+                                formState.loadingRev && "loading-section"
+                            }`}
+                            data-state={
+                                formState.loading || formState.loadingRev
+                                    ? "loading"
+                                    : "loaded"
+                            }
+                        >
+                            <h2 className="text icon-wrapper | red red-icon medium-big bold">
+                                <TriangleExclamation />
+                                Zona Peligrosa
+                            </h2>
+                            <p>
+                                Esta accion no se puede revertir, aunque no se afectara
+                                los datos que estan relacionados con este. Por favor
+                                escribe el nombre {EnterpriseTypeRenderPronounV2[type]}{" "}
+                                para confirmar su eliminacion.
+                            </p>
+                            <fieldset className="form-section | max-width-60">
+                                <input
+                                    type="text"
+                                    placeholder={`Nombre ${EnterpriseTypeRenderPronounV2[type]}`}
+                                    className="form-section-input"
+                                    name="fullname"
+                                    onChange={(e) =>
+                                        setValidToDelete(
+                                            e.target.value === enterpriseData.name,
+                                        )
+                                    }
+                                    autoComplete="off"
+                                />
 
-                        {formData.name.message && <small>{formData.name.message}</small>}
-                    </fieldset>
-                    <button
-                        type="button"
-                        onClick={deleteEnterprise}
-                        className={`small-general-button | red touchable ${
-                            formState.loadingRev && "loading-section"
-                        }`}
-                        disabled={!validToDelete}
-                    >
-                        {formState.loadingRev ? (
-                            <span className="loader"></span>
-                        ) : (
-                            <span className="text | white bold">
-                                Eliminar {EnterpriseTypeRender[type]}
-                            </span>
-                        )}
-                    </button>
-                </div>
+                                {formData.name.message && (
+                                    <small>{formData.name.message}</small>
+                                )}
+                            </fieldset>
+                            <button
+                                type="button"
+                                onClick={deleteEnterprise}
+                                className={`small-general-button | red touchable ${
+                                    formState.loadingRev && "loading-section"
+                                }`}
+                                disabled={!validToDelete}
+                            >
+                                {formState.loadingRev ? (
+                                    <span className="loader"></span>
+                                ) : (
+                                    <span className="text | white bold">
+                                        Eliminar {EnterpriseTypeRender[type]}
+                                    </span>
+                                )}
+                            </button>
+                        </div>
+                    </>
+                )}
             </form>
         </section>
     ) : (
