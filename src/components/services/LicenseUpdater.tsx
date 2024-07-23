@@ -165,7 +165,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
             );
             if (thereAreActiveReqs) {
                 toast.warning(
-                    "Ya enviaste una peticion para editar tu licencia, espera a que se apruebe",
+                    "Ya enviaste una peticion para editar tu licencia, espera a que se revise",
                 );
                 setFormState({
                     ...formState,

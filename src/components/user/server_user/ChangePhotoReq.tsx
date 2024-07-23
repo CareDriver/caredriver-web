@@ -11,6 +11,7 @@ import { nanoid } from "nanoid";
 import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { toast } from "react-toastify";
+import { UpPhoto_thereAreActiveReqs } from "@/utils/validator/photo/UpdatePhotoLimiter";
 
 const ChangePhotoReq = () => {
     const { loadingUser, user } = useContext(AuthContext);
@@ -23,73 +24,96 @@ const ChangePhotoReq = () => {
 
     const submit = async (e: FormEvent) => {
         e.preventDefault();
-        setFormState({
-            loading: true,
-            isValid: true,
-        });
-        if (newPhoto.value) {
-            if (!newPhoto.message) {
-                if (user.data && user.data.id) {
-                    try {
-                        var id = nanoid(30);
-                        const imgWithRef = await toast.promise(
-                            uploadFileBase64(
-                                DirectoryPath.Users,
-                                newPhoto.value,
-                            ),
-                            {
-                                pending: "Subiendo foto, por favor espera",
-                                success: "Foto subida",
-                                error: "Error al subir la foto, intentalo de nuevo por favor",
-                            },
-                        );
-                        await toast.promise(
-                            saveChangePhotoReq(id, {
-                                id,
-                                newPhoto: imgWithRef,
-                                userId: user.data.id,
-                                userName: user.data.fullName,
-                                active: true
-                            }),
-                            {
-                                pending: "Enviando la peticion, por favor espera",
-                                success: "Peticion enviada",
-                                error: "Error al enviar la peticion, intentalo de nuevo por favor",
-                            },
-                        );
-                        toast.info(
-                            "Tu peticion sera servisada por uno de nuestros administradores",
-                        );
-                        setFormState({
-                            loading: false,
-                            isValid: true,
-                        });
-                        router.push("/user/profile");
-                    } catch (e) {
-                        setFormState({
-                            loading: false,
-                            isValid: true,
-                        });
-                        window.location.reload();
+        if (!formState.loading) {
+            setFormState({
+                loading: true,
+                isValid: true,
+            });
+            if (user.data && user.data.id) {
+                let thereAreActiveReqs = await toast.promise(
+                    UpPhoto_thereAreActiveReqs(user.data.id),
+                    {
+                        pending: "Verificando peticiones activas",
+                        success: "Verificado",
+                        error: "Error verificando peticiones activas, intentalo de nuevo por favor",
+                    },
+                );
+                if (thereAreActiveReqs) {
+                    toast.warning(
+                        "Ya enviaste una peticion para actulizar tu foto, espera a que se revise",
+                    );
+                    setFormState({
+                        ...formState,
+                        loading: false,
+                    });
+                    return;
+                } else {
+                    toast.success(
+                        "Valido para enviar una nueva peticion para actualizar tu foto",
+                    );
+                }
+            }
+            if (newPhoto.value) {
+                if (!newPhoto.message) {
+                    if (user.data && user.data.id) {
+                        try {
+                            var id = nanoid(30);
+                            const imgWithRef = await toast.promise(
+                                uploadFileBase64(DirectoryPath.Users, newPhoto.value),
+                                {
+                                    pending: "Subiendo foto, por favor espera",
+                                    success: "Foto subida",
+                                    error: "Error al subir la foto, intentalo de nuevo por favor",
+                                },
+                            );
+                            await toast.promise(
+                                saveChangePhotoReq(id, {
+                                    id,
+                                    newPhoto: imgWithRef,
+                                    userId: user.data.id,
+                                    userName: user.data.fullName,
+                                    active: true,
+                                }),
+                                {
+                                    pending: "Enviando la peticion, por favor espera",
+                                    success: "Peticion enviada",
+                                    error: "Error al enviar la peticion, intentalo de nuevo por favor",
+                                },
+                            );
+                            toast.info(
+                                "Tu peticion sera servisada por uno de nuestros administradores",
+                            );
+                            setFormState({
+                                loading: false,
+                                isValid: true,
+                            });
+                            router.push("/user/profile");
+                        } catch (e) {
+                            setFormState({
+                                loading: false,
+                                isValid: true,
+                            });
+                            window.location.reload();
+                        }
                     }
+                } else {
+                    setFormState({
+                        loading: false,
+                        isValid: false,
+                    });
+                    toast.error("Por favor llena los campos con datos validos", {
+                        toastId: "toast-error-invalid-form",
+                    });
                 }
             } else {
                 setFormState({
                     loading: false,
                     isValid: false,
                 });
-                toast.error("Por favor llena los campos con datos validos", {
-                    toastId: "toast-error-invalid-form",
+                toast.error("Por favor llena los campos que estan vacios", {
+                    toastId: "toast-error-empty-form",
                 });
             }
-        } else {
-            setFormState({
-                loading: false,
-                isValid: false,
-            });
-            toast.error("Por favor llena los campos que estan vacios", {
-                toastId: "toast-error-empty-form",
-            });
         }
     };
 
