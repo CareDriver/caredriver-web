@@ -252,7 +252,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
     return (
         <div className="service-form-wrapper | max-width-60">
-            <h1 className="text | big bolder">Solicitud para ser Operador de Grua</h1>
+            <h1 className="text | big bolder">Solicitud para ser Operador de Grúa</h1>
             <div className="row-wrapper | gap-20">
                 <ApprovalsRenderer
                     serviceReq={serviceReq}
@@ -281,7 +281,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
             {enterprise === null ? (
                 <span className="loader-green"></span>
             ) : enterprise === undefined ? (
-                <FieldDeleted description="No se encontro la Empresa Operadora de Grua, es posible que fue eliminada" />
+                <FieldDeleted description="No se encontró la Empresa Operadora de Grúa, es posible que fue eliminada" />
             ) : (
                 <TowRenderer tow={enterprise} />
             )}

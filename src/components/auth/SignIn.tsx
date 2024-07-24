@@ -177,7 +177,7 @@ const SignIn = () => {
                     {formState.loading ? (
                         <i className="loader"></i>
                     ) : (
-                        <span>Iniciar sesion</span>
+                        <span>Iniciar sesión</span>
                     )}
                 </button>
             </form>

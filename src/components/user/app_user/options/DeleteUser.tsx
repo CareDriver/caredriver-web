@@ -57,9 +57,9 @@ const DeleteUser = ({
                         reason: balanceHistory.reason.value,
                     }),
                     {
-                        pending: "Registrando accion",
-                        success: "Accion en el usuario registrada",
-                        error: "Error al registrar accion en el usuario",
+                        pending: "Registrando acción",
+                        success: "Acción en el usuario registrada",
+                        error: "Error al registrar acción en el usuario",
                     },
                 );
 
@@ -83,7 +83,7 @@ const DeleteUser = ({
                     {
                         pending: "Eliminando al usuario",
                         success: "Usuario eliminado",
-                        error: "Error al eliminar al usuario, intentalo de nuevo",
+                        error: "Error al eliminar al usuario, inténtalo de nuevo",
                     },
                 );
                 router.push("/admin/users");
@@ -100,8 +100,8 @@ const DeleteUser = ({
                 Zona Peligrosa
             </h2>
             <p>
-                Esta accion no se puede revertir, aunque no se afectara los datos que
-                estan relacionados con este. Por favor escribe el nombre del usuario para
+                Esta acción no se puede revertir, aunque no se afectara los datos que
+                están relacionados con este. Por favor escribe el nombre del usuario para
                 confirmar su eliminacion.
             </p>
             <fieldset className="form-section | max-width-60">

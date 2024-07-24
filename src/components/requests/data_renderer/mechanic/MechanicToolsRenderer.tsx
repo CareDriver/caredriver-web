@@ -17,7 +17,7 @@ const MechanicToolsRenderer = ({ tools }: { tools: string | undefined }) => {
             ) : (
                 <FieldDeleted
                     description={
-                        "El usuario que solicito ser mecanico no especifico sus herramientas de trabajo"
+                        "El usuario que solicito ser mecánico no especifico sus herramientas de trabajo"
                     }
                 />
             )}

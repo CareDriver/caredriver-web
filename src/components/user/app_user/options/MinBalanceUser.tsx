@@ -1,11 +1,9 @@
 "use client";
 
 import MoneyBillWave from "@/icons/MoneyBillWave";
-import { Price } from "@/interfaces/Payment";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { updateUser } from "@/utils/requests/UserRequester";
 import { isValidAmount } from "@/utils/validator/debt/DebtValidator";
-import { Timestamp } from "firebase/firestore";
 import { SyntheticEvent, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -37,9 +35,9 @@ const MinBalanceUser = ({
                         },
                     }),
                     {
-                        pending: "Actualizando saldo minimo",
-                        success: "Saldo minimo actualizado",
-                        error: "Error al actualizar el saldo minimo, intantalo de nuevo",
+                        pending: "Actualizando saldo mínimo",
+                        success: "Saldo mínimo actualizado",
+                        error: "Error al actualizar el saldo mínimo, inténtalo de nuevo",
                     },
                 );
                 window.location.reload();
@@ -74,13 +72,13 @@ const MinBalanceUser = ({
         <section className="profile-info-wrapper | margin-top-50 max-width-60">
             <h2 className="profile-subtitle icon-wrapper | mb">
                 <MoneyBillWave />
-                Saldo minimo |{" "}
+                Saldo mínimo |{" "}
                 {user.minimumBalance
                     ? user.minimumBalance.amount + " " + user.minimumBalance.currency
                     : "0"}
             </h2>
             <p className="text | gray-dark">
-                Ingresa el nuevo saldo minimo que el usuario puede tener en su cuenta.
+                Ingresa el nuevo saldo mínimo que el usuario puede tener en su cuenta.
             </p>
 
             <div
@@ -105,7 +103,7 @@ const MinBalanceUser = ({
                         }}
                     />
                     <legend className="form-section-legend">
-                        Saldo minimo {user.balance.currency}
+                        Saldo mínimo {user.balance.currency}
                     </legend>
                     {formState.message && <small>{formState.message}</small>}
                 </fieldset>
@@ -119,7 +117,7 @@ const MinBalanceUser = ({
                 }
                 className="small-general-button text | medium bold touchable green"
             >
-                Establecer saldo minimo
+                Establecer saldo mínimo
             </button>
         </section>
     );

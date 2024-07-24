@@ -294,10 +294,10 @@ const ServicesRequestedByUser = ({
                 <div className="empty-wrapper | auto-height">
                     <h2>
                         {dataState.isSearching
-                            ? `No se encontro ninguna peticion hasta la fecha ${getFormatDate(
+                            ? `No se encontró ninguna petición hasta la fecha ${getFormatDate(
                                   dataState.value.toDate(),
                               )}`
-                            : `El usuario no ha hecho ninguna peticion por un ${userReqTypes[type]}`}
+                            : `El usuario no ha hecho ninguna petición por un ${userReqTypes[type]}`}
                     </h2>
                 </div>
             )}

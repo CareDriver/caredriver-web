@@ -16,13 +16,13 @@ const IdCardRenderer = ({ idCard }: { idCard: IdentityCard | undefined }) => {
             {idCard ? (
                 <div className="form-sub-container">
                     <fieldset className="form-section">
-                        <InputData content={idCard.location} placeholder="Localizacion" />
-                        <legend className="form-section-legend">Localizacion</legend>
+                        <InputData content={idCard.location} placeholder="Localización" />
+                        <legend className="form-section-legend">Localización</legend>
                     </fieldset>
                     <fieldset className="form-section">
                         <InpurDate date={idCard.updatedDate.toDate()} />
                         <legend className="form-section-legend">
-                            Ultima modificacion
+                            Ultima modificación
                         </legend>
                     </fieldset>
                     <ImageRenderer

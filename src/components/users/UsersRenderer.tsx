@@ -320,8 +320,8 @@ const UsersRenderer = () => {
                 <div className="empty-wrapper | auto-height">
                     <h2>
                         {dataState.isSearching
-                            ? "Ningun usuario fue encontrado"
-                            : "No hay usuarios registrados en la aplicacion"}
+                            ? "Ningún usuario fue encontrado"
+                            : "No hay usuarios registrados en la aplicación"}
                     </h2>
                 </div>
             )}

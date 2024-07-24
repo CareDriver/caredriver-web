@@ -34,7 +34,7 @@ const UserItemRenderer = ({
                     <CompPermissionValidator user={user} roles={ROLES_TO_VIEW_USER_STATE}>
                         <div className="row-wrapper">
                             {req.disable && (
-                                <h4 className="text | bold yellow">Desabilitado</h4>
+                                <h4 className="text | bold yellow">Deshabilitado</h4>
                             )}
 
                             <h4

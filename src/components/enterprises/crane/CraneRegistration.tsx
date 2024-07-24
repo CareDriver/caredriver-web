@@ -89,7 +89,7 @@ const CraneRegistration = () => {
                                 {
                                     pending: "Subiendo el logo, por favor espera",
                                     success: "Logo subido",
-                                    error: "Error al subir el logo, intentalo de nuevo por favor",
+                                    error: "Error al subir el logo, inténtalo de nuevo por favor",
                                 },
                             );
 
@@ -115,7 +115,7 @@ const CraneRegistration = () => {
                             await toast.promise(sendEnterpriseReq(id, enterprise), {
                                 pending: "Enviando el formulario, por favor espera",
                                 success: "Formulario enviado",
-                                error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                                error: "Error al enviar el formulario, inténtalo de nuevo por favor",
                             });
 
                             setFormState({
@@ -143,7 +143,7 @@ const CraneRegistration = () => {
                         ...formState,
                         loading: false,
                     });
-                    toast.error("Por favor llena los campos que estan vacios", {
+                    toast.error("Por favor llena los campos que están vacíos", {
                         toastId: "toast-error-empty-form",
                     });
                 }
@@ -184,7 +184,7 @@ const CraneRegistration = () => {
 
     return (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">Registar Empresa Operadora de Grua</h1>
+            <h1 className="text | big bolder">Registrar Empresa Operadora de Grúa</h1>
             <p className="text | light">
                 Necesitamos verificar que la nueva empresa sea valida antes de
                 registrarla.

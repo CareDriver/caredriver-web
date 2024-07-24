@@ -219,7 +219,7 @@ export const registerUserFromGoogleAuth = async (
     const userFound = await toast.promise(getUserById(user.uid), {
         pending: "Verificando datos, espera por favor",
         success: "Datos validos",
-        error: "Error al verificar tus datos, intentalo de nuevo por favor",
+        error: "Error al verificar tus datos, inténtalo de nuevo por favor",
     });
     if (!userFound) {
         var emptyUserData: UserInterface = createUserData(user.uid, UserRole.User, {
@@ -257,7 +257,7 @@ export const registerUserFromGoogleAuth = async (
             await toast.promise(saveUser(user.uid, emptyUserData), {
                 pending: "Creando nueva cuenta",
                 success: "Cuenta creada",
-                error: "Error al crear la cuenta, intentalo de nuevo por favor",
+                error: "Error al crear la cuenta, inténtalo de nuevo por favor",
             });
             window.location.replace("/redirector");
             setVerifier(false);

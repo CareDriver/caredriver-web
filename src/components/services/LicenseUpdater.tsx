@@ -161,12 +161,12 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                     {
                         pending: "Verificando peticiones activas",
                         success: "Verificado",
-                        error: "Error verificando peticiones activas, intentalo de nuevo por favor",
+                        error: "Error verificando peticiones activas, inténtalo de nuevo por favor",
                     },
                 );
                 if (thereAreActiveReqs) {
                     toast.warning(
-                        "Ya enviaste una peticion para editar tu licencia, espera a que se revise",
+                        "Ya enviaste una petición para editar tu licencia, espera a que se revise",
                     );
                     setFormState({
                         ...formState,
@@ -175,7 +175,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                     return;
                 } else {
                     toast.success(
-                        "Valido para enviar una nueva peticion para actualizar tu licencia",
+                        "Valido para enviar una nueva petición para actualizar tu licencia",
                     );
                 }
             }
@@ -194,9 +194,9 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                 ) {
                     try {
                         const res = await toast.promise(uploadImages(), {
-                            pending: "Subiendo imagenes, por favor espera",
-                            success: "Imagenes subidas",
-                            error: "Error al subir imagenes, intentalo de nuevo por favor",
+                            pending: "Subiendo imágenes, por favor espera",
+                            success: "Imágenes subidas",
+                            error: "Error al subir imágenes, inténtalo de nuevo por favor",
                         });
                         if (res) {
                             const { frontImgUrl, behindImgUrl, realTimePhotoImgUrl } =
@@ -216,7 +216,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                                 {
                                     pending: "Enviando el formulario, por favor espera",
                                     success: "Formulario enviado",
-                                    error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                                    error: "Error al enviar el formulario, inténtalo de nuevo por favor",
                                 },
                             );
                             toast.info(
@@ -251,7 +251,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                     loading: false,
                     isValid: false,
                 });
-                toast.error("Por favor llena los campos que estan vacios", {
+                toast.error("Por favor llena los campos que están vacíos", {
                     toastId: "toast-error-empty-form",
                 });
             }
@@ -390,7 +390,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
                             },
                         }}
                         content={{
-                            indicator: "Parte posteror de la licencia",
+                            indicator: "Parte posterior de la licencia",
                             isCircle: false,
                             id: "tow-license-behind-photo",
                         }}

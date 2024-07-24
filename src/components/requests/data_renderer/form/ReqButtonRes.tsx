@@ -48,7 +48,7 @@ const ReqButtonRes = ({
         <div
             className="row-wrapper | gap-20 | margin-top-15 loading-section"
             data-state={loading || alreadyReviewed ? "loading" : "loaded"}
-            title={alreadyReviewed ? "Esta peticion ya fue revisada" : ""}
+            title={alreadyReviewed ? "Esta petición ya fue revisada" : ""}
         >
             <button
                 className="icon-wrapper general-button | center touchable yellow lb"

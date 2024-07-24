@@ -89,7 +89,7 @@ const CraneRegistrationByAdmin = () => {
                                 {
                                     pending: "Subiendo el logo, por favor espera",
                                     success: "Logo subido",
-                                    error: "Error al subir el logo, intentalo de nuevo por favor",
+                                    error: "Error al subir el logo, inténtalo de nuevo por favor",
                                 },
                             );
 
@@ -113,9 +113,9 @@ const CraneRegistrationByAdmin = () => {
                             };
 
                             await toast.promise(sendEnterpriseReq(id, enterprise), {
-                                pending: "Creando la empresa operadora de grua",
+                                pending: "Creando la empresa operadora de grúa",
                                 success: "Creado",
-                                error: "Error al crear la empresa, intentalo de nuevo por favor",
+                                error: "Error al crear la empresa, inténtalo de nuevo por favor",
                             });
 
                             setFormState({
@@ -140,7 +140,7 @@ const CraneRegistrationByAdmin = () => {
                         ...formState,
                         loading: false,
                     });
-                    toast.error("Por favor llena los campos que estan vacios", {
+                    toast.error("Por favor llena los campos que están vacíos", {
                         toastId: "toast-error-empty-form",
                     });
                 }
@@ -181,7 +181,7 @@ const CraneRegistrationByAdmin = () => {
 
     return (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">Registar Empresa Operadora de Grua</h1>
+            <h1 className="text | big bolder">Registrar Empresa Operadora de Grúa</h1>
             <form
                 className="form-sub-container | margin-top-50"
                 onSubmit={handleSummbit}

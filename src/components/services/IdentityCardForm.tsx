@@ -39,7 +39,7 @@ const IdentityCardForm = ({
                     }}
                     className="form-section-input"
                 />
-                <legend className="form-section-legend">Localizacion</legend>
+                <legend className="form-section-legend">Localización</legend>
                 {idCardForm.location.message && (
                     <small>{idCardForm.location.message}</small>
                 )}

@@ -56,7 +56,7 @@ const BrandingReqsRenderer = () => {
         data.length > 0 ? (
             <div className="render-data-wrapper">
                 <h1 className={"text | big-medium bolder margin-bottom-25 capitalize"}>
-                    Solicitudes de verificacion de Branding
+                    Solicitudes de verificación de Branding
                 </h1>
                 <InfiniteScroll
                     dataLength={data.length}

@@ -101,7 +101,7 @@ const EnterpriseEditData = ({
             if (enterpriseData) {
                 if (!EditENT_hasChanges(formData, enterpriseData)) {
                     toast.warning(
-                        "No hiciste ningun cambio para solicitar la edicion de este servicio",
+                        "No hiciste ningún cambio para solicitar la edicion de este servicio",
                         {
                             toastId: "no-changes-edit-ent-warning-toast",
                         },
@@ -120,12 +120,12 @@ const EnterpriseEditData = ({
                     {
                         pending: "Verificando peticiones activas",
                         success: "Verificado",
-                        error: "Error verificando peticiones activas, intentalo de nuevo por favor",
+                        error: "Error verificando peticiones activas, inténtalo de nuevo por favor",
                     },
                 );
                 if (thereAreActiveReqs) {
                     toast.warning(
-                        "Ya enviaste una peticion para editar este servicio, espera a que las demas se aprueben",
+                        "Ya enviaste una petición para editar este servicio, espera a que las demas se aprueben",
                     );
                     setFormState({
                         ...formState,
@@ -133,7 +133,7 @@ const EnterpriseEditData = ({
                     });
                     return;
                 } else {
-                    toast.success("Valido para enviar una nueva peticion de edicion");
+                    toast.success("Valido para enviar una nueva petición de edicion");
                 }
             }
 
@@ -165,7 +165,7 @@ const EnterpriseEditData = ({
                             {
                                 pending: "Subiendo el logo, por favor espera",
                                 success: "Logo subido",
-                                error: "Error al subir el logo, intentalo de nuevo por favor",
+                                error: "Error al subir el logo, inténtalo de nuevo por favor",
                             },
                         );
                         image = imgWithRef;
@@ -194,7 +194,7 @@ const EnterpriseEditData = ({
                     await toast.promise(sendEditEnterpriseReq(reqId, enterprise), {
                         pending: "Enviando el formulario, por favor espera",
                         success: "Formulario enviado",
-                        error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                        error: "Error al enviar el formulario, inténtalo de nuevo por favor",
                     });
 
                     setFormState({
@@ -299,7 +299,7 @@ const EnterpriseEditData = ({
                     await toast.promise(deleteEnterpriseReq(enterpriseData.id), {
                         pending: `Eliminando ${EnterpriseTypeRenderPronoun[type]}`,
                         success: "Eliminado",
-                        error: `Error al eliminar ${EnterpriseTypeRenderPronoun[type]}, intentalo de nuevo por favor`,
+                        error: `Error al eliminar ${EnterpriseTypeRenderPronoun[type]}, inténtalo de nuevo por favor`,
                     });
                     router.push(`/enterprise/${getRoute(type)}`);
                     setFormState({
@@ -452,8 +452,8 @@ const EnterpriseEditData = ({
                                 Zona Peligrosa
                             </h2>
                             <p>
-                                Esta accion no se puede revertir, aunque no se afectara
-                                los datos que estan relacionados con este. Por favor
+                                Esta acción no se puede revertir, aunque no se afectara
+                                los datos que están relacionados con este. Por favor
                                 escribe el nombre {EnterpriseTypeRenderPronounV2[type]}{" "}
                                 para confirmar su eliminacion.
                             </p>

@@ -14,7 +14,7 @@ const ApprovalsRenderer = ({
 }) => {
     return (
         <h5
-            className={`icon-wrapper text | ${
+            className={`icon-wrapper row-wrapper baseline text | ${
                 serviceReq.active === true
                     ? "green-icon green"
                     : serviceReq.aproved === true

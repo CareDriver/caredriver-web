@@ -20,7 +20,7 @@ const ServiceReqsByUser = ({ user }: { user: UserInterface }) => {
                 <h3 className="text | medium-big bolder">Solicitudes de Choferes</h3>
                 <span className="icon-wrapper text | underline gray-dark gray-icon | margin-top-15">
                     <Eye />
-                    Click para ver mas informacion
+                    Click para ver mas información
                 </span>
             </Link>
             <Link
@@ -30,7 +30,7 @@ const ServiceReqsByUser = ({ user }: { user: UserInterface }) => {
                 <h3 className="text | medium-big bolder">Solicitudes de Mecanicos</h3>
                 <span className="icon-wrapper text | underline gray-dark gray-icon | margin-top-15">
                     <Eye />
-                    Click para ver mas informacion
+                    Click para ver mas información
                 </span>
             </Link>
             <Link
@@ -42,7 +42,7 @@ const ServiceReqsByUser = ({ user }: { user: UserInterface }) => {
                 </h3>
                 <span className="icon-wrapper text | underline gray-dark gray-icon | margin-top-15">
                     <Eye />
-                    Click para ver mas informacion
+                    Click para ver mas información
                 </span>
             </Link>
             <Link
@@ -52,7 +52,7 @@ const ServiceReqsByUser = ({ user }: { user: UserInterface }) => {
                 <h3 className="text | medium-big bolder">Solicitudes de Lavadores</h3>
                 <span className="icon-wrapper text | underline gray-dark gray-icon | margin-top-15">
                     <Eye />
-                    Click para ver mas informacion
+                    Click para ver mas información
                 </span>
             </Link>
         </div>

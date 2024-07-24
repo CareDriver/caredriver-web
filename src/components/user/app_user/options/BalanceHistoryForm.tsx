@@ -48,10 +48,10 @@ const BalanceHistoryForm = ({
     return (
         <div className="margin-bottom-25">
             <div>
-                <h2 className="text | big-medium bolder">Razon de cambio</h2>
+                <h2 className="text | big-medium bolder">Razón de cambio</h2>
                 <p className="text | light">
                     Escribe el número de transacción registrada en cuenta bancaria o la
-                    razon por la cual esta haciendo este cambio.
+                    razón por la cual esta haciendo este cambio.
                 </p>
             </div>
             <div
@@ -92,7 +92,7 @@ const BalanceHistoryForm = ({
                         })
                     }
                 >
-                    Razon por la cual modificas el saldo
+                    Razón por la cual modificas el saldo
                 </button>
             </div>
 
@@ -111,7 +111,7 @@ const BalanceHistoryForm = ({
                 />
                 <legend className="form-section-legend">
                     {balanceHistoryItem.reasonType === "modificationReason"
-                        ? "Razon de la modificacion"
+                        ? "Razón de la modificación"
                         : "Número de transacción"}
                 </legend>
                 {balanceHistoryItem.reason.message && (

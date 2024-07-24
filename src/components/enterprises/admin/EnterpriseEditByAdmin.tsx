@@ -115,7 +115,7 @@ const EnterpriseEditByAdmin = ({
                         {
                             pending: "Cambiando el logo, por favor espera",
                             success: "Logo cambiado",
-                            error: "Error al cambiar el logo, intentalo de nuevo por favor",
+                            error: "Error al cambiar el logo, inténtalo de nuevo por favor",
                         },
                     );
                     await toast.promise(deleteFile(enterpriseData.logoImgUrl.ref), {
@@ -142,7 +142,7 @@ const EnterpriseEditByAdmin = ({
                 await toast.promise(updateEnterprise(enterpriseData.id, enterprise), {
                     pending: `Editando ${EnterpriseTypeRender[type]}`,
                     success: "Editado",
-                    error: `Error al editar ${EnterpriseTypeRender[type]}, intentalo de nuevo por favor`,
+                    error: `Error al editar ${EnterpriseTypeRender[type]}, inténtalo de nuevo por favor`,
                 });
 
                 setFormState({
@@ -247,12 +247,12 @@ const EnterpriseEditByAdmin = ({
                         ? {
                               pending: `Habilitando ${EnterpriseTypeRenderPronoun[type]}`,
                               success: "Habilitado",
-                              error: `Error al habilitar ${EnterpriseTypeRenderPronoun[type]}, intentalo de nuevo por favor`,
+                              error: `Error al habilitar ${EnterpriseTypeRenderPronoun[type]}, inténtalo de nuevo por favor`,
                           }
                         : {
-                              pending: `Desabilitando ${EnterpriseTypeRenderPronoun[type]}`,
-                              success: "Desabilitado",
-                              error: `Error al desabilitar ${EnterpriseTypeRenderPronoun[type]}, intentalo de nuevo por favor`,
+                              pending: `Deshabilitando ${EnterpriseTypeRenderPronoun[type]}`,
+                              success: "Deshabilitado",
+                              error: `Error al deshabilitar ${EnterpriseTypeRenderPronoun[type]}, inténtalo de nuevo por favor`,
                           };
 
                     await toast.promise(
@@ -291,7 +291,7 @@ const EnterpriseEditByAdmin = ({
                     await toast.promise(deleteEnterpriseReq(enterpriseData.id), {
                         pending: `Eliminando ${EnterpriseTypeRenderPronoun[type]}`,
                         success: "Eliminado",
-                        error: `Error al eliminar ${EnterpriseTypeRenderPronoun[type]}, intentalo de nuevo por favor`,
+                        error: `Error al eliminar ${EnterpriseTypeRenderPronoun[type]}, inténtalo de nuevo por favor`,
                     });
                     router.push(`/admin/enterprises/${getRoute(type)}`);
                     setFormState({
@@ -423,10 +423,10 @@ const EnterpriseEditByAdmin = ({
                         Zona Peligrosa
                     </h2>
                     <p>
-                        Esta accion si puede revertir, pero si afectara los datos que
-                        estan relacionados con este mientras este desabilitado. Por favor
+                        Esta acción si puede revertir, pero si afectara los datos que
+                        están relacionados con este mientras este deshabilitado. Por favor
                         escribe el nombre {EnterpriseTypeRenderPronounV2[type]} para
-                        confirmar la accion.
+                        confirmar la acción.
                     </p>
                     <fieldset className="form-section | max-width-60">
                         <input
@@ -453,7 +453,7 @@ const EnterpriseEditByAdmin = ({
                         {formState.loadingEdit ? (
                             <span className="loader-black"></span>
                         ) : (
-                            `${enterpriseData.active ? "Desabilitar" : "Habilitar"} 
+                            `${enterpriseData.active ? "Deshabilitar" : "Habilitar"} 
                         ${EnterpriseTypeRender[type]}`
                         )}
                     </button>
@@ -473,8 +473,8 @@ const EnterpriseEditByAdmin = ({
                         Zona Peligrosa
                     </h2>
                     <p>
-                        Esta accion no se puede revertir, aunque no se afectara los datos
-                        que estan relacionados con este. Por favor escribe el nombre{" "}
+                        Esta acción no se puede revertir, aunque no se afectara los datos
+                        que están relacionados con este. Por favor escribe el nombre{" "}
                         {EnterpriseTypeRenderPronounV2[type]} para confirmar su
                         eliminacion.
                     </p>

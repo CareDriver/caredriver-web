@@ -61,7 +61,7 @@ const TowPanel = () => {
                 await toast.promise(updateUser(user.data?.id, userToUpdate), {
                     pending: "Agregando nueva transmisión, por favor espera",
                     success: "Transmisión agregada",
-                    error: "Error al agregar la nueva transmisión, intentalo de nuevo por favor",
+                    error: "Error al agregar la nueva transmisión, inténtalo de nuevo por favor",
                 });
                 setAddingNew(false);
                 window.location.reload();
@@ -103,13 +103,13 @@ const TowPanel = () => {
             <h1 className="text | big bolder green">Tu solicitud fue aprobada!</h1>
             <p className="text icon-wrapper | green-icon green bolder lb medium margin-top-15">
                 <SackDollar />
-                Ve a nuestra Aplicacion Móvil y empieza a Ofrecer tu servicio!
+                Ve a nuestra Aplicación Móvil y empieza a Ofrecer tu servicio!
             </p>
             {user.data.serviceVehicles && user.data.serviceVehicles.tow && (
                 <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
                         <Truck />
-                        Operador de Grua
+                        Operador de Grúa
                     </h2>
                     <h3 className="text | gray gray-dark bold margin-top-5">
                         Valido hasta el{" "}

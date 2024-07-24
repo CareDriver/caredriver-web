@@ -28,7 +28,7 @@ const PersonalDataV2 = ({
                 </fieldset>
                 <fieldset className="form-section">
                     <InputData content={location} placeholder="" />
-                    <legend className="form-section-legend">Localizacion</legend>
+                    <legend className="form-section-legend">Localización</legend>
                 </fieldset>
                 <fieldset className="form-section">
                     <ImageRenderer

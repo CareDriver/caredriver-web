@@ -22,8 +22,8 @@ export interface Vehicle {
 
 export const userReqTypes = {
     driver: "Chofer",
-    mechanic: "Mecanico",
-    tow: "Operador de Grua",
+    mechanic: "Mecánico",
+    tow: "Operador de Grúa",
     laundry: "Lavadero",
 };
 

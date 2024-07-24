@@ -81,16 +81,16 @@ const UserRoleSeter = ({
                         reason: balanceHistory.reason.value,
                     }),
                     {
-                        pending: "Registrando accion",
-                        success: "Accion en el usuario registrada",
-                        error: "Error al registrar accion en el usuario",
+                        pending: "Registrando acción",
+                        success: "Acción en el usuario registrada",
+                        error: "Error al registrar acción en el usuario",
                     },
                 );
 
                 await toast.promise(updateUser(user.id, { role: roleState.value }), {
                     pending: "Cambiando el rol del usuario",
                     success: "Rol del usuario cambiado",
-                    error: "Error al cambiar el rol del usuario, intentalo de nuevo por favor",
+                    error: "Error al cambiar el rol del usuario, inténtalo de nuevo por favor",
                 });
                 setLoading(false);
                 window.location.reload();

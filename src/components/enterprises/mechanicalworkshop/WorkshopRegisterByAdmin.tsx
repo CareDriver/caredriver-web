@@ -89,7 +89,7 @@ const WorkshopRegisterByAdmin = () => {
                                 {
                                     pending: "Subiendo el logo, por favor espera",
                                     success: "Logo subido",
-                                    error: "Error al subir el logo, intentalo de nuevo por favor",
+                                    error: "Error al subir el logo, inténtalo de nuevo por favor",
                                 },
                             );
 
@@ -113,9 +113,9 @@ const WorkshopRegisterByAdmin = () => {
                             };
 
                             await toast.promise(sendEnterpriseReq(id, enterprise), {
-                                pending: "Creando taller mecanico",
+                                pending: "Creando taller mecánico",
                                 success: "Creado",
-                                error: "Error al crear el taller, intentalo de nuevo por favor",
+                                error: "Error al crear el taller, inténtalo de nuevo por favor",
                             });
 
                             setFormState({
@@ -140,7 +140,7 @@ const WorkshopRegisterByAdmin = () => {
                         ...formState,
                         loading: false,
                     });
-                    toast.error("Por favor llena los campos que estan vacios", {
+                    toast.error("Por favor llena los campos que están vacíos", {
                         toastId: "toast-error-empty-form",
                     });
                 }
@@ -181,7 +181,7 @@ const WorkshopRegisterByAdmin = () => {
 
     return (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">Registar Taller Mecanico</h1>
+            <h1 className="text | big bolder">Registrar Taller Mecánico</h1>
             <form
                 className="form-sub-container | margin-top-50"
                 onSubmit={handleSummbit}

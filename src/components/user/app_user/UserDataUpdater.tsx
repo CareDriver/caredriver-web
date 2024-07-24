@@ -72,7 +72,7 @@ const UserDataUpdater = ({ user }: { user: UserInterface }) => {
                 await toast.promise(updateUser(user.id, { fullName: fullName.value }), {
                     pending: "Cambiando el nombre",
                     success: "Nombre cambiado",
-                    error: "Error al cambiar el nombre, intentalo de nuevo por favor",
+                    error: "Error al cambiar el nombre, inténtalo de nuevo por favor",
                 });
             } catch (e) {
                 console.log(e);
@@ -98,7 +98,7 @@ const UserDataUpdater = ({ user }: { user: UserInterface }) => {
                 await toast.promise(editCredentials(), {
                     pending: "Cambiando credenciales",
                     success: "Credenciales cambiadas",
-                    error: "Error al cambiar credenciales, intentalo de nuevo por favor",
+                    error: "Error al cambiar credenciales, inténtalo de nuevo por favor",
                 });
             }
 

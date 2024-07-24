@@ -70,7 +70,7 @@ const EnterpriseUpReqRender = ({
                         await toast.promise(deleteFile(oldEnterprise.logoImgUrl.ref), {
                             pending: "Remplazando el logo",
                             success: "Logo remplazado",
-                            error: "Error al remplazar el logo, intentalo de nuevo por favor",
+                            error: "Error al remplazar el logo, inténtalo de nuevo por favor",
                         });
                     }
                     await toast.promise(updating(), {
@@ -78,7 +78,7 @@ const EnterpriseUpReqRender = ({
                             EnterpriseTypeRenderPronoun[enterprise.type]
                         }`,
                         success: "Editado",
-                        error: "Error al editar, intentalo de nuevo por favor",
+                        error: "Error al editar, inténtalo de nuevo por favor",
                     });
                     router.push(
                         `/admin/requests/enterprises/edit${getRoute(enterprise.type)}`,
@@ -135,7 +135,7 @@ const EnterpriseUpReqRender = ({
                         await toast.promise(deleteFile(enterprise.logoImgUrl.ref), {
                             pending: "Eliminado el logo",
                             success: "Logo eliminado",
-                            error: "Error al eliminar el logo, intentalo de nuevo por favor",
+                            error: "Error al eliminar el logo, inténtalo de nuevo por favor",
                         });
                     }
 

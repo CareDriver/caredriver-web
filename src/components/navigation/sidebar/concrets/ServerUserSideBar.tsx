@@ -42,14 +42,14 @@ const ServerUserSideBar = ({
                     }`}
                 >
                     <Wrench />
-                    <span>Mecanico</span>
+                    <span>Mecánico</span>
                 </Link>
                 <Link
                     href={"/services/tow"}
                     className={`sidebar-option ${pathname.includes("tow") && "selected"}`}
                 >
                     <Truck />
-                    <span>Grua</span>
+                    <span>Grúa</span>
                 </Link>
                 <Link
                     href={"/services/laundry"}
@@ -80,7 +80,7 @@ const ServerUserSideBar = ({
                     }`}
                 >
                     <Building />
-                    <span>Empresas de Grua</span>
+                    <span>Empresas de Grúa</span>
                 </Link>
                 <Link
                     href={"/enterprise/laundry"}

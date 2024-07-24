@@ -1,7 +1,7 @@
 export const getTitleForRender = (type: "mechanical" | "tow" | "laundry") => {
     switch (type) {
         case "tow":
-            return "Empresas de Grua Creadas";
+            return "Empresas de Grúa Creadas";
         case "mechanical":
             return "Talleres Mecanicos Creados";
         default:
@@ -34,10 +34,10 @@ export const getNewButtonTitle = (type: "mechanical" | "tow" | "laundry") => {
 export const getEmptyEnterprise = (type: "mechanical" | "tow" | "laundry") => {
     switch (type) {
         case "tow":
-            return "ninguna empresa de grua registrada";
+            return "ninguna empresa de grúa registrada";
         case "mechanical":
-            return "ningun taller mecanico registrado";
+            return "ningún taller mecánico registrado";
         default:
-            return "ningun lavadero registrado";
+            return "ningún lavadero registrado";
     }
 };

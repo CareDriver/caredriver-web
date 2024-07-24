@@ -98,7 +98,7 @@ const TowVehicle = ({
     return (
         <div className="form-sub-container | max-width-60">
             <h2 className="text icon-wrapper | medium-big bold">
-                <Car /> Transmisión de su vehiculo
+                <Car /> Transmisión de su vehículo
             </h2>
             {vehicle.type.mode.length == 1 ? (
                 <fieldset className="form-section | select-item">
@@ -212,7 +212,7 @@ const TowVehicle = ({
                     },
                 }}
                 content={{
-                    indicator: "Parte posteror de la licencia",
+                    indicator: "Parte posterior de la licencia",
                     isCircle: false,
                     id: "tow-license-behind-photo",
                 }}

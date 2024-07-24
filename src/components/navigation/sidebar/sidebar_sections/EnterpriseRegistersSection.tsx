@@ -28,7 +28,7 @@ const EnterpriseRegistersSection = ({ pathname }: { pathname: string }) => {
                 }`}
             >
                 <Building />
-                <span>Empresas de Grua</span>
+                <span>Empresas de Grúa</span>
             </Link>
             <Link
                 href={"/admin/enterprises/laundry"}

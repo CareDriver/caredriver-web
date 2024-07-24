@@ -52,7 +52,7 @@ const UserRegistration = () => {
                 {
                     pending: "Subiendo foto de perfil",
                     success: "Foto de perfil subido",
-                    error: "Error al subir la foto de perfil, intentalo de nuevo por favor",
+                    error: "Error al subir la foto de perfil, inténtalo de nuevo por favor",
                 },
             );
         }
@@ -121,12 +121,12 @@ const UserRegistration = () => {
                                 errorMessage: "El correo ya fue registrado",
                             },
                         });
-                        toast.error("El correo ya fue registrado, inicia sesion");
+                        toast.error("El correo ya fue registrado, inicia sesión");
                     } else {
                         const userId = await toast.promise(register(), {
-                            pending: "Creando metodo de authenticacion para el usuario",
+                            pending: "Creando método de authentication para el usuario",
                             success: "Creado",
-                            error: "Error al crear metodo de authenticacion",
+                            error: "Error al crear método de authentication",
                         });
                         if (userId) {
                             await toast.promise(createData(userId), {
@@ -136,7 +136,7 @@ const UserRegistration = () => {
                                 success: `Usuario ${
                                     UserRoleRender[credentials.role]
                                 } creado`,
-                                error: "Error al crear el nuevo usuario, intentalo de nuevo por favor",
+                                error: "Error al crear el nuevo usuario, inténtalo de nuevo por favor",
                             });
                             router.push("/admin/users");
                         } else {

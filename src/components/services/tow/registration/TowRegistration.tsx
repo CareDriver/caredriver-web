@@ -208,7 +208,7 @@ const TowRegistration = () => {
         if (!towEnterprise.value) {
             setTowEnterprise({
                 ...towEnterprise,
-                message: "Por favor selecciona la Empresa de Grua en la que trabajas",
+                message: "Por favor selecciona la Empresa de Grúa en la que trabajas",
             });
         }
         var isValid = verifyNoEmptyData(
@@ -233,9 +233,9 @@ const TowRegistration = () => {
                     await updateIdCard(personalData.idCard, user.data);
                     const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
                         await toast.promise(uploadImages(), {
-                            pending: "Subiendo imagenes, por favor espera",
-                            success: "Imagenes subidas",
-                            error: "Error al subir imagenes, intentalo de nuevo por favor",
+                            pending: "Subiendo imágenes, por favor espera",
+                            success: "Imágenes subidas",
+                            error: "Error al subir imágenes, inténtalo de nuevo por favor",
                         });
                     await toast.promise(
                         uploadForm(
@@ -246,7 +246,7 @@ const TowRegistration = () => {
                         {
                             pending: "Enviando el formulario, por favor espera",
                             success: "Formulario enviado",
-                            error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                            error: "Error al enviar el formulario, inténtalo de nuevo por favor",
                         },
                     );
                     window.location.reload();
@@ -275,7 +275,7 @@ const TowRegistration = () => {
                 loading: false,
                 isValid: false,
             });
-            toast.error("Por favor llena los campos que estan vacios", {
+            toast.error("Por favor llena los campos que están vacíos", {
                 toastId: "toast-error-empty-form",
             });
         }
@@ -345,15 +345,15 @@ const TowRegistration = () => {
             return {
                 title: "Tu solicitud fue Rechazada!",
                 description:
-                    "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud.",
+                    "Puede que alguno de tus datos no fueron validos, pero puedes volver a intentar mandar una nueva solicitud.",
                 state: ServiceReqState.Refused,
             };
         }
 
         return {
-            title: "Solicita trabajar como Operador de Grua con nosotros!",
+            title: "Solicita trabajar como Operador de Grúa con nosotros!",
             description:
-                "Por favor llena este formulario con datos reales para que tu solicitud sea aprovada y puedas empezar a trabajar con nosotros.",
+                "Por favor llena este formulario con datos reales para que tu solicitud sea aprobada y puedas empezar a trabajar con nosotros.",
             state: ServiceReqState.NotSent,
         };
     };
@@ -374,7 +374,7 @@ const TowRegistration = () => {
                 <div className="form-sub-container | margin-top-25">
                     <h2 className="text icon-wrapper | medium-big bold">
                         <Building />
-                        Empresa de Grua
+                        Empresa de Grúa
                     </h2>
 
                     <EnterpriseSelector

@@ -8,12 +8,12 @@ const TowRenderer = ({ tow }: { tow: Enterprise | undefined }) => {
         <div className="form-sub-container | margin-top-25">
             <h2 className="text icon-wrapper | medium-big bold">
                 <Building />
-                Empresa Operadora de Grua
+                Empresa Operadora de Grúa
             </h2>
             {tow ? (
                 <EnterpriseRenderer enterprise={tow} />
             ) : (
-                <FieldDeleted description="No se selecciono la empresa de grua" />
+                <FieldDeleted description="No se selecciono la empresa de grúa" />
             )}
         </div>
     );

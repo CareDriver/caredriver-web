@@ -100,7 +100,7 @@ const SignUpAsNew = () => {
                                     isVerifyingCode: false,
                                 });
                             } else {
-                                toast.error("Algo fallo, intentalo de nuevo por favor");
+                                toast.error("Algo fallo, inténtalo de nuevo por favor");
                                 console.log(errorMessage);
                                 setFormState({
                                     ...formState,
@@ -120,7 +120,7 @@ const SignUpAsNew = () => {
                         ...credentials,
                         code: {
                             ...credentials.code,
-                            errorMessage: "Codigo invalido, vuelve a intentarlo",
+                            errorMessage: "Código invalido, vuelve a intentarlo",
                         },
                     });
                 }
@@ -174,7 +174,7 @@ const SignUpAsNew = () => {
                                 errorMessage: "El correo ya fue registrado",
                             },
                         });
-                        toast.error("El correo ya fue registrado, inicia sesion");
+                        toast.error("El correo ya fue registrado, inicia sesión");
                     } else {
                         var codeToSent: string =
                             "" +
@@ -206,9 +206,9 @@ const SignUpAsNew = () => {
                                 }),
                                 {
                                     pending:
-                                        "Enviando codigo de verificacion a tu celular",
-                                    success: "Codigo enviado",
-                                    error: "Error al enviar el codigo, intentalo de nuevo por favor",
+                                        "Enviando código de verificación a tu celular",
+                                    success: "Código enviado",
+                                    error: "Error al enviar el código, inténtalo de nuevo por favor",
                                 },
                             );
 
@@ -241,7 +241,7 @@ const SignUpAsNew = () => {
                         isVerifyingCode: false,
                         loading: false,
                     });
-                    toast.error("Ocurrio un error, intentalo de nuevo por favor");
+                    toast.error("Ocurrio un error, inténtalo de nuevo por favor");
                 }
             } else {
                 setFormState({
@@ -305,7 +305,7 @@ const SignUpAsNew = () => {
                             className="form-section-input"
                         />
                         <legend className="form-section-legend">
-                            Codigo de verificacion
+                            Código de verificación
                         </legend>
                         {credentials.code.errorMessage && (
                             <small>{credentials.code.errorMessage}</small>
@@ -315,7 +315,7 @@ const SignUpAsNew = () => {
                         {formState.loading ? (
                             <i className="loader"></i>
                         ) : (
-                            <span>Verificar codigo</span>
+                            <span>Verificar código</span>
                         )}
                     </button>
                 </form>

@@ -19,7 +19,7 @@ const UserStatusIndicator = ({ user }: { user: UserInterface }) => {
                     href={`/admin/users/${user.id}`}
                 >
                     <TriangleExclamation />
-                    El usuario esta desabilitado, click aqui para mas informacion
+                    El usuario esta deshabilitado, click aquí para mas información
                 </Link>
             );
         } else {

@@ -81,9 +81,9 @@ const BalanceUser = ({
                 await toast.promise(
                     saveBalanceHistoryItem(balanceHistoryId, balanceItem),
                     {
-                        pending: "Guardando justificatorio",
+                        pending: "Guardando justificativo",
                         success: "Justificatio guardado",
-                        error: "Error al guardar tu justificatio, intentalo de nuevo por favor",
+                        error: "Error al guardar tu justificatio, inténtalo de nuevo por favor",
                     },
                 );
 
@@ -111,7 +111,7 @@ const BalanceUser = ({
                     {
                         pending: "Actualizando el saldo del usuario",
                         success: "Saldo actualizado",
-                        error: "Error al actualizar el saldo, intantalo de nuevo",
+                        error: "Error al actualizar el saldo, inténtalo de nuevo",
                     },
                 );
                 window.location.reload();

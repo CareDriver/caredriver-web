@@ -21,7 +21,7 @@ const EnterpriseItem = ({
             {!enterprise.active && (
                 <h4 className="icon-wrapper text | yellow-icon bold yellow | margin-top-15">
                     <TriangleExclamation />
-                    Desabilitado
+                    Deshabilitado
                 </h4>
             )}
         </Link>

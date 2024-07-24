@@ -39,7 +39,7 @@ const DrivePanel = () => {
                 await toast.promise(updateUser(user.data?.id, userToUpdate), {
                     pending: "Agregando nueva transmisión, por favor espera",
                     success: "Transmisión agregada",
-                    error: "Error al agregar la nueva transmisión, intentalo de nuevo por favor",
+                    error: "Error al agregar la nueva transmisión, inténtalo de nuevo por favor",
                 });
                 setAddingNew(false);
                 window.location.reload();
@@ -99,13 +99,13 @@ const DrivePanel = () => {
             <h1 className="text | big bolder green">Tu solicitud fue aprobada!</h1>
             <p className="text icon-wrapper | green-icon green bolder lb medium margin-top-15">
                 <SackDollar />
-                Ve a nuestra Aplicacion Móvil y empieza a Ofrecer tu servicio!
+                Ve a nuestra Aplicación Móvil y empieza a Ofrecer tu servicio!
             </p>
             {user.data.serviceVehicles && user.data.serviceVehicles.car && (
                 <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
                         <CarSide />
-                        Automovil
+                        Automóvil
                     </h2>
                     <h3 className="text | gray gray-dark bold margin-top-5">
                         Valido hasta el{" "}
@@ -219,7 +219,7 @@ const DrivePanel = () => {
                         {user.data.serviceVehicles &&
                         !user.data.serviceVehicles.motorcycle
                             ? "Motocicleta"
-                            : "Automovil"}
+                            : "Automóvil"}
                     </h2>
                     {(user.data.serviceRequests &&
                         user.data.serviceRequests.driveCar &&
@@ -241,8 +241,8 @@ const DrivePanel = () => {
                     ) : (
                         <div data-state={addingNew && "loading"}>
                             <h3 className="text | gray gray-dark bold margin-top-5">
-                                Agrega este vehiculo para poder ofrecer tu servicio usando
-                                este vehiculo.
+                                Agrega este vehículo para poder ofrecer tu servicio usando
+                                este vehículo.
                             </h3>
                             <Link
                                 className="icon-wrapper small-general-button text | gray gray-icon medium bolder lb margin-top-25 touchable"
@@ -254,7 +254,7 @@ const DrivePanel = () => {
                                 }`}
                             >
                                 <Plus />
-                                Agregar Vehiculo
+                                Agregar Vehículo
                             </Link>
                         </div>
                     )}

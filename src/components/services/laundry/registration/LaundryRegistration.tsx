@@ -181,16 +181,16 @@ const LaundryRegistration = () => {
                     await updateIdCard(personalData.idCard, user.data);
                     const { newProfilePhotoImgUrl, realTimePhotoImgUrl } =
                         await toast.promise(uploadImages(), {
-                            pending: "Subiendo imagenes, por favor espera",
-                            success: "Imagenes subidas",
-                            error: "Error al subir imagenes, intentalo de nuevo por favor",
+                            pending: "Subiendo imágenes, por favor espera",
+                            success: "Imágenes subidas",
+                            error: "Error al subir imágenes, inténtalo de nuevo por favor",
                         });
                     await toast.promise(
                         uploadForm(newProfilePhotoImgUrl, realTimePhotoImgUrl),
                         {
                             pending: "Enviando el formulario, por favor espera",
                             success: "Formulario enviado",
-                            error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                            error: "Error al enviar el formulario, inténtalo de nuevo por favor",
                         },
                     );
                     window.location.reload();
@@ -219,7 +219,7 @@ const LaundryRegistration = () => {
                 loading: false,
                 isValid: false,
             });
-            toast.error("Por favor llena los campos que estan vacios", {
+            toast.error("Por favor llena los campos que están vacíos", {
                 toastId: "toast-error-empty-form",
             });
         }
@@ -288,7 +288,7 @@ const LaundryRegistration = () => {
             return {
                 title: "Tu solicitud fue Rechazada!",
                 description:
-                    "Puede que alguno de tus datos no fueron validos, pero puedes volver a intertar mandar una nueva solicitud.",
+                    "Puede que alguno de tus datos no fueron validos, pero puedes volver a intentar mandar una nueva solicitud.",
                 state: ServiceReqState.Refused,
             };
         }

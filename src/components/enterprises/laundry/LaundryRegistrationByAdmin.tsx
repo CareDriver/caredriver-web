@@ -89,7 +89,7 @@ const LaundryRegistrationByAdmin = () => {
                                 {
                                     pending: "Subiendo el logo, por favor espera",
                                     success: "Logo subido",
-                                    error: "Error al subir el logo, intentalo de nuevo por favor",
+                                    error: "Error al subir el logo, inténtalo de nuevo por favor",
                                 },
                             );
 
@@ -115,7 +115,7 @@ const LaundryRegistrationByAdmin = () => {
                             await toast.promise(sendEnterpriseReq(id, enterprise), {
                                 pending: "Creando lavadero",
                                 success: "Creado",
-                                error: "Error al crear lavadero, intentalo de nuevo por favor",
+                                error: "Error al crear lavadero, inténtalo de nuevo por favor",
                             });
 
                             setFormState({
@@ -140,7 +140,7 @@ const LaundryRegistrationByAdmin = () => {
                         ...formState,
                         loading: false,
                     });
-                    toast.error("Por favor llena los campos que estan vacios", {
+                    toast.error("Por favor llena los campos que están vacíos", {
                         toastId: "toast-error-empty-form",
                     });
                 }
@@ -181,7 +181,7 @@ const LaundryRegistrationByAdmin = () => {
 
     return (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">Registar Lavadero</h1>
+            <h1 className="text | big bolder">Registrar Lavadero</h1>
             <form
                 className="form-sub-container | margin-top-50"
                 onSubmit={handleSummbit}

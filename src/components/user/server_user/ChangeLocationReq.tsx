@@ -42,7 +42,7 @@ const ChangeLocationReq = () => {
     const sendMessage = () => {
         const message = `${getGreeting()}\n\nSoy el usuario servidor ${
             user.data?.fullName
-        }, quiero pedirle cambiarme de grupo porque **acabo de cambiar mi localizacion de ${
+        }, quiero pedirle cambiarme de grupo porque **acabo de cambiar mi localización de ${
             location.default
         } a ${location.value}**`;
         sendWhatsapp(PHONE_BUSINESS, message);
@@ -70,9 +70,9 @@ const ChangeLocationReq = () => {
                                 }),
                                 {
                                     pending:
-                                        "Actualizando localizacion, por favor espera",
-                                    success: "Localizacion actualizada",
-                                    error: "Error al actualizar tu localizacion, intentalo de nuevo por favor",
+                                        "Actualizando localización, por favor espera",
+                                    success: "Localización actualizada",
+                                    error: "Error al actualizar tu localización, inténtalo de nuevo por favor",
                                 },
                             );
 
@@ -106,7 +106,7 @@ const ChangeLocationReq = () => {
                 });
                 setLocation({
                     ...location,
-                    message: "Ya tienes establecido esta localizacion",
+                    message: "Ya tienes establecido esta localización",
                 });
             }
         }
@@ -134,7 +134,7 @@ const ChangeLocationReq = () => {
         <PageLoader />
     ) : user.data && location.value ? (
         <section className="service-form-wrapper | max-height-100">
-            <h1 className="text | big bolder">Cambia tu Localizacion</h1>
+            <h1 className="text | big bolder">Cambia tu Localización</h1>
             <p className="text | light">
                 Se mandara una solicitud por Whatsapp para que puedas actualizar tu foto
                 de perfil.
@@ -156,7 +156,7 @@ const ChangeLocationReq = () => {
                                 value: newLocation,
                                 message:
                                     newLocation === location.default
-                                        ? "Ya tienes establecido esta localizacion"
+                                        ? "Ya tienes establecido esta localización"
                                         : null,
                             });
                         }}
@@ -168,7 +168,7 @@ const ChangeLocationReq = () => {
                             </option>
                         ))}
                     </select>
-                    <legend className="form-section-legend">Nueva localizacion</legend>
+                    <legend className="form-section-legend">Nueva localización</legend>
                     {location.message && <small>{location.message}</small>}
                 </fieldset>
                 <div

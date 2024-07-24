@@ -51,7 +51,7 @@ const LicenseRenderer = ({
                         noFoundDescr={undefined}
                     />
                     <legend className="form-section-legend | focused">
-                        Parte posteror de la licencia
+                        Parte posterior de la licencia
                     </legend>
                 </fieldset>
             )}
