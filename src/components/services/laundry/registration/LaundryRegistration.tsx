@@ -157,71 +157,73 @@ const LaundryRegistration = () => {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        setFormState({
-            ...formState,
-            loading: true,
-        });
-        var isValid = verifyNoEmptyData(
-            personalData,
-            userConfirmation,
-            acceptedTerms,
-            personalData.idCard,
-            laundryEnterprise,
-        );
-        if (isValid) {
-            isValid = isValidForm(
+        if (!formState.loading) {
+            setFormState({
+                ...formState,
+                loading: true,
+            });
+            var isValid = verifyNoEmptyData(
                 personalData,
                 userConfirmation,
                 acceptedTerms,
                 personalData.idCard,
                 laundryEnterprise,
             );
-            if (isValid && user.data) {
-                try {
-                    await updateIdCard(personalData.idCard, user.data);
-                    const { newProfilePhotoImgUrl, realTimePhotoImgUrl } =
-                        await toast.promise(uploadImages(), {
-                            pending: "Subiendo imágenes, por favor espera",
-                            success: "Imágenes subidas",
-                            error: "Error al subir imágenes, inténtalo de nuevo por favor",
+            if (isValid) {
+                isValid = isValidForm(
+                    personalData,
+                    userConfirmation,
+                    acceptedTerms,
+                    personalData.idCard,
+                    laundryEnterprise,
+                );
+                if (isValid && user.data) {
+                    try {
+                        await updateIdCard(personalData.idCard, user.data);
+                        const { newProfilePhotoImgUrl, realTimePhotoImgUrl } =
+                            await toast.promise(uploadImages(), {
+                                pending: "Subiendo imágenes, por favor espera",
+                                success: "Imágenes subidas",
+                                error: "Error al subir imágenes, inténtalo de nuevo por favor",
+                            });
+                        await toast.promise(
+                            uploadForm(newProfilePhotoImgUrl, realTimePhotoImgUrl),
+                            {
+                                pending: "Enviando el formulario, por favor espera",
+                                success: "Formulario enviado",
+                                error: "Error al enviar el formulario, inténtalo de nuevo por favor",
+                            },
+                        );
+                        window.location.reload();
+                        setFormState({
+                            loading: false,
+                            isValid: true,
                         });
-                    await toast.promise(
-                        uploadForm(newProfilePhotoImgUrl, realTimePhotoImgUrl),
-                        {
-                            pending: "Enviando el formulario, por favor espera",
-                            success: "Formulario enviado",
-                            error: "Error al enviar el formulario, inténtalo de nuevo por favor",
-                        },
-                    );
-                    window.location.reload();
-                    setFormState({
-                        loading: false,
-                        isValid: true,
-                    });
-                } catch (e) {
+                    } catch (e) {
+                        setFormState({
+                            loading: false,
+                            isValid: false,
+                        });
+                        window.location.reload();
+                    }
+                } else {
                     setFormState({
                         loading: false,
                         isValid: false,
                     });
-                    window.location.reload();
+                    toast.error("Por favor llena los campos con datos validos", {
+                        toastId: "toast-error-invalid-form",
+                    });
                 }
             } else {
                 setFormState({
                     loading: false,
                     isValid: false,
                 });
-                toast.error("Por favor llena los campos con datos validos", {
-                    toastId: "toast-error-invalid-form",
+                toast.error("Por favor llena los campos que están vacíos", {
+                    toastId: "toast-error-empty-form",
                 });
             }
-        } else {
-            setFormState({
-                loading: false,
-                isValid: false,
-            });
-            toast.error("Por favor llena los campos que están vacíos", {
-                toastId: "toast-error-empty-form",
-            });
         }
     };
 
@@ -302,11 +304,12 @@ const LaundryRegistration = () => {
     };
 
     return (
-        <div className="service-form-wrapper" onSubmit={(e) => handleSubmit(e)}>
+        <div className="service-form-wrapper">
             <ServiceHeader data={getState()} />
             <form
                 className="form-sub-container"
                 data-state={formState.loading ? "loading" : "loaded"}
+                onSubmit={(e) => handleSubmit(e)}
             >
                 <PersonalDataForm
                     personalData={personalData}

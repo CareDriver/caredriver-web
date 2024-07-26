@@ -188,6 +188,13 @@ const EnterpriseEditByAdmin = ({
                     data.coordinates?.latitude &&
                     data.coordinates?.longitude
                 ) {
+                    if (data.deleted) {
+                        toast.warning("Servicio no encontrado", {
+                            toastId: "no-found-service-enterprise",
+                        });
+                        router.push(`/admin/enterprises/${getRoute(type)}`);
+                        return;
+                    }
                     setFormData({
                         name: {
                             value: data.name,
@@ -390,7 +397,9 @@ const EnterpriseEditByAdmin = ({
                     <button
                         className="general-button touchable | gray"
                         type="button"
-                        onClick={() => router.push(`/admin/enterprises/${getRoute(type)}`)}
+                        onClick={() =>
+                            router.push(`/admin/enterprises/${getRoute(type)}`)
+                        }
                     >
                         Cancelar
                     </button>

@@ -54,112 +54,127 @@ const EnterpriseUpReqRender = ({
     };
 
     const approve = async () => {
-        if (user.data && user.data.id && enterprise.id) {
-            setReviewState({
-                ...reviewState,
-                loading: true,
-            });
-            try {
-                const oldEnterprise = await getEnterpriseById(enterprise.enterpriseId);
-                if (oldEnterprise) {
-                    const logoChanged: boolean =
-                        oldEnterprise.logoImgUrl.ref !== enterprise.logoImgUrl.ref &&
-                        oldEnterprise.logoImgUrl.url !== enterprise.logoImgUrl.url;
+        if (!reviewState.loading) {
+            if (user.data && user.data.id && enterprise.id) {
+                setReviewState({
+                    ...reviewState,
+                    loading: true,
+                });
+                try {
+                    const oldEnterprise = await getEnterpriseById(
+                        enterprise.enterpriseId,
+                    );
+                    if (oldEnterprise) {
+                        const logoChanged: boolean =
+                            oldEnterprise.logoImgUrl.ref !== enterprise.logoImgUrl.ref &&
+                            oldEnterprise.logoImgUrl.url !== enterprise.logoImgUrl.url;
 
-                    if (logoChanged) {
-                        await toast.promise(deleteFile(oldEnterprise.logoImgUrl.ref), {
-                            pending: "Remplazando el logo",
-                            success: "Logo remplazado",
-                            error: "Error al remplazar el logo, inténtalo de nuevo por favor",
+                        if (logoChanged) {
+                            await toast.promise(
+                                deleteFile(oldEnterprise.logoImgUrl.ref),
+                                {
+                                    pending: "Remplazando el logo",
+                                    success: "Logo remplazado",
+                                    error: "Error al remplazar el logo, inténtalo de nuevo por favor",
+                                },
+                            );
+                        }
+                        await toast.promise(updating(), {
+                            pending: `Editando ${
+                                EnterpriseTypeRenderPronoun[enterprise.type]
+                            }`,
+                            success: "Editado",
+                            error: "Error al editar, inténtalo de nuevo por favor",
                         });
+                        router.push(
+                            `/admin/requests/enterprises/edit${getRoute(
+                                enterprise.type,
+                            )}`,
+                        );
+                    } else {
+                        toast.error(
+                            `${
+                                EnterpriseTypeRender[enterprise.type]
+                            } para editar no encontrado`,
+                        );
                     }
-                    await toast.promise(updating(), {
-                        pending: `Editando ${
-                            EnterpriseTypeRenderPronoun[enterprise.type]
-                        }`,
-                        success: "Editado",
-                        error: "Error al editar, inténtalo de nuevo por favor",
+                    setReviewState({
+                        ...reviewState,
+                        loading: false,
                     });
-                    router.push(
-                        `/admin/requests/enterprises/edit${getRoute(enterprise.type)}`,
-                    );
-                } else {
-                    toast.error(
-                        `${
-                            EnterpriseTypeRender[enterprise.type]
-                        } para editar no encontrado`,
-                    );
+                } catch (e) {
+                    console.log(e);
+                    setReviewState({
+                        ...reviewState,
+                        loading: false,
+                    });
                 }
-                setReviewState({
-                    ...reviewState,
-                    loading: false,
-                });
-            } catch (e) {
-                console.log(e);
-                setReviewState({
-                    ...reviewState,
-                    loading: false,
-                });
             }
         }
     };
 
     const decline = async () => {
-        if (user.data && user.data.id && enterprise.id) {
-            setReviewState({
-                ...reviewState,
-                loading: true,
-            });
-            try {
-                const oldEnterprise = await getEnterpriseById(enterprise.enterpriseId);
-                if (oldEnterprise) {
-                    const logoChanged: boolean =
-                        oldEnterprise.logoImgUrl.ref !== enterprise.logoImgUrl.ref &&
-                        oldEnterprise.logoImgUrl.url !== enterprise.logoImgUrl.url;
-
-                    await toast.promise(
-                        updateUpdateEnterprise(enterprise.id, {
-                            active: false,
-                        }),
-                        {
-                            pending: `Rechazando la edicion ${
-                                EnterpriseTypeRenderPronounV2[enterprise.type]
-                            }`,
-                            success: "Rechazado",
-                            error: `Error al rechazar ${
-                                EnterpriseTypeRenderPronounV2[enterprise.type]
-                            }`,
-                        },
+        if (!reviewState.loading) {
+            if (user.data && user.data.id && enterprise.id) {
+                setReviewState({
+                    ...reviewState,
+                    loading: true,
+                });
+                try {
+                    const oldEnterprise = await getEnterpriseById(
+                        enterprise.enterpriseId,
                     );
-                    if (logoChanged) {
-                        await toast.promise(deleteFile(enterprise.logoImgUrl.ref), {
-                            pending: "Eliminado el logo",
-                            success: "Logo eliminado",
-                            error: "Error al eliminar el logo, inténtalo de nuevo por favor",
-                        });
+                    if (oldEnterprise) {
+                        const logoChanged: boolean =
+                            oldEnterprise.logoImgUrl.ref !== enterprise.logoImgUrl.ref &&
+                            oldEnterprise.logoImgUrl.url !== enterprise.logoImgUrl.url;
+
+                        await toast.promise(
+                            updateUpdateEnterprise(enterprise.id, {
+                                active: false,
+                            }),
+                            {
+                                pending: `Rechazando la edicion ${
+                                    EnterpriseTypeRenderPronounV2[enterprise.type]
+                                }`,
+                                success: "Rechazado",
+                                error: `Error al rechazar ${
+                                    EnterpriseTypeRenderPronounV2[enterprise.type]
+                                }`,
+                            },
+                        );
+                        if (logoChanged) {
+                            await toast.promise(deleteFile(enterprise.logoImgUrl.ref), {
+                                pending: "Eliminado el logo",
+                                success: "Logo eliminado",
+                                error: "Error al eliminar el logo, inténtalo de nuevo por favor",
+                            });
+                        }
+
+                        router.push(
+                            `/admin/requests/enterprises/edit${getRoute(
+                                enterprise.type,
+                            )}`,
+                        );
+                    } else {
+                        toast.error(
+                            `${
+                                EnterpriseTypeRender[enterprise.type]
+                            } para editar no encontrado`,
+                        );
                     }
 
-                    router.push(
-                        `/admin/requests/enterprises/edit${getRoute(enterprise.type)}`,
-                    );
-                } else {
-                    toast.error(
-                        `${
-                            EnterpriseTypeRender[enterprise.type]
-                        } para editar no encontrado`,
-                    );
+                    setReviewState({
+                        ...reviewState,
+                        loading: false,
+                    });
+                } catch (e) {
+                    console.log(e);
+                    setReviewState({
+                        ...reviewState,
+                        loading: false,
+                    });
                 }
-
-                setReviewState({
-                    ...reviewState,
-                    loading: false,
-                });
-            } catch (e) {
-                console.log(e);
-                setReviewState({
-                    ...reviewState,
-                    loading: false,
-                });
             }
         }
     };

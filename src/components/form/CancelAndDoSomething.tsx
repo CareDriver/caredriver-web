@@ -15,25 +15,27 @@ const CancelAndDoSomething = ({
 }) => {
     const execute = async (e: SyntheticEvent) => {
         e.preventDefault();
-        var button = e.target as HTMLButtonElement;
-        const text = button.innerHTML;
-        button.innerHTML = "";
-        button.classList.add("loading-section");
-        var loader = document.createElement("span");
-        loader.classList.add("loader");
-        button.appendChild(loader);
-
-        if (button.name === "button_1") {
-            loader.classList.add("loader-black");
-            await onCancel();
-        } else {
-            await onDoSomething(e);
+        if (!loading) {
+            var button = e.target as HTMLButtonElement;
+            const text = button.innerHTML;
+            button.innerHTML = "";
+            button.classList.add("loading-section");
+            var loader = document.createElement("span");
+            loader.classList.add("loader");
+            button.appendChild(loader);
+    
+            if (button.name === "button_1") {
+                loader.classList.add("loader-black");
+                await onCancel();
+            } else {
+                await onDoSomething(e);
+            }
+            if (includeChild(button, loader)) {
+                button.removeChild(loader);
+            }
+            button.innerHTML = text;
+            button.classList.remove("loading-section");
         }
-        if (includeChild(button, loader)) {
-            button.removeChild(loader);
-        }
-        button.innerHTML = text;
-        button.classList.remove("loading-section");
     };
 
     const includeChild = (button: HTMLButtonElement, child: HTMLElement) => {

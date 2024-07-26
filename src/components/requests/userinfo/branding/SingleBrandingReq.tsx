@@ -105,19 +105,23 @@ const SingleBrandingReq = ({ reqId }: { reqId: string }) => {
     };
 
     const approve = async () => {
-        await toast.promise(review(true), {
-            pending: "Aprobando verificación del branding",
-            success: "Verificación del branding aprobada",
-            error: "Error al aprobar la verificación, inténtalo de nuevo por favor",
-        });
+        if (!reviewState.loading) {
+            await toast.promise(review(true), {
+                pending: "Aprobando verificación del branding",
+                success: "Verificación del branding aprobada",
+                error: "Error al aprobar la verificación, inténtalo de nuevo por favor",
+            });
+        }
     };
 
     const decline = async () => {
-        await toast.promise(review(false), {
-            pending: "Rechazando verificación del branding",
-            success: "Verificación del branding rechazada",
-            error: "Error al rechazar la verificación, inténtalo de nuevo por favor",
-        });
+        if (!reviewState.loading) {
+            await toast.promise(review(false), {
+                pending: "Rechazando verificación del branding",
+                success: "Verificación del branding rechazada",
+                error: "Error al rechazar la verificación, inténtalo de nuevo por favor",
+            });
+        }
     };
 
     return req ? (

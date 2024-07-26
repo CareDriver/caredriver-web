@@ -29,6 +29,7 @@ const EnterpriseSelector = ({
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
     const [pages, setPages] = useState<number | null>(null);
     const [page, setPage] = useState<number>(1);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         getAllNumPages(numPerPage, type).then((pages) => setPages(pages));
@@ -37,6 +38,7 @@ const EnterpriseSelector = ({
     useEffect(() => {
         const startAfterDoc = lastDoc;
         const endBeforeDoc = undefined;
+        setLoading(true);
         getAllPaginatedData(type, "next", startAfterDoc, endBeforeDoc, numPerPage).then(
             (result) => {
                 if (data) {
@@ -45,12 +47,13 @@ const EnterpriseSelector = ({
                     setData(result.result);
                 }
                 setLastDoc(result.lastDoc);
+                setLoading(false);
             },
         );
     }, [page]);
 
     const handleNextClick = () => {
-        if (page === pages) return;
+        if (page === pages || loading) return;
         setPage((prev) => prev + 1);
     };
 
@@ -102,8 +105,8 @@ const EnterpriseSelector = ({
                 {page !== pages && (
                     <div title={page === pages ? "No hay mas resultados" : "Cargar mas"}>
                         <button
-                            className="icon-wrapper small-general-button text | bold gray-icon gray | margin-top-25"
-                            disabled={page === pages}
+                            className="icon-wrapper small-general-button text | bold gray-icon gray | margin-top-25 touchable"
+                            disabled={page === pages || loading}
                             type="button"
                             onClick={handleNextClick}
                         >

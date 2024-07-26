@@ -98,57 +98,66 @@ const UserRegistration = () => {
 
     const handleSummit = async (e: FormEvent) => {
         e.preventDefault();
-        setFormState({
-            ...formState,
-            loading: true,
-        });
-
-        if (isNotEmpty(credentials)) {
-            if (thereAreNotErrorsSignUp(credentials)) {
-                try {
-                    const amountOfUsers = await checkEmailExists(credentials.email.value);
-
-                    if (amountOfUsers > 0) {
-                        setFormState({
-                            ...formState,
-                            isValid: false,
-                            loading: false,
-                        });
-                        setCredentials({
-                            ...credentials,
-                            email: {
-                                ...credentials.email,
-                                errorMessage: "El correo ya fue registrado",
-                            },
-                        });
-                        toast.error("El correo ya fue registrado, inicia sesión");
-                    } else {
-                        const userId = await toast.promise(register(), {
-                            pending: "Creando método de authentication para el usuario",
-                            success: "Creado",
-                            error: "Error al crear método de authentication",
-                        });
-                        if (userId) {
-                            await toast.promise(createData(userId), {
-                                pending: `Creando nuevo usuario ${
-                                    UserRoleRender[credentials.role]
-                                }`,
-                                success: `Usuario ${
-                                    UserRoleRender[credentials.role]
-                                } creado`,
-                                error: "Error al crear el nuevo usuario, inténtalo de nuevo por favor",
-                            });
-                            router.push("/admin/users");
-                        } else {
+        if (!formState.loading) {
+            setFormState({
+                ...formState,
+                loading: true,
+            });
+    
+            if (isNotEmpty(credentials)) {
+                if (thereAreNotErrorsSignUp(credentials)) {
+                    try {
+                        const amountOfUsers = await checkEmailExists(credentials.email.value);
+    
+                        if (amountOfUsers > 0) {
                             setFormState({
                                 ...formState,
                                 isValid: false,
                                 loading: false,
                             });
+                            setCredentials({
+                                ...credentials,
+                                email: {
+                                    ...credentials.email,
+                                    errorMessage: "El correo ya fue registrado",
+                                },
+                            });
+                            toast.error("El correo ya fue registrado, inicia sesión");
+                        } else {
+                            const userId = await toast.promise(register(), {
+                                pending: "Creando método de authentication para el usuario",
+                                success: "Creado",
+                                error: "Error al crear método de authentication",
+                            });
+                            if (userId) {
+                                await toast.promise(createData(userId), {
+                                    pending: `Creando nuevo usuario ${
+                                        UserRoleRender[credentials.role]
+                                    }`,
+                                    success: `Usuario ${
+                                        UserRoleRender[credentials.role]
+                                    } creado`,
+                                    error: "Error al crear el nuevo usuario, inténtalo de nuevo por favor",
+                                });
+                                router.push("/admin/users");
+                            } else {
+                                setFormState({
+                                    ...formState,
+                                    isValid: false,
+                                    loading: false,
+                                });
+                            }
                         }
+                    } catch (e) {
+                        console.log(e);
                     }
-                } catch (e) {
-                    console.log(e);
+                } else {
+                    setFormState({
+                        ...formState,
+                        isValid: false,
+                        loading: false,
+                    });
+                    toast.error("Por favor completa los campos con datos validos");
                 }
             } else {
                 setFormState({
@@ -156,15 +165,8 @@ const UserRegistration = () => {
                     isValid: false,
                     loading: false,
                 });
-                toast.error("Por favor completa los campos con datos validos");
+                toast.error("Por favor completa los campos");
             }
-        } else {
-            setFormState({
-                ...formState,
-                isValid: false,
-                loading: false,
-            });
-            toast.error("Por favor completa los campos");
         }
     };
 

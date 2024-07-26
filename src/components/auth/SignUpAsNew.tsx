@@ -41,88 +41,99 @@ const SignUpAsNew = () => {
 
     const signUp = async (e: FormEvent) => {
         e.preventDefault();
-        setFormState({
-            ...formState,
-            loading: true,
-        });
+        if (!formState.loading) {
+            setFormState({
+                ...formState,
+                loading: true,
+            });
 
-        if (isNotEmpty(credentials)) {
-            if (thereAreNotErrorsSignUp(credentials)) {
-                if (
-                    credentials.code.sent.trim().length > 0 &&
-                    credentials.code.sent === credentials.code.toVerify
-                ) {
-                    createUserWithEmailAndPassword(
-                        auth,
-                        credentials.email.value.toLocaleLowerCase().trim(),
-                        credentials.password.value.trim(),
-                    )
-                        .then((res) => {
-                            const emptyUserData: UserInterface = createUserData(
-                                res.user.uid,
-                                UserRole.User,
-                                credentials,
-                            );
+            if (isNotEmpty(credentials)) {
+                if (thereAreNotErrorsSignUp(credentials)) {
+                    if (
+                        credentials.code.sent.trim().length > 0 &&
+                        credentials.code.sent === credentials.code.toVerify
+                    ) {
+                        createUserWithEmailAndPassword(
+                            auth,
+                            credentials.email.value.toLocaleLowerCase().trim(),
+                            credentials.password.value.trim(),
+                        )
+                            .then((res) => {
+                                const emptyUserData: UserInterface = createUserData(
+                                    res.user.uid,
+                                    UserRole.User,
+                                    credentials,
+                                );
 
-                            saveUser(res.user.uid, emptyUserData)
-                                .then(() => {
+                                saveUser(res.user.uid, emptyUserData)
+                                    .then(() => {
+                                        setFormState({
+                                            ...formState,
+                                            loading: false,
+                                        });
+                                        toast.success("Registro exitoso");
+                                        window.location.replace("/redirector");
+                                    })
+                                    .catch(() => {
+                                        setFormState({
+                                            ...formState,
+                                            loading: false,
+                                        });
+                                    });
+                            })
+                            .catch((error) => {
+                                var errorCode = error.code;
+                                var errorMessage = error.message;
+                                if (errorCode === "auth/email-already-in-use") {
+                                    toast.error("El correo electrónico ya está en uso");
+                                    setCredentials({
+                                        ...credentials,
+                                        email: {
+                                            ...credentials.email,
+                                            errorMessage:
+                                                "El correo electrónico ya está en uso",
+                                        },
+                                    });
                                     setFormState({
                                         ...formState,
+                                        isValid: false,
                                         loading: false,
+                                        isVerifyingCode: false,
                                     });
-                                    toast.success("Registro exitoso");
-                                    window.location.replace("/redirector");
-                                })
-                                .catch(() => {
+                                } else {
+                                    toast.error(
+                                        "Algo fallo, inténtalo de nuevo por favor",
+                                    );
+                                    console.log(errorMessage);
                                     setFormState({
                                         ...formState,
+                                        isValid: false,
                                         loading: false,
+                                        isVerifyingCode: false,
                                     });
-                                });
-                        })
-                        .catch((error) => {
-                            var errorCode = error.code;
-                            var errorMessage = error.message;
-                            if (errorCode === "auth/email-already-in-use") {
-                                toast.error("El correo electrónico ya está en uso");
-                                setCredentials({
-                                    ...credentials,
-                                    email: {
-                                        ...credentials.email,
-                                        errorMessage:
-                                            "El correo electrónico ya está en uso",
-                                    },
-                                });
-                                setFormState({
-                                    ...formState,
-                                    isValid: false,
-                                    loading: false,
-                                    isVerifyingCode: false,
-                                });
-                            } else {
-                                toast.error("Algo fallo, inténtalo de nuevo por favor");
-                                console.log(errorMessage);
-                                setFormState({
-                                    ...formState,
-                                    isValid: false,
-                                    loading: false,
-                                    isVerifyingCode: false,
-                                });
-                            }
+                                }
+                            });
+                    } else {
+                        setFormState({
+                            ...formState,
+                            isValid: false,
+                            loading: false,
                         });
+                        setCredentials({
+                            ...credentials,
+                            code: {
+                                ...credentials.code,
+                                errorMessage: "Código invalido, vuelve a intentarlo",
+                            },
+                        });
+                    }
                 } else {
                     setFormState({
                         ...formState,
                         isValid: false,
                         loading: false,
                     });
-                    setCredentials({
-                        ...credentials,
-                        code: {
-                            ...credentials.code,
-                            errorMessage: "Código invalido, vuelve a intentarlo",
-                        },
-                    });
+                    toast.error("Por favor completa los campos con datos validos");
                 }
             } else {
                 setFormState({
@@ -130,15 +141,8 @@ const SignUpAsNew = () => {
                     isValid: false,
                     loading: false,
                 });
-                toast.error("Por favor completa los campos con datos validos");
+                toast.error("Por favor completa los campos");
             }
-        } else {
-            setFormState({
-                ...formState,
-                isValid: false,
-                loading: false,
-            });
-            toast.error("Por favor completa los campos");
         }
     };
 
@@ -151,97 +155,108 @@ const SignUpAsNew = () => {
 
     const verifyCode = async (e: FormEvent) => {
         e.preventDefault();
-        setFormState({
-            ...formState,
-            loading: true,
-        });
+        if (!formState.loading) {
+            setFormState({
+                ...formState,
+                loading: true,
+            });
 
-        if (isNotEmpty(credentials)) {
-            if (thereAreNotErrorsSignUp(credentials)) {
-                try {
-                    const amountOfUsers = await checkEmailExists(credentials.email.value);
-                    if (amountOfUsers > 0) {
-                        setFormState({
-                            ...formState,
-                            isValid: false,
-                            isVerifyingCode: false,
-                            loading: false,
-                        });
-                        setCredentials({
-                            ...credentials,
-                            email: {
-                                ...credentials.email,
-                                errorMessage: "El correo ya fue registrado",
-                            },
-                        });
-                        toast.error("El correo ya fue registrado, inicia sesión");
-                    } else {
-                        var codeToSent: string =
-                            "" +
-                            generateVerificationCode({
-                                length: 6,
-                                type: "string",
-                            });
-                        try {
-                            /* 
-                            Cross-Origin Request Warning: The Same Origin 
-                            Policy will disallow reading the remote resource 
-                            at https://gate.whapi.cloud/messages/text soon. 
-                            (Reason: When the `Access-Control-Allow-Headers` is `*`, 
-                            the `Authorization` header is not covered. To include the 
-                            `Authorization` header, it must be explicitly listed 
-                            in CORS header `Access-Control-Allow-Headers`).
-                            */
-
-                            await toast.promise(
-                                fetch("/api/sms", {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                    },
-                                    body: JSON.stringify({
-                                        phone: credentials.phone.value,
-                                        code: codeToSent,
-                                    }),
-                                }),
-                                {
-                                    pending:
-                                        "Enviando código de verificación a tu celular",
-                                    success: "Código enviado",
-                                    error: "Error al enviar el código, inténtalo de nuevo por favor",
-                                },
-                            );
-
-                            setCredentials({
-                                ...credentials,
-                                code: {
-                                    ...credentials.code,
-                                    sent: codeToSent,
-                                },
-                            });
-
-                            setFormState({
-                                ...formState,
-                                isVerifyingCode: true,
-                                loading: false,
-                            });
-                        } catch (e) {
+            if (isNotEmpty(credentials)) {
+                if (thereAreNotErrorsSignUp(credentials)) {
+                    try {
+                        const amountOfUsers = await checkEmailExists(
+                            credentials.email.value,
+                        );
+                        if (amountOfUsers > 0) {
                             setFormState({
                                 ...formState,
                                 isValid: false,
                                 isVerifyingCode: false,
                                 loading: false,
                             });
+                            setCredentials({
+                                ...credentials,
+                                email: {
+                                    ...credentials.email,
+                                    errorMessage: "El correo ya fue registrado",
+                                },
+                            });
+                            toast.error("El correo ya fue registrado, inicia sesión");
+                        } else {
+                            var codeToSent: string =
+                                "" +
+                                generateVerificationCode({
+                                    length: 6,
+                                    type: "string",
+                                });
+                            try {
+                                /* 
+                                Cross-Origin Request Warning: The Same Origin 
+                                Policy will disallow reading the remote resource 
+                                at https://gate.whapi.cloud/messages/text soon. 
+                                (Reason: When the `Access-Control-Allow-Headers` is `*`, 
+                                the `Authorization` header is not covered. To include the 
+                                `Authorization` header, it must be explicitly listed 
+                                in CORS header `Access-Control-Allow-Headers`).
+                                */
+
+                                await toast.promise(
+                                    fetch("/api/sms", {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json",
+                                        },
+                                        body: JSON.stringify({
+                                            phone: credentials.phone.value,
+                                            code: codeToSent,
+                                        }),
+                                    }),
+                                    {
+                                        pending:
+                                            "Enviando código de verificación a tu celular",
+                                        success: "Código enviado",
+                                        error: "Error al enviar el código, inténtalo de nuevo por favor",
+                                    },
+                                );
+
+                                setCredentials({
+                                    ...credentials,
+                                    code: {
+                                        ...credentials.code,
+                                        sent: codeToSent,
+                                    },
+                                });
+
+                                setFormState({
+                                    ...formState,
+                                    isVerifyingCode: true,
+                                    loading: false,
+                                });
+                            } catch (e) {
+                                setFormState({
+                                    ...formState,
+                                    isValid: false,
+                                    isVerifyingCode: false,
+                                    loading: false,
+                                });
+                            }
                         }
+                    } catch (e) {
+                        setFormState({
+                            ...formState,
+                            isValid: false,
+                            isVerifyingCode: false,
+                            loading: false,
+                        });
+                        toast.error("Ocurrio un error, inténtalo de nuevo por favor");
                     }
-                } catch (e) {
+                } else {
                     setFormState({
                         ...formState,
                         isValid: false,
-                        isVerifyingCode: false,
                         loading: false,
                     });
-                    toast.error("Ocurrio un error, inténtalo de nuevo por favor");
+                    toast.error("Por favor completa los campos con datos validos");
                 }
             } else {
                 setFormState({
@@ -249,15 +264,8 @@ const SignUpAsNew = () => {
                     isValid: false,
                     loading: false,
                 });
-                toast.error("Por favor completa los campos con datos validos");
+                toast.error("Por favor completa los campos");
             }
-        } else {
-            setFormState({
-                ...formState,
-                isValid: false,
-                loading: false,
-            });
-            toast.error("Por favor completa los campos");
         }
     };
 

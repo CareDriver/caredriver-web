@@ -61,11 +61,23 @@ const MinBalanceUser = ({
             button.appendChild(loader);
 
             await perform();
-
-            button.removeChild(loader);
+            if (includeChild(button, loader)) {
+                button.removeChild(loader);
+            }
             button.innerHTML = text;
             button.classList.remove("loading-section");
         }
+    };
+
+    const includeChild = (button: HTMLButtonElement, child: HTMLElement) => {
+        for (let i = 0; i < button.children.length; i++) {
+            const element = button.children[i];
+            if (element === child) {
+                return true;
+            }
+        }
+
+        return false;
     };
 
     return (

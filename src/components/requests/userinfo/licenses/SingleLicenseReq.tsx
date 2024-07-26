@@ -142,11 +142,15 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
     };
 
     const approve = async () => {
-        await review(true);
+        if (!reviewState.loading) {
+            await review(true);
+        }
     };
 
     const decline = async () => {
-        await review(false);
+        if (!reviewState.loading) {
+            await review(false);
+        }
     };
 
     useEffect(() => {

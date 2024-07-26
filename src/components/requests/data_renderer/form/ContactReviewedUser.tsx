@@ -40,7 +40,7 @@ const ContactReviewedUser = ({
                     onClick={contactByEmail}
                     className="icon-wrapper text general-button | red white-icon bolder mb"
                 >
-                    <Envelope /> Contactar por CORREO
+                    <Envelope /> Contactar por Correo
                 </button>
                 <button
                     type="button"

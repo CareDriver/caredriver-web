@@ -28,65 +28,76 @@ const EnterpriseReqRender = ({ enterprise }: { enterprise: Enterprise }) => {
     const router = useRouter();
 
     const approve = async () => {
-        if (user.data && user.data.id && enterprise.id) {
-            setReviewState({
-                ...reviewState,
-                loading: true,
-            });
-            try {
-                await toast.promise(aproveEnterpriseReq(enterprise.id, user.data.id), {
-                    pending: `Aprobando ${EnterpriseTypeRender[enterprise.type]}`,
-                    success: "Aprobado",
-                    error: `Error al aprobar ${
-                        EnterpriseTypeRenderPronoun[enterprise.type]
-                    }`,
-                });
+        if (!reviewState.loading) {
+            if (user.data && user.data.id && enterprise.id) {
                 setReviewState({
                     ...reviewState,
-                    loading: false,
+                    loading: true,
                 });
-                router.push(`/admin/requests/enterprises/${getRoute(enterprise.type)}`);
-            } catch (e) {
-                console.log(e);
-                setReviewState({
-                    ...reviewState,
-                    loading: false,
-                });
+                try {
+                    await toast.promise(
+                        aproveEnterpriseReq(enterprise.id, user.data.id),
+                        {
+                            pending: `Aprobando ${EnterpriseTypeRender[enterprise.type]}`,
+                            success: "Aprobado",
+                            error: `Error al aprobar ${
+                                EnterpriseTypeRenderPronoun[enterprise.type]
+                            }`,
+                        },
+                    );
+                    setReviewState({
+                        ...reviewState,
+                        loading: false,
+                    });
+                    router.push(
+                        `/admin/requests/enterprises/${getRoute(enterprise.type)}`,
+                    );
+                } catch (e) {
+                    console.log(e);
+                    setReviewState({
+                        ...reviewState,
+                        loading: false,
+                    });
+                }
             }
         }
     };
 
     const decline = async () => {
-        if (user.data && user.data.id && enterprise.id) {
-            setReviewState({
-                ...reviewState,
-                loading: true,
-            });
-            try {
-                await toast.promise(deleteFile(enterprise.logoImgUrl.ref), {
-                    pending: "Eliminado el logo",
-                    success: "Logo eliminado",
-                    error: "Error al eliminar el logo, inténtalo de nuevo por favor",
+        if (!reviewState.loading) {
+            if (user.data && user.data.id && enterprise.id) {
+                setReviewState({
+                    ...reviewState,
+                    loading: true,
                 });
+                try {
+                    await toast.promise(deleteFile(enterprise.logoImgUrl.ref), {
+                        pending: "Eliminado el logo",
+                        success: "Logo eliminado",
+                        error: "Error al eliminar el logo, inténtalo de nuevo por favor",
+                    });
 
-                await toast.promise(declineEnterpriseReq(enterprise, user.data.id), {
-                    pending: `Rechazando ${EnterpriseTypeRender[enterprise.type]}`,
-                    success: "Rechazado",
-                    error: `Error al rechazar ${
-                        EnterpriseTypeRenderPronoun[enterprise.type]
-                    }`,
-                });
-                setReviewState({
-                    ...reviewState,
-                    loading: false,
-                });
-                router.push(`/admin/requests/enterprises/${getRoute(enterprise.type)}`);
-            } catch (e) {
-                console.log(e);
-                setReviewState({
-                    ...reviewState,
-                    loading: false,
-                });
+                    await toast.promise(declineEnterpriseReq(enterprise, user.data.id), {
+                        pending: `Rechazando ${EnterpriseTypeRender[enterprise.type]}`,
+                        success: "Rechazado",
+                        error: `Error al rechazar ${
+                            EnterpriseTypeRenderPronoun[enterprise.type]
+                        }`,
+                    });
+                    setReviewState({
+                        ...reviewState,
+                        loading: false,
+                    });
+                    router.push(
+                        `/admin/requests/enterprises/${getRoute(enterprise.type)}`,
+                    );
+                } catch (e) {
+                    console.log(e);
+                    setReviewState({
+                        ...reviewState,
+                        loading: false,
+                    });
+                }
             }
         }
     };

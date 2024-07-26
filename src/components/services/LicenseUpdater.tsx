@@ -157,7 +157,7 @@ const LicenseUpdater = ({ type }: { type: "car" | "motorcycle" | "tow" }) => {
             });
             if (user.data && user.data.id) {
                 let thereAreActiveReqs = await toast.promise(
-                    EditLICC_thereAreActiveReqs(user.data.id),
+                    EditLICC_thereAreActiveReqs(user.data.id, type),
                     {
                         pending: "Verificando peticiones activas",
                         success: "Verificado",
