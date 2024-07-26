@@ -9,6 +9,7 @@ import Wrench from "@/icons/Wrench";
 import Link from "next/link";
 import LogoutOption from "../sidebar_options/LogoutOption";
 import Bullhorn from "@/icons/Bullhorn";
+import Taxi from "@/icons/Taxi";
 
 const ServerUserSideBar = ({
     pathname,
@@ -29,6 +30,7 @@ const ServerUserSideBar = ({
                         (pathname.includes("drive") ||
                             pathname.includes("car") ||
                             pathname.includes("motorcycle")) &&
+                        !pathname.includes("enterprise") &&
                         "selected"
                     }`}
                 >
@@ -64,6 +66,15 @@ const ServerUserSideBar = ({
             <span className="text | medium bolder | margin-bottom-15">Registros</span>
 
             <li className="sidebar-options | margin-bottom-25">
+                <Link
+                    href={"/enterprise/driver"}
+                    className={`sidebar-option ${
+                        pathname.includes("/enterprise/driver") && "selected"
+                    }`}
+                >
+                    <Taxi />
+                    <span>Empresas de Choferes</span>
+                </Link>
                 <Link
                     href={"/enterprise/workshops"}
                     className={`sidebar-option ${

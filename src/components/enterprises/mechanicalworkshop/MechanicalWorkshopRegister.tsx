@@ -22,6 +22,9 @@ import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { toast } from "react-toastify";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
+import { locationList, Locations } from "@/interfaces/Locations";
+import { getLocation } from "@/utils/auth/UserAuth";
+import ChevronDown from "@/icons/ChevronDown";
 
 interface FormData {
     name: {
@@ -33,6 +36,7 @@ interface FormData {
         message: string | null;
     };
     logo: PhotoField;
+    location: Locations;
     coordinates: {
         value: Location | null;
         message: string | null;
@@ -59,6 +63,7 @@ const MechanicRegister = () => {
             value: null,
             message: null,
         },
+        location: Locations.CochabambaBolivia,
         coordinates: {
             value: null,
             message: null,
@@ -110,6 +115,9 @@ const MechanicRegister = () => {
                                 aproved: false,
                                 deleted: false,
                                 active: true,
+                                location: formData.location,
+                                addedUsers: [],
+                                addedUsersId: [],
                             };
 
                             await toast.promise(sendEnterpriseReq(id, enterprise), {
@@ -231,6 +239,26 @@ const MechanicRegister = () => {
                         }}
                     />
                 </div>
+                <fieldset className="form-section | select-item | max-width-60">
+                    <ChevronDown />
+                    <select
+                        className="form-section-input"
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData,
+                                location: getLocation(e.target.value),
+                            })
+                        }
+                        value={formData.location}
+                    >
+                        {locationList.map((location, i) => (
+                            <option key={`location-option-${i}`} value={location}>
+                                {location}
+                            </option>
+                        ))}
+                    </select>
+                    <legend className="form-section-legend">Ubicación</legend>
+                </fieldset>
                 <fieldset className="form-section">
                     <span className="text | bold gray-dark">Ubicación del Taller</span>
                     <div className="form-section-map | max-width-80">

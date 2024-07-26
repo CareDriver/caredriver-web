@@ -8,7 +8,7 @@ const EnterpriseItemReq = ({
     type,
 }: {
     enterprise: Enterprise;
-    type: "mechanical" | "tow" | "laundry";
+    type: "mechanical" | "tow" | "laundry" | "driver";
 }) => {
     return (
         <Link

@@ -1,7 +1,7 @@
 import LaundryPanel from "@/components/enterprises/laundry/LaundryPanel";
 import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
 
-const CraneworkshopPage = () => {
+const LaundryEnterprisePage = () => {
     return (
         <PageServerUserPermission>
             <LaundryPanel />
@@ -9,4 +9,4 @@ const CraneworkshopPage = () => {
     );
 };
 
-export default CraneworkshopPage;
+export default LaundryEnterprisePage;

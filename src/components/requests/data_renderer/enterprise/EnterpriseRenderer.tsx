@@ -42,6 +42,16 @@ const EnterpriseRenderer = ({
                 url={enterprise.logoImgUrl}
                 noFoundDescr={undefined}
             />
+            <fieldset className="form-section">
+                <InputData
+                    content={enterprise.location}
+                    placeholder={`Ubicacion ${EnterpriseTypeRenderPronounV2[enterprise.type]}
+                `}
+                />
+                <legend className="form-section-legend">
+                    Ubicacion {EnterpriseTypeRenderPronounV2[enterprise.type]}
+                </legend>
+            </fieldset>
             {enterprise.coordinates && (
                 <fieldset className="form-section">
                     <span className="text | bold gray-dark">

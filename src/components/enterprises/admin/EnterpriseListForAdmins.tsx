@@ -24,7 +24,7 @@ import {
 const EnterpriseListForAdmins = ({
     type,
 }: {
-    type: "mechanical" | "tow" | "laundry";
+    type: "mechanical" | "tow" | "laundry" | "driver";
 }) => {
     const numPerPage = 12;
     const [data, setData] = useState<Enterprise[] | null>(null);

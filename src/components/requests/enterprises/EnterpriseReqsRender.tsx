@@ -19,7 +19,7 @@ import "@/styles/components/enterprise-req.css";
 import MiddleMessage from "@/components/MiddleMessage";
 import DataLoaderIndicator from "@/components/DataLoaderIndicator";
 
-const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" | "laundry" }) => {
+const EnterpriseReqsRender = ({ type }: { type: "mechanical" | "tow" | "laundry" | "driver" }) => {
     const numPerPage = 10;
     const [data, setData] = useState<Enterprise[] | null>(null);
     const [page, setPage] = useState<number>(1);

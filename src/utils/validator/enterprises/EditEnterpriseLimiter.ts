@@ -4,6 +4,7 @@ import { firestore } from "@/firebase/FirebaseConfig";
 import { Enterprise } from "@/interfaces/Enterprise";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { Location, equalToGeopoint } from "@/utils/map/Locator";
+import { Locations } from "@/interfaces/Locations";
 
 export const EditENT_thereAreActiveReqsFromUser = async (
     userId: string,
@@ -36,6 +37,7 @@ export const EditENT_hasChanges = (
             message: string | null;
         };
         logo: PhotoField;
+        location: Locations;
         coordinates: {
             value: Location | null;
             message: string | null;
@@ -47,6 +49,8 @@ export const EditENT_hasChanges = (
         formData.name.value !== currentEnterprise.name ||
         formData.phone.value !== currentEnterprise.phone ||
         formData.logo.value !== currentEnterprise.logoImgUrl.url ||
+        (currentEnterprise.location !== undefined &&
+            formData.location !== currentEnterprise.location) ||
         (formData.coordinates.value !== null &&
             currentEnterprise.coordinates !== null &&
             currentEnterprise.coordinates !== undefined &&

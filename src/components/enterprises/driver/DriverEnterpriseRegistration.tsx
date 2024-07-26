@@ -43,7 +43,7 @@ interface FormData {
     };
 }
 
-const CraneRegistrationByAdmin = () => {
+const DriverEnterpriseRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
     const router = useRouter();
     const [formState, setFormState] = useState({
@@ -101,7 +101,7 @@ const CraneRegistrationByAdmin = () => {
                             var id = nanoid(25);
                             const enterprise: Enterprise = {
                                 id,
-                                type: "tow",
+                                type: "driver",
                                 name: formData.name.value,
                                 logoImgUrl: imgWithRef,
                                 coordinates: new GeoPoint(
@@ -112,7 +112,7 @@ const CraneRegistrationByAdmin = () => {
                                 longitude: formData.coordinates.value.lng,
                                 phone: formData.phone.value,
                                 userId: user.data.id,
-                                aproved: true,
+                                aproved: false,
                                 deleted: false,
                                 active: true,
                                 location: formData.location,
@@ -121,16 +121,19 @@ const CraneRegistrationByAdmin = () => {
                             };
 
                             await toast.promise(sendEnterpriseReq(id, enterprise), {
-                                pending: "Creando la empresa operadora de grúa",
-                                success: "Creado",
-                                error: "Error al crear la empresa, inténtalo de nuevo por favor",
+                                pending: "Enviando el formulario, por favor espera",
+                                success: "Formulario enviado",
+                                error: "Error al enviar el formulario, inténtalo de nuevo por favor",
                             });
 
                             setFormState({
                                 ...formState,
                                 loading: false,
                             });
-                            router.push("/admin/enterprises/cranes");
+                            toast.info(
+                                "Tu solicitud sera revisada, por favor se paciente",
+                            );
+                            router.push("/enterprise/driver");
                         } catch (e) {
                             window.location.reload();
                         }
@@ -189,7 +192,11 @@ const CraneRegistrationByAdmin = () => {
 
     return (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">Registrar Empresa Operadora de Grúa</h1>
+            <h1 className="text | big bolder">Registrar Empresa de Choferes</h1>
+            <p className="text | light">
+                Necesitamos verificar que la nueva Empresa de Choferes sea valido antes de
+                registrarlo.
+            </p>
             <form
                 className="form-sub-container | margin-top-50"
                 onSubmit={handleSummbit}
@@ -204,7 +211,7 @@ const CraneRegistrationByAdmin = () => {
                         name="fullname"
                         onChange={(e) => handleInputChange(e)}
                     />
-                    <legend className="form-section-legend">Nombre de la Empresa</legend>
+                    <legend className="form-section-legend">Empresa de Choferes</legend>
 
                     {formData.name.message && <small>{formData.name.message}</small>}
                 </fieldset>
@@ -226,13 +233,13 @@ const CraneRegistrationByAdmin = () => {
                                 }),
                         }}
                         content={{
-                            id: "workshop-uploader-image",
-                            indicator: "Logo de la Empresa",
+                            id: "driver-enterprise-uploader-image",
+                            indicator: "Logo de la Empresa de Choferes",
                             isCircle: true,
                         }}
                     />
                 </div>
-                <fieldset className="form-section | select-item">
+                <fieldset className="form-section | select-item | max-width-60">
                     <ChevronDown />
                     <select
                         className="form-section-input"
@@ -253,7 +260,9 @@ const CraneRegistrationByAdmin = () => {
                     <legend className="form-section-legend">Ubicación</legend>
                 </fieldset>
                 <fieldset className="form-section">
-                    <span className="text | bold gray-dark">Ubicación de la Empresa</span>
+                    <span className="text | bold gray-dark">
+                        Ubicación de la Empresa de Choferes
+                    </span>
                     <div className="form-section-map | max-width-80">
                         <MapForm
                             location={formData.coordinates.value}
@@ -283,11 +292,15 @@ const CraneRegistrationByAdmin = () => {
                     }
                     disabled={!formState.isValid}
                 >
-                    {formState.loading ? <span className="loader"></span> : "Registrar"}
+                    {formState.loading ? (
+                        <span className="loader"></span>
+                    ) : (
+                        "Solicitar registro"
+                    )}
                 </button>
             </form>
         </section>
     );
 };
 
-export default CraneRegistrationByAdmin;
+export default DriverEnterpriseRegistration;

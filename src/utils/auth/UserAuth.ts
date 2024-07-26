@@ -19,6 +19,7 @@ import {
 } from "firebase/auth";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { auth } from "@/firebase/FirebaseConfig";
+import { nanoid } from "nanoid";
 
 export const createUserData = (
     id: string,
@@ -192,7 +193,6 @@ export const getRole = (input: string, roles: UserRole[]): UserRole => {
 };
 
 export const signUpWithGoogle = async (
-    fakeId: string,
     router: AppRouterInstance,
     verifiyingGoogle: boolean,
     setVerifier: (verifiyingGoogle: boolean) => void,
@@ -206,6 +206,7 @@ export const signUpWithGoogle = async (
             const credential = GoogleAuthProvider.credentialFromResult(result);
             if (credential) {
                 // const token = credential.accessToken;
+                const fakeId = nanoid(30);
                 const user = result.user;
                 await registerUserFromGoogleAuth(user, fakeId, setVerifier, router);
             }
@@ -228,30 +229,35 @@ export const registerUserFromGoogleAuth = async (
         error: "Error al verificar tus datos, inténtalo de nuevo por favor",
     });
     if (!userFound) {
-        var emptyUserData: UserInterface = createUserData(user.uid, fakeId, UserRole.User, {
-            email: {
-                value: user.email ? user.email : "",
-                errorMessage: null,
+        var emptyUserData: UserInterface = createUserData(
+            user.uid,
+            fakeId,
+            UserRole.User,
+            {
+                email: {
+                    value: user.email ? user.email : "",
+                    errorMessage: null,
+                },
+                fullName: {
+                    value: user.displayName ? user.displayName : "",
+                    errorMessage: null,
+                },
+                location: Locations.CochabambaBolivia,
+                password: {
+                    value: "",
+                    errorMessage: null,
+                },
+                phone: {
+                    value: "",
+                    errorMessage: null,
+                },
+                code: {
+                    sent: "string",
+                    toVerify: "string",
+                    errorMessage: null,
+                },
             },
-            fullName: {
-                value: user.displayName ? user.displayName : "",
-                errorMessage: null,
-            },
-            location: Locations.CochabambaBolivia,
-            password: {
-                value: "",
-                errorMessage: null,
-            },
-            phone: {
-                value: "",
-                errorMessage: null,
-            },
-            code: {
-                sent: "string",
-                toVerify: "string",
-                errorMessage: null,
-            },
-        });
+        );
         emptyUserData = {
             ...emptyUserData,
             photoUrl: {
