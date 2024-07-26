@@ -124,9 +124,9 @@ export const getServiceCollection = (type: "driver" | "mechanic" | "tow" | "laun
 
 export const deleteImages = async (serviceReq: UserRequest) => {
     try {
-        if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
+        /* if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
             await deleteFile(serviceReq.newProfilePhotoImgUrl.ref);
-        }
+        } */
         await deleteFile(serviceReq.realTimePhotoImgUrl.ref);
         // Remove vehicle licenses
         /*         if (serviceReq.vehicles) {

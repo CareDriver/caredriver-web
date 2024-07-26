@@ -203,7 +203,7 @@ const LaundryRegistration = () => {
                         name="fullname"
                         onChange={(e) => handleInputChange(e)}
                     />
-                    <legend className="form-section-legend">Nombre del Lavadero</legend>
+                    <legend className="form-section-legend">Lavadero</legend>
 
                     {formData.name.message && <small>{formData.name.message}</small>}
                 </fieldset>

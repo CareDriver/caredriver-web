@@ -7,7 +7,7 @@ import {
 import { InputState } from "../InputValidator";
 
 export const isValidMechanicTools = (tools: string): InputState => {
-    const nameRegex: RegExp = /^[a-zA-Z0-9\s,.-]+$/;
+    const nameRegex: RegExp = /^\S[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s,.-]+$/;
 
     if (tools.trim() === "") {
         return {

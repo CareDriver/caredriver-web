@@ -3,7 +3,7 @@ import { InputState } from "../InputValidator";
 import { Location } from "@/utils/map/Locator";
 
 export const isValidWorkshopName = (name: string): InputState => {
-    const nameRegex: RegExp = /^[a-zA-Z\d\s]+$/;
+    const nameRegex: RegExp = /^\S[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
 
     if (name.trim() === "") {
         return {
@@ -29,7 +29,7 @@ export const isValidWorkshopName = (name: string): InputState => {
 };
 
 export const isValidCraneName = (name: string): InputState => {
-    const nameRegex: RegExp = /^[a-zA-Z\d\s]+$/;
+    const nameRegex: RegExp = /^\S[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
 
     if (name.trim() === "") {
         return {

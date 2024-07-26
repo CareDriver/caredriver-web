@@ -8,7 +8,7 @@ import { PhotoField } from "@/components/services/FormModels";
 import { PDFField } from "@/components/form/PDFUploader";
 
 export const isValidLicenseNumber = (licenseNumber: string): InputState => {
-    const regex: RegExp = /^[a-zA-Z0-9\s]+$/;
+    const regex: RegExp = /^[a-zA-Z0-9]+$/;
     if (licenseNumber.trim().length === 0) {
         return {
             isValid: false,
@@ -17,17 +17,17 @@ export const isValidLicenseNumber = (licenseNumber: string): InputState => {
     } else if (!regex.test(licenseNumber)) {
         return {
             isValid: false,
-            message: "El número de licencia no puede contener caracteres especiales",
+            message: "El número de licencia no puede contener caracteres especiales ni espacios",
         };
     } else if (licenseNumber.length > 50) {
         return {
             isValid: false,
-            message: "No puedes ingresar mas de 50 caracteres para el número de licencia",
+            message: "No puedes ingresar más de 50 caracteres para el número de licencia",
         };
     } else {
         return {
             isValid: true,
-            message: "Fecha válida",
+            message: "Número de licencia válido",
         };
     }
 };
