@@ -22,11 +22,13 @@ import { auth } from "@/firebase/FirebaseConfig";
 
 export const createUserData = (
     id: string,
+    fakeId: string,
     role: UserRole,
     credentials: SignUpInterface,
 ): UserInterface => {
     return {
         id: id,
+        fakeId,
         role: role,
         fullName: credentials.fullName.value,
         phoneNumber: credentials.phone.value,
@@ -55,12 +57,14 @@ export const createUserData = (
 
 export const createUserDataWithPhoto = (
     id: string,
+    fakeId: string,
     role: UserRole,
     credentials: SignUpInterface,
     photo: ImgWithRef | null,
 ): UserInterface => {
     var newUser = {
         id: id,
+        fakeId,
         role: role,
         fullName: credentials.fullName.value,
         phoneNumber: credentials.phone.value,
@@ -188,6 +192,7 @@ export const getRole = (input: string, roles: UserRole[]): UserRole => {
 };
 
 export const signUpWithGoogle = async (
+    fakeId: string,
     router: AppRouterInstance,
     verifiyingGoogle: boolean,
     setVerifier: (verifiyingGoogle: boolean) => void,
@@ -202,7 +207,7 @@ export const signUpWithGoogle = async (
             if (credential) {
                 // const token = credential.accessToken;
                 const user = result.user;
-                await registerUserFromGoogleAuth(user, setVerifier, router);
+                await registerUserFromGoogleAuth(user, fakeId, setVerifier, router);
             }
         } catch (error) {
             console.log(error);
@@ -212,6 +217,7 @@ export const signUpWithGoogle = async (
 
 export const registerUserFromGoogleAuth = async (
     user: User,
+    fakeId: string,
     setVerifier: (verifiyingGoogle: boolean) => void,
     router: AppRouterInstance,
 ) => {
@@ -222,7 +228,7 @@ export const registerUserFromGoogleAuth = async (
         error: "Error al verificar tus datos, inténtalo de nuevo por favor",
     });
     if (!userFound) {
-        var emptyUserData: UserInterface = createUserData(user.uid, UserRole.User, {
+        var emptyUserData: UserInterface = createUserData(user.uid, fakeId, UserRole.User, {
             email: {
                 value: user.email ? user.email : "",
                 errorMessage: null,

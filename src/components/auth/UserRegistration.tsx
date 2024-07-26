@@ -28,6 +28,7 @@ import SignUpFormV2 from "./SignUpFormV2";
 import { PhotoField } from "../services/FormModels";
 import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
+import { nanoid } from "nanoid";
 
 const UserRegistration = () => {
     const router = useRouter();
@@ -43,7 +44,7 @@ const UserRegistration = () => {
         UserRole.BalanceRecharge,
     ];
 
-    const createData = async (id: string) => {
+    const createData = async (id: string, fakeId: string) => {
         var photoRef = null;
 
         if (credentials.photo.value && !credentials.photo.message) {
@@ -59,6 +60,7 @@ const UserRegistration = () => {
 
         const newUserData: UserInterface = createUserDataWithPhoto(
             id,
+            fakeId,
             credentials.role,
             credentials,
             photoRef,
@@ -129,8 +131,9 @@ const UserRegistration = () => {
                                 success: "Creado",
                                 error: "Error al crear método de authentication",
                             });
+                            const fakeId = nanoid(30);
                             if (userId) {
-                                await toast.promise(createData(userId), {
+                                await toast.promise(createData(userId, fakeId), {
                                     pending: `Creando nuevo usuario ${
                                         UserRoleRender[credentials.role]
                                     }`,

@@ -47,7 +47,7 @@ export async function POST(request) {
     try {
         await initAdmin();
         const { email, password } = await request.json();
-        const userId = nanoid(25);
+        const userId = nanoid(30);
         await admin.auth().createUser({
             uid: userId,
             email,

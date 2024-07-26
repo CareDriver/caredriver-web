@@ -28,6 +28,7 @@ import {
     validatePhone,
 } from "@/utils/auth/UserAuth";
 import AuthProviders from "./AuthProviders";
+import { nanoid } from "nanoid";
 
 const SignUpAsNew = () => {
     const router = useRouter();
@@ -59,8 +60,10 @@ const SignUpAsNew = () => {
                             credentials.password.value.trim(),
                         )
                             .then((res) => {
+                                const fakeId = nanoid(30);
                                 const emptyUserData: UserInterface = createUserData(
                                     res.user.uid,
+                                    fakeId,
                                     UserRole.User,
                                     credentials,
                                 );
