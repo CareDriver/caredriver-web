@@ -105,7 +105,7 @@ const LaundryServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         ) {
                             userToUpdate = {
                                 ...userToUpdate,
-                                laundryEnterpriteId: serviceReq.laundryEnterprite,
+                                laundryEnterpriseId: serviceReq.laundryEnterprite,
                                 services: [...userData.services, Services.Laundry],
                             };
                         }

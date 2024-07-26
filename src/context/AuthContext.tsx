@@ -37,6 +37,7 @@ const buildUser = (
     if (userData) {
         return {
             id: id,
+            fakeId: userData.fakeId,
             fullName: userData?.fullName === undefined ? "" : userData.fullName,
             phoneNumber: userData?.phoneNumber === undefined ? "" : userData.phoneNumber,
             photoUrl:
@@ -73,7 +74,11 @@ const buildUser = (
                 userData.minimumBalance === undefined
                     ? defaultMinBalance
                     : userData.minimumBalance,
-            branding: userData.branding
+            branding: userData.branding,
+            driverEnterpriseId: userData.driverEnterpriseId,
+            laundryEnterpriseId: userData.laundryEnterpriseId,
+            mechanicalWorkShopId: userData.mechanicalWorkShopId,
+            towEnterpriseId: userData.towEnterpriseId,
         };
     }
 

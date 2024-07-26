@@ -66,13 +66,13 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
     };
 
     const openTow = async () => {
-        if (user.towEnterpriteId && isViewTow.enterprise === null) {
-            const enterprise = await getEnterpriseById(user.towEnterpriteId);
+        if (user.towEnterpriseId && isViewTow.enterprise === null) {
+            const enterprise = await getEnterpriseById(user.towEnterpriseId);
             setViewTow({
                 enterprise,
                 isOpen: true,
             });
-        } else if (user.towEnterpriteId === undefined) {
+        } else if (user.towEnterpriseId === undefined) {
             setViewTow({
                 enterprise: undefined,
                 isOpen: true,
@@ -94,13 +94,13 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
     };
 
     const openLaundry = async () => {
-        if (user.laundryEnterpriteId && isViewLaundry.enterprise === null) {
+        if (user.laundryEnterpriseId && isViewLaundry.enterprise === null) {
             setViewLaundry({
                 ...isViewLaundry,
                 isOpen: true,
             });
-            await fetchLaundry(user.laundryEnterpriteId);
-        } else if (user.laundryEnterpriteId === undefined) {
+            await fetchLaundry(user.laundryEnterpriseId);
+        } else if (user.laundryEnterpriseId === undefined) {
             setViewLaundry({
                 enterprise: undefined,
                 isOpen: true,
@@ -326,7 +326,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                                                 enterprise: enterpise,
                                             })
                                         }
-                                        enterpriseId={user.towEnterpriteId}
+                                        enterpriseId={user.towEnterpriseId}
                                         type="tow"
                                     />
                                 </div>
@@ -377,7 +377,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                                             enterprise: enterpise,
                                         })
                                     }
-                                    enterpriseId={user.laundryEnterpriteId}
+                                    enterpriseId={user.laundryEnterpriseId}
                                     type="laundry"
                                 />
                             </div>

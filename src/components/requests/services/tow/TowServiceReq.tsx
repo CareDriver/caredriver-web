@@ -154,7 +154,7 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             userToUpdate = {
                                 ...userToUpdate,
 
-                                towEnterpriteId: serviceReq.towEnterprite,
+                                towEnterpriseId: serviceReq.towEnterprite,
                             };
                             if (!userData.services.includes(Services.Tow)) {
                                 userToUpdate = {
