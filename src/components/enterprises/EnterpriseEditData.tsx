@@ -40,6 +40,7 @@ import FieldDeleted from "../requests/data_renderer/form/FieldDeleted";
 import ChevronDown from "@/icons/ChevronDown";
 import { getLocation } from "@/utils/auth/UserAuth";
 import { locationList, Locations } from "@/interfaces/Locations";
+import EnterpriseUserAdder from "./EnterpriseUserAdder";
 
 interface FormData {
     name: {
@@ -526,6 +527,15 @@ const EnterpriseEditData = ({
                     </>
                 )}
             </form>
+            <div
+                data-state={
+                    formState.loading || formState.loadingRev || enterpriseData.deleted
+                        ? "loading"
+                        : "loaded"
+                }
+            >
+                <EnterpriseUserAdder enterprise={enterpriseData} />
+            </div>
         </section>
     ) : (
         <PageLoader />

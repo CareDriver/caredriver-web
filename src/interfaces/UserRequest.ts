@@ -88,7 +88,6 @@ export const driveReqBuilder = (
     realTimePhotoImgUrl: ImgWithRef,
     services: Services[],
     location: Locations,
-    policeRecordsPdf: ImgWithRef,
 ): UserRequest => {
     return {
         id,
@@ -102,7 +101,6 @@ export const driveReqBuilder = (
         services: services,
         location,
         vehicles,
-        policeRecordsPdf,
     };
 };
 

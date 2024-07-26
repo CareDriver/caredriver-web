@@ -1,13 +1,9 @@
 "use client";
 
 import { FormEvent, useContext, useEffect, useState } from "react";
-import { defaultLicense, PersonalDataFormField, VehicleForm } from "../../FormModels";
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
-import PersonalDataForm from "../../../form/PersonalDataForm";
-import VehiclesForm from "./VehiclesForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
-import { defaultPhoto, PhotoField } from "../../FormModels";
 import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import {
@@ -25,37 +21,66 @@ import { nanoid } from "nanoid";
 import { updateUser } from "@/utils/requests/UserRequester";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
-import ServiceHeader from "../../ServiceHeader";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
 import { PDFField } from "@/components/form/PDFUploader";
 import { updateIdCard } from "@/utils/requests/IdCardUpdated";
+import {
+    defaultLicense,
+    defaultPhoto,
+    PersonalDataFormField,
+    PhotoField,
+    VehicleForm,
+} from "@/components/services/FormModels";
+import ServiceHeader from "@/components/services/ServiceHeader";
+import PersonalDataForm from "@/components/form/PersonalDataForm";
+import VehiclesForm from "@/components/services/drive/registration/VehiclesForm";
 
-const DriverRegistration = () => {
-    const { user, loadingUser } = useContext(AuthContext);
-    const [personalData, setPersonalData] = useState<PersonalDataFormField>({
+const loadInitialPersonalData = (userToAdd: UserInterface): PersonalDataFormField => {
+    let data = {
         fullname: {
-            value: "",
+            value: userToAdd.fullName,
             message: null,
         },
         photo: {
-            value: null,
+            value:
+                userToAdd.photoUrl.url.trim().length > 0 ? userToAdd.photoUrl.url : null,
             message: null,
         },
         idCard: {
             frontCard: {
-                value: null,
-                message: null,
+                value: userToAdd.identityCard?.frontCard.url
+                    ? userToAdd.identityCard?.frontCard.url
+                    : null,
+                message: userToAdd.identityCard?.frontCard.url
+                    ? null
+                    : "El usuario no tiene foto de su carnet de la parte anterior",
             },
             backCard: {
-                value: null,
-                message: null,
+                value: userToAdd.identityCard?.backCard.url
+                    ? userToAdd.identityCard?.backCard.url
+                    : null,
+                message: userToAdd.identityCard?.backCard.url
+                    ? null
+                    : "El usuario no tiene foto de su carnet de la parte posterior",
             },
             location: {
-                value: "",
-                message: null,
+                value: userToAdd.identityCard?.location
+                    ? userToAdd.identityCard?.location
+                    : "",
+                message: userToAdd.identityCard?.location
+                    ? null
+                    : "El usuario no tiene su localizacion de su carnet agregada",
             },
         },
-    });
+    };
+
+    return data;
+};
+
+const DriverEnterpriseUserAdder = ({ userToAdd }: { userToAdd: UserInterface }) => {
+    const [personalData, setPersonalData] = useState<PersonalDataFormField>(
+        loadInitialPersonalData(userToAdd),
+    );
     const [vehicles, setVehicles] = useState<VehicleForm[]>([
         {
             type: {
@@ -93,13 +118,9 @@ const DriverRegistration = () => {
         var newProfilePhotoImgUrl: string | ImgWithRef = emptyPhotoWithRef;
         var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
 
-        if (user.data) {
-            newProfilePhotoImgUrl = user.data.photoUrl;
-            if (
-                !loadingUser &&
-                personalData.photo.value &&
-                isImageBase64(personalData.photo.value)
-            ) {
+        if (userToAdd) {
+            newProfilePhotoImgUrl = userToAdd.photoUrl;
+            if (personalData.photo.value && isImageBase64(personalData.photo.value)) {
                 try {
                     newProfilePhotoImgUrl = await uploadFileBase64(
                         DirectoryPath.TempProfilePhotos,
@@ -168,70 +189,68 @@ const DriverRegistration = () => {
         newProfilePhotoImgUrl: string | ImgWithRef,
         realTimePhotoImgUrl: ImgWithRef,
     ) => {
-        if (user.data) {
-            var formId = nanoid(30);
-            try {
-                await saveDriveReq(
+        var formId = nanoid(30);
+        try {
+            await saveDriveReq(
+                formId,
+                driveReqBuilder(
                     formId,
-                    driveReqBuilder(
-                        formId,
-                        user.data.id === undefined ? "" : user.data.id,
-                        personalData.fullname.value,
-                        newProfilePhotoImgUrl,
-                        vehiclesData,
-                        realTimePhotoImgUrl,
-                        user.data.services,
-                        user.data.location === undefined
-                            ? Locations.CochabambaBolivia
-                            : user.data.location,
-                    ),
-                );
+                    userToAdd.id === undefined ? "" : userToAdd.id,
+                    personalData.fullname.value,
+                    newProfilePhotoImgUrl,
+                    vehiclesData,
+                    realTimePhotoImgUrl,
+                    userToAdd.services,
+                    userToAdd.location === undefined
+                        ? Locations.CochabambaBolivia
+                        : userToAdd.location,
+                ),
+            );
 
-                var newReqState;
-                if (vehicles.length > 1) {
-                    newReqState = {
-                        ...user.data.serviceRequests,
-                        driveCar: {
-                            id: formId,
-                            state: ServiceReqState.Reviewing,
-                        },
-                        driveMotorcycle: {
-                            id: formId,
-                            state: ServiceReqState.Reviewing,
-                        },
-                    };
-                } else {
-                    newReqState =
-                        vehicles[0].type.type === VehicleType.CAR
-                            ? {
-                                  ...user.data.serviceRequests,
-                                  driveCar: {
-                                      id: formId,
-                                      state: ServiceReqState.Reviewing,
-                                  },
-                              }
-                            : {
-                                  ...user.data.serviceRequests,
-                                  driveMotorcycle: {
-                                      id: formId,
-                                      state: ServiceReqState.Reviewing,
-                                  },
-                              };
-                }
-
-                if (user.data.id) {
-                    var toUpdate: Partial<UserInterface> = {
-                        serviceRequests: newReqState,
-                    };
-                    try {
-                        await updateUser(user.data.id, toUpdate);
-                    } catch (e) {
-                        throw e;
-                    }
-                }
-            } catch (e) {
-                throw e;
+            var newReqState;
+            if (vehicles.length > 1) {
+                newReqState = {
+                    ...userToAdd.serviceRequests,
+                    driveCar: {
+                        id: formId,
+                        state: ServiceReqState.Reviewing,
+                    },
+                    driveMotorcycle: {
+                        id: formId,
+                        state: ServiceReqState.Reviewing,
+                    },
+                };
+            } else {
+                newReqState =
+                    vehicles[0].type.type === VehicleType.CAR
+                        ? {
+                              ...userToAdd.serviceRequests,
+                              driveCar: {
+                                  id: formId,
+                                  state: ServiceReqState.Reviewing,
+                              },
+                          }
+                        : {
+                              ...userToAdd.serviceRequests,
+                              driveMotorcycle: {
+                                  id: formId,
+                                  state: ServiceReqState.Reviewing,
+                              },
+                          };
             }
+
+            if (userToAdd.id) {
+                var toUpdate: Partial<UserInterface> = {
+                    serviceRequests: newReqState,
+                };
+                try {
+                    await updateUser(userToAdd.id, toUpdate);
+                } catch (e) {
+                    throw e;
+                }
+            }
+        } catch (e) {
+            throw e;
         }
     };
 
@@ -257,9 +276,9 @@ const DriverRegistration = () => {
                     acceptedTerms,
                     personalData.idCard,
                 );
-                if (isValid && user.data) {
+                if (isValid && userToAdd) {
                     try {
-                        await updateIdCard(personalData.idCard, user.data);
+                        await updateIdCard(personalData.idCard, userToAdd);
                         const {
                             vehiclesData,
                             newProfilePhotoImgUrl,
@@ -337,88 +356,85 @@ const DriverRegistration = () => {
     );
 
     const verifyRefusedReq = async () => {
-        if (!loadingUser && user.data) {
-            var changed = false;
-            var toUpdate = {
-                ...user.data.serviceRequests,
+        var changed = false;
+        var toUpdate = {
+            ...userToAdd.serviceRequests,
+        };
+        if (
+            userToAdd.serviceRequests &&
+            userToAdd.serviceRequests.driveCar &&
+            userToAdd.serviceRequests.driveCar.state === ServiceReqState.Refused
+        ) {
+            toUpdate = {
+                ...toUpdate,
+                driveCar: {
+                    id: "",
+                    state: ServiceReqState.NotSent,
+                },
             };
-            if (
-                user.data.serviceRequests &&
-                user.data.serviceRequests.driveCar &&
-                user.data.serviceRequests.driveCar.state === ServiceReqState.Refused
-            ) {
-                toUpdate = {
-                    ...toUpdate,
-                    driveCar: {
-                        id: "",
-                        state: ServiceReqState.NotSent,
-                    },
-                };
-                changed = true;
-            }
-            if (
-                user.data.serviceRequests &&
-                user.data.serviceRequests.driveMotorcycle &&
-                user.data.serviceRequests.driveMotorcycle.state ===
-                    ServiceReqState.Refused
-            ) {
-                toUpdate = {
-                    ...toUpdate,
-                    driveMotorcycle: {
-                        id: "",
-                        state: ServiceReqState.NotSent,
-                    },
-                };
-                changed = true;
-            }
+            changed = true;
+        }
+        if (
+            userToAdd.serviceRequests &&
+            userToAdd.serviceRequests.driveMotorcycle &&
+            userToAdd.serviceRequests.driveMotorcycle.state === ServiceReqState.Refused
+        ) {
+            toUpdate = {
+                ...toUpdate,
+                driveMotorcycle: {
+                    id: "",
+                    state: ServiceReqState.NotSent,
+                },
+            };
+            changed = true;
+        }
 
-            if (changed && user.data.id) {
-                var toUpdateDoc: Partial<UserInterface> = {
-                    serviceRequests: toUpdate,
-                };
-                try {
-                    await updateUser(user.data.id, toUpdateDoc);
-                } catch (e) {
-                    throw e;
-                }
+        if (changed && userToAdd.id) {
+            var toUpdateDoc: Partial<UserInterface> = {
+                serviceRequests: toUpdate,
+            };
+            try {
+                await updateUser(userToAdd.id, toUpdateDoc);
+            } catch (e) {
+                throw e;
             }
         }
     };
 
     useEffect(() => {
         verifyRefusedReq();
-    }, [loadingUser]);
+    }, []);
 
     const getState = () => {
-        if (user.data && user.data.serviceRequests) {
+        if (userToAdd && userToAdd.serviceRequests) {
             if (
-                user.data.serviceRequests.driveCar &&
-                user.data.serviceRequests.driveCar.state === ServiceReqState.Refused
+                userToAdd.serviceRequests.driveCar &&
+                userToAdd.serviceRequests.driveCar.state === ServiceReqState.Refused
             ) {
                 return {
-                    title: "Tu solicitud fue Rechazada!",
+                    title: "La solicitud del usuario fue Rechazada!",
                     description:
-                        "Puede que alguno de tus datos no fueron validos, pero puedes volver a intentar mandar una nueva solicitud.",
+                        "Puede que alguno de los datos no fueron validos, pero puedes volver a intentar mandar una nueva solicitud.",
                     state: ServiceReqState.Refused,
                 };
             } else if (
-                user.data.serviceRequests.driveMotorcycle &&
-                user.data.serviceRequests.driveMotorcycle.state ===
+                userToAdd.serviceRequests.driveMotorcycle &&
+                userToAdd.serviceRequests.driveMotorcycle.state ===
                     ServiceReqState.Refused
             ) {
                 return {
-                    title: "Tu solicitud fue Rechazada!",
+                    title: "La solicitud del usuario fue Rechazada!",
                     description:
-                        "Puede que alguno de tus datos no fueron validos, pero puedes volver a intentar mandar una nueva solicitud.",
+                        "Puede que alguno de los datos no fueron validos, pero puedes volver a intentar mandar una nueva solicitud.",
                     state: ServiceReqState.Refused,
                 };
             }
         }
 
         return {
-            title: "¡Solicita trabajar como chofer con nosotros!",
+            title: "Solicitud registrar un nuevo chofer",
             description:
-                "Por favor, llena este formulario con datos reales para que tu solicitud sea aprobada y puedas empezar a trabajar con nosotros.",
+                "Por favor, llena este formulario con datos reales para que la solicitud sea aprobada y el usuario pueda empezar a trabajar con nosotros.",
             state: ServiceReqState.NotSent,
         };
     };
@@ -470,4 +486,4 @@ const DriverRegistration = () => {
     );
 };
 
-export default DriverRegistration;
+export default DriverEnterpriseUserAdder;

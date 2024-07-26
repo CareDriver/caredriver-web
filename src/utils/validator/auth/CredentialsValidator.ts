@@ -50,6 +50,17 @@ export const isValidEmail = (email: string): InputState => {
     }
 };
 
+export const isValidEmailFrom = (emailFrom: {
+    value: string;
+    message: string | null;
+}): boolean => {
+    return (
+        emailFrom.message === null &&
+        emailFrom.value.length > 0 &&
+        emailFrom.value.trim().length > 0
+    );
+};
+
 export const isValidPassword = (password: string): InputState => {
     if (password.trim() === "") {
         return {

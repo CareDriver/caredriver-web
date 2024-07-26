@@ -18,6 +18,10 @@ const PersonalDataForm = ({
     const { user, loadingUser } = useContext(AuthContext);
     const [loading, setLoading] = useState<boolean>(true);
 
+    /* const wasInitFilled = ():boolean => {
+        return personalData.fullname !== 
+    } */
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         const { isValid, message } = isValidName(value);
