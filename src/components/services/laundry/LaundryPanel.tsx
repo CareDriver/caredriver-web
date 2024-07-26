@@ -14,7 +14,7 @@ const LaundryPanel = () => {
             <h1 className="text | big bolder green">Tu solicitud fue aprobada!</h1>
             <p className="text icon-wrapper | green-icon green bolder lb medium margin-top-15">
                 <SackDollar />
-                Ve a nuestra Aplicacion Móvil y empieza a Ofrecer tu servicio!
+                Ve a nuestra Aplicación Móvil y empieza a Ofrecer tu servicio!
             </p>
             <span className="circles-right-bottomv2 green"></span>
         </div>

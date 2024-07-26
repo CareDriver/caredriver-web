@@ -29,25 +29,25 @@ export interface ReqEditEnterprise extends Enterprise {
 }
 
 export const EnterpriseTypeRender = {
-    mechanical: "taller mecanico",
-    tow: "empresa operadora de grua",
-    laundry: "lavadero de vehiculos",
+    mechanical: "taller mecánico",
+    tow: "empresa operadora de grúa",
+    laundry: "lavadero de vehículos",
 };
 
 export const EnterpriseTypeRenderPronoun = {
-    mechanical: "el taller mecanico",
-    tow: "la empresa operadora de grua",
-    laundry: "el lavadero de vehiculos",
+    mechanical: "el taller mecánico",
+    tow: "la empresa operadora de grúa",
+    laundry: "el lavadero de vehículos",
 };
 
 export const EnterpriseTypeRenderPronounV2 = {
-    mechanical: "del taller mecanico",
-    tow: "de la empresa operadora de grua",
-    laundry: "del lavadero de vehiculos",
+    mechanical: "del taller mecánico",
+    tow: "de la empresa operadora de grúa",
+    laundry: "del lavadero de vehículos",
 };
 
 export const EnterpriseTypeRenderPronounV3 = {
-    mechanical: "un taller mecanico",
-    tow: "una empresa operadora de grua",
-    laundry: "un lavadero de vehiculos",
+    mechanical: "un taller mecánico",
+    tow: "una empresa operadora de grúa",
+    laundry: "un lavadero de vehículos",
 };

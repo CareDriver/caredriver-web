@@ -44,7 +44,7 @@ const Redirector = () => {
 
     useEffect(() => {
         if (!loadingUser && user.data) {
-            toast.success("Inicio de sesion exitoso");
+            toast.success("Inicio de sesión exitoso");
             switch (user.data.role) {
                 case UserRole.Support:
                 case UserRole.BalanceRecharge:

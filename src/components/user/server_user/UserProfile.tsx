@@ -118,8 +118,8 @@ const UserProfile = () => {
                 <p className="text | gray-dark">
                     {user.data.balance &&
                     user.data.balance.amount <= user.data.minimumBalance.amount
-                        ? "Tienes que recargar tu salso, sino no podras seguir usando nuestra aplicacion para ofrecer tus servicios. Haz click para enviar un mensaje a nuestro administrador para recargar saldo."
-                        : `Recarga saldo cuando lo nececites, tu saldo minimo no puede ser menos de ${user.data.minimumBalance.amount
+                        ? "Tienes que recargar tu salso, sino no podrás seguir usando nuestra aplicación para ofrecer tus servicios. Haz click para enviar un mensaje a nuestro administrador para recargar saldo."
+                        : `Recarga saldo cuando lo necesites, tu saldo mínimo no puede ser menos de ${user.data.minimumBalance.amount
                               .toString()
                               .replace("-", "")} ${user.data.minimumBalance.currency}`}
                 </p>

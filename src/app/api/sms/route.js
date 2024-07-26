@@ -15,14 +15,14 @@ export async function POST(request) {
             body: JSON.stringify({
                 typing_time: 0,
                 to: phone.replace("+", ""),
-                body: JSON.stringify(`Tu codigo de verificacion es ${code}`),
+                body: JSON.stringify(`Tu código de verificación es ${code}`),
             }),
         };
         await fetch(url, options);
-        return NextResponse.json({ messsage: "codigo enviado" });
+        return NextResponse.json({ messsage: "código enviado" });
     } catch (e) {
         console.log(e);
-        return NextResponse.json({ error: "error, intentalo de nuevo por favor" });
+        return NextResponse.json({ error: "error, inténtalo de nuevo por favor" });
     }
 }
 
@@ -30,7 +30,7 @@ export async function POST(request) {
 try {
         const { code, toPhone } = await request.json();
         const messsage = await TWILIO_CLIENT.messages.create({
-            body: `Tu codigo de verificacion es ${code}`,
+            body: `Tu código de verificación es ${code}`,
             from: TWILIO_PHONE,
             to: toPhone,
         });
@@ -38,6 +38,6 @@ try {
         return NextResponse.json(messsage.status);
     } catch (e) {
         console.log(e);
-        return NextResponse.json({ error: "error, intentalo de nuevo por favor" });
+        return NextResponse.json({ error: "error, inténtalo de nuevo por favor" });
     }
 */

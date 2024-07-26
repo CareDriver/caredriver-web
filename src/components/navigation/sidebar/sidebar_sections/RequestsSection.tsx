@@ -36,7 +36,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <Wrench />
-                    <span>Mecanico</span>
+                    <span>Mecánico</span>
                 </Link>
                 <Link
                     href={"/admin/requests/services/tow"}
@@ -49,7 +49,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <Truck />
-                    <span>Grua</span>
+                    <span>Grúa</span>
                 </Link>
                 <Link
                     href={"/admin/requests/services/laundry"}
@@ -92,7 +92,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <TowReq />
-                    <span>Nuevas Emp. de Grua</span>
+                    <span>Nuevas Emp. de Grúa</span>
                 </Link>
                 <Link
                     href={"/admin/requests/enterprises/editcranes"}
@@ -101,7 +101,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <TowReq />
-                    <span>Editar Emp. de Grua</span>
+                    <span>Editar Emp. de Grúa</span>
                 </Link>
                 <Link
                     href={"/admin/requests/enterprises/laundry"}
@@ -151,7 +151,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <Bullhorn />
-                    <span>Verificacion de Branding</span>
+                    <span>Verificación de Branding</span>
                 </Link>
             </li>
         </>

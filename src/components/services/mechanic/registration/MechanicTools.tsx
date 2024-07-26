@@ -19,7 +19,7 @@ const MechanicTools = ({
                 </h2>
                 <p className="text | light">
                     Por favor menciona las herramientas de trabajo que tienes para
-                    trabajar como mecanico
+                    trabajar como mecánico
                 </p>
             </div>
             <fieldset className="form-section">

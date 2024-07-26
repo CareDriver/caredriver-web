@@ -8,13 +8,13 @@ const WorkshopRenderer = ({ workshop }: { workshop: Enterprise | undefined }) =>
         <div className="form-sub-container | margin-top-25">
             <h2 className="text icon-wrapper | medium-big bold">
                 <Warehouse />
-                Taller mecanico
+                Taller mecánico
             </h2>
 
             {workshop ? (
                 <EnterpriseRenderer enterprise={workshop} />
             ) : (
-                <FieldDeleted description="No se selecciono el taller mecanico (El campo era opcional)" />
+                <FieldDeleted description="No se selecciono el taller mecánico (El campo era opcional)" />
             )}
         </div>
     );

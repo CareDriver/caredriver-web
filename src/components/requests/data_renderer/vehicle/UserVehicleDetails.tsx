@@ -40,7 +40,7 @@ const UserVehicleDetails = ({
                     <fieldset className="form-section">
                         <InputData
                             content={vehicle.license.licenseNumber}
-                            placeholder="Localizacion"
+                            placeholder="Localización"
                         />
                         <legend className="form-section-legend">
                             número de licencia
@@ -49,7 +49,7 @@ const UserVehicleDetails = ({
                     <fieldset className="form-section">
                         <InpurDate date={vehicle.license.expiredDateLicense.toDate()} />
                         <legend className="form-section-legend">
-                            Fecha de expiracion de la licencia
+                            Fecha de expiración de la licencia
                         </legend>
                     </fieldset>
                     {vehicle.license.frontImgUrl ? (
@@ -75,7 +75,7 @@ const UserVehicleDetails = ({
                 </div>
             ) : (
                 <FieldDeleted
-                    description={`El usuario no tiene registrado informacion ${vehicleTypeRenderV2[type]}`}
+                    description={`El usuario no tiene registrado información ${vehicleTypeRenderV2[type]}`}
                 />
             )}
         </>

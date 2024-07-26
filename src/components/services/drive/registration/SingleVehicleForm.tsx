@@ -222,7 +222,7 @@ const SingleVehicleForm = ({
                             },
                         }}
                         content={{
-                            indicator: "Parte posteror de la licencia",
+                            indicator: "Parte posterior de la licencia",
                             isCircle: false,
                             id: "vehicle-license-behind-photo",
                         }}

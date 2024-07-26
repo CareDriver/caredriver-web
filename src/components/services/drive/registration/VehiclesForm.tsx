@@ -346,7 +346,7 @@ const VehiclesForm = ({
                             },
                         }}
                         content={{
-                            indicator: "Parte posteror de la licencia",
+                            indicator: "Parte posterior de la licencia",
                             isCircle: false,
                             id: `vehicle-license-behind-photo-${i}`,
                         }}
@@ -361,7 +361,7 @@ const VehiclesForm = ({
                         className="icon-wrapper small-general-button text | gray-icon gray bold touchable"
                     >
                         <Plus />
-                        Agregar otro Vehiculo
+                        Agregar otro Vehículo
                     </button>
                 </div>
             )}

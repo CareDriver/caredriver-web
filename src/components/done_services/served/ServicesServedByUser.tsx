@@ -292,10 +292,10 @@ const ServicesServedByUser = ({
                 <div className="empty-wrapper | auto-height">
                     <h2>
                         {dataState.isSearching
-                            ? `No se encontro servicios hechos hasta la fecha ${
+                            ? `No se encontró servicios hechos hasta la fecha ${
                                   dataState.value.toDate().toISOString().split("T")[0]
                               }`
-                            : `El usuario no ha hecho ningun servicio como ${userReqTypes[type]}`}
+                            : `El usuario no ha hecho ningún servicio como ${userReqTypes[type]}`}
                     </h2>
                 </div>
             )}

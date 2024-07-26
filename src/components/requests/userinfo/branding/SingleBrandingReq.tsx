@@ -37,10 +37,10 @@ const SingleBrandingReq = ({ reqId }: { reqId: string }) => {
             if (reqRes) {
                 setReq(reqRes);
             } else {
-                faildRedirect("Peticion no encontrada");
+                faildRedirect("Petición no encontrada");
             }
         } catch (e) {
-            faildRedirect("Peticion no encontrada");
+            faildRedirect("Petición no encontrada");
         }
     };
 
@@ -51,10 +51,10 @@ const SingleBrandingReq = ({ reqId }: { reqId: string }) => {
                 if (userRes) {
                     setUserReq(userRes);
                 } else {
-                    faildRedirect("No se encontro al usuario");
+                    faildRedirect("No se encontró al usuario");
                 }
             } catch (e) {
-                faildRedirect("Peticion no encontrada");
+                faildRedirect("Petición no encontrada");
             }
         }
     };
@@ -105,19 +105,23 @@ const SingleBrandingReq = ({ reqId }: { reqId: string }) => {
     };
 
     const approve = async () => {
-        await toast.promise(review(true), {
-            pending: "Aprovando verificacion del branding",
-            success: "Verificacion del branding aprovada",
-            error: "Error al aprovar la verificacion, intentalo de nuevo por favor",
-        });
+        if (!reviewState.loading) {
+            await toast.promise(review(true), {
+                pending: "Aprobando verificación del branding",
+                success: "Verificación del branding aprobada",
+                error: "Error al aprobar la verificación, inténtalo de nuevo por favor",
+            });
+        }
     };
 
     const decline = async () => {
-        await toast.promise(review(false), {
-            pending: "Rechazando verificacion del branding",
-            success: "Verificacion del branding rechazada",
-            error: "Error al rechazar la verificacion, intentalo de nuevo por favor",
-        });
+        if (!reviewState.loading) {
+            await toast.promise(review(false), {
+                pending: "Rechazando verificación del branding",
+                success: "Verificación del branding rechazada",
+                error: "Error al rechazar la verificación, inténtalo de nuevo por favor",
+            });
+        }
     };
 
     return req ? (
@@ -142,7 +146,7 @@ const SingleBrandingReq = ({ reqId }: { reqId: string }) => {
 
             <h2 className="text icon-wrapper | medium-big bold margin-top-25 margin-bottom-25">
                 <Bullhorn />
-                Foto de verificacion del branding
+                Foto de verificación del branding
             </h2>
             <ImageRenderer
                 url={req.brandingImage}

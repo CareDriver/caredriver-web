@@ -28,12 +28,12 @@ const SingleEnterpiseUpReq = ({
                     setServiceReq(data);
                 } else {
                     router.push(`/admin/requests/enterprises/edit${getRoute(type)}`);
-                    toast.error("Peticion no encontrada");
+                    toast.error("Petición no encontrada");
                 }
             })
             .catch((e) => {
                 router.push(`/admin/requests/enterprises/edit${getRoute(type)}`);
-                toast.error("Peticion no encontrada");
+                toast.error("Petición no encontrada");
             });
     }, []);
 
@@ -45,12 +45,12 @@ const SingleEnterpiseUpReq = ({
                         setRealServiceReq(data);
                     } else {
                         router.push(`/admin/requests/enterprises/edit${getRoute(type)}`);
-                        toast.error("Peticion no encontrada");
+                        toast.error("Petición no encontrada");
                     }
                 })
                 .catch((e) => {
                     router.push(`/admin/requests/enterprises/edit${getRoute(type)}`);
-                    toast.error("Peticion no encontrada");
+                    toast.error("Petición no encontrada");
                 });
         }
     }, [serviceReq]);

@@ -232,14 +232,14 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             {user.services.includes(Services.Mechanic) &&
             user.serviceRequests?.mechanic?.state === ServiceReqState.Approved ? (
                 <div className="service-user-wrapper  | with-data">
-                    <h3 className="text | medium-big bolder">Mecanico</h3>
+                    <h3 className="text | medium-big bolder">Mecánico</h3>
                     {user.mechanicalWorkShopId ? (
                         <>
                             <button
                                 className="service-user-option"
                                 onClick={openMechanic}
                             >
-                                Taller mecanico registrado
+                                Taller mecánico registrado
                             </button>
                             <Popup
                                 isOpen={isViewMechanic.isOpen}
@@ -252,7 +252,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             >
                                 <div>
                                     <h2 className="text | bolder big-medium">
-                                        Detalles del usuario como mecanico
+                                        Detalles del usuario como mecánico
                                     </h2>
                                     <EnterpriseFetcher
                                         enterprise={isViewMechanic.enterprise}
@@ -271,7 +271,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             </Popup>
                         </>
                     ) : (
-                        <span>Sin taller mecanico registrado</span>
+                        <span>Sin taller mecánico registrado</span>
                     )}
 
                     <Link
@@ -279,18 +279,18 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                         className="icon-wrapper text  | underline gray-icon gray-dark | margin-top-15"
                     >
                         <Eye />
-                        Ver los servicios hechos como mecanico
+                        Ver los servicios hechos como mecánico
                     </Link>
                 </div>
             ) : (
                 <h3 className="service-user-wrapper text | medium-big bolder">
-                    Mecanico - No registrado
+                    Mecánico - No registrado
                 </h3>
             )}
             {user.services.includes(Services.Tow) &&
             user.serviceRequests?.tow?.state === ServiceReqState.Approved ? (
                 <div className="service-user-wrapper  | with-data">
-                    <h3 className="text | medium-big bolder">Operador de Grua</h3>
+                    <h3 className="text | medium-big bolder">Operador de Grúa</h3>
                     {user.serviceVehicles?.tow ? (
                         <>
                             <button className="service-user-option" onClick={openTow}>
@@ -310,7 +310,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             >
                                 <div>
                                     <h2 className="text | bolder big-medium">
-                                        Detalles del usuario como operador de grua
+                                        Detalles del usuario como operador de grúa
                                     </h2>
                                     <UserVehicleDetails
                                         vehicle={user.serviceVehicles.tow}
@@ -340,12 +340,12 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                         href={`/admin/users/${user.id}/services/tow`}
                     >
                         <Eye />
-                        Ver servicios hechos como operador de grua
+                        Ver servicios hechos como operador de grúa
                     </Link>
                 </div>
             ) : (
                 <h3 className="service-user-wrapper text | medium-big bolder">
-                    Operador de Grua - No registrado
+                    Operador de Grúa - No registrado
                 </h3>
             )}
             {user.services.includes(Services.Laundry) &&

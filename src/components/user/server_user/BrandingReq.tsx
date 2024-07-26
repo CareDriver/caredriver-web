@@ -39,12 +39,12 @@ const BrandingReq = () => {
                     {
                         pending: "Verificando peticiones activas",
                         success: "Verificado",
-                        error: "Error verificando peticiones activas, intentalo de nuevo por favor",
+                        error: "Error verificando peticiones activas, inténtalo de nuevo por favor",
                     },
                 );
                 if (thereAreActiveReqs) {
                     toast.warning(
-                        "Ya enviaste una peticion para verificar el branding con tu vehiculo, espera a que se revise",
+                        "Ya enviaste una petición para verificar el branding con tu vehículo, espera a que se revise",
                     );
                     setFormState({
                         ...formState,
@@ -53,7 +53,7 @@ const BrandingReq = () => {
                     return;
                 } else {
                     toast.success(
-                        "Valido para enviar una nueva peticion para verificar el branding con tu vehiculo",
+                        "Valido para enviar una nueva petición para verificar el branding con tu vehículo",
                     );
                 }
             }
@@ -70,7 +70,7 @@ const BrandingReq = () => {
                         {
                             pending: "Subiendo la foto, por favor espera",
                             success: "Foto subida",
-                            error: "Error al subir la foto, intentalo de nuevo por favor",
+                            error: "Error al subir la foto, inténtalo de nuevo por favor",
                         },
                     );
 
@@ -85,9 +85,9 @@ const BrandingReq = () => {
                             userName: user.data.fullName,
                         }),
                         {
-                            pending: "Enviando la peticion, por favor espera",
-                            success: "Peticion enviada",
-                            error: "Error al enviar la peticion, intentalo de nuevo por favor",
+                            pending: "Enviando la petición, por favor espera",
+                            success: "Petición enviada",
+                            error: "Error al enviar la petición, inténtalo de nuevo por favor",
                         },
                     );
 
@@ -128,8 +128,8 @@ const BrandingReq = () => {
         <section className="service-form-wrapper | max-height-100">
             <h1 className="text | big bolder">Branding</h1>
             <p className="text | light">
-                Por favor sube una foto de tu vehiculo con el logo de nuestra aplicacion
-                pegado a tu vehiculo
+                Por favor sube una foto de tu vehículo con el logo de nuestra aplicación
+                pegado a tu vehículo
             </p>
             <form
                 className="max-width-60 margin-top-50"
@@ -139,7 +139,7 @@ const BrandingReq = () => {
                 <ImageUploader
                     content={{
                         id: "branding-user-uploader",
-                        indicator: "Foto de tu vehiculo",
+                        indicator: "Foto de tu vehículo",
                         isCircle: false,
                     }}
                     uploader={{

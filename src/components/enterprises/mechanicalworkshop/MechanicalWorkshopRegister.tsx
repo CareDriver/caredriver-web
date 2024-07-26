@@ -89,7 +89,7 @@ const MechanicRegister = () => {
                                 {
                                     pending: "Subiendo el logo, por favor espera",
                                     success: "Logo subido",
-                                    error: "Error al subir el logo, intentalo de nuevo por favor",
+                                    error: "Error al subir el logo, inténtalo de nuevo por favor",
                                 },
                             );
 
@@ -115,7 +115,7 @@ const MechanicRegister = () => {
                             await toast.promise(sendEnterpriseReq(id, enterprise), {
                                 pending: "Enviando el formulario, por favor espera",
                                 success: "Formulario enviado",
-                                error: "Error al enviar el formulario, intentalo de nuevo por favor",
+                                error: "Error al enviar el formulario, inténtalo de nuevo por favor",
                             });
 
                             setFormState({
@@ -143,7 +143,7 @@ const MechanicRegister = () => {
                         ...formState,
                         loading: false,
                     });
-                    toast.error("Por favor llena los campos que estan vacios", {
+                    toast.error("Por favor llena los campos que están vacíos", {
                         toastId: "toast-error-empty-form",
                     });
                 }
@@ -184,9 +184,9 @@ const MechanicRegister = () => {
 
     return (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">Registar Taller Mecanico</h1>
+            <h1 className="text | big bolder">Registrar Taller Mecánico</h1>
             <p className="text | light">
-                Necesitamos verificar que el taller mecanico es valido antes de
+                Necesitamos verificar que el taller mecánico es valido antes de
                 registrarlo.
             </p>
             <form

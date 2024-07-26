@@ -33,12 +33,12 @@ const SingleServiceReq = ({
                     setServiceReq(data);
                 } else {
                     router.push(`/admin/requests/services/drive`);
-                    toast.error("Peticion no encontrada");
+                    toast.error("Petición no encontrada");
                 }
             })
             .catch((e) => {
                 router.push(`/admin/requests/services/drive`);
-                toast.error("Peticion no encontrada");
+                toast.error("Petición no encontrada");
             });
     }, []);
 

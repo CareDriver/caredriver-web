@@ -3,7 +3,7 @@ import { Enterprise, EnterpriseTypeRenderPronoun } from "@/interfaces/Enterprise
 
 const EnterpriseState = ({ enterprise }: { enterprise: Enterprise }) => {
     const deleted = enterprise.type === "tow" ? "eliminada" : "eliminado";
-    const disable = enterprise.type === "tow" ? "desabilitada" : "desabilitado";
+    const disable = enterprise.type === "tow" ? "deshabilitada" : "deshabilitado";
 
     return (
         (enterprise.deleted === true || enterprise.active === false) && (

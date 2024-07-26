@@ -41,10 +41,10 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
             if (reqRes) {
                 setReq(reqRes);
             } else {
-                faildRedirect("Peticion no encontrada");
+                faildRedirect("Petición no encontrada");
             }
         } catch (e) {
-            faildRedirect("Peticion no encontrada");
+            faildRedirect("Petición no encontrada");
         }
     };
 
@@ -59,10 +59,10 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
                 ) {
                     setUserReq(userRes);
                 } else {
-                    faildRedirect("El usuario no tiene ese vehiculo");
+                    faildRedirect("El usuario no tiene ese vehículo");
                 }
             } catch (e) {
-                faildRedirect("Peticion no encontrada");
+                faildRedirect("Petición no encontrada");
             }
         }
     };
@@ -120,12 +120,12 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
                 await toast.promise(deleteImages, {
                     pending: "Eliminando foto de confirmacion del usario",
                     success: "Foto eliminada",
-                    error: "Error al eliminar la foto, intentalo de nuevo por favor",
+                    error: "Error al eliminar la foto, inténtalo de nuevo por favor",
                 });
                 await toast.promise(saveReview(wasApproved), {
                     pending: "Guardando revision",
                     success: "Revision guardada",
-                    error: "Error al guardar, intentalo de nuevo por favor",
+                    error: "Error al guardar, inténtalo de nuevo por favor",
                 });
                 setReviewState({
                     ...reviewState,
@@ -142,11 +142,15 @@ const SingleLicenseReq = ({ reqId }: { reqId: string }) => {
     };
 
     const approve = async () => {
-        await review(true);
+        if (!reviewState.loading) {
+            await review(true);
+        }
     };
 
     const decline = async () => {
-        await review(false);
+        if (!reviewState.loading) {
+            await review(false);
+        }
     };
 
     useEffect(() => {

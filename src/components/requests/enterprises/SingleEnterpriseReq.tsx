@@ -26,12 +26,12 @@ const SingleEnterpriseReq = ({
                     setServiceReq(data);
                 } else {
                     router.push(`/admin/requests/enterprises/${getRoute(type)}`);
-                    toast.error("Peticion no encontrada");
+                    toast.error("Petición no encontrada");
                 }
             })
             .catch((e) => {
                 router.push(`/admin/requests/enterprises/${getRoute(type)}`);
-                toast.error("Peticion no encontrada");
+                toast.error("Petición no encontrada");
             });
     }, []);
 

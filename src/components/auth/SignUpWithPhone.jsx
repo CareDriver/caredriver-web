@@ -83,7 +83,7 @@ const SignUpWithPhone = () => {
                 });
             })
             .catch((error) => {
-                toast("Codigo invalido, vuelva a intentarlo mas tarde");
+                toast("Código invalido, vuelva a intentarlo mas tarde");
             });
     };
 
@@ -124,7 +124,7 @@ const SignUpWithPhone = () => {
             <fieldset className="form-section">
                 <input
                     type="email"
-                    placeholder="Correo Electronico"
+                    placeholder="Correo Electrónico"
                     onChange={(e) =>
                         setCredentials({ ...credentials, email: e.target.value })
                     }
@@ -159,14 +159,14 @@ const SignUpWithPhone = () => {
             </fieldset>
             <button className="general-button | touchable margin-top-25">
                 {authState.sendingData && <i className="loader"></i>}
-                <span>Enviar codigo</span>
+                <span>Enviar código</span>
             </button>
         </form>
     ) : (
         <form onSubmit={onSignInSubmit}>
             <p className="text | small center | margin-bottom-25">
-                Podras seguir ingresando a nuestra aplicacion usando tu número de celular.
-                Ademas no se perderan los datos que ya tienes en nuestra aplicacion.
+                Podrás seguir ingresando a nuestra Aplicación usando tu número de celular.
+                Ademas no se perderán los datos que ya tienes en nuestra Aplicación.
             </p>
 
             <fieldset className="form-section">

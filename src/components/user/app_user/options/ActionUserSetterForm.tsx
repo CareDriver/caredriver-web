@@ -20,10 +20,10 @@ const ActionUserSetterForm = ({
     return (
         <div className="margin-bottom-25">
             <div className="margin-bottom-25">
-                <h2 className="text | big-medium bolder">Razon de cambio</h2>
+                <h2 className="text | big-medium bolder">Razón de cambio</h2>
                 <p className="text | light">
-                    Escribe la razon por la cual estas haciendo este cambio en el usuario,
-                    recuerda que esta accion sera registrada.
+                    Escribe la razón por la cual estas haciendo este cambio en el usuario,
+                    recuerda que esta acción sera registrada.
                 </p>
             </div>
 
@@ -49,7 +49,7 @@ const ActionUserSetterForm = ({
                         });
                     }}
                 />
-                <legend className="form-section-legend">Razon de la accion</legend>
+                <legend className="form-section-legend">Razón de la acción</legend>
                 {actionUser.reason.message && <small>{actionUser.reason.message}</small>}
             </fieldset>
         </div>

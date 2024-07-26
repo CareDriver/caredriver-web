@@ -151,11 +151,15 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     };
 
     const approve = async () => {
-        await review(true);
+        if (!reviewState.loading) {
+            await review(true);
+        }
     };
 
     const decline = async () => {
-        await review(false);
+        if (!reviewState.loading) {
+            await review(false);
+        }
     };
 
     const fetchWorkshop = async () => {
@@ -188,7 +192,7 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
     return (
         <div className="service-form-wrapper | max-width-60">
-            <h1 className="text | big bolder">Solicitud para ser Mecanico</h1>
+            <h1 className="text | big bolder">Solicitud para ser Mecánico</h1>
             <div className="row-wrapper | gap-20">
                 <ApprovalsRenderer
                     serviceReq={serviceReq}

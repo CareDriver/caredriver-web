@@ -45,7 +45,7 @@ const DriverServiceView = ({ service }: { service: ServiceRequestInterface }) =>
             <div className="margin-bottom-50">
                 <h2 className="text icon-wrapper | big-medium-v4 bold nb margin-bottom-15">
                     <Car />
-                    Vehiculo de Transporte -{" "}
+                    Vehículo de Transporte -{" "}
                     {service.vehicle?.type && vehicleTypeRender[service.vehicle.type]}
                 </h2>
                 <p className="text | medium gray-dark">

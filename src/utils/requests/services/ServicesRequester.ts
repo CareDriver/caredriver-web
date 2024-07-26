@@ -124,9 +124,9 @@ export const getServiceCollection = (type: "driver" | "mechanic" | "tow" | "laun
 
 export const deleteImages = async (serviceReq: UserRequest) => {
     try {
-        if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
+        /* if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
             await deleteFile(serviceReq.newProfilePhotoImgUrl.ref);
-        }
+        } */
         await deleteFile(serviceReq.realTimePhotoImgUrl.ref);
         // Remove vehicle licenses
         /*         if (serviceReq.vehicles) {
@@ -151,9 +151,9 @@ export const deleteImagesIfLimitOfApproves = async (serviceReq: UserRequest) => 
     ) {
         try {
             await toast.promise(deleteImages(serviceReq), {
-                pending: "Eliminando imagenes, por favor espera",
+                pending: "Eliminando imágenes, por favor espera",
                 success: "Images eliminadas",
-                error: "Error al eliminar imagenes, intentalo de nuevo por favor",
+                error: "Error al eliminar imágenes, inténtalo de nuevo por favor",
             });
         } catch (e) {
             console.log(e);
@@ -191,7 +191,7 @@ export const setFirstService = async (
         await toast.promise(saveBalanceGift(user, adminId), {
             pending: `Regalando ${balanceGift} Bs. de saldo por ser nuevo usuario servidor`,
             success: `${balanceGift} Bs. de saldo regalado`,
-            error: "Error al regalar saldo, intentalo de nuevo por favor",
+            error: "Error al regalar saldo, inténtalo de nuevo por favor",
         });
     }
 

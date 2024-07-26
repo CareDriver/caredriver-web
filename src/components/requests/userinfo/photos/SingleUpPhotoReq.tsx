@@ -39,10 +39,10 @@ const SingleUpPhotoReq = ({ reqId }: { reqId: string }) => {
             if (reqRes) {
                 setReq(reqRes);
             } else {
-                faildRedirect("Peticion no encontrada");
+                faildRedirect("Petición no encontrada");
             }
         } catch (e) {
-            faildRedirect("Peticion no encontrada");
+            faildRedirect("Petición no encontrada");
         }
     };
 
@@ -53,10 +53,10 @@ const SingleUpPhotoReq = ({ reqId }: { reqId: string }) => {
                 if (userRes) {
                     setUserReq(userRes);
                 } else {
-                    faildRedirect("No se encontro al usuario");
+                    faildRedirect("No se encontró al usuario");
                 }
             } catch (e) {
-                faildRedirect("Peticion no encontrada");
+                faildRedirect("Petición no encontrada");
             }
         }
     };
@@ -99,19 +99,23 @@ const SingleUpPhotoReq = ({ reqId }: { reqId: string }) => {
     };
 
     const approve = async () => {
-        await toast.promise(review(true), {
-            pending: "Cambiando foto de perfil del usuario",
-            success: "Foto cambiada",
-            error: "Error al cambiar foto, intentalo de nuevo por favor",
-        });
+        if (!reviewState.loading) {
+            await toast.promise(review(true), {
+                pending: "Cambiando foto de perfil del usuario",
+                success: "Foto cambiada",
+                error: "Error al cambiar foto, inténtalo de nuevo por favor",
+            });
+        }
     };
 
     const decline = async () => {
-        await toast.promise(review(false), {
-            pending: "Elimando la foto de perfil",
-            success: "Foto eliminada",
-            error: "Error al eliminar la foto de perfil, intentalo de nuevo por favor",
-        });
+        if (!reviewState.loading) {
+            await toast.promise(review(false), {
+                pending: "Eliminando la foto de perfil",
+                success: "Foto eliminada",
+                error: "Error al eliminar la foto de perfil, inténtalo de nuevo por favor",
+            });
+        }
     };
 
     return req ? (

@@ -100,9 +100,9 @@ const FormToSeeInfo = ({
 
                 try {
                     await toast.promise(saveReq(infoDoc), {
-                        pending: "Guardando justificatorio",
-                        success: "Justificatorio guardado",
-                        error: "Error al guardar el justificatorio, intentalo de nuevo por favor",
+                        pending: "Guardando justificativo",
+                        success: "Justificativo guardado",
+                        error: "Error al guardar el justificativo, inténtalo de nuevo por favor",
                     });
                     setAbleToSee({
                         isChecking: false,
@@ -192,16 +192,16 @@ const FormToSeeInfo = ({
                 <div className="margin-bottom-25">
                     <div>
                         <h2 className="text | big-medium bolder">
-                            Justificacion para continuar
+                            Justificación para continuar
                         </h2>
                         <p className="text | light">
-                            Necesitas escribir una justificacion para ver esta
-                            informacion, por favor llena uno o ambos de los siguientes
+                            Necesitas escribir una justificación para ver esta
+                            información, por favor llena uno o ambos de los siguientes
                             campos.
                         </p>
                         <p className="text | light">
                             <b>
-                                Podras ver esta informacion hasta el final del dia de hoy
+                                Podrás ver esta información hasta el final del dia de hoy
                                 o hasta salgas de tu cuenta
                             </b>
                         </p>
@@ -219,7 +219,7 @@ const FormToSeeInfo = ({
                             onChange={verifyReason}
                         />
                         <legend className="form-section-legend">
-                            Justificacion {isValidID() && "(Opcional)"}
+                            Justificación {isValidID() && "(Opcional)"}
                         </legend>
                         {formData.reason.message && (
                             <small>

@@ -106,11 +106,11 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         if (userData) {
                             if (userData.deleted) {
                                 logoutWithReason(
-                                    "Tu cuenta fue borrada, comunicate con uno de nuestro adminstradores",
+                                    "Tu cuenta fue borrada, comunícate con uno de nuestro administradores",
                                 );
                             } else if (userData.disable) {
                                 logoutWithReason(
-                                    "Fuiste desabilitado, comunicate con uno de nuestro adminstradores",
+                                    "Fuiste , comunícate con uno de nuestro administradores",
                                 );
                             } else {
                                 var userBuilt: UserInterface | null = buildUser(
@@ -173,7 +173,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     data: null,
                     hasPhoto: false,
                 });
-                toast.success("Sesion cerrada existosamente");
+                toast.success("Sesión cerrada existosamente");
                 router.push("/");
             })
             .catch(() => {

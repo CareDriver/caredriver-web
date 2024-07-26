@@ -47,7 +47,7 @@ const DisableUser = ({
                         {
                             pending: "Habilitando al usuario",
                             success: "Usuario habilitado",
-                            error: "Error al volver a habilitar al usuario, intentalo de nuevo",
+                            error: "Error al volver a habilitar al usuario, inténtalo de nuevo",
                         },
                     );
                 } catch (e) {
@@ -62,7 +62,7 @@ const DisableUser = ({
                         {
                             pending: "Deshabilitando al usuario",
                             success: "Usuario deshabilitado",
-                            error: "Error al deshabilitar al usuario, intentalo de nuevo",
+                            error: "Error al deshabilitar al usuario, inténtalo de nuevo",
                         },
                     );
                 } catch (e) {
@@ -85,12 +85,12 @@ const DisableUser = ({
                     }),
                     {
                         pending: isDisable
-                            ? "Habilitando la authenticacion del usuario"
-                            : "Desabilitando la autenticacion del usuario",
-                        success: isDisable ? "Habilitado" : "Desabilitado",
+                            ? "Habilitando la authentication del usuario"
+                            : "Deshabilitando la authentication del usuario",
+                        success: isDisable ? "Habilitado" : "Deshabilitado",
                         error: isDisable
-                            ? "Error al habilitar la autenticacion del usuario, intentalo de nuevo por favor"
-                            : "Error al desabilitar la autenticacion del usuario, intentalo de nuevo por favor",
+                            ? "Error al habilitar la authentication del usuario, inténtalo de nuevo por favor"
+                            : "Error al deshabilitar la authentication del usuario, inténtalo de nuevo por favor",
                     },
                 );
                 window.location.reload();
@@ -121,9 +121,9 @@ const DisableUser = ({
                         reason: balanceHistory.reason.value,
                     }),
                     {
-                        pending: "Registrando accion",
-                        success: "Accion en el usuario registrada",
-                        error: "Error al registrar accion en el usuario",
+                        pending: "Registrando acción",
+                        success: "Acción en el usuario registrada",
+                        error: "Error al registrar acción en el usuario",
                     },
                 );
 
@@ -144,8 +144,8 @@ const DisableUser = ({
                 Zona Peligrosa
             </h2>
             <p>
-                Esta accion si se puede revertir, aunque el usuario no podra usar la
-                aplicacion mientras este desabilitado.
+                Esta acción si se puede revertir, aunque el usuario no podrá usar la
+                aplicación mientras este deshabilitado.
             </p>
             <fieldset className="form-section | max-width-60">
                 <input
@@ -184,7 +184,7 @@ const DisableUser = ({
                     !balanceHistory.reason.message &&
                     balanceHistory.reason.value.trim().length > 0
                 }
-                doSomethingText={"Desabilitar usuario"}
+                doSomethingText={"Deshabilitar usuario"}
             >
                 <ActionUserSetterForm
                     loading={loading}

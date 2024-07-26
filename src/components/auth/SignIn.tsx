@@ -45,58 +45,63 @@ const SignIn = () => {
 
     const login = (e: FormEvent) => {
         e.preventDefault();
-        setFormState({
-            ...formState,
-            loading: true,
-        });
-        if (
-            credentials.email.value.trim().length > 0 &&
-            credentials.password.value.trim().length > 0
-        ) {
-            if (!credentials.email.errorMessage && !credentials.password.errorMessage) {
-                signInWithEmailAndPassword(
-                    auth,
-                    credentials.email.value.toLocaleLowerCase().trim(),
-                    credentials.password.value.trim(),
-                )
-                    .then((res) => {
-                        setFormState({
-                            ...formState,
-                            loading: false,
-                        });
+        if (!formState.loading) {
+            setFormState({
+                ...formState,
+                loading: true,
+            });
+            if (
+                credentials.email.value.trim().length > 0 &&
+                credentials.password.value.trim().length > 0
+            ) {
+                if (
+                    !credentials.email.errorMessage &&
+                    !credentials.password.errorMessage
+                ) {
+                    signInWithEmailAndPassword(
+                        auth,
+                        credentials.email.value.toLocaleLowerCase().trim(),
+                        credentials.password.value.trim(),
+                    )
+                        .then((res) => {
+                            setFormState({
+                                ...formState,
+                                loading: false,
+                            });
 
-                        window.location.replace("/redirector");
-                    })
-                    .catch((e) => {
-                        let message: string = e.message;
-                        if (message.includes("user-disabled")) {
-                            toast.warning(
-                                "Tu cuenta fue desabilitada, por favor contactate con uno de nuestros administradores",
-                            );
-                        } else {
-                            toast.error("Credenciales inválidas, intalo de nuevo");
-                        }
-                        setFormState({
-                            ...formState,
-                            isValid: false,
-                            loading: false,
+                            window.location.replace("/redirector");
+                        })
+                        .catch((e) => {
+                            let message: string = e.message;
+                            if (message.includes("user-disabled")) {
+                                toast.warning(
+                                    "Tu cuenta fue desabilitada, por favor contactate con uno de nuestros administradores",
+                                );
+                            } else {
+                                toast.error("Credenciales inválidas, intalo de nuevo");
+                            }
+                            setFormState({
+                                ...formState,
+                                isValid: false,
+                                loading: false,
+                            });
                         });
+                } else {
+                    setFormState({
+                        ...formState,
+                        isValid: false,
+                        loading: false,
                     });
+                    toast.error("Por favor completa los campos con datos validos");
+                }
             } else {
                 setFormState({
                     ...formState,
                     isValid: false,
                     loading: false,
                 });
-                toast.error("Por favor completa los campos con datos validos");
+                toast.error("Por favor completa los campos");
             }
-        } else {
-            setFormState({
-                ...formState,
-                isValid: false,
-                loading: false,
-            });
-            toast.error("Por favor completa los campos");
         }
     };
 
@@ -177,7 +182,7 @@ const SignIn = () => {
                     {formState.loading ? (
                         <i className="loader"></i>
                     ) : (
-                        <span>Iniciar sesion</span>
+                        <span>Iniciar sesión</span>
                     )}
                 </button>
             </form>

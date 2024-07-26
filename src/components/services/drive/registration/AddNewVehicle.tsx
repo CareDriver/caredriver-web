@@ -221,20 +221,12 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        setFormState({
-            ...formState,
-            loading: true,
-        });
-        var isValid = verifyNoEmptyData(
-            personalData,
-            vehicle,
-            userConfirmation,
-            acceptedTerms,
-            pdf,
-            personalData.idCard,
-        );
-        if (isValid) {
-            isValid = isValidForm(
+        if (!formState.loading) {
+            setFormState({
+                ...formState,
+                loading: true,
+            });
+            var isValid = verifyNoEmptyData(
                 personalData,
                 vehicle,
                 userConfirmation,
@@ -242,65 +234,75 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                 pdf,
                 personalData.idCard,
             );
-            if (isValid && user.data) {
-                try {
-                    await updateIdCard(personalData.idCard, user.data);
-                    const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
-                        await toast.promise(uploadImages(), {
-                            pending: "Subiendo imagenes, por favor espera",
-                            success: "Imagenes subidas",
-                            error: "Error al subir imagenes, intentalo de nuevo por favor",
+            if (isValid) {
+                isValid = isValidForm(
+                    personalData,
+                    vehicle,
+                    userConfirmation,
+                    acceptedTerms,
+                    pdf,
+                    personalData.idCard,
+                );
+                if (isValid && user.data) {
+                    try {
+                        await updateIdCard(personalData.idCard, user.data);
+                        const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
+                            await toast.promise(uploadImages(), {
+                                pending: "Subiendo imágenes, por favor espera",
+                                success: "Imágenes subidas",
+                                error: "Error al subir imágenes, inténtalo de nuevo por favor",
+                            });
+    
+                        const pdfRef = await toast.promise(uploadPDF(), {
+                            pending: "Subiendo PDF",
+                            success: "PDF subido",
+                            error: "Error al subir el PDF, inténtalo de nuevo",
                         });
-
-                    const pdfRef = await toast.promise(uploadPDF(), {
-                        pending: "Subiendo PDF",
-                        success: "PDF subido",
-                        error: "Error al subir el PDF, intentalo de nuevo",
-                    });
-                    if (pdfRef) {
-                        await toast.promise(
-                            uploadForm(
-                                vehiclesData,
-                                newProfilePhotoImgUrl,
-                                realTimePhotoImgUrl,
-                                pdfRef,
-                            ),
-                            {
-                                pending: "Enviando el formulario, por favor espera",
-                                success: "Formulario enviado",
-                                error: "Error al enviar el formulario, intentalo de nuevo por favor",
-                            },
-                        );
-                        window.location.replace("/services/drive");
+                        if (pdfRef) {
+                            await toast.promise(
+                                uploadForm(
+                                    vehiclesData,
+                                    newProfilePhotoImgUrl,
+                                    realTimePhotoImgUrl,
+                                    pdfRef,
+                                ),
+                                {
+                                    pending: "Enviando el formulario, por favor espera",
+                                    success: "Formulario enviado",
+                                    error: "Error al enviar el formulario, inténtalo de nuevo por favor",
+                                },
+                            );
+                            window.location.replace("/services/drive");
+                            setFormState({
+                                loading: false,
+                                isValid: true,
+                            });
+                        }
+                    } catch (e) {
                         setFormState({
                             loading: false,
-                            isValid: true,
+                            isValid: false,
                         });
+                        window.location.reload();
                     }
-                } catch (e) {
+                } else {
                     setFormState({
                         loading: false,
                         isValid: false,
                     });
-                    window.location.reload();
+                    toast.error("Por favor llena los campos con datos validos", {
+                        toastId: "toast-error-invalid-form",
+                    });
                 }
             } else {
                 setFormState({
                     loading: false,
                     isValid: false,
                 });
-                toast.error("Por favor llena los campos con datos validos", {
-                    toastId: "toast-error-invalid-form",
+                toast.error("Por favor llena los campos que están vacíos", {
+                    toastId: "toast-error-empty-form",
                 });
             }
-        } else {
-            setFormState({
-                loading: false,
-                isValid: false,
-            });
-            toast.error("Por favor llena los campos que estan vacios", {
-                toastId: "toast-error-empty-form",
-            });
         }
     };
 
@@ -326,7 +328,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                 var isValid = user.data.serviceVehicles[type] !== undefined;
                 if (isValid) {
                     router.push("/services/drive");
-                    toast.error("Ya registraste este vehiculo", {
+                    toast.error("Ya registraste este vehículo", {
                         toastId: "vehicle-already-registered-message",
                     });
                 }
@@ -342,7 +344,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                               ServiceReqState.Reviewing;
                 if (isValid) {
                     router.push("/services/drive");
-                    toast.error("Tu peticion esta siendo revisada", {
+                    toast.error("Tu petición esta siendo revisada", {
                         toastId: "vehicle-already-registered-like-req-message",
                     });
                 }
@@ -351,17 +353,18 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
     }, [loadingUser]);
 
     return (
-        <div className="service-form-wrapper" onSubmit={(e) => handleSubmit(e)}>
+        <div className="service-form-wrapper">
             <div>
-                <h1 className="text | big bolder">Agregar un nuevo Vehiculo</h1>
+                <h1 className="text | big bolder">Agregar un nuevo Vehículo</h1>
                 <p className="text | bold">
                     Por favor llena este formulario con datos reales para que tu solicitud
-                    sea aprovada y puedas empezar a trabajar con este nuevo vehiculo.
+                    sea aprobada y puedas empezar a trabajar con este nuevo vehículo.
                 </p>
             </div>
             <form
                 className="form-sub-container"
                 data-state={formState.loading ? "loading" : "loaded"}
+                onSubmit={(e) => handleSubmit(e)}
             >
                 <PersonalDataForm
                     personalData={personalData}

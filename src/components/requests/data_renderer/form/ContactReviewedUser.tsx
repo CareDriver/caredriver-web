@@ -16,15 +16,15 @@ const ContactReviewedUser = ({
     const contactByEmail = () => {
         if (user.email) {
             const subject = "CAReDriver - Revision de su solicitud";
-            const message = `${getGreeting()}\n\n soy el administrador ${transmitter} de la aplicacion CAReDriver, me comunico con usted para `;
+            const message = `${getGreeting()}\n\n soy el administrador ${transmitter} de la aplicación CAReDriver, me comunico con usted para `;
             sendEmail(user.email, subject, message);
         } else {
-            toast.error("El usuario no tiene registrado su correo electronico");
+            toast.error("El usuario no tiene registrado su correo electrónico");
         }
     };
 
     const contactByWhatsapp = () => {
-        const message = `${getGreeting()}\n\n soy el administrador ${transmitter} de la aplicacion CAReDriver, me comunico con usted para `;
+        const message = `${getGreeting()}\n\n soy el administrador ${transmitter} de la aplicación CAReDriver, me comunico con usted para `;
         sendWhatsapp(user.phoneNumber, message);
     };
 
@@ -40,14 +40,14 @@ const ContactReviewedUser = ({
                     onClick={contactByEmail}
                     className="icon-wrapper text general-button | red white-icon bolder mb"
                 >
-                    <Envelope /> Contactar por CORREO
+                    <Envelope /> Contactar por Correo
                 </button>
                 <button
                     type="button"
                     onClick={contactByWhatsapp}
                     className="icon-wrapper text general-button | white-icon bolder mb"
                 >
-                    <Whatsapp /> Contactar por WHATSAPP
+                    <Whatsapp /> Contactar por WhatsApp
                 </button>
             </div>
         </div>

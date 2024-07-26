@@ -254,7 +254,7 @@ const ServicesRequestedByUser = ({
             <div className="margin-bottom-50">
                 <fieldset className="filter-date-wrapper">
                     <button className="filter-date-button" onClick={search}>
-                        Filtrar por petidos hasta el:{" "}
+                        Filtrar por pedidos hasta :{"  "}
                     </button>
                     <input
                         type="date"
@@ -294,10 +294,10 @@ const ServicesRequestedByUser = ({
                 <div className="empty-wrapper | auto-height">
                     <h2>
                         {dataState.isSearching
-                            ? `No se encontro ninguna peticion hasta la fecha ${getFormatDate(
+                            ? `No se encontró ninguna petición hasta la fecha ${getFormatDate(
                                   dataState.value.toDate(),
                               )}`
-                            : `El usuario no ha hecho ninguna peticion por un ${userReqTypes[type]}`}
+                            : `El usuario no ha hecho ninguna petición por un ${userReqTypes[type]}`}
                     </h2>
                 </div>
             )}

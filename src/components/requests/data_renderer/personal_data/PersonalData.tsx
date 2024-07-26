@@ -25,8 +25,8 @@ const PersonalData = ({
                     <legend className="form-section-legend">Nombre completo</legend>
                 </fieldset>
                 <fieldset className="form-section">
-                    <InputData content={location} placeholder="Localizacion" />
-                    <legend className="form-section-legend">Localizacion</legend>
+                    <InputData content={location} placeholder="Localización" />
+                    <legend className="form-section-legend">Localización</legend>
                 </fieldset>
                 <ImageRenderer
                     url={photo}

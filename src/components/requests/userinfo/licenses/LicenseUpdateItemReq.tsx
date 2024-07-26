@@ -19,7 +19,7 @@ const LicenseUpdateItemReq = ({ license }: { license: LicenseUpdateReq }) => {
                 </h4>
             )}
             <h4 className="text | light">
-                <b>Nueva fecha de expiracion: </b>
+                <b>Nueva fecha de expiración: </b>
                 {toformatDate(license.expiredDateLicense.toDate())}
             </h4>
         </Link>

@@ -72,7 +72,7 @@ const UserDataUpdater = ({ user }: { user: UserInterface }) => {
                 await toast.promise(updateUser(user.id, { fullName: fullName.value }), {
                     pending: "Cambiando el nombre",
                     success: "Nombre cambiado",
-                    error: "Error al cambiar el nombre, intentalo de nuevo por favor",
+                    error: "Error al cambiar el nombre, inténtalo de nuevo por favor",
                 });
             } catch (e) {
                 console.log(e);
@@ -81,46 +81,47 @@ const UserDataUpdater = ({ user }: { user: UserInterface }) => {
     };
 
     const editData = async () => {
-        if (fullName.value === user.fullName && email.value === user.email) {
-            return;
-        }
-
-        setEditState({
-            ...editState,
-            loading: true,
-        });
-        try {
-            const credentialsChanged: boolean =
-                (user.email && user.email !== email.value) ||
-                password.value.trim().length > 0;
-            const fullNameChanged: boolean = user.fullName !== fullName.value;
-            if (credentialsChanged) {
-                await toast.promise(editCredentials(), {
-                    pending: "Cambiando credenciales",
-                    success: "Credenciales cambiadas",
-                    error: "Error al cambiar credenciales, intentalo de nuevo por favor",
-                });
+        if (!editState.loading) {
+            if (fullName.value === user.fullName && email.value === user.email) {
+                return;
             }
-
-            if (fullNameChanged) {
-                await toast.promise(editFullName(), {
-                    pending: "Cambiando el nombre",
-                    success: "Nombre cambiado",
-                    error: "Error al cambiar el nombre",
-                });
-            }
-            window.location.reload();
             setEditState({
                 ...editState,
-                loading: false,
+                loading: true,
             });
-        } catch (e) {
-            console.log(e);
+            try {
+                const credentialsChanged: boolean =
+                    (user.email && user.email !== email.value) ||
+                    password.value.trim().length > 0;
+                const fullNameChanged: boolean = user.fullName !== fullName.value;
+                if (credentialsChanged) {
+                    await toast.promise(editCredentials(), {
+                        pending: "Cambiando credenciales",
+                        success: "Credenciales cambiadas",
+                        error: "Error al cambiar credenciales, inténtalo de nuevo por favor",
+                    });
+                }
 
-            setEditState({
-                ...editState,
-                loading: false,
-            });
+                if (fullNameChanged) {
+                    await toast.promise(editFullName(), {
+                        pending: "Cambiando el nombre",
+                        success: "Nombre cambiado",
+                        error: "Error al cambiar el nombre",
+                    });
+                }
+                window.location.reload();
+                setEditState({
+                    ...editState,
+                    loading: false,
+                });
+            } catch (e) {
+                console.log(e);
+
+                setEditState({
+                    ...editState,
+                    loading: false,
+                });
+            }
         }
     };
 

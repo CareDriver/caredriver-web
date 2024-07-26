@@ -15,16 +15,16 @@ const UserContacts = ({
     const contactByEmail = () => {
         if (user.email) {
             const subject = "CAReDriver - Revision de su solicitud";
-            const message = `${getGreeting()}\n\n soy el administrador ${reviewUserName} de la aplicacion CAReDriver, me comunico con usted para `;
+            const message = `${getGreeting()}\n\n soy el administrador ${reviewUserName} de la aplicación CAReDriver, me comunico con usted para `;
             sendEmail(user.email, subject, message);
         } else {
-            toast.error("El usuario no tiene registrado su correo electronico");
+            toast.error("El usuario no tiene registrado su correo electrónico");
         }
     };
 
     const contactByWhatsapp = () => {
         if (user.phoneNumber.trim().length > 0) {
-            const message = `${getGreeting()}\n\n soy el administrador ${reviewUserName} de la aplicacion CAReDriver, me comunico con usted para `;
+            const message = `${getGreeting()}\n\n soy el administrador ${reviewUserName} de la aplicación CAReDriver, me comunico con usted para `;
             sendWhatsapp(user.phoneNumber, message);
         } else {
             toast.error("El usuario no tiene registrado su número");

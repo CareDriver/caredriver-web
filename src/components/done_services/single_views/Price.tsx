@@ -26,7 +26,7 @@ const SericeDonePrice = ({ service }: { service: ServiceRequestInterface }) => {
                     )}
                     {service.price.method && (
                         <span className="text | medium-big">
-                            <b>Metodo de pago: </b>
+                            <b>Método de pago: </b>
                             {getMethod(service.price.method)}
                         </span>
                     )}

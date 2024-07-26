@@ -67,6 +67,6 @@ export async function POST(request) {
         return NextResponse.json({ userId });
     } catch (e) {
         console.log(e);
-        return NextResponse.json({ error: "error, intentalo de nuevo por favor" });
+        return NextResponse.json({ error: "error, inténtalo de nuevo por favor" });
     }
 }

@@ -20,7 +20,7 @@ const PDFRenderer = ({
             </div>
         </div>
     ) : (
-        <FieldDeleted description={"No se encontro el archivo"} />
+        <FieldDeleted description={"No se encontró el archivo"} />
     );
 };
 

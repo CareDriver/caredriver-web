@@ -35,12 +35,12 @@ const ChangePhotoReq = () => {
                     {
                         pending: "Verificando peticiones activas",
                         success: "Verificado",
-                        error: "Error verificando peticiones activas, intentalo de nuevo por favor",
+                        error: "Error verificando peticiones activas, inténtalo de nuevo por favor",
                     },
                 );
                 if (thereAreActiveReqs) {
                     toast.warning(
-                        "Ya enviaste una peticion para actulizar tu foto, espera a que se revise",
+                        "Ya enviaste una petición para actulizar tu foto, espera a que se revise",
                     );
                     setFormState({
                         ...formState,
@@ -49,7 +49,7 @@ const ChangePhotoReq = () => {
                     return;
                 } else {
                     toast.success(
-                        "Valido para enviar una nueva peticion para actualizar tu foto",
+                        "Valido para enviar una nueva petición para actualizar tu foto",
                     );
                 }
             }
@@ -63,7 +63,7 @@ const ChangePhotoReq = () => {
                                 {
                                     pending: "Subiendo foto, por favor espera",
                                     success: "Foto subida",
-                                    error: "Error al subir la foto, intentalo de nuevo por favor",
+                                    error: "Error al subir la foto, inténtalo de nuevo por favor",
                                 },
                             );
                             await toast.promise(
@@ -75,13 +75,13 @@ const ChangePhotoReq = () => {
                                     active: true,
                                 }),
                                 {
-                                    pending: "Enviando la peticion, por favor espera",
-                                    success: "Peticion enviada",
-                                    error: "Error al enviar la peticion, intentalo de nuevo por favor",
+                                    pending: "Enviando la petición, por favor espera",
+                                    success: "Petición enviada",
+                                    error: "Error al enviar la petición, inténtalo de nuevo por favor",
                                 },
                             );
                             toast.info(
-                                "Tu peticion sera servisada por uno de nuestros administradores",
+                                "Tu petición sera servisada por uno de nuestros administradores",
                             );
                             setFormState({
                                 loading: false,
@@ -110,7 +110,7 @@ const ChangePhotoReq = () => {
                     loading: false,
                     isValid: false,
                 });
-                toast.error("Por favor llena los campos que estan vacios", {
+                toast.error("Por favor llena los campos que están vacíos", {
                     toastId: "toast-error-empty-form",
                 });
             }
