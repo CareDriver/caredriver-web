@@ -51,6 +51,7 @@ export const userRoles = [
 
 export interface UserInterface {
     id?: string; // Unique identifier for the user
+    fakeId?: string;
     role?: UserRole; // the role that the user has in the application
     fullName: string; // Full name of the user
     phoneNumber: string; // Phone number of the user (includes country code, ej: +591 76543218)
@@ -72,9 +73,10 @@ export interface UserInterface {
     location?: Locations; // Location user begins
     disable?: boolean; // true when user did not paid to the app and was disabled.
     deleted: boolean; // used for soft delete
+    driverEnterpriseId?: string;
     mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
-    towEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
-    laundryEnterpriteId?: string; // id of the tow enterprise user works for if is tow user
+    towEnterpriseId?: string; // id of the tow enterprise user works for if is tow user
+    laundryEnterpriseId?: string; // id of the tow enterprise user works for if is tow user
 
     serviceVehicles?: ServiceVehicles; // vehicles that the user registered
     serviceRequests?: ServiceRequestsInterface; // status of the services that the user made a request
