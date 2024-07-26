@@ -43,7 +43,7 @@ interface FormData {
     };
 }
 
-const CraneRegistrationByAdmin = () => {
+const DriverRegistrationByAdmin = () => {
     const { user, loadingUser } = useContext(AuthContext);
     const router = useRouter();
     const [formState, setFormState] = useState({
@@ -101,7 +101,7 @@ const CraneRegistrationByAdmin = () => {
                             var id = nanoid(25);
                             const enterprise: Enterprise = {
                                 id,
-                                type: "tow",
+                                type: "driver",
                                 name: formData.name.value,
                                 logoImgUrl: imgWithRef,
                                 coordinates: new GeoPoint(
@@ -121,16 +121,16 @@ const CraneRegistrationByAdmin = () => {
                             };
 
                             await toast.promise(sendEnterpriseReq(id, enterprise), {
-                                pending: "Creando la empresa operadora de grúa",
+                                pending: "Creando Empresa de Choferes",
                                 success: "Creado",
-                                error: "Error al crear la empresa, inténtalo de nuevo por favor",
+                                error: "Error al crear la Empresa de Choferes, inténtalo de nuevo por favor",
                             });
 
                             setFormState({
                                 ...formState,
                                 loading: false,
                             });
-                            router.push("/admin/enterprises/cranes");
+                            router.push("/admin/enterprises/driver");
                         } catch (e) {
                             window.location.reload();
                         }
@@ -189,7 +189,7 @@ const CraneRegistrationByAdmin = () => {
 
     return (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">Registrar Empresa Operadora de Grúa</h1>
+            <h1 className="text | big bolder">Registrar Empresa de Choferes</h1>
             <form
                 className="form-sub-container | margin-top-50"
                 onSubmit={handleSummbit}
@@ -204,7 +204,7 @@ const CraneRegistrationByAdmin = () => {
                         name="fullname"
                         onChange={(e) => handleInputChange(e)}
                     />
-                    <legend className="form-section-legend">Nombre de la Empresa</legend>
+                    <legend className="form-section-legend">Nombre de la Empresa de Choferes</legend>
 
                     {formData.name.message && <small>{formData.name.message}</small>}
                 </fieldset>
@@ -226,13 +226,13 @@ const CraneRegistrationByAdmin = () => {
                                 }),
                         }}
                         content={{
-                            id: "workshop-uploader-image",
-                            indicator: "Logo de la Empresa",
+                            id: "driver-enterprise-uploader-image",
+                            indicator: "Logo de la Empresa de Choferes",
                             isCircle: true,
                         }}
                     />
                 </div>
-                <fieldset className="form-section | select-item">
+                <fieldset className="form-section | select-item | max-width-60">
                     <ChevronDown />
                     <select
                         className="form-section-input"
@@ -253,7 +253,7 @@ const CraneRegistrationByAdmin = () => {
                     <legend className="form-section-legend">Ubicación</legend>
                 </fieldset>
                 <fieldset className="form-section">
-                    <span className="text | bold gray-dark">Ubicación de la Empresa</span>
+                    <span className="text | bold gray-dark">Ubicación de la Empresa de Choferes</span>
                     <div className="form-section-map | max-width-80">
                         <MapForm
                             location={formData.coordinates.value}
@@ -290,4 +290,4 @@ const CraneRegistrationByAdmin = () => {
     );
 };
 
-export default CraneRegistrationByAdmin;
+export default DriverRegistrationByAdmin;

@@ -29,6 +29,9 @@ import { isImageBase64 } from "@/utils/validator/ImageValidator";
 import PageLoader from "../../PageLoader";
 import TriangleExclamation from "@/icons/TriangleExclamation";
 import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
+import { locationList, Locations } from "@/interfaces/Locations";
+import ChevronDown from "@/icons/ChevronDown";
+import { getLocation } from "@/utils/auth/UserAuth";
 
 interface FormData {
     name: {
@@ -40,6 +43,7 @@ interface FormData {
         message: string | null;
     };
     logo: PhotoField;
+    location: Locations;
     coordinates: {
         value: Location | null;
         message: string | null;
@@ -51,7 +55,7 @@ const EnterpriseEditByAdmin = ({
     type,
 }: {
     id: string;
-    type: "mechanical" | "tow" | "laundry";
+    type: "mechanical" | "tow" | "laundry" | "driver";
 }) => {
     const router = useRouter();
     const [enterpriseData, setEnterpriseData] = useState<Enterprise | null>(null);
@@ -74,6 +78,7 @@ const EnterpriseEditByAdmin = ({
             value: null,
             message: null,
         },
+        location: Locations.CochabambaBolivia,
         coordinates: {
             value: null,
             message: null,
@@ -133,9 +138,12 @@ const EnterpriseEditByAdmin = ({
                         formData.coordinates.value.lat,
                         formData.coordinates.value.lng,
                     ),
+                    latitude: formData.coordinates.value.lat,
+                    longitude: formData.coordinates.value.lng,
                     phone: isPhoneValid(formData.phone.value).isValid
                         ? formData.phone.value
                         : "",
+                    location: formData.location,
                     active: true,
                 };
 
@@ -211,6 +219,9 @@ const EnterpriseEditByAdmin = ({
                             },
                             message: null,
                         },
+                        location: data.location
+                            ? data.location
+                            : Locations.CochabambaBolivia,
                         logo: {
                             value: data.logoImgUrl.url,
                             message: null,
@@ -366,6 +377,26 @@ const EnterpriseEditByAdmin = ({
                         }}
                     />
                 </div>
+                <fieldset className="form-section | select-item | max-width-60">
+                    <ChevronDown />
+                    <select
+                        className="form-section-input"
+                        onChange={(e) =>
+                            setFormData({
+                                ...formData,
+                                location: getLocation(e.target.value),
+                            })
+                        }
+                        value={formData.location}
+                    >
+                        {locationList.map((location, i) => (
+                            <option key={`location-option-${i}`} value={location}>
+                                {location}
+                            </option>
+                        ))}
+                    </select>
+                    <legend className="form-section-legend">Ubicación</legend>
+                </fieldset>
                 <fieldset className="form-section">
                     <span className="text | bold gray-dark">
                         Ubicación {EnterpriseTypeRenderPronounV2[type]}

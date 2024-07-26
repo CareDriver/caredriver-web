@@ -7,7 +7,7 @@ const EnterpriseUpItemReq = ({
     type,
 }: {
     enterprise: ReqEditEnterprise;
-    type: "mechanical" | "tow" | "laundry";
+    type: "mechanical" | "tow" | "laundry" | "driver";
 }) => {
     return (
         <Link

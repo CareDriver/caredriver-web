@@ -14,7 +14,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import DataLoaderIndicator from "../DataLoaderIndicator";
 import { getEmptyEnterprise, getRoute } from "@/utils/parser/ToSpanishEnterprise";
 
-const EnterpriseListForUsers = ({ type }: { type: "mechanical" | "tow" | "laundry" }) => {
+const EnterpriseListForUsers = ({ type }: { type: "mechanical" | "tow" | "laundry" | "driver" }) => {
     const { loadingUser, user } = useContext(AuthContext);
     const numPerPage = 12;
     const [data, setData] = useState<Enterprise[] | null>(null);

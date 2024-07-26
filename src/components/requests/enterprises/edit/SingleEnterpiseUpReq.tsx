@@ -15,7 +15,7 @@ const SingleEnterpiseUpReq = ({
     type,
 }: {
     reqId: string;
-    type: "mechanical" | "tow" | "laundry";
+    type: "mechanical" | "tow" | "laundry" | "driver";
 }) => {
     const [serviceReq, setServiceReq] = useState<ReqEditEnterprise | null>(null);
     const [realServiceReq, setRealServiceReq] = useState<Enterprise | null>(null);

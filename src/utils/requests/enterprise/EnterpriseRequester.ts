@@ -113,7 +113,7 @@ export const getEnterpriseById = async (id: string): Promise<Enterprise | undefi
 // PAGINATE ENTERPRISE DATA JUST FOR A USER
 
 export const getPaginatedData = async (
-    type: "mechanical" | "tow" | "laundry",
+    type: "mechanical" | "tow" | "laundry" | "driver",
     userId: string,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
@@ -161,7 +161,7 @@ export const getPaginatedData = async (
 
 export const getNumPages = async (
     numPerPages: number,
-    type: "mechanical" | "tow" | "laundry",
+    type: "mechanical" | "tow" | "laundry" | "driver",
     userId: string,
 ): Promise<number> => {
     const count = await getCountFromServer(
@@ -180,7 +180,7 @@ export const getNumPages = async (
 // PAGINATE ENTERPRISE DATA FOR ALL USERS, USED FOR MECHANIC AND TOW REQS
 
 export const getAllPaginatedData = async (
-    type: "mechanical" | "tow" | "laundry",
+    type: "mechanical" | "tow" | "laundry" | "driver",
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
     endBeforeDoc?: DocumentSnapshot,
@@ -227,7 +227,7 @@ export const getAllPaginatedData = async (
 
 export const getAllNumPages = async (
     numPerPages: number,
-    type: "mechanical" | "tow" | "laundry",
+    type: "mechanical" | "tow" | "laundry" | "driver",
 ): Promise<number> => {
     const count = await getCountFromServer(
         query(
@@ -245,7 +245,7 @@ export const getAllNumPages = async (
 // PAGINATE ENTERPRISE REQS
 
 export const getEnterpriseReqs = async (
-    type: "mechanical" | "tow" | "laundry",
+    type: "mechanical" | "tow" | "laundry" | "driver",
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
     endBeforeDoc?: DocumentSnapshot,
@@ -292,7 +292,7 @@ export const getEnterpriseReqs = async (
 
 export const getEnterpriseReqsNumPages = async (
     numPerPages: number,
-    type: "mechanical" | "tow" | "laundry",
+    type: "mechanical" | "tow" | "laundry" | "driver",
 ): Promise<number> => {
     const count = await getCountFromServer(
         query(
@@ -310,7 +310,7 @@ export const getEnterpriseReqsNumPages = async (
 // PAGINATE ENTERPRISE DATA FOR ALL USERS, USED FOR MECHANIC AND TOW REQS
 
 export const getEnterprisesAdminPaginated = async (
-    type: "mechanical" | "tow" | "laundry",
+    type: "mechanical" | "tow" | "laundry" | "driver",
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
     endBeforeDoc?: DocumentSnapshot,
@@ -355,7 +355,7 @@ export const getEnterprisesAdminPaginated = async (
 
 export const getEnterprisesAdminNumPages = async (
     numPerPages: number,
-    type: "mechanical" | "tow" | "laundry",
+    type: "mechanical" | "tow" | "laundry" | "driver",
 ): Promise<number> => {
     const count = await getCountFromServer(
         query(

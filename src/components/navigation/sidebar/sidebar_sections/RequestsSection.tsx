@@ -4,6 +4,7 @@ import Camera from "@/icons/Camera";
 import Car from "@/icons/Car";
 import MechanicReq from "@/icons/MechanicReq";
 import Soap from "@/icons/Soap";
+import Taxi from "@/icons/Taxi";
 import TowReq from "@/icons/TowReq";
 import Truck from "@/icons/Truck";
 import Wrench from "@/icons/Wrench";
@@ -66,6 +67,25 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                 <div>
                     <i className="separator-horizontal"></i>
                 </div>
+                <Link
+                    href={"/admin/requests/enterprises/driver"}
+                    className={`sidebar-option ${
+                        pathname.includes("/requests/enterprises/driver") && "selected"
+                    }`}
+                >
+                    <Taxi />
+                    <span>Nuevas Emp. de Choferes</span>
+                </Link>
+                <Link
+                    href={"/admin/requests/enterprises/editdriver"}
+                    className={`sidebar-option ${
+                        pathname.includes("/requests/enterprises/editdriver") &&
+                        "selected"
+                    }`}
+                >
+                    <Taxi />
+                    <span>Editar Emp. de Choferes</span>
+                </Link>
                 <Link
                     href={"/admin/requests/enterprises/workshops"}
                     className={`sidebar-option lb-icon ${

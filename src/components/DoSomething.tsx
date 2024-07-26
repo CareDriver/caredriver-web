@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 const DoSomething = () => {
     useEffect(() => {
-        /* changeUsers()
+        /* changeEnterprises()
             .then(() => console.log("success"))
             .catch((e) => console.log(e)); */
     }, []);

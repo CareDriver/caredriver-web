@@ -14,7 +14,7 @@ const SingleEnterpriseReq = ({
     type,
 }: {
     reqId: string;
-    type: "mechanical" | "tow" | "laundry";
+    type: "mechanical" | "tow" | "laundry" | "driver";
 }) => {
     const [serviceReq, setServiceReq] = useState<Enterprise | null>(null);
     const router = useRouter();
