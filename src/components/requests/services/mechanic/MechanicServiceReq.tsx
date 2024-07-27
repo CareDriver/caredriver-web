@@ -27,6 +27,7 @@ import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter"
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
 import MechanicToolsRenderer from "../../data_renderer/mechanic/MechanicToolsRenderer";
+import { addUserServerToEnterprise } from "@/utils/requests/enterprise/EnterpriseUserAdder";
 
 const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -116,6 +117,17 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             user.data.id,
                         );
                         await updateUser(serviceReq.userId, userToUpdate);
+                        if (enterprise && wasApproved) {
+                            await toast.promise(
+                                addUserServerToEnterprise(enterprise, serviceReq.userId),
+                                {
+                                    pending:
+                                        "Agregando al usuario al servicio como usuario servidor",
+                                    success: "Usuario agregado al servicio",
+                                    error: "Error al agregar al usuario al servicio",
+                                },
+                            );
+                        }
                     } else {
                         toast.error("El usuario no fue encontrado");
                     }

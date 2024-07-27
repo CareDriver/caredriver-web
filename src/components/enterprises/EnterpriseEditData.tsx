@@ -496,7 +496,12 @@ const EnterpriseEditData = ({
                                 >
                                     <h2 className="text icon-wrapper | green green-icon medium-big bold">
                                         <Users />
-                                        Agregar Usuarios
+                                        {!enterpriseData.addedUsers ||
+                                        enterpriseData.addedUsers.length === 0
+                                            ? "Ningun usuario agregado"
+                                            : enterpriseData.addedUsers.length > 1
+                                            ? `${enterpriseData.addedUsers.length} Usuarios agregados`
+                                            : "Un usuario agregado"}
                                     </h2>
                                     <p>
                                         Registra o agrega usuarios a tu servicio, puedes

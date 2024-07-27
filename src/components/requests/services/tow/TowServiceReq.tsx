@@ -32,6 +32,7 @@ import TowRenderer from "../../data_renderer/enterprise/TowRenderer";
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
 import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
+import { addUserServerToEnterprise } from "@/utils/requests/enterprise/EnterpriseUserAdder";
 
 const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -169,6 +170,17 @@ const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             user.data.id,
                         );
                         await updateUser(serviceReq.userId, userToUpdate);
+                        if (enterprise && wasApproved) {
+                            await toast.promise(
+                                addUserServerToEnterprise(enterprise, serviceReq.userId),
+                                {
+                                    pending:
+                                        "Agregando al usuario al servicio como usuario servidor",
+                                    success: "Usuario agregado al servicio",
+                                    error: "Error al agregar al usuario al servicio",
+                                },
+                            );
+                        }
                     } else {
                         toast.error("El usuario no fue encontrado");
                     }

@@ -19,6 +19,14 @@ const DriveService = () => {
             case ServiceReqState.Reviewing:
                 return <RequestInProgress />;
             default:
+                return (
+                    <div>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo
+                        illo, magnam optio quia ea qui, labore quidem commodi ullam
+                        doloremque eos nesciunt atque sit quos? Expedita officia dolore
+                        incidunt vero?
+                    </div>
+                );
             // return <DriverRegistration baseUser={user.data} defaultTowEnterprise={null}/>;
         }
     };

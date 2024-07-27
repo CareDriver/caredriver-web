@@ -27,6 +27,7 @@ import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV
 import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
 import LaundryRenderer from "../../data_renderer/enterprise/LaundryRenderer";
 import { laundryReqCollection } from "@/utils/requests/services/LaundryRequester";
+import { addUserServerToEnterprise } from "@/utils/requests/enterprise/EnterpriseUserAdder";
 
 const LaundryServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -115,6 +116,17 @@ const LaundryServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                             user.data.id,
                         );
                         await updateUser(serviceReq.userId, userToUpdate);
+                        if (enterprise && wasApproved) {
+                            await toast.promise(
+                                addUserServerToEnterprise(enterprise, serviceReq.userId),
+                                {
+                                    pending:
+                                        "Agregando al usuario al servicio como usuario servidor",
+                                    success: "Usuario agregado al servicio",
+                                    error: "Error al agregar al usuario al servicio",
+                                },
+                            );
+                        }
                     } else {
                         toast.error("El usuario no fue encontrado");
                     }

@@ -30,6 +30,7 @@ import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter"
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 import PoliceRecords from "../../data_renderer/vehicle/PoliceRecords";
 import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
+import { addUserServerToEnterpriseById } from "@/utils/requests/enterprise/EnterpriseUserAdder";
 
 const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
@@ -191,6 +192,20 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         );
 
                         await updateUser(serviceReq.userId, userToUpdate);
+                        if (serviceReq.driverEnterprise && wasApproved) {
+                            await toast.promise(
+                                addUserServerToEnterpriseById(
+                                    serviceReq.driverEnterprise,
+                                    serviceReq.userId,
+                                ),
+                                {
+                                    pending:
+                                        "Agregando al usuario al servicio como usuario servidor",
+                                    success: "Usuario agregado al servicio",
+                                    error: "Error al agregar al usuario al servicio",
+                                },
+                            );
+                        }
                     } else {
                         toast.error("El usuario no fue encontrado");
                     }
