@@ -1,8 +1,7 @@
 "use client";
 
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { VehicleTransmission, VehicleType } from "@/interfaces/VehicleInterface";
-import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
 import { uploadFileBase64 } from "@/utils/requests/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
@@ -10,7 +9,6 @@ import {
     isValidForm,
     verifyNoEmptyData,
 } from "@/utils/validator/service_requests/DriveValidator";
-import { AuthContext } from "@/context/AuthContext";
 import { Vehicle, driveReqBuilder } from "@/interfaces/UserRequest";
 import { Timestamp } from "firebase/firestore";
 import { saveDriveReq } from "@/utils/requests/services/DriveRequester";
@@ -22,7 +20,6 @@ import { updateUser } from "@/utils/requests/UserRequester";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import { isImageBase64 } from "@/utils/validator/ImageValidator";
-import { PDFField } from "@/components/form/PDFUploader";
 import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 import {
     defaultLicense,
@@ -34,6 +31,8 @@ import {
 import ServiceHeader from "@/components/services/ServiceHeader";
 import PersonalDataForm from "@/components/form/PersonalDataForm";
 import VehiclesForm from "@/components/services/drive/registration/VehiclesForm";
+import { useRouter } from "next/navigation";
+import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 
 const loadInitialPersonalData = (userToAdd: UserInterface): PersonalDataFormField => {
     let data = {
@@ -44,7 +43,7 @@ const loadInitialPersonalData = (userToAdd: UserInterface): PersonalDataFormFiel
         photo: {
             value:
                 userToAdd.photoUrl.url.trim().length > 0 ? userToAdd.photoUrl.url : null,
-            message: null,
+            message: "El usuario no tiene foto de perfil",
         },
         idCard: {
             frontCard: {
@@ -78,6 +77,7 @@ const loadInitialPersonalData = (userToAdd: UserInterface): PersonalDataFormFiel
 };
 
 const DriverEnterpriseUserAdder = ({ userToAdd }: { userToAdd: UserInterface }) => {
+    const router = useRouter();
     const [personalData, setPersonalData] = useState<PersonalDataFormField>(
         loadInitialPersonalData(userToAdd),
     );
@@ -307,7 +307,7 @@ const DriverEnterpriseUserAdder = ({ userToAdd }: { userToAdd: UserInterface }) 
                                 error: "Error al enviar el formulario, inténtalo de nuevo por favor",
                             },
                         );
-                        window.location.reload();
+                        router.push("/enterprise/driver");
                         setFormState({
                             loading: false,
                             isValid: true,
@@ -317,7 +317,7 @@ const DriverEnterpriseUserAdder = ({ userToAdd }: { userToAdd: UserInterface }) 
                             loading: false,
                             isValid: false,
                         });
-                        window.location.reload();
+                        router.push("/enterprise/driver");
                     }
                 } else {
                     setFormState({
@@ -432,7 +432,7 @@ const DriverEnterpriseUserAdder = ({ userToAdd }: { userToAdd: UserInterface }) 
         }
 
         return {
-            title: "Solicitud registrar un nuevo chofer",
+            title: "Solicitud para registrar un nuevo chofer",
             description:
                 "Por favor, llena este formulario con datos reales para que la solicitud sea aprobada y el usuario pueda empezar a trabajar con nosotros.",
             state: ServiceReqState.NotSent,
@@ -440,7 +440,7 @@ const DriverEnterpriseUserAdder = ({ userToAdd }: { userToAdd: UserInterface }) 
     };
 
     return (
-        <div className="service-form-wrapper">
+        <div>
             <ServiceHeader data={getState()} />
             <form
                 className="form-sub-container"

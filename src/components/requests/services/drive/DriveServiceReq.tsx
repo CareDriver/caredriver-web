@@ -287,7 +287,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
             <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
             {serviceReq.vehicles && <VehiclesRenderer vehicles={serviceReq.vehicles} />}
 
-            <PoliceRecords pdf={serviceReq.policeRecordsPdf} />
+            {/* <PoliceRecords pdf={serviceReq.policeRecordsPdf} /> */}
 
             {userData && user.data ? (
                 <ContactReviewedUser user={userData} transmitter={user.data.fullName} />

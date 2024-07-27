@@ -18,9 +18,15 @@ const PersonalDataForm = ({
     const { user, loadingUser } = useContext(AuthContext);
     const [loading, setLoading] = useState<boolean>(true);
 
-    /* const wasInitFilled = ():boolean => {
-        return personalData.fullname !== 
-    } */
+    const wasInitFilled = (): boolean => {
+        return (
+            personalData.fullname.value.length > 0 ||
+            personalData.photo.value !== null ||
+            personalData.idCard.frontCard.value !== null ||
+            personalData.idCard.backCard.value !== null ||
+            personalData.idCard.location.value.length > 0
+        );
+    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -36,6 +42,10 @@ const PersonalDataForm = ({
     };
 
     useEffect(() => {
+        if (wasInitFilled()) {
+            setLoading(false);
+            return;
+        }
         if (!loadingUser) {
             if (user.data) {
                 var hasIdCard: boolean =
@@ -157,10 +167,12 @@ const PersonalDataForm = ({
             </div>
             <IdentityCardForm
                 idCardForm={personalData.idCard}
-                setIdCardForm={(idCardForm: IdCardForm) => setPersonalData({
-                    ...personalData,
-                    idCard: idCardForm
-                })}
+                setIdCardForm={(idCardForm: IdCardForm) =>
+                    setPersonalData({
+                        ...personalData,
+                        idCard: idCardForm,
+                    })
+                }
             />
         </>
     );
