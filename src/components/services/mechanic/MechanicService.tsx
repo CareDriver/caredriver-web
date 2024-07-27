@@ -20,7 +20,12 @@ const MechanicService = () => {
             case ServiceReqState.Reviewing:
                 return <RequestInProgress />;
             default:
-                return <MechanicRegistration baseUser={user.data} />;
+                return (
+                    <MechanicRegistration
+                        baseUser={user.data}
+                        defaultTowEnterprise={null}
+                    />
+                );
         }
     };
 

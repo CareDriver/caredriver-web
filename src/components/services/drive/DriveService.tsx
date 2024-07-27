@@ -19,7 +19,7 @@ const DriveService = () => {
             case ServiceReqState.Reviewing:
                 return <RequestInProgress />;
             default:
-                return <DriverRegistration baseUser={user.data}/>;
+            // return <DriverRegistration baseUser={user.data} defaultTowEnterprise={null}/>;
         }
     };
 
@@ -32,7 +32,6 @@ const DriveService = () => {
                     user.data.serviceRequests.driveMotorcycle &&
                     user.data.serviceRequests.driveMotorcycle.state ===
                         ServiceReqState.Reviewing) ||
-
                 (user.data.serviceRequests.driveCar &&
                     user.data.serviceRequests.driveCar.state ===
                         ServiceReqState.Reviewing &&
@@ -42,7 +41,6 @@ const DriveService = () => {
                                 ServiceReqState.NotSent ||
                                 user.data.serviceRequests.driveMotorcycle.state ===
                                     ServiceReqState.Refused)))) ||
-
                 (user.data.serviceRequests.driveMotorcycle &&
                     user.data.serviceRequests.driveMotorcycle.state ===
                         ServiceReqState.Reviewing &&

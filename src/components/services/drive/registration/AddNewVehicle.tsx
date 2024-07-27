@@ -33,9 +33,11 @@ import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 
 const AddNewVehicle = ({
     baseUser,
+    defaultTowEnterprise: defaultEnterprise,
     type,
 }: {
     baseUser: UserInterface | null;
+    defaultTowEnterprise: string;
     type: "car" | "motorcycle";
 }) => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -190,6 +192,7 @@ const AddNewVehicle = ({
                         requesterUser.location === undefined
                             ? Locations.CochabambaBolivia
                             : requesterUser.location,
+                        defaultEnterprise,
                     ),
                 );
 

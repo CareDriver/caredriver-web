@@ -45,6 +45,7 @@ export interface UserRequest {
     mechanicalWorkShop?: string; // id of the mechanical user works for if is mechanic user
     towEnterprite?: string; // id of the tow enterprise user works for if is tow user
     laundryEnterprite?: string; // id of the laundry enterprise user works for if is tow user
+    driverEnterprise?: string; // id of the driver enterprise user works for if is tow user
     services: Services[];
     location?: Locations; // just if user does not have a location registered yet.
     vehicles?: Vehicle[]; // vehicles that are in the request
@@ -88,6 +89,7 @@ export const driveReqBuilder = (
     realTimePhotoImgUrl: ImgWithRef,
     services: Services[],
     location: Locations,
+    driverEnterprise: string
 ): UserRequest => {
     return {
         id,
@@ -101,6 +103,7 @@ export const driveReqBuilder = (
         services: services,
         location,
         vehicles,
+        driverEnterprise
     };
 };
 
@@ -117,6 +120,7 @@ export const emptyDriveReq = (): UserRequest => {
         services: [],
         location: Locations.CochabambaBolivia,
         vehicles: [],
+        driverEnterprise: ""
     };
 };
 

@@ -29,7 +29,13 @@ import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 import { saveLaundryReq } from "@/utils/requests/services/LaundryRequester";
 import Soap from "@/icons/Soap";
 
-const LaundryRegistration = ({ baseUser }: { baseUser: UserInterface | null }) => {
+const LaundryRegistration = ({
+    baseUser,
+    defaultTowEnterprise: defaultEnterprise,
+}: {
+    baseUser: UserInterface | null;
+    defaultTowEnterprise: string | null;
+}) => {
     const { user, loadingUser } = useContext(AuthContext);
     const [requesterUser, setRequesterUser] = useState<UserInterface | null>(baseUser);
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
@@ -58,7 +64,7 @@ const LaundryRegistration = ({ baseUser }: { baseUser: UserInterface | null }) =
     });
 
     const [laundryEnterprise, setLaundryEnterprise] = useState<EnterpriseField>({
-        value: null,
+        value: defaultEnterprise,
         message: null,
     });
 
@@ -321,25 +327,28 @@ const LaundryRegistration = ({ baseUser }: { baseUser: UserInterface | null }) =
                     personalData={personalData}
                     setPersonalData={setPersonalData}
                 />
-                <div className="form-sub-container | margin-top-25 max-width-90">
-                    <h2 className="text icon-wrapper | medium-big bold">
-                        <Soap />
-                        Lavadero
-                    </h2>
 
-                    <EnterpriseSelector
-                        type={EnterpriseType.Laundry}
-                        enterpriseFiled={laundryEnterprise}
-                        setEnterprise={setLaundryEnterprise}
-                    />
-                    {laundryEnterprise.message && (
-                        <div className="margin-top-15">
-                            <small className="form-section-message">
-                                {laundryEnterprise.message}
-                            </small>
-                        </div>
-                    )}
-                </div>
+                {!defaultEnterprise && (
+                    <div className="form-sub-container | margin-top-25 max-width-90">
+                        <h2 className="text icon-wrapper | medium-big bold">
+                            <Soap />
+                            Lavadero
+                        </h2>
+
+                        <EnterpriseSelector
+                            type={EnterpriseType.Laundry}
+                            enterpriseFiled={laundryEnterprise}
+                            setEnterprise={setLaundryEnterprise}
+                        />
+                        {laundryEnterprise.message && (
+                            <div className="margin-top-15">
+                                <small className="form-section-message">
+                                    {laundryEnterprise.message}
+                                </small>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <SelfieConfirmer
                     image={userConfirmation}

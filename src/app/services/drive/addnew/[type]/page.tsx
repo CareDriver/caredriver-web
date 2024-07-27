@@ -3,10 +3,11 @@ import AddNewVehicle from "@/components/services/drive/registration/AddNewVehicl
 
 const AddNewDrivePage = ({ params }: { params: any }) => {
     return (
-        <PageServerUserPermission>
-            <AddNewVehicle type={params.type} baseUser={null}/>
-        </PageServerUserPermission>
+        <div></div>
     );
 };
 
 export default AddNewDrivePage;
+{/* <PageServerUserPermission>
+    <AddNewVehicle type={params.type} baseUser={null}/>
+</PageServerUserPermission> */}

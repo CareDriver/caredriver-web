@@ -37,11 +37,15 @@ import { saveTowReq } from "@/utils/requests/services/TowRequester";
 import Building from "@/icons/Building";
 import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 
-const TowRegistration = ({ baseUser }: { baseUser: UserInterface | null }) => {
+const TowRegistration = ({
+    baseUser,
+    defaultTowEnterprise: defaultEnterprise,
+}: {
+    baseUser: UserInterface | null;
+    defaultTowEnterprise: string | null;
+}) => {
     const { user, loadingUser } = useContext(AuthContext);
-    const [requesterUser, setRequesterUser] = useState<UserInterface | null>(
-        baseUser,
-    );
+    const [requesterUser, setRequesterUser] = useState<UserInterface | null>(baseUser);
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
         fullname: {
             value: "",
@@ -75,7 +79,7 @@ const TowRegistration = ({ baseUser }: { baseUser: UserInterface | null }) => {
     });
 
     const [towEnterprise, setTowEnterprise] = useState<EnterpriseField>({
-        value: null,
+        value: defaultEnterprise,
         message: null,
     });
 
@@ -388,25 +392,27 @@ const TowRegistration = ({ baseUser }: { baseUser: UserInterface | null }) => {
                 />
                 <TowVehicle vehicle={vehicle} setVehicle={setVehicle} />
 
-                <div className="form-sub-container | margin-top-25">
-                    <h2 className="text icon-wrapper | medium-big bold">
-                        <Building />
-                        Empresa de Grúa
-                    </h2>
+                {!defaultEnterprise && (
+                    <div className="form-sub-container | margin-top-25">
+                        <h2 className="text icon-wrapper | medium-big bold">
+                            <Building />
+                            Empresa de Grúa
+                        </h2>
 
-                    <EnterpriseSelector
-                        type={EnterpriseType.Tow}
-                        enterpriseFiled={towEnterprise}
-                        setEnterprise={setTowEnterprise}
-                    />
-                    {towEnterprise.message && (
-                        <div className="margin-top-15">
-                            <small className="form-section-message">
-                                {towEnterprise.message}
-                            </small>
-                        </div>
-                    )}
-                </div>
+                        <EnterpriseSelector
+                            type={EnterpriseType.Tow}
+                            enterpriseFiled={towEnterprise}
+                            setEnterprise={setTowEnterprise}
+                        />
+                        {towEnterprise.message && (
+                            <div className="margin-top-15">
+                                <small className="form-section-message">
+                                    {towEnterprise.message}
+                                </small>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <SelfieConfirmer
                     image={userConfirmation}

@@ -30,7 +30,13 @@ import { isImageBase64 } from "@/utils/validator/ImageValidator";
 import { PDFField } from "@/components/form/PDFUploader";
 import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 
-const DriverRegistration = ({ baseUser }: { baseUser: UserInterface | null }) => {
+const DriverRegistration = ({
+    baseUser,
+    defaultTowEnterprise: defaultEnterprise,
+}: {
+    baseUser: UserInterface | null;
+    defaultTowEnterprise: string;
+}) => {
     const { user, loadingUser } = useContext(AuthContext);
     const [requesterUser, setRequesterUser] = useState<UserInterface | null>(baseUser);
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
@@ -185,6 +191,7 @@ const DriverRegistration = ({ baseUser }: { baseUser: UserInterface | null }) =>
                         requesterUser.location === undefined
                             ? Locations.CochabambaBolivia
                             : requesterUser.location,
+                        defaultEnterprise
                     ),
                 );
 

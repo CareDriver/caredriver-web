@@ -163,16 +163,36 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         typeAdder: "ServerUser" | "SupportUser",
         userToAdd: UserInterface,
     ) => {
-        if (typeAdder === "ServerUser") {
+        if (typeAdder === "ServerUser" && enterprise.id) {
             switch (enterprise.type) {
                 case "driver":
-                    return <DriverRegistration baseUser={userToAdd} />;
+                    return (
+                        <DriverRegistration
+                            baseUser={userToAdd}
+                            defaultTowEnterprise={enterprise.id}
+                        />
+                    );
                 case "mechanical":
-                    return <MechanicRegistration baseUser={userToAdd} />;
+                    return (
+                        <MechanicRegistration
+                            baseUser={userToAdd}
+                            defaultTowEnterprise={enterprise.id}
+                        />
+                    );
                 case "tow":
-                    return <TowRegistration baseUser={userToAdd} />;
+                    return (
+                        <TowRegistration
+                            baseUser={userToAdd}
+                            defaultTowEnterprise={enterprise.id}
+                        />
+                    );
                 default:
-                    return <LaundryRegistration baseUser={userToAdd} />;
+                    return (
+                        <LaundryRegistration
+                            baseUser={userToAdd}
+                            defaultTowEnterprise={enterprise.id}
+                        />
+                    );
             }
         }
     };

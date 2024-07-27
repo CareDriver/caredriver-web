@@ -34,7 +34,13 @@ import { saveMechanicReq } from "@/utils/requests/services/MechanicRequester";
 import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 import MechanicTools from "./MechanicTools";
 
-const MechanicRegistration = ({ baseUser }: { baseUser: UserInterface | null }) => {
+const MechanicRegistration = ({
+    baseUser,
+    defaultTowEnterprise: defaultEnterprise,
+}: {
+    baseUser: UserInterface | null;
+    defaultTowEnterprise: string | null;
+}) => {
     const { user, loadingUser } = useContext(AuthContext);
     const [requesterUser, setRequesterUser] = useState<UserInterface | null>(baseUser);
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
@@ -68,7 +74,7 @@ const MechanicRegistration = ({ baseUser }: { baseUser: UserInterface | null }) 
     });
 
     const [mechanicWorkshop, setMechanicWorkshop] = useState<EnterpriseField>({
-        value: null,
+        value: defaultEnterprise,
         message: null,
     });
 
@@ -335,25 +341,28 @@ const MechanicRegistration = ({ baseUser }: { baseUser: UserInterface | null }) 
 
                 <MechanicTools tools={mechanicTools} setTools={setMechanicTools} />
 
-                <div className="form-sub-container | margin-top-25 max-width-90">
-                    <h2 className="text icon-wrapper | medium-big bold">
-                        <Warehouse />
-                        Taller mecánico {"(Opcional)"}
-                    </h2>
+                {!defaultEnterprise && (
+                    <div className="form-sub-container | margin-top-25 max-width-90">
+                        <h2 className="text icon-wrapper | medium-big bold">
+                            <Warehouse />
+                            Taller mecánico {"(Opcional)"}
+                        </h2>
 
-                    <EnterpriseSelector
-                        type={EnterpriseType.Mechanical}
-                        enterpriseFiled={mechanicWorkshop}
-                        setEnterprise={setMechanicWorkshop}
-                    />
-                    {mechanicWorkshop.message && (
-                        <div className="margin-top-15">
-                            <small className="form-section-message">
-                                {mechanicWorkshop.message}
-                            </small>
-                        </div>
-                    )}
-                </div>
+                        <EnterpriseSelector
+                            type={EnterpriseType.Mechanical}
+                            enterpriseFiled={mechanicWorkshop}
+                            setEnterprise={setMechanicWorkshop}
+                        />
+
+                        {mechanicWorkshop.message && (
+                            <div className="margin-top-15">
+                                <small className="form-section-message">
+                                    {mechanicWorkshop.message}
+                                </small>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 <SelfieConfirmer
                     image={userConfirmation}

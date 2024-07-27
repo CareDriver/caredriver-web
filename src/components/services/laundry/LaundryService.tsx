@@ -20,7 +20,12 @@ const LaundryService = () => {
             case ServiceReqState.Reviewing:
                 return <RequestInProgress />;
             default:
-                return <LaundryRegistration baseUser={user.data}/>;
+                return (
+                    <LaundryRegistration
+                        baseUser={user.data}
+                        defaultTowEnterprise={null}
+                    />
+                );
         }
     };
 
