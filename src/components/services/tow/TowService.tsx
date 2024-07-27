@@ -19,7 +19,7 @@ const TowService = () => {
             case ServiceReqState.Reviewing:
                 return <RequestInProgress />;
             default:
-                return <TowRegistration />;
+                return <TowRegistration baseUser={user.data} />;
         }
     };
 

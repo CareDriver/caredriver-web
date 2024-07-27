@@ -9,10 +9,13 @@ import {
 } from "@/utils/validator/auth/CredentialsValidator";
 import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import DriverEnterpriseUserAdder from "./driver/DriverEnterpriseUserAdder";
 import { DEFAULT_PHOTO } from "@/utils/user/UserData";
 import "@/styles/components/users.css";
 import { ServiceReqState, Services } from "@/interfaces/Services";
+import DriverRegistration from "../services/drive/registration/DriverRegistration";
+import MechanicRegistration from "../services/mechanic/registration/MechanicRegistration";
+import TowRegistration from "../services/tow/registration/TowRegistration";
+import LaundryRegistration from "../services/laundry/registration/LaundryRegistration";
 
 const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
     const [formState, setFormState] = useState<{
@@ -163,15 +166,21 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         if (typeAdder === "ServerUser") {
             switch (enterprise.type) {
                 case "driver":
-                    return <DriverEnterpriseUserAdder userToAdd={userToAdd} />;
+                    return <DriverRegistration baseUser={userToAdd} />;
+                case "mechanical":
+                    return <MechanicRegistration baseUser={userToAdd} />;
+                case "tow":
+                    return <TowRegistration baseUser={userToAdd} />;
+                default:
+                    return <LaundryRegistration baseUser={userToAdd} />;
             }
         }
     };
 
     return (
-        <div className="form-container | margin-top-25">
+        <div>
             {formState.selectedUser === null && (
-                <>
+                <div className="service-form-wrapper">
                     <div>
                         <h1 className="text | big bolder">Agregar usuario al servicio</h1>
                         <p className="text | light">
@@ -181,7 +190,7 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
                     </div>
 
                     {userToAdd !== undefined && formState.selectedUser === null && (
-                        <div className="users-item | max-width-60">
+                        <div className="users-item | margin-top-25">
                             <img
                                 src={
                                     userToAdd.photoUrl.url === ""
@@ -203,7 +212,7 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
 
                     <form
                         onSubmit={lookForTheUser}
-                        className="form-container | max-width-60"
+                        className="margin-top-25"
                         data-state={formState.loading ? "loading" : "loaded"}
                     >
                         <fieldset className="form-section">
@@ -230,7 +239,7 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
                         </fieldset>
 
                         <button
-                            className={`general-button touchable ${
+                            className={`general-button margin-top-25 touchable ${
                                 formState.loading && "loading-section"
                             }`}
                             title={
@@ -247,33 +256,33 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
                             )}
                         </button>
                     </form>
-                </>
-            )}
+                    {userToAdd !== undefined && formState.selectedUser === null && (
+                        <div className="margin-top-25 row-wrapper">
+                            <button
+                                type="button"
+                                className="small-general-button text | bold green touchable"
+                                onClick={() => registerAsUserServer(userToAdd)}
+                            >
+                                Registrar como Usuario Servidor
+                            </button>
 
-            {userToAdd !== undefined && formState.selectedUser === null && (
-                <div className="row-wrapper">
-                    <button
-                        type="button"
-                        className="small-general-button text | bold green touchable"
-                        onClick={() => registerAsUserServer(userToAdd)}
-                    >
-                        Registrar como Usuario Servidor
-                    </button>
-
-                    <button
-                        type="button"
-                        className="small-general-button text | bold green touchable"
-                        onClick={() =>
-                            setFormState({
-                                ...formState,
-                                selectedUser: "SupportUser",
-                            })
-                        }
-                    >
-                        Agregar como Usuario Soporte
-                    </button>
+                            <button
+                                type="button"
+                                className="small-general-button text | bold green touchable"
+                                onClick={() =>
+                                    setFormState({
+                                        ...formState,
+                                        selectedUser: "SupportUser",
+                                    })
+                                }
+                            >
+                                Agregar como Usuario Soporte
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
+
             {userToAdd &&
                 formState.selectedUser &&
                 getEnterpriseUserAdder(formState.selectedUser, userToAdd)}

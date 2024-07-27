@@ -19,7 +19,7 @@ const DriveService = () => {
             case ServiceReqState.Reviewing:
                 return <RequestInProgress />;
             default:
-                return <DriverRegistration />;
+                return <DriverRegistration baseUser={user.data}/>;
         }
     };
 

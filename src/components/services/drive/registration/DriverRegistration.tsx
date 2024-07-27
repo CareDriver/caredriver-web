@@ -30,8 +30,9 @@ import { isImageBase64 } from "@/utils/validator/ImageValidator";
 import { PDFField } from "@/components/form/PDFUploader";
 import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 
-const DriverRegistration = () => {
+const DriverRegistration = ({ baseUser }: { baseUser: UserInterface | null }) => {
     const { user, loadingUser } = useContext(AuthContext);
+    const [requesterUser, setRequesterUser] = useState<UserInterface | null>(baseUser);
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
         fullname: {
             value: "",
@@ -93,8 +94,8 @@ const DriverRegistration = () => {
         var newProfilePhotoImgUrl: string | ImgWithRef = emptyPhotoWithRef;
         var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
 
-        if (user.data) {
-            newProfilePhotoImgUrl = user.data.photoUrl;
+        if (requesterUser) {
+            newProfilePhotoImgUrl = requesterUser.photoUrl;
             if (
                 !loadingUser &&
                 personalData.photo.value &&
@@ -168,29 +169,29 @@ const DriverRegistration = () => {
         newProfilePhotoImgUrl: string | ImgWithRef,
         realTimePhotoImgUrl: ImgWithRef,
     ) => {
-        if (user.data) {
+        if (requesterUser) {
             var formId = nanoid(30);
             try {
                 await saveDriveReq(
                     formId,
                     driveReqBuilder(
                         formId,
-                        user.data.id === undefined ? "" : user.data.id,
+                        requesterUser.id === undefined ? "" : requesterUser.id,
                         personalData.fullname.value,
                         newProfilePhotoImgUrl,
                         vehiclesData,
                         realTimePhotoImgUrl,
-                        user.data.services,
-                        user.data.location === undefined
+                        requesterUser.services,
+                        requesterUser.location === undefined
                             ? Locations.CochabambaBolivia
-                            : user.data.location,
+                            : requesterUser.location,
                     ),
                 );
 
                 var newReqState;
                 if (vehicles.length > 1) {
                     newReqState = {
-                        ...user.data.serviceRequests,
+                        ...requesterUser.serviceRequests,
                         driveCar: {
                             id: formId,
                             state: ServiceReqState.Reviewing,
@@ -204,14 +205,14 @@ const DriverRegistration = () => {
                     newReqState =
                         vehicles[0].type.type === VehicleType.CAR
                             ? {
-                                  ...user.data.serviceRequests,
+                                  ...requesterUser.serviceRequests,
                                   driveCar: {
                                       id: formId,
                                       state: ServiceReqState.Reviewing,
                                   },
                               }
                             : {
-                                  ...user.data.serviceRequests,
+                                  ...requesterUser.serviceRequests,
                                   driveMotorcycle: {
                                       id: formId,
                                       state: ServiceReqState.Reviewing,
@@ -219,12 +220,12 @@ const DriverRegistration = () => {
                               };
                 }
 
-                if (user.data.id) {
+                if (requesterUser.id) {
                     var toUpdate: Partial<UserInterface> = {
                         serviceRequests: newReqState,
                     };
                     try {
-                        await updateUser(user.data.id, toUpdate);
+                        await updateUser(requesterUser.id, toUpdate);
                     } catch (e) {
                         throw e;
                     }
@@ -257,9 +258,9 @@ const DriverRegistration = () => {
                     acceptedTerms,
                     personalData.idCard,
                 );
-                if (isValid && user.data) {
+                if (isValid && requesterUser) {
                     try {
-                        await updateIdCard(personalData.idCard, user.data);
+                        await updateIdCard(personalData.idCard, requesterUser);
                         const {
                             vehiclesData,
                             newProfilePhotoImgUrl,
@@ -336,16 +337,23 @@ const DriverRegistration = () => {
         [personalData, vehicles, userConfirmation, acceptedTerms],
     );
 
+    const loadRequesterUser = () => {
+        if (!loadingUser && user.data && !requesterUser) {
+            setRequesterUser(user.data);
+        }
+        verifyRefusedReq();
+    };
+
     const verifyRefusedReq = async () => {
-        if (!loadingUser && user.data) {
+        if (requesterUser) {
             var changed = false;
             var toUpdate = {
-                ...user.data.serviceRequests,
+                ...requesterUser.serviceRequests,
             };
             if (
-                user.data.serviceRequests &&
-                user.data.serviceRequests.driveCar &&
-                user.data.serviceRequests.driveCar.state === ServiceReqState.Refused
+                requesterUser.serviceRequests &&
+                requesterUser.serviceRequests.driveCar &&
+                requesterUser.serviceRequests.driveCar.state === ServiceReqState.Refused
             ) {
                 toUpdate = {
                     ...toUpdate,
@@ -357,9 +365,9 @@ const DriverRegistration = () => {
                 changed = true;
             }
             if (
-                user.data.serviceRequests &&
-                user.data.serviceRequests.driveMotorcycle &&
-                user.data.serviceRequests.driveMotorcycle.state ===
+                requesterUser.serviceRequests &&
+                requesterUser.serviceRequests.driveMotorcycle &&
+                requesterUser.serviceRequests.driveMotorcycle.state ===
                     ServiceReqState.Refused
             ) {
                 toUpdate = {
@@ -372,12 +380,12 @@ const DriverRegistration = () => {
                 changed = true;
             }
 
-            if (changed && user.data.id) {
+            if (changed && requesterUser.id) {
                 var toUpdateDoc: Partial<UserInterface> = {
                     serviceRequests: toUpdate,
                 };
                 try {
-                    await updateUser(user.data.id, toUpdateDoc);
+                    await updateUser(requesterUser.id, toUpdateDoc);
                 } catch (e) {
                     throw e;
                 }
@@ -386,39 +394,39 @@ const DriverRegistration = () => {
     };
 
     useEffect(() => {
-        verifyRefusedReq();
+        loadRequesterUser();
     }, [loadingUser]);
 
     const getState = () => {
-        if (user.data && user.data.serviceRequests) {
+        if (requesterUser && requesterUser.serviceRequests) {
             if (
-                user.data.serviceRequests.driveCar &&
-                user.data.serviceRequests.driveCar.state === ServiceReqState.Refused
+                requesterUser.serviceRequests.driveCar &&
+                requesterUser.serviceRequests.driveCar.state === ServiceReqState.Refused
             ) {
                 return {
-                    title: "Tu solicitud fue Rechazada!",
+                    title: "La solicitud fue Rechazada!",
                     description:
-                        "Puede que alguno de tus datos no fueron validos, pero puedes volver a intentar mandar una nueva solicitud.",
+                        "Puede que alguno de los datos enviados no hayan sido validos, intenta mandar una nueva solicitud.",
                     state: ServiceReqState.Refused,
                 };
             } else if (
-                user.data.serviceRequests.driveMotorcycle &&
-                user.data.serviceRequests.driveMotorcycle.state ===
+                requesterUser.serviceRequests.driveMotorcycle &&
+                requesterUser.serviceRequests.driveMotorcycle.state ===
                     ServiceReqState.Refused
             ) {
                 return {
-                    title: "Tu solicitud fue Rechazada!",
+                    title: "La solicitud fue Rechazada!",
                     description:
-                        "Puede que alguno de tus datos no fueron validos, pero puedes volver a intentar mandar una nueva solicitud.",
+                        "Puede que alguno de los datos enviados no hayan sido validos, intenta mandar una nueva solicitud.",
                     state: ServiceReqState.Refused,
                 };
             }
         }
 
         return {
-            title: "¡Solicita trabajar como chofer con nosotros!",
+            title: "Solicitud para trabajar como chofer con nosotros!",
             description:
-                "Por favor, llena este formulario con datos reales para que tu solicitud sea aprobada y puedas empezar a trabajar con nosotros.",
+                "Necesitamos verificar que todos los datos que se llenen sean validos antes registrar al nuevo usuario servidor.",
             state: ServiceReqState.NotSent,
         };
     };
@@ -432,6 +440,7 @@ const DriverRegistration = () => {
                 onSubmit={(e) => handleSubmit(e)}
             >
                 <PersonalDataForm
+                    baseUser={baseUser}
                     personalData={personalData}
                     setPersonalData={setPersonalData}
                 />

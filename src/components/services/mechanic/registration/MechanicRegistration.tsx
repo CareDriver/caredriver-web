@@ -34,8 +34,9 @@ import { saveMechanicReq } from "@/utils/requests/services/MechanicRequester";
 import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 import MechanicTools from "./MechanicTools";
 
-const MechanicRegistration = () => {
+const MechanicRegistration = ({ baseUser }: { baseUser: UserInterface | null }) => {
     const { user, loadingUser } = useContext(AuthContext);
+    const [requesterUser, setRequesterUser] = useState<UserInterface | null>(baseUser);
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
         fullname: {
             value: "",
@@ -82,8 +83,8 @@ const MechanicRegistration = () => {
         var newProfilePhotoImgUrl: string | ImgWithRef = emptyPhotoWithRef;
         var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
 
-        if (user.data) {
-            newProfilePhotoImgUrl = user.data.photoUrl;
+        if (requesterUser) {
+            newProfilePhotoImgUrl = requesterUser.photoUrl;
             if (
                 !loadingUser &&
                 personalData.photo.value &&
@@ -121,30 +122,30 @@ const MechanicRegistration = () => {
         newProfilePhotoImgUrl: string | ImgWithRef,
         realTimePhotoImgUrl: ImgWithRef,
     ) => {
-        if (user.data) {
+        if (requesterUser) {
             var formId = nanoid(30);
             try {
                 await saveMechanicReq(
                     formId,
                     mechanicReqBuilder(
                         formId,
-                        user.data.id === undefined ? "" : user.data.id,
+                        requesterUser.id === undefined ? "" : requesterUser.id,
                         personalData.fullname.value,
                         newProfilePhotoImgUrl,
                         realTimePhotoImgUrl,
-                        user.data.services,
-                        user.data.location === undefined
+                        requesterUser.services,
+                        requesterUser.location === undefined
                             ? Locations.CochabambaBolivia
-                            : user.data.location,
+                            : requesterUser.location,
                         mechanicWorkshop.value,
                         mechanicTools.value,
                     ),
                 );
 
-                if (user.data.id) {
+                if (requesterUser.id) {
                     var toUpdate: Partial<UserInterface> = {
                         serviceRequests: {
-                            ...user.data.serviceRequests,
+                            ...requesterUser.serviceRequests,
                             mechanic: {
                                 id: formId,
                                 state: ServiceReqState.Reviewing,
@@ -152,7 +153,7 @@ const MechanicRegistration = () => {
                         },
                     };
                     try {
-                        await updateUser(user.data.id, toUpdate);
+                        await updateUser(requesterUser.id, toUpdate);
                     } catch (e) {
                         throw e;
                     }
@@ -185,9 +186,9 @@ const MechanicRegistration = () => {
                     personalData.idCard,
                     mechanicTools,
                 );
-                if (isValid && user.data) {
+                if (isValid && requesterUser) {
                     try {
-                        await updateIdCard(personalData.idCard, user.data);
+                        await updateIdCard(personalData.idCard, requesterUser);
                         const { newProfilePhotoImgUrl, realTimePhotoImgUrl } =
                             await toast.promise(uploadImages(), {
                                 pending: "Subiendo imágenes, por favor espera",
@@ -235,16 +236,23 @@ const MechanicRegistration = () => {
         }
     };
 
+    const loadRequesterUser = () => {
+        if (!loadingUser && user.data && !requesterUser) {
+            setRequesterUser(user.data);
+        }
+        verifyRefusedReq();
+    };
+
     const verifyRefusedReq = async () => {
-        if (!loadingUser && user.data) {
+        if (!loadingUser && requesterUser) {
             var changed = false;
             var toUpdate = {
-                ...user.data.serviceRequests,
+                ...requesterUser.serviceRequests,
             };
             if (
-                user.data.serviceRequests &&
-                user.data.serviceRequests.mechanic &&
-                user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
+                requesterUser.serviceRequests &&
+                requesterUser.serviceRequests.mechanic &&
+                requesterUser.serviceRequests.mechanic.state === ServiceReqState.Refused
             ) {
                 toUpdate = {
                     ...toUpdate,
@@ -256,12 +264,12 @@ const MechanicRegistration = () => {
                 changed = true;
             }
 
-            if (changed && user.data.id) {
+            if (changed && requesterUser.id) {
                 var toUpdateDoc: Partial<UserInterface> = {
                     serviceRequests: toUpdate,
                 };
                 try {
-                    await updateUser(user.data.id, toUpdateDoc);
+                    await updateUser(requesterUser.id, toUpdateDoc);
                 } catch (e) {
                     throw e;
                 }
@@ -270,7 +278,7 @@ const MechanicRegistration = () => {
     };
 
     useEffect(() => {
-        verifyRefusedReq();
+        loadRequesterUser();
     }, [loadingUser]);
 
     useEffect(
@@ -290,23 +298,23 @@ const MechanicRegistration = () => {
 
     const getState = () => {
         if (
-            user.data &&
-            user.data.serviceRequests &&
-            user.data.serviceRequests.mechanic &&
-            user.data.serviceRequests.mechanic.state === ServiceReqState.Refused
+            requesterUser &&
+            requesterUser.serviceRequests &&
+            requesterUser.serviceRequests.mechanic &&
+            requesterUser.serviceRequests.mechanic.state === ServiceReqState.Refused
         ) {
             return {
-                title: "Tu solicitud fue Rechazada!",
+                title: "La solicitud fue Rechazada!",
                 description:
-                    "Puede que alguno de tus datos no fueron validos, pero puedes volver a intentar mandar una nueva solicitud.",
+                    "Puede que alguno de los datos enviados no hayan sido validos, intenta mandar una nueva solicitud.",
                 state: ServiceReqState.Refused,
             };
         }
 
         return {
-            title: "Solicita trabajar como Mecánico con nosotros!",
+            title: "Solicitud para trabajar como Mecánico con nosotros!",
             description:
-                "Necesitamos verificar que trabajas en un taller antes que empieces a trabajar con nosotros.",
+                "Necesitamos verificar que todos los datos que se llenen sean validos antes registrar al nuevo usuario servidor.",
             state: ServiceReqState.NotSent,
         };
     };
@@ -320,6 +328,7 @@ const MechanicRegistration = () => {
                 onSubmit={(e) => handleSubmit(e)}
             >
                 <PersonalDataForm
+                    baseUser={baseUser}
                     personalData={personalData}
                     setPersonalData={setPersonalData}
                 />

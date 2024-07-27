@@ -1,10 +1,7 @@
 "use client";
 
 import { FormEvent, useContext, useEffect, useState } from "react";
-import {
-    EnterpriseField,
-    PersonalDataFormField,
-} from "../../FormModels";
+import { EnterpriseField, PersonalDataFormField } from "../../FormModels";
 import PersonalDataForm from "../../../form/PersonalDataForm";
 import SelfieConfirmer from "@/components/form/SelfieConfirmer";
 import TermsCheckForm from "@/components/form/TermsCheckForm";
@@ -32,8 +29,9 @@ import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 import { saveLaundryReq } from "@/utils/requests/services/LaundryRequester";
 import Soap from "@/icons/Soap";
 
-const LaundryRegistration = () => {
+const LaundryRegistration = ({ baseUser }: { baseUser: UserInterface | null }) => {
     const { user, loadingUser } = useContext(AuthContext);
+    const [requesterUser, setRequesterUser] = useState<UserInterface | null>(baseUser);
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
         fullname: {
             value: "",
@@ -75,8 +73,8 @@ const LaundryRegistration = () => {
         var newProfilePhotoImgUrl: string | ImgWithRef = emptyPhotoWithRef;
         var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
 
-        if (user.data) {
-            newProfilePhotoImgUrl = user.data.photoUrl;
+        if (requesterUser) {
+            newProfilePhotoImgUrl = requesterUser.photoUrl;
             if (
                 !loadingUser &&
                 personalData.photo.value &&
@@ -114,29 +112,29 @@ const LaundryRegistration = () => {
         newProfilePhotoImgUrl: string | ImgWithRef,
         realTimePhotoImgUrl: ImgWithRef,
     ) => {
-        if (user.data && laundryEnterprise.value) {
+        if (requesterUser && laundryEnterprise.value) {
             var formId = nanoid(30);
             try {
                 await saveLaundryReq(
                     formId,
                     laundryReqBuilder(
                         formId,
-                        user.data.id === undefined ? "" : user.data.id,
+                        requesterUser.id === undefined ? "" : requesterUser.id,
                         personalData.fullname.value,
                         newProfilePhotoImgUrl,
                         realTimePhotoImgUrl,
-                        user.data.services,
-                        user.data.location === undefined
+                        requesterUser.services,
+                        requesterUser.location === undefined
                             ? Locations.CochabambaBolivia
-                            : user.data.location,
+                            : requesterUser.location,
                         laundryEnterprise.value,
                     ),
                 );
 
-                if (user.data.id) {
+                if (requesterUser.id) {
                     var toUpdate: Partial<UserInterface> = {
                         serviceRequests: {
-                            ...user.data.serviceRequests,
+                            ...requesterUser.serviceRequests,
                             laundry: {
                                 id: formId,
                                 state: ServiceReqState.Reviewing,
@@ -144,7 +142,7 @@ const LaundryRegistration = () => {
                         },
                     };
                     try {
-                        await updateUser(user.data.id, toUpdate);
+                        await updateUser(requesterUser.id, toUpdate);
                     } catch (e) {
                         throw e;
                     }
@@ -177,9 +175,9 @@ const LaundryRegistration = () => {
                     personalData.idCard,
                     laundryEnterprise,
                 );
-                if (isValid && user.data) {
+                if (isValid && requesterUser) {
                     try {
-                        await updateIdCard(personalData.idCard, user.data);
+                        await updateIdCard(personalData.idCard, requesterUser);
                         const { newProfilePhotoImgUrl, realTimePhotoImgUrl } =
                             await toast.promise(uploadImages(), {
                                 pending: "Subiendo imágenes, por favor espera",
@@ -227,16 +225,23 @@ const LaundryRegistration = () => {
         }
     };
 
+    const loadRequesterUser = () => {
+        if (!loadingUser && user.data && !requesterUser) {
+            setRequesterUser(user.data);
+        }
+        verifyRefusedReq();
+    };
+
     const verifyRefusedReq = async () => {
-        if (!loadingUser && user.data) {
+        if (!loadingUser && requesterUser) {
             var changed = false;
             var toUpdate = {
-                ...user.data.serviceRequests,
+                ...requesterUser.serviceRequests,
             };
             if (
-                user.data.serviceRequests &&
-                user.data.serviceRequests.laundry &&
-                user.data.serviceRequests.laundry.state === ServiceReqState.Refused
+                requesterUser.serviceRequests &&
+                requesterUser.serviceRequests.laundry &&
+                requesterUser.serviceRequests.laundry.state === ServiceReqState.Refused
             ) {
                 toUpdate = {
                     ...toUpdate,
@@ -248,12 +253,12 @@ const LaundryRegistration = () => {
                 changed = true;
             }
 
-            if (changed && user.data.id) {
+            if (changed && requesterUser.id) {
                 var toUpdateDoc: Partial<UserInterface> = {
                     serviceRequests: toUpdate,
                 };
                 try {
-                    await updateUser(user.data.id, toUpdateDoc);
+                    await updateUser(requesterUser.id, toUpdateDoc);
                 } catch (e) {
                     throw e;
                 }
@@ -262,7 +267,7 @@ const LaundryRegistration = () => {
     };
 
     useEffect(() => {
-        verifyRefusedReq();
+        loadRequesterUser();
     }, [loadingUser]);
 
     useEffect(
@@ -282,23 +287,23 @@ const LaundryRegistration = () => {
 
     const getState = () => {
         if (
-            user.data &&
-            user.data.serviceRequests &&
-            user.data.serviceRequests.laundry &&
-            user.data.serviceRequests.laundry.state === ServiceReqState.Refused
+            requesterUser &&
+            requesterUser.serviceRequests &&
+            requesterUser.serviceRequests.laundry &&
+            requesterUser.serviceRequests.laundry.state === ServiceReqState.Refused
         ) {
             return {
-                title: "Tu solicitud fue Rechazada!",
+                title: "La solicitud fue Rechazada!",
                 description:
-                    "Puede que alguno de tus datos no fueron validos, pero puedes volver a intentar mandar una nueva solicitud.",
+                    "Puede que alguno de los datos enviados no hayan sido validos, intenta mandar una nueva solicitud.",
                 state: ServiceReqState.Refused,
             };
         }
 
         return {
-            title: "Solicita trabajar como Lavadero con nosotros!",
+            title: "Solicitud para trabajar como Lavadero con nosotros!",
             description:
-                "Necesitamos verificar que trabajas en un lavadero antes que empieces a trabajar con nosotros.",
+                "Necesitamos verificar que todos los datos que se llenen sean validos antes registrar al nuevo usuario servidor.",
             state: ServiceReqState.NotSent,
         };
     };
@@ -312,6 +317,7 @@ const LaundryRegistration = () => {
                 onSubmit={(e) => handleSubmit(e)}
             >
                 <PersonalDataForm
+                    baseUser={baseUser}
                     personalData={personalData}
                     setPersonalData={setPersonalData}
                 />

@@ -31,8 +31,15 @@ import AntecedentsPdf from "@/components/form/AntecedentsPdf";
 import { PDFField } from "@/components/form/PDFUploader";
 import { updateIdCard } from "@/utils/requests/IdCardUpdated";
 
-const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
+const AddNewVehicle = ({
+    baseUser,
+    type,
+}: {
+    baseUser: UserInterface | null;
+    type: "car" | "motorcycle";
+}) => {
     const { user, loadingUser } = useContext(AuthContext);
+    const [requesterUser, setRequesterUser] = useState<UserInterface | null>(baseUser);
     const router = useRouter();
     const [personalData, setPersonalData] = useState<PersonalDataFormField>({
         fullname: {
@@ -97,8 +104,8 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
         var newProfilePhotoImgUrl: string | ImgWithRef = emptyPhotoWithRef;
         var realTimePhotoImgUrl: ImgWithRef = emptyPhotoWithRef;
 
-        if (user.data) {
-            newProfilePhotoImgUrl = user.data.photoUrl;
+        if (requesterUser) {
+            newProfilePhotoImgUrl = requesterUser.photoUrl;
             if (
                 !loadingUser &&
                 personalData.photo.value &&
@@ -167,48 +174,47 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
         realTimePhotoImgUrl: ImgWithRef,
         pdfRef: ImgWithRef,
     ) => {
-        if (user.data) {
+        if (requesterUser) {
             var formId = nanoid(30);
             try {
                 await saveDriveReq(
                     formId,
                     driveReqBuilder(
                         formId,
-                        user.data.id === undefined ? "" : user.data.id,
+                        requesterUser.id === undefined ? "" : requesterUser.id,
                         personalData.fullname.value,
                         newProfilePhotoImgUrl,
                         vehiclesData,
                         realTimePhotoImgUrl,
-                        user.data.services,
-                        user.data.location === undefined
+                        requesterUser.services,
+                        requesterUser.location === undefined
                             ? Locations.CochabambaBolivia
-                            : user.data.location,
-                        pdfRef,
+                            : requesterUser.location,
                     ),
                 );
 
                 var newReqState =
                     type === "car"
                         ? {
-                              ...user.data.serviceRequests,
+                              ...requesterUser.serviceRequests,
                               driveCar: {
                                   id: formId,
                                   state: ServiceReqState.Reviewing,
                               },
                           }
                         : {
-                              ...user.data.serviceRequests,
+                              ...requesterUser.serviceRequests,
                               driveMotorcycle: {
                                   id: formId,
                                   state: ServiceReqState.Reviewing,
                               },
                           };
-                if (user.data.id) {
+                if (requesterUser.id) {
                     var toUpdate: Partial<UserInterface> = {
                         serviceRequests: newReqState,
                     };
                     try {
-                        await updateUser(user.data.id, toUpdate);
+                        await updateUser(requesterUser.id, toUpdate);
                     } catch (e) {
                         throw e;
                     }
@@ -243,16 +249,19 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                     pdf,
                     personalData.idCard,
                 );
-                if (isValid && user.data) {
+                if (isValid && requesterUser) {
                     try {
-                        await updateIdCard(personalData.idCard, user.data);
-                        const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
-                            await toast.promise(uploadImages(), {
-                                pending: "Subiendo imágenes, por favor espera",
-                                success: "Imágenes subidas",
-                                error: "Error al subir imágenes, inténtalo de nuevo por favor",
-                            });
-    
+                        await updateIdCard(personalData.idCard, requesterUser);
+                        const {
+                            vehiclesData,
+                            newProfilePhotoImgUrl,
+                            realTimePhotoImgUrl,
+                        } = await toast.promise(uploadImages(), {
+                            pending: "Subiendo imágenes, por favor espera",
+                            success: "Imágenes subidas",
+                            error: "Error al subir imágenes, inténtalo de nuevo por favor",
+                        });
+
                         const pdfRef = await toast.promise(uploadPDF(), {
                             pending: "Subiendo PDF",
                             success: "PDF subido",
@@ -322,33 +331,44 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
         [personalData, vehicle, userConfirmation, acceptedTerms],
     );
 
+    const loadRequesterUser = () => {
+        if (!loadingUser && user.data && !requesterUser) {
+            setRequesterUser(user.data);
+        }
+        verifyRequestAvailability();
+    };
+
+    const verifyRequestAvailability = () => {
+        if (requesterUser && requesterUser.serviceVehicles) {
+            var isValid = requesterUser.serviceVehicles[type] !== undefined;
+            if (isValid) {
+                router.push("/services/drive");
+                toast.error("Ya registraste este vehículo", {
+                    toastId: "vehicle-already-registered-message",
+                });
+            }
+            isValid =
+                type === "car"
+                    ? requesterUser.serviceRequests !== undefined &&
+                      requesterUser.serviceRequests.driveCar !== undefined &&
+                      requesterUser.serviceRequests.driveCar.state ===
+                          ServiceReqState.Reviewing
+                    : requesterUser.serviceRequests !== undefined &&
+                      requesterUser.serviceRequests.driveMotorcycle !== undefined &&
+                      requesterUser.serviceRequests.driveMotorcycle.state ===
+                          ServiceReqState.Reviewing;
+            if (isValid) {
+                router.push("/services/drive");
+                toast.error("Tu petición esta siendo revisada", {
+                    toastId: "vehicle-already-registered-like-req-message",
+                });
+            }
+        }
+    };
+
     useEffect(() => {
         if (!loadingUser) {
-            if (user.data && user.data.serviceVehicles) {
-                var isValid = user.data.serviceVehicles[type] !== undefined;
-                if (isValid) {
-                    router.push("/services/drive");
-                    toast.error("Ya registraste este vehículo", {
-                        toastId: "vehicle-already-registered-message",
-                    });
-                }
-                isValid =
-                    type === "car"
-                        ? user.data.serviceRequests !== undefined &&
-                          user.data.serviceRequests.driveCar !== undefined &&
-                          user.data.serviceRequests.driveCar.state ===
-                              ServiceReqState.Reviewing
-                        : user.data.serviceRequests !== undefined &&
-                          user.data.serviceRequests.driveMotorcycle !== undefined &&
-                          user.data.serviceRequests.driveMotorcycle.state ===
-                              ServiceReqState.Reviewing;
-                if (isValid) {
-                    router.push("/services/drive");
-                    toast.error("Tu petición esta siendo revisada", {
-                        toastId: "vehicle-already-registered-like-req-message",
-                    });
-                }
-            }
+            loadRequesterUser();
         }
     }, [loadingUser]);
 
@@ -367,6 +387,7 @@ const AddNewVehicle = ({ type }: { type: "car" | "motorcycle" }) => {
                 onSubmit={(e) => handleSubmit(e)}
             >
                 <PersonalDataForm
+                    baseUser={baseUser}
                     personalData={personalData}
                     setPersonalData={setPersonalData}
                 />

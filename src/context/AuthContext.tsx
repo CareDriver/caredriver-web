@@ -126,6 +126,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                     data: userBuilt,
                                     hasPhoto:
                                         userBuilt !== null &&
+                                        userBuilt.photoUrl.url.length > 0 &&
                                         userBuilt.photoUrl.url.trim().length > 0,
                                 });
                                 setLoadingUser(false);

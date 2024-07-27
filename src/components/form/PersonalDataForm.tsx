@@ -7,26 +7,20 @@ import { IdCardForm, PersonalDataFormField, PhotoField } from "../services/FormM
 import { isValidName } from "@/utils/validator/auth/CredentialsValidator";
 import { AuthContext } from "@/context/AuthContext";
 import IdentityCardForm from "../services/IdentityCardForm";
+import { UserInterface } from "@/interfaces/UserInterface";
 
 const PersonalDataForm = ({
+    baseUser,
     personalData,
     setPersonalData,
 }: {
+    baseUser: UserInterface | null;
     personalData: PersonalDataFormField;
     setPersonalData: Dispatch<SetStateAction<PersonalDataFormField>>;
 }) => {
     const { user, loadingUser } = useContext(AuthContext);
+    const [requesterUser, setRequesterUser] = useState<UserInterface | null>(baseUser);
     const [loading, setLoading] = useState<boolean>(true);
-
-    const wasInitFilled = (): boolean => {
-        return (
-            personalData.fullname.value.length > 0 ||
-            personalData.photo.value !== null ||
-            personalData.idCard.frontCard.value !== null ||
-            personalData.idCard.backCard.value !== null ||
-            personalData.idCard.location.value.length > 0
-        );
-    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -41,80 +35,91 @@ const PersonalDataForm = ({
         });
     };
 
-    useEffect(() => {
-        if (wasInitFilled()) {
-            setLoading(false);
-            return;
+    const loadRequesterUserData = () => {
+        if (!baseUser && user.data) {
+            setRequesterUser(user.data);
         }
-        if (!loadingUser) {
-            if (user.data) {
-                var hasIdCard: boolean =
-                    user.data.identityCard !== null &&
-                    user.data.identityCard !== undefined;
-                setPersonalData({
-                    fullname: {
-                        value: user.data.fullName,
-                        message: null,
-                    },
-                    photo: {
-                        value: user.hasPhoto ? user.data.photoUrl.url : null,
-                        message: user.hasPhoto
+
+        fillInformation();
+    };
+
+    const fillInformation = () => {
+        if (requesterUser) {
+            var hasIdCard: boolean =
+                requesterUser.identityCard !== null &&
+                requesterUser.identityCard !== undefined;
+            setPersonalData({
+                fullname: {
+                    value: requesterUser.fullName,
+                    message: null,
+                },
+                photo: {
+                    value: requesterUser.photoUrl.url.length > 0 ? requesterUser.photoUrl.url : null,
+                    message: requesterUser.photoUrl.url.length > 0
+                        ? null
+                        : "No se subio una foto de perfil, por favor sube una foto",
+                },
+                idCard: {
+                    frontCard: {
+                        value: requesterUser.identityCard
+                            ? requesterUser.identityCard.frontCard.url
+                            : null,
+                        message: hasIdCard
                             ? null
-                            : "No tienes foto de perfil, por favor sube una foto de perfil",
+                            : "No se subio una foto frontal del carnet de identidad",
                     },
-                    idCard: {
-                        frontCard: {
-                            value: user.data.identityCard
-                                ? user.data.identityCard.frontCard.url
-                                : null,
-                            message: hasIdCard
-                                ? null
-                                : "No has subido la foto frontal de tu carnet de identidad",
-                        },
-                        backCard: {
-                            value: user.data.identityCard
-                                ? user.data.identityCard.backCard.url
-                                : null,
-                            message: hasIdCard
-                                ? null
-                                : "No has subido la foto de atrás de tu carnet de identidad",
-                        },
-                        location: {
-                            value: user.data.identityCard
-                                ? user.data.identityCard.location
-                                : "",
-                            message: hasIdCard ? null : "No tienes localización",
-                        },
+                    backCard: {
+                        value: requesterUser.identityCard
+                            ? requesterUser.identityCard.backCard.url
+                            : null,
+                        message: hasIdCard
+                            ? null
+                            : "No se subio una foto posterior del carnet de identidad",
                     },
-                });
-                setLoading(false);
-            } else {
-                setPersonalData({
-                    fullname: {
-                        value: "",
-                        message: "Ingresa tu nombre completo por favor",
+                    location: {
+                        value: requesterUser.identityCard
+                            ? requesterUser.identityCard.location
+                            : "",
+                        message: hasIdCard
+                            ? null
+                            : "No se agrego la localización en base al carnet de indentidad",
                     },
-                    photo: {
+                },
+            });
+            setLoading(false);
+        } else {
+            setPersonalData({
+                fullname: {
+                    value: "",
+                    message: "Completa este campo por favor",
+                },
+                photo: {
+                    value: null,
+                    message: "Sube una foto de perfil",
+                },
+                idCard: {
+                    frontCard: {
                         value: null,
-                        message: "Sube una foto de perfil",
+                        message: "No se subio una foto frontal del carnet de identidad",
                     },
-                    idCard: {
-                        frontCard: {
-                            value: null,
-                            message: "No tienes foto frontal de tu carnet de identidad",
-                        },
-                        backCard: {
-                            value: null,
-                            message: "No tienes foto de atrás de tu carnet de identidad",
-                        },
-                        location: {
-                            value: "",
-                            message: "No tienes localización",
-                        },
+                    backCard: {
+                        value: null,
+                        message: "No se subio una foto posterior del carnet de identidad",
                     },
-                });
-                setLoading(false);
-            }
+                    location: {
+                        value: "",
+                        message:
+                            "No se agrego la localización en base al carnet de indentidad",
+                    },
+                },
+            });
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (!loadingUser) {
+            loadRequesterUserData();
         }
     }, [loadingUser]);
 

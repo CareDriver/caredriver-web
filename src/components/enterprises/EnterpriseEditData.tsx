@@ -336,9 +336,9 @@ const EnterpriseEditData = ({
     };
 
     return enterpriseData ? (
-        <section className="service-form-wrapper">
+        <>
             {pageState.currentPage === "edit" && (
-                <>
+                <section className="service-form-wrapper">
                     <h1 className="text | big bolder">
                         Editar {EnterpriseTypeRender[type]}
                     </h1>
@@ -580,7 +580,7 @@ const EnterpriseEditData = ({
                             </>
                         )}
                     </form>
-                </>
+                </section>
             )}
             {pageState.currentPage === "register-user" && (
                 <div
@@ -595,7 +595,7 @@ const EnterpriseEditData = ({
                     <EnterpriseUserAdder enterprise={enterpriseData} />
                 </div>
             )}
-        </section>
+        </>
     ) : (
         <PageLoader />
     );
