@@ -16,6 +16,7 @@ import DriverRegistration from "../services/drive/registration/DriverRegistratio
 import MechanicRegistration from "../services/mechanic/registration/MechanicRegistration";
 import TowRegistration from "../services/tow/registration/TowRegistration";
 import LaundryRegistration from "../services/laundry/registration/LaundryRegistration";
+import AddNewVehicle from "../services/drive/registration/AddNewVehicle";
 
 const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
     const [formState, setFormState] = useState<{
@@ -36,36 +37,141 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
     });
     const [userToAdd, setUserToAdd] = useState<undefined | UserInterface>(undefined);
 
-    const isAlreadyDriverUser = (userToAdd: UserInterface): boolean => {
+    const belongsToTheService = (
+        user: UserInterface,
+        enterprise: Enterprise,
+    ): boolean => {
         return (
-            userToAdd.services.includes(Services.Driver) ||
-            userToAdd.serviceRequests?.driveCar?.state === ServiceReqState.Approved ||
-            userToAdd.serviceRequests?.driveCar?.state === ServiceReqState.Reviewing ||
-            userToAdd.serviceRequests?.driveMotorcycle?.state ===
-                ServiceReqState.Approved ||
-            userToAdd.serviceRequests?.driveMotorcycle?.state ===
-                ServiceReqState.Reviewing
+            user.id !== undefined &&
+            enterprise.addedUsersId !== undefined &&
+            enterprise.addedUsersId.includes(user.id)
         );
     };
 
-    const isAlreadyUserServer = (userToAdd: UserInterface): boolean => {
+    const checkRegistrationForSingleVehicule = (
+        user: UserInterface,
+    ): {
+        isAbleToRegisterASingleVehicule: boolean;
+        type: "car" | "motorcycle" | undefined;
+    } => {
+        let type: "car" | "motorcycle" | undefined = undefined;
+        let isCarNotRegistered: boolean =
+            user.serviceRequests !== undefined &&
+            user.serviceRequests.driveMotorcycle !== undefined &&
+            user.serviceRequests.driveMotorcycle.state === ServiceReqState.Approved &&
+            (user.serviceRequests.driveCar === undefined ||
+                user.serviceRequests.driveCar.state === ServiceReqState.NotSent ||
+                user.serviceRequests.driveCar.state === ServiceReqState.Refused);
+
+        let isMotorcycleNotRegistered: boolean =
+            user.serviceRequests !== undefined &&
+            user.serviceRequests.driveCar !== undefined &&
+            user.serviceRequests.driveCar.state === ServiceReqState.Approved &&
+            (user.serviceRequests.driveMotorcycle === undefined ||
+                user.serviceRequests.driveMotorcycle.state === ServiceReqState.NotSent ||
+                user.serviceRequests.driveMotorcycle.state === ServiceReqState.Refused);
+
+        if (isCarNotRegistered) {
+            type = "car";
+        } else if (isMotorcycleNotRegistered) {
+            type = "motorcycle";
+        }
+
+        return {
+            isAbleToRegisterASingleVehicule:
+                isCarNotRegistered || isMotorcycleNotRegistered,
+            type,
+        };
+    };
+
+    const isAbleToBeDriver = (user: UserInterface): boolean => {
+        let isAble = true;
+
+        let isDriver: boolean =
+            user.serviceRequests?.driveCar?.state === ServiceReqState.Approved ||
+            user.serviceRequests?.driveMotorcycle?.state === ServiceReqState.Approved;
+
+        let hasRequestsReviwing: boolean =
+            user.serviceRequests?.driveCar?.state === ServiceReqState.Reviewing ||
+            user.serviceRequests?.driveMotorcycle?.state === ServiceReqState.Reviewing;
+
+        let belongsToDriverService: boolean = belongsToTheService(user, enterprise);
+        let { isAbleToRegisterASingleVehicule } =
+            checkRegistrationForSingleVehicule(user);
+
+        if (isAble && hasRequestsReviwing) {
+            isAble = false;
+            toast.error(
+                "El usuario ya tiene una peticion en progreso, espera a que sea revisada",
+            );
+        }
+
+        if (isAble && isDriver && !belongsToDriverService) {
+            isAble = false;
+            toast.error("El usuario ya fue agregado a otro servicio");
+        }
+
+        if (isAble && belongsToDriverService && isAbleToRegisterASingleVehicule) {
+            toast.info("El usuario solo puede registrar el vehiculo faltante");
+        }
+
+        return isAble;
+    };
+
+    const isAbleToBeUserServer = (user: UserInterface): boolean => {
         switch (enterprise.type) {
             case "driver":
-                return isAlreadyDriverUser(userToAdd);
+                return isAbleToBeDriver(user);
             default:
                 return false;
         }
     };
 
-    const registerAsUserServer = (userToAdd: UserInterface) => {
-        if (isAlreadyUserServer(userToAdd)) {
-            toast.error(
-                "El usuario ya es chofer, no puede ser agregado a un nuevo servicio",
-            );
-        } else {
+    const registerAsUserServer = (user: UserInterface) => {
+        if (isAbleToBeUserServer(user)) {
             setFormState({
                 ...formState,
                 selectedUser: "ServerUser",
+            });
+        }
+    };
+
+    const checkUserAvailability = (userFound: UserInterface | undefined) => {
+        if (!userFound) {
+            setUserEmail({
+                ...userEmail,
+                message: "Usuario no encontrado",
+            });
+            setFormState({
+                ...formState,
+                loading: false,
+            });
+            setUserToAdd(undefined);
+        } else if (userFound.location !== enterprise.location) {
+            setUserEmail({
+                ...userEmail,
+                message: "El usuario no esta en la misma localizacion que la empresa",
+            });
+            setFormState({
+                ...formState,
+                loading: false,
+            });
+            setUserToAdd(undefined);
+        } else if (userFound.id && userFound.id === enterprise.userId) {
+            setUserEmail({
+                ...userEmail,
+                message: "Tu eres el administrador de la empresa",
+            });
+            setFormState({
+                ...formState,
+                loading: false,
+            });
+            setUserToAdd(undefined);
+        } else {
+            setUserToAdd(userFound);
+            setFormState({
+                ...formState,
+                loading: false,
             });
         }
     };
@@ -84,60 +190,9 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
                         pending: "Buscando al usuario",
                         error: "",
                     });
+                    checkUserAvailability(userFound);
                 } catch (e) {
                     console.log(e);
-                }
-                if (!userFound) {
-                    setUserEmail({
-                        ...userEmail,
-                        message: "Usuario no encontrado",
-                    });
-                    setFormState({
-                        ...formState,
-                        loading: false,
-                    });
-                    setUserToAdd(undefined);
-                } else if (
-                    enterprise.addedUsersId &&
-                    userFound.id &&
-                    enterprise.addedUsersId.includes(userFound.id)
-                ) {
-                    setUserEmail({
-                        ...userEmail,
-                        message: "El usuario ya esta agregado",
-                    });
-                    setFormState({
-                        ...formState,
-                        loading: false,
-                    });
-                    setUserToAdd(undefined);
-                } else if (userFound.location !== enterprise.location) {
-                    setUserEmail({
-                        ...userEmail,
-                        message:
-                            "El usuario no esta en la misma localizacion que la empresa",
-                    });
-                    setFormState({
-                        ...formState,
-                        loading: false,
-                    });
-                    setUserToAdd(undefined);
-                } else if (userFound.id && userFound.id === enterprise.userId) {
-                    setUserEmail({
-                        ...userEmail,
-                        message: "Tu eres el administrador de la empresa",
-                    });
-                    setFormState({
-                        ...formState,
-                        loading: false,
-                    });
-                    setUserToAdd(undefined);
-                } else {
-                    setUserToAdd(userFound);
-                    setFormState({
-                        ...formState,
-                        loading: false,
-                    });
                 }
             } else {
                 setUserEmail({
@@ -166,7 +221,15 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         if (typeAdder === "ServerUser" && enterprise.id) {
             switch (enterprise.type) {
                 case "driver":
-                    return (
+                    let { isAbleToRegisterASingleVehicule, type } =
+                        checkRegistrationForSingleVehicule(userToAdd);
+                    return isAbleToRegisterASingleVehicule && type ? (
+                        <AddNewVehicle
+                            type={type}
+                            baseUser={userToAdd}
+                            defaultTowEnterprise={enterprise.id}
+                        />
+                    ) : (
                         <DriverRegistration
                             baseUser={userToAdd}
                             defaultTowEnterprise={enterprise.id}

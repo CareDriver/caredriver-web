@@ -110,11 +110,15 @@ const LaundryServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 services: [...userData.services, Services.Laundry],
                             };
                         }
-                        userToUpdate = await setFirstService(
-                            userData,
-                            userToUpdate,
-                            user.data.id,
-                        );
+
+                        if (wasApproved) {
+                            userToUpdate = await setFirstService(
+                                userData,
+                                userToUpdate,
+                                user.data.id,
+                            );
+                        }
+                        
                         await updateUser(serviceReq.userId, userToUpdate);
                         if (enterprise && wasApproved) {
                             await toast.promise(

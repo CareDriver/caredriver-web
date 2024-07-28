@@ -48,7 +48,7 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     serviceReq.reviewedByHistory.length + 1 === MIN_NUM_OF_APPROVALS;
                 const serviceReview = {
                     adminId: user.data.id,
-                    dateTime: Timestamp.fromDate(new Date()),
+                    dateTime: Timestamp.now(),
                     aproved: wasApproved,
                 };
                 var newReviewServiceHistory = serviceReq.reviewedByHistory
@@ -185,11 +185,14 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 serviceRequests: newReqState,
                             };
                         }
-                        userToUpdate = await setFirstService(
-                            userData,
-                            userToUpdate,
-                            user.data.id,
-                        );
+
+                        if (wasApproved) {
+                            userToUpdate = await setFirstService(
+                                userData,
+                                userToUpdate,
+                                user.data.id,
+                            );
+                        }
 
                         await updateUser(serviceReq.userId, userToUpdate);
                         if (serviceReq.driverEnterprise && wasApproved) {

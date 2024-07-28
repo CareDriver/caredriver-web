@@ -111,11 +111,15 @@ const MechanicServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 };
                             }
                         }
-                        userToUpdate = await setFirstService(
-                            userData,
-                            userToUpdate,
-                            user.data.id,
-                        );
+
+                        if (wasApproved) {
+                            userToUpdate = await setFirstService(
+                                userData,
+                                userToUpdate,
+                                user.data.id,
+                            );
+                        }
+
                         await updateUser(serviceReq.userId, userToUpdate);
                         if (enterprise && wasApproved) {
                             await toast.promise(
