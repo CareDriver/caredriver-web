@@ -13,6 +13,7 @@ import { updateUser } from "@/utils/requests/UserRequester";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
+import DriveInstrucctions from "./DriveInstrucctions";
 
 const DrivePanel = () => {
     const { user, loadingUser } = useContext(AuthContext);
@@ -99,7 +100,8 @@ const DrivePanel = () => {
             <h1 className="text | big bolder green">Tu solicitud fue aprobada!</h1>
             <p className="text icon-wrapper | green-icon green bolder lb medium margin-top-15">
                 <SackDollar />
-                Ve a nuestra Aplicación Móvil y empieza a Ofrecer tu servicio!
+                Ya eres chofer, ve a nuestra Aplicación Móvil y empieza a Ofrecer tu
+                servicio!
             </p>
             {user.data.serviceVehicles && user.data.serviceVehicles.car && (
                 <div className="margin-top-50">
@@ -244,18 +246,7 @@ const DrivePanel = () => {
                                 Agrega este vehículo para poder ofrecer tu servicio usando
                                 este vehículo.
                             </h3>
-                            <Link
-                                className="icon-wrapper small-general-button text | gray gray-icon medium bolder lb margin-top-25 touchable"
-                                href={`/services/drive/addnew/${
-                                    user.data.serviceVehicles &&
-                                    !user.data.serviceVehicles.motorcycle
-                                        ? "motorcycle"
-                                        : "car"
-                                }`}
-                            >
-                                <Plus />
-                                Agregar Vehículo
-                            </Link>
+                            <DriveInstrucctions user={user.data} />
                         </div>
                     )}
                 </div>

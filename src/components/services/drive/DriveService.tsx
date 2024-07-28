@@ -4,30 +4,24 @@ import { AuthContext } from "@/context/AuthContext";
 import { ServiceReqState } from "@/interfaces/Services";
 import { useContext, useEffect, useState } from "react";
 import DrivePanel from "./DrivePanel";
-import DriverRegistration from "./registration/DriverRegistration";
 import RequestInProgress from "../RequestInProgress";
 import PageLoader from "@/components/PageLoader";
+import DriveInstructionsPage from "./DriveInstructionsPage";
 
 const DriveService = () => {
     const { user, loadingUser } = useContext(AuthContext);
     const [state, setState] = useState<ServiceReqState>(ServiceReqState.NotSent);
 
     const getView = () => {
-        switch (state) {
-            case ServiceReqState.Approved:
-                return <DrivePanel />;
-            case ServiceReqState.Reviewing:
-                return <RequestInProgress />;
-            default:
-                return (
-                    <div>
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nemo
-                        illo, magnam optio quia ea qui, labore quidem commodi ullam
-                        doloremque eos nesciunt atque sit quos? Expedita officia dolore
-                        incidunt vero?
-                    </div>
-                );
-            // return <DriverRegistration baseUser={user.data} defaultTowEnterprise={null}/>;
+        if (user.data) {
+            switch (state) {
+                case ServiceReqState.Approved:
+                    return <DrivePanel />;
+                case ServiceReqState.Reviewing:
+                    return <RequestInProgress />;
+                default:
+                    return <DriveInstructionsPage user={user.data} />;
+            }
         }
     };
 
