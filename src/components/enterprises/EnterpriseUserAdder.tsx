@@ -11,7 +11,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { DEFAULT_PHOTO } from "@/utils/user/UserData";
 import "@/styles/components/users.css";
-import { ServiceReqState, Services } from "@/interfaces/Services";
+import { ServiceReqState } from "@/interfaces/Services";
 import DriverRegistration from "../services/drive/registration/DriverRegistration";
 import MechanicRegistration from "../services/mechanic/registration/MechanicRegistration";
 import TowRegistration from "../services/tow/registration/TowRegistration";
@@ -84,6 +84,86 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         };
     };
 
+    const isAbleToBeCraneOperator = (user: UserInterface): boolean => {
+        let isAble = true;
+
+        let isCraneOperator: boolean =
+            user.serviceRequests?.tow?.state === ServiceReqState.Approved;
+
+        let hasRequestsReviwing: boolean =
+            user.serviceRequests?.tow?.state === ServiceReqState.Reviewing;
+
+        let belongsToCraneService: boolean = belongsToTheService(user, enterprise);
+
+        if (isAble && hasRequestsReviwing) {
+            isAble = false;
+            toast.error(
+                "El usuario ya tiene una peticion en progreso, espera a que sea revisada",
+            );
+        }
+
+        if (isAble && isCraneOperator && !belongsToCraneService) {
+            isAble = false;
+            toast.error(
+                "El usuario ya fue agregado a otro servicio como operador de grua",
+            );
+        }
+
+        return isAble;
+    };
+
+    const isAbleToBeWasher = (user: UserInterface): boolean => {
+        let isAble = true;
+
+        let isWasher: boolean =
+            user.serviceRequests?.laundry?.state === ServiceReqState.Approved;
+
+        let hasRequestsReviwing: boolean =
+            user.serviceRequests?.laundry?.state === ServiceReqState.Reviewing;
+
+        let belongsToLaundryService: boolean = belongsToTheService(user, enterprise);
+
+        if (isAble && hasRequestsReviwing) {
+            isAble = false;
+            toast.error(
+                "El usuario ya tiene una peticion en progreso, espera a que sea revisada",
+            );
+        }
+
+        if (isAble && isWasher && !belongsToLaundryService) {
+            isAble = false;
+            toast.error("El usuario ya fue agregado a otro servicio como lavadero");
+        }
+
+        return isAble;
+    };
+
+    const isAbleToBeMechanic = (user: UserInterface): boolean => {
+        let isAble = true;
+
+        let isMechanic: boolean =
+            user.serviceRequests?.mechanic?.state === ServiceReqState.Approved;
+
+        let hasRequestsReviwing: boolean =
+            user.serviceRequests?.mechanic?.state === ServiceReqState.Reviewing;
+
+        let belongsToMechanicService: boolean = belongsToTheService(user, enterprise);
+
+        if (isAble && hasRequestsReviwing) {
+            isAble = false;
+            toast.error(
+                "El usuario ya tiene una peticion en progreso, espera a que sea revisada",
+            );
+        }
+
+        if (isAble && isMechanic && !belongsToMechanicService) {
+            isAble = false;
+            toast.error("El usuario ya fue agregado a otro servicio como mecanico");
+        }
+
+        return isAble;
+    };
+
     const isAbleToBeDriver = (user: UserInterface): boolean => {
         let isAble = true;
 
@@ -108,7 +188,7 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
 
         if (isAble && isDriver && !belongsToDriverService) {
             isAble = false;
-            toast.error("El usuario ya fue agregado a otro servicio");
+            toast.error("El usuario ya fue agregado a otro servicio como chofer");
         }
 
         if (isAble && belongsToDriverService && isAbleToRegisterASingleVehicule) {
@@ -122,8 +202,12 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         switch (enterprise.type) {
             case "driver":
                 return isAbleToBeDriver(user);
+            case "mechanical":
+                return isAbleToBeMechanic(user);
+            case "laundry":
+                return isAbleToBeWasher(user);
             default:
-                return false;
+                return isAbleToBeCraneOperator(user);
         }
     };
 
