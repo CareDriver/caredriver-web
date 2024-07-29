@@ -17,6 +17,7 @@ import MechanicRegistration from "../services/mechanic/registration/MechanicRegi
 import TowRegistration from "../services/tow/registration/TowRegistration";
 import LaundryRegistration from "../services/laundry/registration/LaundryRegistration";
 import AddNewVehicle from "../services/drive/registration/AddNewVehicle";
+import SupportUserRegistration from "./SupportUserRegistration";
 
 const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
     const [formState, setFormState] = useState<{
@@ -109,6 +110,11 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
             );
         }
 
+        if (isAble && belongsToCraneService) {
+            isAble = false;
+            toast.error("El usuario ya fue agregado al servicio");
+        }
+
         return isAble;
     };
 
@@ -135,6 +141,11 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
             toast.error("El usuario ya fue agregado a otro servicio como lavadero");
         }
 
+        if (isAble && belongsToLaundryService) {
+            isAble = false;
+            toast.error("El usuario ya fue agregado al servicio");
+        }
+
         return isAble;
     };
 
@@ -159,6 +170,11 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         if (isAble && isMechanic && !belongsToMechanicService) {
             isAble = false;
             toast.error("El usuario ya fue agregado a otro servicio como mecanico");
+        }
+
+        if (isAble && belongsToMechanicService) {
+            isAble = false;
+            toast.error("El usuario ya fue agregado al servicio");
         }
 
         return isAble;
@@ -191,6 +207,11 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
             toast.error("El usuario ya fue agregado a otro servicio como chofer");
         }
 
+        if (isAble && belongsToDriverService && !isAbleToRegisterASingleVehicule) {
+            isAble = false;
+            toast.error("El usuario ya fue agregado al servicio");
+        }
+
         if (isAble && belongsToDriverService && isAbleToRegisterASingleVehicule) {
             toast.info("El usuario solo puede registrar el vehiculo faltante");
         }
@@ -211,7 +232,7 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         }
     };
 
-    const registerAsUserServer = (user: UserInterface) => {
+    const registerAsUserServer = (user: UserInterface): void => {
         if (isAbleToBeUserServer(user)) {
             setFormState({
                 ...formState,
@@ -232,12 +253,14 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
 
         if (isAble && hasActiveRequests) {
             isAble = false;
-            toast.error("El usuario tiene peticiones activas para este servicio");
+            toast.error(
+                "El usuario tiene peticiones activas para ser usuario servidor para este tipo de servicio",
+            );
         }
 
         if (isAble && isAlreadyUserServer) {
             isAble = false;
-            toast.error("El usuario ya es usuario servidor");
+            toast.error("El usuario ya pertenece al servicio");
         }
 
         return isAble;
@@ -256,12 +279,14 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
 
         if (isAble && hasActiveRequests) {
             isAble = false;
-            toast.error("El usuario tiene peticiones activas para este servicio");
+            toast.error(
+                "El usuario tiene peticiones activas para ser usuario servidor para este tipo de servicio",
+            );
         }
 
         if (isAble && isAlreadyUserServer) {
             isAble = false;
-            toast.error("El usuario ya es usuario servidor");
+            toast.error("El usuario ya pertenece al servicio");
         }
 
         return isAble;
@@ -410,7 +435,9 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
                     );
             }
         } else {
-            return <div>Register support user</div>;
+            return (
+                <SupportUserRegistration userToAdd={userToAdd} enterprise={enterprise} />
+            );
         }
     };
 
