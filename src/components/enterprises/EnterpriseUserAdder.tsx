@@ -327,7 +327,7 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         } else if (userFound.location !== enterprise.location) {
             setUserEmail({
                 ...userEmail,
-                message: "El usuario no esta en la misma localizacion que la empresa",
+                message: "El usuario no esta en la misma localizacion que el servicio",
             });
             setFormState({
                 ...formState,
@@ -337,7 +337,7 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         } else if (userFound.id && userFound.id === enterprise.userId) {
             setUserEmail({
                 ...userEmail,
-                message: "Tu eres el administrador de la empresa",
+                message: "El usuario es administrador del servicio",
             });
             setFormState({
                 ...formState,

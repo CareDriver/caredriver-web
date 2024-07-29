@@ -81,6 +81,19 @@ const getUserById = async (userId: string): Promise<UserInterface | undefined> =
     }
 };
 
+export const getUsersByTheirIds = async (usersId: string[]): Promise<UserInterface[]> => {
+    const q = query(usersCollection, where("id", "in", usersId));
+    const querySnapshot = await getDocs(q);
+    const users: UserInterface[] = [];
+    querySnapshot.forEach((doc) => {
+        let user = doc.data() as UserInterface;
+        user.id = doc.id;
+        users.push(user);
+    });
+
+    return users;
+};
+
 /**
  * Updates a user document in the database.
  *

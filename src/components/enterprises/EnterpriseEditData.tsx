@@ -42,6 +42,7 @@ import { getLocation } from "@/utils/auth/UserAuth";
 import { locationList, Locations } from "@/interfaces/Locations";
 import EnterpriseUserAdder from "./EnterpriseUserAdder";
 import Users from "@/icons/Users";
+import EnterpriseUsers from "./EnterpriseUsers";
 
 interface FormData {
     name: {
@@ -69,7 +70,7 @@ const EnterpriseEditData = ({
 }) => {
     const { user, loadingUser } = useContext(AuthContext);
     const [pageState, setPageState] = useState<{
-        currentPage: "edit" | "register-user";
+        currentPage: "edit" | "register-user" | "users-management";
     }>({
         currentPage: "edit",
     });
@@ -510,20 +511,42 @@ const EnterpriseEditData = ({
                                         servicio
                                     </p>
 
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setPageState({
-                                                ...pageState,
-                                                currentPage: "register-user",
-                                            })
-                                        }
-                                        className={`small-general-button text | bold green touchable ${
-                                            formState.loadingRev && "loading-section"
-                                        }`}
-                                    >
-                                        Registrar nuevo usuario
-                                    </button>
+                                    <div className="row-wrapper">
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setPageState({
+                                                    ...pageState,
+                                                    currentPage: "register-user",
+                                                })
+                                            }
+                                            className={`small-general-button text | bold green touchable ${
+                                                formState.loadingRev && "loading-section"
+                                            }`}
+                                        >
+                                            Registrar nuevo usuario
+                                        </button>
+                                        {enterpriseData !== undefined &&
+                                            enterpriseData.addedUsers !== undefined &&
+                                            enterpriseData.addedUsers.length > 0 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setPageState({
+                                                            ...pageState,
+                                                            currentPage:
+                                                                "users-management",
+                                                        })
+                                                    }
+                                                    className={`small-general-button text | bold green touchable ${
+                                                        formState.loadingRev &&
+                                                        "loading-section"
+                                                    }`}
+                                                >
+                                                    Admnistrar usuarios
+                                                </button>
+                                            )}
+                                    </div>
                                 </div>
                                 <div
                                     className={`form-sub-container | margin-top-50 max-width-60 ${
@@ -598,6 +621,20 @@ const EnterpriseEditData = ({
                     }
                 >
                     <EnterpriseUserAdder enterprise={enterpriseData} />
+                </div>
+            )}
+
+            {pageState.currentPage === "users-management" && (
+                <div
+                    data-state={
+                        formState.loading ||
+                        formState.loadingRev ||
+                        enterpriseData.deleted
+                            ? "loading"
+                            : "loaded"
+                    }
+                >
+                    <EnterpriseUsers enterprise={enterpriseData} />
                 </div>
             )}
         </>
