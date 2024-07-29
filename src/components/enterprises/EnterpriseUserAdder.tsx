@@ -220,6 +220,74 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         }
     };
 
+    const isAbleToBeSupportIntoDriverService = (user: UserInterface): boolean => {
+        let isAble = true;
+        let hasActiveRequests: boolean =
+            user.serviceRequests !== undefined &&
+            (user.serviceRequests.driveCar?.state === ServiceReqState.Reviewing ||
+                user.serviceRequests.driveMotorcycle?.state ===
+                    ServiceReqState.Reviewing);
+
+        let isAlreadyUserServer: boolean = belongsToTheService(user, enterprise);
+
+        if (isAble && hasActiveRequests) {
+            isAble = false;
+            toast.error("El usuario tiene peticiones activas para este servicio");
+        }
+
+        if (isAble && isAlreadyUserServer) {
+            isAble = false;
+            toast.error("El usuario ya es usuario servidor");
+        }
+
+        return isAble;
+    };
+    const isAbleToBeSupportIntoService = (
+        user: UserInterface,
+        type: "mechanic" | "tow" | "laundry",
+    ): boolean => {
+        let isAble = true;
+
+        let hasActiveRequests: boolean =
+            user.serviceRequests !== undefined &&
+            user.serviceRequests[type]?.state === ServiceReqState.Reviewing;
+
+        let isAlreadyUserServer: boolean = belongsToTheService(user, enterprise);
+
+        if (isAble && hasActiveRequests) {
+            isAble = false;
+            toast.error("El usuario tiene peticiones activas para este servicio");
+        }
+
+        if (isAble && isAlreadyUserServer) {
+            isAble = false;
+            toast.error("El usuario ya es usuario servidor");
+        }
+
+        return isAble;
+    };
+
+    const isAbleToBeSupportUser = (user: UserInterface): boolean => {
+        switch (enterprise.type) {
+            case "driver":
+                return isAbleToBeSupportIntoDriverService(user);
+            case "laundry":
+            case "tow":
+                return isAbleToBeSupportIntoService(user, enterprise.type);
+            case "mechanical":
+                return isAbleToBeSupportIntoService(user, "mechanic");
+        }
+    };
+
+    const registerAsSupportUser = (user: UserInterface): void => {
+        if (isAbleToBeSupportUser(user)) {
+            setFormState({
+                ...formState,
+                selectedUser: "SupportUser",
+            });
+        }
+    };
+
     const checkUserAvailability = (userFound: UserInterface | undefined) => {
         if (!userFound) {
             setUserEmail({
@@ -341,6 +409,8 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
                         />
                     );
             }
+        } else {
+            return <div>Register support user</div>;
         }
     };
 
@@ -436,12 +506,7 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
                             <button
                                 type="button"
                                 className="small-general-button text | bold green touchable"
-                                onClick={() =>
-                                    setFormState({
-                                        ...formState,
-                                        selectedUser: "SupportUser",
-                                    })
-                                }
+                                onClick={() => registerAsSupportUser(userToAdd)}
                             >
                                 Agregar como Usuario Soporte
                             </button>
