@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import DataLoaderIndicator from "../DataLoaderIndicator";
 import { DEFAULT_PHOTO } from "@/utils/user/UserData";
-import OwnInfiniteScroll from "../OwnInfiniteScroll";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const EnterpriseUsers = ({ enterprise }: { enterprise: Enterprise }) => {
     const AMOUNT_OF_USERS_PER_PAGE = 20;
@@ -45,11 +45,9 @@ const EnterpriseUsers = ({ enterprise }: { enterprise: Enterprise }) => {
             console.log("Fetching users:", usersIdToFetch);
             const users = await getUsersByTheirIds(usersIdToFetch);
             setFetchedUsers((prev) => ({
-                users: [
-                    ...prev.users,
-                    ...users.filter((user) => !prev.users.some((u) => u.id === user.id)),
-                ],
-                hasMore: missingIdUsers.length > 0,
+                users: [...prev.users, ...users],
+                hasMore:
+                    users.length + prev.users.length !== enterprise.addedUsersId?.length,
             }));
         } catch (e) {
             toast.error("Error al obtener usuarios, recarga la página por favor");
@@ -57,10 +55,6 @@ const EnterpriseUsers = ({ enterprise }: { enterprise: Enterprise }) => {
             setLoading(false);
         }
     };
-
-    useEffect(() => {
-        fetchUsersById();
-    }, []);
 
     useEffect(() => {
         console.log("polled:");
@@ -73,8 +67,9 @@ const EnterpriseUsers = ({ enterprise }: { enterprise: Enterprise }) => {
             {fetchedUsers.users.length === 0 && !fetchedUsers.hasMore ? (
                 <div>Ningún usuario registrado</div>
             ) : (
-                <OwnInfiniteScroll
-                    fetcher={fetchUsersById}
+                <InfiniteScroll
+                    dataLength={fetchedUsers.users.length}
+                    next={fetchUsersById}
                     hasMore={fetchedUsers.hasMore}
                     loader={<DataLoaderIndicator />}
                 >
@@ -96,7 +91,7 @@ const EnterpriseUsers = ({ enterprise }: { enterprise: Enterprise }) => {
                             </div>
                         ))}
                     </div>
-                </OwnInfiniteScroll>
+                </InfiniteScroll>
             )}
         </div>
     );
