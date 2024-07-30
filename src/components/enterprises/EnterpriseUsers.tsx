@@ -1,5 +1,5 @@
 "use client";
-import { Enterprise } from "@/interfaces/Enterprise";
+import { Enterprise, UserRoleEnterpriseRender } from "@/interfaces/Enterprise";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { getUsersByTheirIds } from "@/utils/requests/UserRequester";
 import { useEffect, useState } from "react";
@@ -7,12 +7,17 @@ import { toast } from "react-toastify";
 import DataLoaderIndicator from "../DataLoaderIndicator";
 import { DEFAULT_PHOTO } from "@/utils/user/UserData";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Popup from "../form/Popup";
+import "@/styles/modules/popup.css";
+import TriangleExclamation from "@/icons/TriangleExclamation";
+import DeleteUserFromService from "./DeleteUserFromService";
 
 const EnterpriseUsers = ({ enterprise }: { enterprise: Enterprise }) => {
     const AMOUNT_OF_USERS_PER_PAGE = 20;
     const [missingIdUsers, setMissingIdUsers] = useState<string[]>(
         enterprise.addedUsersId || [],
     );
+    const [mapRoles, setMapRoles] = useState(new Map<string, "user" | "support">());
     const [fetchedUsers, setFetchedUsers] = useState<{
         users: UserInterface[];
         hasMore: boolean;
@@ -21,6 +26,7 @@ const EnterpriseUsers = ({ enterprise }: { enterprise: Enterprise }) => {
         hasMore: true,
     });
     const [loading, setLoading] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<UserInterface | null>(null);
 
     const pollMissingUsersId = (): string[] => {
         const usersPolled: string[] = missingIdUsers.slice(0, AMOUNT_OF_USERS_PER_PAGE);
@@ -42,7 +48,6 @@ const EnterpriseUsers = ({ enterprise }: { enterprise: Enterprise }) => {
 
         setLoading(true);
         try {
-            console.log("Fetching users:", usersIdToFetch);
             const users = await getUsersByTheirIds(usersIdToFetch);
             setFetchedUsers((prev) => ({
                 users: [...prev.users, ...users],
@@ -56,10 +61,28 @@ const EnterpriseUsers = ({ enterprise }: { enterprise: Enterprise }) => {
         }
     };
 
+    const getUserRole = (user: UserInterface): "user" | "support" => {
+        if (user.id) {
+            let role = mapRoles.get(user.id);
+            return role ? role : "support";
+        }
+
+        return "support";
+    };
+
+    const fillMapOfRoles = () => {
+        if (enterprise.addedUsers) {
+            let map = new Map<string, "user" | "support">();
+            enterprise.addedUsers.map((u) => {
+                map.set(u.userId, u.role);
+            });
+            setMapRoles(map);
+        }
+    };
+
     useEffect(() => {
-        console.log("polled:");
-        console.log(missingIdUsers);
-    }, [missingIdUsers]);
+        fillMapOfRoles();
+    }, []);
 
     return (
         <div className="service-form-wrapper">
@@ -75,7 +98,11 @@ const EnterpriseUsers = ({ enterprise }: { enterprise: Enterprise }) => {
                 >
                     <div className="users-wrapper">
                         {fetchedUsers.users.map((user) => (
-                            <div key={user.id} className="users-item | touchable">
+                            <div
+                                key={user.id}
+                                className="users-item | touchable"
+                                onClick={() => setSelectedUser(user)}
+                            >
                                 <img
                                     src={user.photoUrl.url || DEFAULT_PHOTO}
                                     alt=""
@@ -87,11 +114,23 @@ const EnterpriseUsers = ({ enterprise }: { enterprise: Enterprise }) => {
                                     </h2>
                                     <h4 className="text | light">{user.email}</h4>
                                     <h4 className="text | light">{user.phoneNumber}</h4>
+                                    <div className="separator-horizontal"></div>
+                                    <h4 className="text">
+                                        {UserRoleEnterpriseRender[getUserRole(user)]}
+                                    </h4>
                                 </div>
                             </div>
                         ))}
                     </div>
                 </InfiniteScroll>
+            )}
+            {selectedUser && (
+                <DeleteUserFromService
+                    userRole={getUserRole(selectedUser)}
+                    cancel={() => setSelectedUser(null)}
+                    enterprise={enterprise}
+                    userToDelete={selectedUser}
+                />
             )}
         </div>
     );

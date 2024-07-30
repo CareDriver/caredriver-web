@@ -7,6 +7,11 @@ export interface EnterpriseUser {
     role: "user" | "support";
 }
 
+export const UserRoleEnterpriseRender = {
+    user: "Usuario Servidor",
+    support: "Soporte",
+};
+
 export enum EnterpriseType {
     Mechanical = "mechanical",
     Tow = "tow",

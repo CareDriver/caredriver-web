@@ -132,7 +132,7 @@ const SupportUserRegistration = ({
                             let areEmailEquals = currentEmail === userToAdd.email;
                             if (isValid && !areEmailEquals) {
                                 isValid = false;
-                                message = "El email no es el mismo que el del usuario";
+                                message = "El correo no es el mismo que el del usuario";
                             }
                             setUserVerification({
                                 ...userVerification,
