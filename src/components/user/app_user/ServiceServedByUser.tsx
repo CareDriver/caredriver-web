@@ -35,6 +35,9 @@ const defaultViewControlWithEnter: ViewControlWithEnterprise = {
 const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
     const [isViewAuto, setViewAuto] = useState<ViewControl>(defaultViewControl);
     const [isViewMoto, setViewMoto] = useState<ViewControl>(defaultViewControl);
+    const [isViewDriver, setViewDriver] = useState<ViewControlWithEnterprise>(
+        defaultViewControlWithEnter,
+    );
     const [isViewMechanic, setViewMechanic] = useState<ViewControlWithEnterprise>(
         defaultViewControlWithEnter,
     );
@@ -60,6 +63,26 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
         } else {
             setViewMechanic({
                 ...isViewMechanic,
+                isOpen: true,
+            });
+        }
+    };
+
+    const openDriverEnterprise = async () => {
+        if (user.driverEnterpriseId && isViewDriver.enterprise === null) {
+            const enterprise = await getEnterpriseById(user.driverEnterpriseId);
+            setViewDriver({
+                enterprise,
+                isOpen: true,
+            });
+        } else if (user.driverEnterpriseId === undefined) {
+            setViewDriver({
+                enterprise: undefined,
+                isOpen: true,
+            });
+        } else {
+            setViewDriver({
+                ...isViewDriver,
                 isOpen: true,
             });
         }
@@ -216,6 +239,47 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                     ) : (
                         <span>Moto - No agregado</span>
                     )}
+                    {user.driverEnterpriseId ? (
+                        <>
+                            <button
+                                className="service-user-option"
+                                onClick={openDriverEnterprise}
+                            >
+                                Empresa de chofer registrado
+                            </button>
+                            <Popup
+                                isOpen={isViewDriver.isOpen}
+                                close={() =>
+                                    setViewDriver({
+                                        ...isViewDriver,
+                                        isOpen: false,
+                                    })
+                                }
+                            >
+                                <div>
+                                    <h2 className="text | bolder big-medium">
+                                        Detalles del usuario como chofer
+                                    </h2>
+                                    <EnterpriseFetcher
+                                        enterprise={isViewDriver.enterprise}
+                                        setEnterprise={(
+                                            enterpise: Enterprise | undefined,
+                                        ) =>
+                                            setViewDriver({
+                                                ...isViewDriver,
+                                                enterprise: enterpise,
+                                            })
+                                        }
+                                        enterpriseId={user.driverEnterpriseId}
+                                        type="driver"
+                                    />
+                                </div>
+                            </Popup>
+                        </>
+                    ) : (
+                        <span>Sin empresa de chofer registrado</span>
+                    )}
+
                     <Link
                         className="icon-wrapper text  | underline gray-icon gray-dark | margin-top-15"
                         href={`/admin/users/${user.id}/services/driver`}

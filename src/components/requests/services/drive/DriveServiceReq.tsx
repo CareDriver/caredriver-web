@@ -28,12 +28,15 @@ import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import FieldDeleted from "../../data_renderer/form/FieldDeleted";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
-import PoliceRecords from "../../data_renderer/vehicle/PoliceRecords";
 import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
-import { addUserServerToEnterpriseById } from "@/utils/requests/enterprise/EnterpriseUserAdder";
+import { addUserServerToEnterprise } from "@/utils/requests/enterprise/EnterpriseUserAdder";
+import { Enterprise } from "@/interfaces/Enterprise";
+import DriverServiceRenderer from "../../data_renderer/enterprise/DriverServiceRenderer";
+import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
 
 const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);
+    const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(null);
     const [reviewState, setReviewState] = useState({
         loading: false,
         reviewed: false,
@@ -166,9 +169,14 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         }
 
                         var userToUpdate: Partial<UserInterface> = {};
-                        if (wasApproved && !userData.services.includes(Services.Driver)) {
+                        if (
+                            wasApproved &&
+                            serviceReq.driverEnterprise &&
+                            !userData.services.includes(Services.Driver)
+                        ) {
                             userToUpdate = {
                                 ...userToUpdate,
+                                driverEnterpriseId: serviceReq.driverEnterprise,
                                 services: [...userData.services, Services.Driver],
                             };
                         }
@@ -195,12 +203,9 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         }
 
                         await updateUser(serviceReq.userId, userToUpdate);
-                        if (serviceReq.driverEnterprise && wasApproved) {
+                        if (enterprise && wasApproved) {
                             await toast.promise(
-                                addUserServerToEnterpriseById(
-                                    serviceReq.driverEnterprise,
-                                    serviceReq.userId,
-                                ),
+                                addUserServerToEnterprise(enterprise, serviceReq.userId),
                                 {
                                     pending:
                                         "Agregando al usuario al servicio como usuario servidor",
@@ -276,6 +281,24 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
         });
     }, []);
 
+    const fetchDriverEnterprise = async () => {
+        if (serviceReq.driverEnterprise) {
+            try {
+                const data = await getEnterpriseById(serviceReq.driverEnterprise);
+                setEnterpise(data);
+            } catch (e) {
+                setEnterpise(undefined);
+                console.log(e);
+            }
+        } else {
+            setEnterpise(undefined);
+        }
+    };
+
+    useEffect(() => {
+        fetchDriverEnterprise();
+    }, []);
+
     return (
         <div className="service-form-wrapper | max-width-60">
             <h1 className="text | big bolder">Solicitud para ser Chofer</h1>
@@ -305,6 +328,11 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
             <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
             {serviceReq.vehicles && <VehiclesRenderer vehicles={serviceReq.vehicles} />}
 
+            {enterprise === null ? (
+                <span className="loader-green"></span>
+            ) : (
+                <DriverServiceRenderer driverEnterprise={enterprise} />
+            )}
             {/* <PoliceRecords pdf={serviceReq.policeRecordsPdf} /> */}
 
             {userData && user.data ? (

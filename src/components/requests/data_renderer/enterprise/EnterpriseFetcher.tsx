@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import LaundryRenderer from "./LaundryRenderer";
 import WorkshopRenderer from "./WorkshopRenderer";
 import TowRenderer from "./TowRenderer";
+import DriverServiceRenderer from "./DriverServiceRenderer";
 
 const EnterpriseFetcher = ({
     enterprise,
@@ -16,7 +17,7 @@ const EnterpriseFetcher = ({
     enterprise: Enterprise | null | undefined;
     setEnterprise: (enterprise: Enterprise | undefined) => void;
     enterpriseId: string | undefined;
-    type: "laundry" | "tow" | "mechanic";
+    type: "laundry" | "tow" | "mechanic" | "driver";
 }) => {
     useEffect(() => {
         if (enterpriseId) {
@@ -36,6 +37,8 @@ const EnterpriseFetcher = ({
                 return <LaundryRenderer laundry={enterpriseData} />;
             case "mechanic":
                 return <WorkshopRenderer workshop={enterpriseData} />;
+            case "driver":
+                return <DriverServiceRenderer driverEnterprise={enterpriseData} />;
             default:
                 return <TowRenderer tow={enterpriseData} />;
         }
