@@ -1,68 +1,33 @@
 "use client";
 
 import React, { useContext, useEffect, useState } from "react";
-import { DocumentSnapshot } from "firebase/firestore";
 import { Enterprise } from "@/interfaces/Enterprise";
-import {
-    getNumPages,
-    getPaginatedData,
-} from "@/utils/requests/enterprise/EnterpriseRequester";
+import { getUserEnterprises } from "@/utils/requests/enterprise/EnterpriseRequester";
 import { AuthContext } from "@/context/AuthContext";
 import EnterpriseItem from "./EnterpriseItem";
 import "@/styles/components/pagination.css";
-import InfiniteScroll from "react-infinite-scroll-component";
-import DataLoaderIndicator from "../DataLoaderIndicator";
 import { getEmptyEnterprise, getRoute } from "@/utils/parser/ToSpanishEnterprise";
+import EnterpriseListForSupportUser from "./EnterpriseListForSupportUser";
 
-const EnterpriseListForUsers = ({ type }: { type: "mechanical" | "tow" | "laundry" | "driver" }) => {
+const EnterpriseListForUsers = ({
+    type,
+}: {
+    type: "mechanical" | "tow" | "laundry" | "driver";
+}) => {
     const { loadingUser, user } = useContext(AuthContext);
-    const numPerPage = 12;
     const [data, setData] = useState<Enterprise[] | null>(null);
-    const [page, setPage] = useState<number>(1);
-    const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(undefined);
-    const [pages, setPages] = useState<number | null>(null);
 
     useEffect(() => {
         if (!loadingUser && user.data && user.data.id) {
-            getNumPages(numPerPage, type, user.data.id).then((pages) => setPages(pages));
+            getUserEnterprises(type, user.data.id).then((result) => {
+                setData(result);
+            });
         }
     }, [loadingUser]);
 
-    useEffect(() => {
-        if (!loadingUser && user.data && user.data.id) {
-            const startAfterDoc = lastDoc;
-            const endBeforeDoc = undefined;
-            getPaginatedData(
-                type,
-                user.data.id,
-                "next",
-                startAfterDoc,
-                endBeforeDoc,
-                numPerPage,
-            ).then((result) => {
-                if (data) {
-                    setData([...data, ...result.result]);
-                } else {
-                    setData(result.result);
-                }
-                setLastDoc(result.lastDoc);
-            });
-        }
-    }, [page, loadingUser]);
-
-    const handleNextClick = () => {
-        if (page === pages) return;
-        setPage((prev) => prev + 1);
-    };
-
-    return data ? (
-        data.length > 0 ? (
-            <InfiniteScroll
-                dataLength={data.length}
-                next={handleNextClick}
-                hasMore={page !== pages}
-                loader={<DataLoaderIndicator />}
-            >
+    return !loadingUser ? (
+        <div>
+            {data && data.length > 0 ? (
                 <div className="enterprise-list">
                     {data.map((product, i) => (
                         <EnterpriseItem
@@ -72,12 +37,21 @@ const EnterpriseListForUsers = ({ type }: { type: "mechanical" | "tow" | "laundr
                         />
                     ))}
                 </div>
-            </InfiniteScroll>
-        ) : (
-            <div className="auto-height">
-                <h2 className="text | medium-big">No tienes {getEmptyEnterprise(type)}</h2>
+            ) : (
+                <div className="auto-height">
+                    <h2 className="text | medium-big">
+                        No tienes {getEmptyEnterprise(type)}
+                    </h2>
+                </div>
+            )}
+            <div className="margin-top-25">
+                <div className="separator-horizontal"></div>
+                <h2 className="text | medium-big | margin-top-25 margin-bottom-25">
+                    Empresas donde eres usuario soporte
+                </h2>
+                <EnterpriseListForSupportUser type={type} />
             </div>
-        )
+        </div>
     ) : (
         <div className="auto-height">
             <span className="loader-green | big-loader"></span>

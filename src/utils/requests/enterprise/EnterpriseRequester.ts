@@ -177,6 +177,104 @@ export const getNumPages = async (
     return numPages;
 };
 
+const isSupportInEnteprise = (userId: string, enterprise: Enterprise): boolean => {
+    if (enterprise.addedUsers) {
+        return enterprise.addedUsers.some(
+            (u) => u.userId === userId && u.role === "support",
+        );
+    }
+    return false;
+};
+
+export const getUserEnterprises = async (
+    type: "mechanical" | "tow" | "laundry" | "driver",
+    userId: string,
+) => {
+    let dataQuery = query(
+        enterpriseCollection,
+        orderBy("name"),
+        where("userId", "==", userId),
+        where("aproved", "==", true),
+        where("deleted", "==", false),
+        where("type", "==", type),
+    );
+    const productsSnapshot = await getDocs(dataQuery);
+    const products = productsSnapshot.docs.map((doc) => {
+        var data = doc.data() as Enterprise;
+        data.id = doc.id;
+        return data;
+    });
+
+    return products;
+};
+
+// PAGINATE TO GET ENTERPRISES FOR USERS THAT ARE SUPPORT FOR THEIR
+export const getPaginatedDataForSupportUsers = async (
+    type: "mechanical" | "tow" | "laundry" | "driver",
+    userId: string,
+    direction: "next" | "prev" | undefined,
+    startAfterDoc?: DocumentSnapshot,
+    endBeforeDoc?: DocumentSnapshot,
+    numPerPage: number = 12,
+) => {
+    let dataQuery = query(
+        enterpriseCollection,
+        orderBy("name"),
+        limit(numPerPage),
+        where("addedUsersId", "array-contains", userId),
+        where("aproved", "==", true),
+        where("deleted", "==", false),
+        where("type", "==", type),
+    );
+
+    if (direction === "next" && startAfterDoc) {
+        dataQuery = query(dataQuery, startAfter(startAfterDoc));
+    } else if (direction === "prev" && endBeforeDoc) {
+        dataQuery = query(
+            enterpriseCollection,
+            orderBy("name"),
+            endBefore(endBeforeDoc),
+            limitToLast(numPerPage),
+            where("addedUsersId", "array-contains", userId),
+            where("aproved", "==", true),
+            where("deleted", "==", false),
+            where("type", "==", type),
+        );
+    }
+
+    const productsSnapshot = await getDocs(dataQuery);
+    let products = productsSnapshot.docs.map((doc) => {
+        var data = doc.data() as Enterprise;
+        data.id = doc.id;
+        return data;
+    });
+    products = products.filter((p) => isSupportInEnteprise(userId, p));
+
+    return {
+        result: products,
+        lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
+        firstDoc: productsSnapshot.docs[0],
+    };
+};
+
+export const getNumPagesForSupportUsers = async (
+    numPerPages: number,
+    type: "mechanical" | "tow" | "laundry" | "driver",
+    userId: string,
+): Promise<number> => {
+    const count = await getCountFromServer(
+        query(
+            enterpriseCollection,
+            where("addedUsersId", "array-contains", userId),
+            where("aproved", "==", true),
+            where("deleted", "==", false),
+            where("type", "==", type),
+        ),
+    );
+    const numPages = Math.ceil(count.data().count / numPerPages);
+    return numPages;
+};
+
 // PAGINATE ENTERPRISE DATA FOR ALL USERS, USED FOR MECHANIC AND TOW REQS
 
 export const getAllPaginatedData = async (
