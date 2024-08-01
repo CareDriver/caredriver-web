@@ -89,8 +89,8 @@ const EnterpriseListForSupportUser = ({
             </InfiniteScroll>
         ) : (
             <div className="auto-height">
-                <h2 className="text | medium-big">
-                    No tienes {getEmptyEnterprise(type)}
+                <h2 className="text">
+                    <i>No fuiste agregado a ningun servicio como soporte</i>
                 </h2>
             </div>
         )

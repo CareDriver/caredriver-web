@@ -43,6 +43,9 @@ import { locationList, Locations } from "@/interfaces/Locations";
 import EnterpriseUserAdder from "./EnterpriseUserAdder";
 import Users from "@/icons/Users";
 import EnterpriseUsers from "./EnterpriseUsers";
+import CompPermissionValidator from "../permission/component/CompPermissionValidator";
+import { UserInterface } from "@/interfaces/UserInterface";
+import EnterpriseRenderer from "../requests/data_renderer/enterprise/EnterpriseRenderer";
 
 interface FormData {
     name: {
@@ -336,278 +339,304 @@ const EnterpriseEditData = ({
         }
     };
 
+    const isTheEnterpriseOwner = (
+        user: UserInterface,
+        enterprise: Enterprise,
+    ): boolean => {
+        return user.id !== undefined && enterprise.userId === user.id;
+    };
+
     return enterpriseData ? (
         <>
             {pageState.currentPage === "edit" && (
                 <section className="service-form-wrapper">
                     <h1 className="text | big bolder">
-                        Editar {EnterpriseTypeRender[type]}
+                        Administrar {EnterpriseTypeRender[type]}
                     </h1>
-                    <p>
-                        Necesitamos verificar que los nuevos datos{" "}
-                        {EnterpriseTypeRenderPronounV2[type]} sean validos antes de
-                        editarlo.
-                    </p>
-                    {enterpriseData.deleted && (
-                        <div className="margin-top-25 max-width-60">
-                            <FieldDeleted description="Este servicio fue eliminado" />
-                        </div>
+                    {user.data && isTheEnterpriseOwner(user.data, enterpriseData) ? (
+                        <>
+                            <p>
+                                Necesitamos verificar que los nuevos datos{" "}
+                                {EnterpriseTypeRenderPronounV2[type]} sean validos antes
+                                de editarlo.
+                            </p>
+                            {enterpriseData.deleted && (
+                                <div className="margin-top-25 max-width-60">
+                                    <FieldDeleted description="Este servicio fue eliminado" />
+                                </div>
+                            )}
+                            <form
+                                className="form-sub-container | margin-top-25"
+                                onSubmit={handleSummbit}
+                                data-state={
+                                    formState.loading ||
+                                    formState.loadingRev ||
+                                    enterpriseData.deleted
+                                        ? "loading"
+                                        : "loaded"
+                                }
+                            >
+                                <fieldset className="form-section | max-width-60">
+                                    <input
+                                        type="text"
+                                        placeholder={`Nombre ${EnterpriseTypeRenderPronounV2[type]}`}
+                                        className="form-section-input"
+                                        value={formData.name.value}
+                                        name="fullname"
+                                        onChange={(e) => handleInputChange(e)}
+                                    />
+
+                                    {formData.name.message && (
+                                        <small>{formData.name.message}</small>
+                                    )}
+                                </fieldset>
+                                <fieldset className="form-section | max-width-60">
+                                    <PhoneForm
+                                        phone={formData.phone.value}
+                                        validatePhone={validatePhone}
+                                    />
+                                    {formData.phone.message && (
+                                        <small className="yellow">
+                                            {formData.phone.message}{" "}
+                                            {"(Este campo es opcional)"}
+                                        </small>
+                                    )}
+                                </fieldset>
+                                <div className="max-width-60">
+                                    <ImageUploader
+                                        uploader={{
+                                            image: formData.logo,
+                                            setImage: (photoField) =>
+                                                setFormData({
+                                                    ...formData,
+                                                    logo: photoField,
+                                                }),
+                                        }}
+                                        content={{
+                                            id: "workshop-uploader-image",
+                                            indicator: `Logo ${EnterpriseTypeRenderPronounV2[type]}`,
+                                            isCircle: true,
+                                        }}
+                                    />
+                                </div>
+                                <fieldset className="form-section | select-item | max-width-60">
+                                    <ChevronDown />
+                                    <select
+                                        className="form-section-input"
+                                        onChange={(e) =>
+                                            setFormData({
+                                                ...formData,
+                                                location: getLocation(e.target.value),
+                                            })
+                                        }
+                                        value={formData.location}
+                                    >
+                                        {locationList.map((location, i) => (
+                                            <option
+                                                key={`location-option-${i}`}
+                                                value={location}
+                                            >
+                                                {location}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <legend className="form-section-legend">
+                                        Ubicación
+                                    </legend>
+                                </fieldset>
+                                <fieldset className="form-section">
+                                    <span className="text | bold gray-dark">
+                                        Ubicación {EnterpriseTypeRenderPronounV2[type]}
+                                    </span>
+                                    <div className="form-section-map | max-width-80">
+                                        <MapForm
+                                            location={formData.coordinates.value}
+                                            setLocation={(location: Location) =>
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    coordinates: {
+                                                        value: location,
+                                                        message: null,
+                                                    },
+                                                }))
+                                            }
+                                        />
+                                    </div>
+                                    {formData.coordinates.message && (
+                                        <small>{formData.coordinates.message}</small>
+                                    )}
+                                </fieldset>
+                                {!enterpriseData.deleted && (
+                                    <div
+                                        className="row-wrapper | gap-20 | margin-top-25 max-width-60 loading-section"
+                                        data-state={
+                                            formState.loading || formState.loadingRev
+                                                ? "loading"
+                                                : "loaded"
+                                        }
+                                    >
+                                        <button
+                                            className="general-button touchable | gray "
+                                            type="button"
+                                            onClick={() =>
+                                                router.push(
+                                                    `/enterprise/${getRoute(type)}`,
+                                                )
+                                            }
+                                        >
+                                            Cancelar
+                                        </button>
+                                        <button
+                                            className={`general-button touchable ${
+                                                formState.loading && "loading-section"
+                                            }`}
+                                            title={
+                                                !formState.isValid
+                                                    ? "Por favor completa los campos con datos validos"
+                                                    : ""
+                                            }
+                                            disabled={!formState.isValid}
+                                        >
+                                            {formState.loading ? (
+                                                <span className="loader"></span>
+                                            ) : (
+                                                "Solicitar Edicion"
+                                            )}
+                                        </button>
+                                    </div>
+                                )}
+                            </form>
+                        </>
+                    ) : (
+                        <>
+                            <p>
+                                Eres <b>usuario soporte</b> en este servicio, ayuda a
+                                admnistrar a los usuarios que pueden trabajar en este
+                                servicio.
+                            </p>
+                            <div className="margin-top-50 max-width-60">
+                                <EnterpriseRenderer enterprise={enterpriseData} />
+                            </div>
+                        </>
                     )}
-                    <form
-                        className="form-sub-container | margin-top-25"
-                        onSubmit={handleSummbit}
+
+                    <div
+                        className={`form-sub-container | margin-top-50 max-width-60 ${
+                            formState.loadingRev && "loading-section"
+                        }`}
                         data-state={
-                            formState.loading ||
-                            formState.loadingRev ||
-                            enterpriseData.deleted
+                            formState.loading || formState.loadingRev
                                 ? "loading"
                                 : "loaded"
                         }
                     >
-                        <fieldset className="form-section | max-width-60">
-                            <input
-                                type="text"
-                                placeholder={`Nombre ${EnterpriseTypeRenderPronounV2[type]}`}
-                                className="form-section-input"
-                                value={formData.name.value}
-                                name="fullname"
-                                onChange={(e) => handleInputChange(e)}
-                            />
+                        <h2 className="text icon-wrapper | green green-icon medium-big bold">
+                            <Users />
+                            {!enterpriseData.addedUsers ||
+                            enterpriseData.addedUsers.length === 0
+                                ? "Ningun usuario agregado"
+                                : enterpriseData.addedUsers.length > 1
+                                ? `${enterpriseData.addedUsers.length} Usuarios agregados`
+                                : "Un usuario agregado"}
+                        </h2>
+                        <p>
+                            Registra o agrega usuarios a tu servicio, puedes registrar
+                            usuarios que trabajar en tu servicio o agregar usuarios
+                            soporte que ayuden a manejar tu servicio
+                        </p>
 
-                            {formData.name.message && (
-                                <small>{formData.name.message}</small>
-                            )}
-                        </fieldset>
-                        <fieldset className="form-section | max-width-60">
-                            <PhoneForm
-                                phone={formData.phone.value}
-                                validatePhone={validatePhone}
-                            />
-                            {formData.phone.message && (
-                                <small className="yellow">
-                                    {formData.phone.message} {"(Este campo es opcional)"}
-                                </small>
-                            )}
-                        </fieldset>
-                        <div className="max-width-60">
-                            <ImageUploader
-                                uploader={{
-                                    image: formData.logo,
-                                    setImage: (photoField) =>
-                                        setFormData({
-                                            ...formData,
-                                            logo: photoField,
-                                        }),
-                                }}
-                                content={{
-                                    id: "workshop-uploader-image",
-                                    indicator: `Logo ${EnterpriseTypeRenderPronounV2[type]}`,
-                                    isCircle: true,
-                                }}
-                            />
-                        </div>
-                        <fieldset className="form-section | select-item | max-width-60">
-                            <ChevronDown />
-                            <select
-                                className="form-section-input"
-                                onChange={(e) =>
-                                    setFormData({
-                                        ...formData,
-                                        location: getLocation(e.target.value),
+                        <div className="row-wrapper">
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setPageState({
+                                        ...pageState,
+                                        currentPage: "register-user",
                                     })
                                 }
-                                value={formData.location}
+                                className={`small-general-button text | bold green touchable ${
+                                    formState.loadingRev && "loading-section"
+                                }`}
                             >
-                                {locationList.map((location, i) => (
-                                    <option key={`location-option-${i}`} value={location}>
-                                        {location}
-                                    </option>
-                                ))}
-                            </select>
-                            <legend className="form-section-legend">Ubicación</legend>
-                        </fieldset>
-                        <fieldset className="form-section">
-                            <span className="text | bold gray-dark">
-                                Ubicación {EnterpriseTypeRenderPronounV2[type]}
-                            </span>
-                            <div className="form-section-map | max-width-80">
-                                <MapForm
-                                    location={formData.coordinates.value}
-                                    setLocation={(location: Location) =>
-                                        setFormData((prev) => ({
-                                            ...prev,
-                                            coordinates: {
-                                                value: location,
-                                                message: null,
-                                            },
-                                        }))
-                                    }
-                                />
-                            </div>
-                            {formData.coordinates.message && (
-                                <small>{formData.coordinates.message}</small>
-                            )}
-                        </fieldset>
-                        {!enterpriseData.deleted && (
-                            <>
-                                <div
-                                    className="row-wrapper | gap-20 | margin-top-25 max-width-60 loading-section"
-                                    data-state={
-                                        formState.loading || formState.loadingRev
-                                            ? "loading"
-                                            : "loaded"
-                                    }
-                                >
+                                Registrar nuevo usuario
+                            </button>
+                            {enterpriseData !== undefined &&
+                                enterpriseData.addedUsers !== undefined &&
+                                enterpriseData.addedUsers.length > 0 && (
                                     <button
-                                        className="general-button touchable | gray "
                                         type="button"
                                         onClick={() =>
-                                            router.push(`/enterprise/${getRoute(type)}`)
+                                            setPageState({
+                                                ...pageState,
+                                                currentPage: "users-management",
+                                            })
                                         }
-                                    >
-                                        Cancelar
-                                    </button>
-                                    <button
-                                        className={`general-button touchable ${
-                                            formState.loading && "loading-section"
-                                        }`}
-                                        title={
-                                            !formState.isValid
-                                                ? "Por favor completa los campos con datos validos"
-                                                : ""
-                                        }
-                                        disabled={!formState.isValid}
-                                    >
-                                        {formState.loading ? (
-                                            <span className="loader"></span>
-                                        ) : (
-                                            "Solicitar Edicion"
-                                        )}
-                                    </button>
-                                </div>
-                                <div
-                                    className={`form-sub-container | margin-top-50 max-width-60 ${
-                                        formState.loadingRev && "loading-section"
-                                    }`}
-                                    data-state={
-                                        formState.loading || formState.loadingRev
-                                            ? "loading"
-                                            : "loaded"
-                                    }
-                                >
-                                    <h2 className="text icon-wrapper | green green-icon medium-big bold">
-                                        <Users />
-                                        {!enterpriseData.addedUsers ||
-                                        enterpriseData.addedUsers.length === 0
-                                            ? "Ningun usuario agregado"
-                                            : enterpriseData.addedUsers.length > 1
-                                            ? `${enterpriseData.addedUsers.length} Usuarios agregados`
-                                            : "Un usuario agregado"}
-                                    </h2>
-                                    <p>
-                                        Registra o agrega usuarios a tu servicio, puedes
-                                        registrar usuarios que trabajar en tu servicio o
-                                        agregar usuarios soporte que ayuden a manejar tu
-                                        servicio
-                                    </p>
-
-                                    <div className="row-wrapper">
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                setPageState({
-                                                    ...pageState,
-                                                    currentPage: "register-user",
-                                                })
-                                            }
-                                            className={`small-general-button text | bold green touchable ${
-                                                formState.loadingRev && "loading-section"
-                                            }`}
-                                        >
-                                            Registrar nuevo usuario
-                                        </button>
-                                        {enterpriseData !== undefined &&
-                                            enterpriseData.addedUsers !== undefined &&
-                                            enterpriseData.addedUsers.length > 0 && (
-                                                <button
-                                                    type="button"
-                                                    onClick={() =>
-                                                        setPageState({
-                                                            ...pageState,
-                                                            currentPage:
-                                                                "users-management",
-                                                        })
-                                                    }
-                                                    className={`small-general-button text | bold green touchable ${
-                                                        formState.loadingRev &&
-                                                        "loading-section"
-                                                    }`}
-                                                >
-                                                    Admnistrar usuarios
-                                                </button>
-                                            )}
-                                    </div>
-                                </div>
-                                <div
-                                    className={`form-sub-container | margin-top-50 max-width-60 ${
-                                        formState.loadingRev && "loading-section"
-                                    }`}
-                                    data-state={
-                                        formState.loading || formState.loadingRev
-                                            ? "loading"
-                                            : "loaded"
-                                    }
-                                >
-                                    <h2 className="text icon-wrapper | red red-icon medium-big bold">
-                                        <TriangleExclamation />
-                                        Zona Peligrosa
-                                    </h2>
-                                    <p>
-                                        Esta acción no se puede revertir, aunque no se
-                                        afectara los datos que están relacionados con
-                                        este. Por favor escribe el nombre{" "}
-                                        {EnterpriseTypeRenderPronounV2[type]} para
-                                        confirmar su eliminacion.
-                                    </p>
-                                    <fieldset className="form-section | max-width-60">
-                                        <input
-                                            type="text"
-                                            placeholder={`Nombre ${EnterpriseTypeRenderPronounV2[type]}`}
-                                            className="form-section-input"
-                                            name="fullname"
-                                            onChange={(e) =>
-                                                setValidToDelete(
-                                                    e.target.value ===
-                                                        enterpriseData.name,
-                                                )
-                                            }
-                                            autoComplete="off"
-                                        />
-
-                                        {formData.name.message && (
-                                            <small>{formData.name.message}</small>
-                                        )}
-                                    </fieldset>
-                                    <button
-                                        type="button"
-                                        onClick={deleteEnterprise}
-                                        className={`small-general-button | red touchable ${
+                                        className={`small-general-button text | bold green touchable ${
                                             formState.loadingRev && "loading-section"
                                         }`}
-                                        disabled={!validToDelete}
                                     >
-                                        {formState.loadingRev ? (
-                                            <span className="loader"></span>
-                                        ) : (
-                                            <span className="text | white bold">
-                                                Eliminar {EnterpriseTypeRender[type]}
-                                            </span>
-                                        )}
+                                        Admnistrar usuarios
                                     </button>
-                                </div>
-                            </>
-                        )}
-                    </form>
+                                )}
+                        </div>
+                    </div>
+                    {user.data && isTheEnterpriseOwner(user.data, enterpriseData) && (
+                        <div
+                            className={`form-sub-container | margin-top-50 max-width-60 ${
+                                formState.loadingRev && "loading-section"
+                            }`}
+                            data-state={
+                                formState.loading || formState.loadingRev
+                                    ? "loading"
+                                    : "loaded"
+                            }
+                        >
+                            <h2 className="text icon-wrapper | red red-icon medium-big bold">
+                                <TriangleExclamation />
+                                Zona Peligrosa
+                            </h2>
+                            <p>
+                                Esta acción no se puede revertir, aunque no se afectara
+                                los datos que están relacionados con este. Por favor
+                                escribe el nombre {EnterpriseTypeRenderPronounV2[type]}{" "}
+                                para confirmar su eliminacion.
+                            </p>
+                            <fieldset className="form-section | max-width-60">
+                                <input
+                                    type="text"
+                                    placeholder={`Nombre ${EnterpriseTypeRenderPronounV2[type]}`}
+                                    className="form-section-input"
+                                    name="fullname"
+                                    onChange={(e) =>
+                                        setValidToDelete(
+                                            e.target.value === enterpriseData.name,
+                                        )
+                                    }
+                                    autoComplete="off"
+                                />
+
+                                {formData.name.message && (
+                                    <small>{formData.name.message}</small>
+                                )}
+                            </fieldset>
+                            <button
+                                type="button"
+                                onClick={deleteEnterprise}
+                                className={`small-general-button | red touchable ${
+                                    formState.loadingRev && "loading-section"
+                                }`}
+                                disabled={!validToDelete}
+                            >
+                                {formState.loadingRev ? (
+                                    <span className="loader"></span>
+                                ) : (
+                                    <span className="text | white bold">
+                                        Eliminar {EnterpriseTypeRender[type]}
+                                    </span>
+                                )}
+                            </button>
+                        </div>
+                    )}
                 </section>
             )}
             {pageState.currentPage === "register-user" && (

@@ -39,8 +39,8 @@ const EnterpriseListForUsers = ({
                 </div>
             ) : (
                 <div className="auto-height">
-                    <h2 className="text | medium-big">
-                        No tienes {getEmptyEnterprise(type)}
+                    <h2 className="text">
+                        <i>No tienes {getEmptyEnterprise(type)}</i>
                     </h2>
                 </div>
             )}
