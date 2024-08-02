@@ -278,6 +278,7 @@ export const getNumPagesForSupportUsers = async (
 // PAGINATE ENTERPRISE DATA FOR ALL USERS, USED FOR MECHANIC AND TOW REQS
 
 export const getAllPaginatedData = async (
+    location: string,
     type: "mechanical" | "tow" | "laundry" | "driver",
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
@@ -292,6 +293,7 @@ export const getAllPaginatedData = async (
         where("deleted", "==", false),
         where("active", "==", true),
         where("type", "==", type),
+        where("location", "==", location),
     );
 
     if (direction === "next" && startAfterDoc) {
@@ -306,6 +308,7 @@ export const getAllPaginatedData = async (
             where("deleted", "==", false),
             where("active", "==", true),
             where("type", "==", type),
+            where("location", "==", location),
         );
     }
 
@@ -324,6 +327,7 @@ export const getAllPaginatedData = async (
 };
 
 export const getAllNumPages = async (
+    location: string,
     numPerPages: number,
     type: "mechanical" | "tow" | "laundry" | "driver",
 ): Promise<number> => {
@@ -334,6 +338,7 @@ export const getAllNumPages = async (
             where("deleted", "==", false),
             where("active", "==", true),
             where("type", "==", type),
+            where("location", "==", location),
         ),
     );
     const numPages = Math.ceil(count.data().count / numPerPages);
