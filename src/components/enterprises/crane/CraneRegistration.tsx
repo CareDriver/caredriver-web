@@ -14,7 +14,11 @@ import ImageUploader from "../../form/ImageUploader";
 import { PhotoField } from "../../services/FormModels";
 import { Location } from "@/utils/map/Locator";
 import MapForm from "../../form/MapForm";
-import { sendEnterpriseReq } from "@/utils/requests/enterprise/EnterpriseRequester";
+import {
+    countEnterprisesActives,
+    MAX_NUMBER_ENTERPRISES,
+    sendEnterpriseReq,
+} from "@/utils/requests/enterprise/EnterpriseRequester";
 import { Enterprise } from "@/interfaces/Enterprise";
 import { nanoid } from "nanoid";
 import { GeoPoint } from "firebase/firestore";
@@ -25,6 +29,7 @@ import { useRouter } from "next/navigation";
 import { locationList, Locations } from "@/interfaces/Locations";
 import ChevronDown from "@/icons/ChevronDown";
 import { getLocation } from "@/utils/auth/UserAuth";
+import PageLoader from "@/components/PageLoader";
 
 interface FormData {
     name: {
@@ -45,6 +50,7 @@ interface FormData {
 
 const CraneRegistration = () => {
     const { user, loadingUser } = useContext(AuthContext);
+    const [isCheckingAvailability, setCheckingAvailability] = useState(true);
     const router = useRouter();
     const [formState, setFormState] = useState({
         isValid: true,
@@ -117,8 +123,7 @@ const CraneRegistration = () => {
                                 active: true,
                                 location: formData.location,
                                 addedUsers: [],
-                                addedUsersId: []
-                                
+                                addedUsersId: [],
                             };
 
                             await toast.promise(sendEnterpriseReq(id, enterprise), {
@@ -185,13 +190,36 @@ const CraneRegistration = () => {
     };
 
     useEffect(() => {
+        if (!loadingUser) {
+            if (user.data && user.data.id) {
+                countEnterprisesActives(user.data.id, "tow").then((r) => {
+                    if (r >= MAX_NUMBER_ENTERPRISES) {
+                        toast.error(
+                            "Alcanzaste el limite de empresas de grua que puedes registrar",
+                        );
+                        toast.info("Las empresas que estan en revicion tambien cuentan");
+                        router.push("/enterprise/cranes");
+                    } else {
+                        setCheckingAvailability(false);
+                    }
+                });
+            } else {
+                toast.error(
+                    "Error al verificar disponibilidad para registrar el nuevo servicio",
+                );
+                router.push("/enterprise/cranes");
+            }
+        }
+    }, [loadingUser]);
+
+    useEffect(() => {
         setFormState({
             ...formState,
             isValid: verifyNoEmptyData(formData) && isValidForm(formData),
         });
     }, [formData]);
 
-    return (
+    return !loadingUser && !isCheckingAvailability ? (
         <section className="service-form-wrapper">
             <h1 className="text | big bolder">Registrar Empresa Operadora de Grúa</h1>
             <p className="text | light">
@@ -299,6 +327,8 @@ const CraneRegistration = () => {
                 </button>
             </form>
         </section>
+    ) : (
+        <PageLoader />
     );
 };
 

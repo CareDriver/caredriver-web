@@ -20,6 +20,7 @@ import { Collections } from "@/firebase/CollecionNames";
 import { Enterprise } from "@/interfaces/Enterprise";
 
 const enterpriseCollection = collection(firestore, Collections.Enterprises);
+export const MAX_NUMBER_ENTERPRISES = 5;
 
 export const sendEnterpriseReq = async (
     id: string,
@@ -30,6 +31,37 @@ export const sendEnterpriseReq = async (
         await setDoc(enterpriseRef, enterpriseReq);
     } catch (error) {
         throw error;
+    }
+};
+
+export const countEnterprisesActives = async (
+    userId: string,
+    type: "mechanical" | "tow" | "laundry" | "driver",
+): Promise<number> => {
+    const enterpriseCollection = collection(firestore, Collections.Enterprises);
+
+    try {
+        const baseQuery = query(
+            enterpriseCollection,
+            where("userId", "==", userId),
+            where("deleted", "==", false),
+            where("type", "==", type),
+        );
+
+        const baseSnapshot = await getDocs(baseQuery);
+
+        const allData = baseSnapshot.docs.map((doc) => doc.data() as Enterprise);
+
+        const actives = allData.filter(
+            (data) =>
+                data.aproved === true ||
+                (data.aproved === false && (!data.aprovedBy || data.aprovedBy === "")),
+        );
+
+        return actives.length;
+    } catch (error) {
+        console.error("Error counting documents: ", error);
+        throw new Error("Error counting documents");
     }
 };
 
