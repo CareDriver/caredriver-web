@@ -19,7 +19,13 @@ import LaundryRegistration from "../services/laundry/registration/LaundryRegistr
 import AddNewVehicle from "../services/drive/registration/AddNewVehicle";
 import SupportUserRegistration from "./SupportUserRegistration";
 
-const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
+const EnterpriseUserAdder = ({
+    userLogged,
+    enterprise,
+}: {
+    userLogged: UserInterface;
+    enterprise: Enterprise;
+}) => {
     const [formState, setFormState] = useState<{
         loading: boolean;
         selectedUser: "ServerUser" | "SupportUser" | null;
@@ -85,14 +91,17 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         };
     };
 
+    const hasCraneActiveRequests = (user: UserInterface): boolean => {
+        return user.serviceRequests?.tow?.state === ServiceReqState.Reviewing;
+    };
+
     const isAbleToBeCraneOperator = (user: UserInterface): boolean => {
         let isAble = true;
 
         let isCraneOperator: boolean =
             user.serviceRequests?.tow?.state === ServiceReqState.Approved;
 
-        let hasRequestsReviwing: boolean =
-            user.serviceRequests?.tow?.state === ServiceReqState.Reviewing;
+        let hasRequestsReviwing: boolean = hasCraneActiveRequests(user);
 
         let belongsToCraneService: boolean = belongsToTheService(user, enterprise);
 
@@ -118,14 +127,17 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         return isAble;
     };
 
+    const hasLaundryActiveRequests = (user: UserInterface): boolean => {
+        return user.serviceRequests?.laundry?.state === ServiceReqState.Reviewing;
+    };
+
     const isAbleToBeWasher = (user: UserInterface): boolean => {
         let isAble = true;
 
         let isWasher: boolean =
             user.serviceRequests?.laundry?.state === ServiceReqState.Approved;
 
-        let hasRequestsReviwing: boolean =
-            user.serviceRequests?.laundry?.state === ServiceReqState.Reviewing;
+        let hasRequestsReviwing: boolean = hasLaundryActiveRequests(user);
 
         let belongsToLaundryService: boolean = belongsToTheService(user, enterprise);
 
@@ -149,14 +161,17 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         return isAble;
     };
 
+    const hasMechanicActiveRequests = (user: UserInterface): boolean => {
+        return user.serviceRequests?.mechanic?.state === ServiceReqState.Reviewing;
+    };
+
     const isAbleToBeMechanic = (user: UserInterface): boolean => {
         let isAble = true;
 
         let isMechanic: boolean =
             user.serviceRequests?.mechanic?.state === ServiceReqState.Approved;
 
-        let hasRequestsReviwing: boolean =
-            user.serviceRequests?.mechanic?.state === ServiceReqState.Reviewing;
+        let hasRequestsReviwing: boolean = hasMechanicActiveRequests(user);
 
         let belongsToMechanicService: boolean = belongsToTheService(user, enterprise);
 
@@ -180,6 +195,13 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         return isAble;
     };
 
+    const hasDriverActiveRequests = (user: UserInterface): boolean => {
+        return (
+            user.serviceRequests?.driveCar?.state === ServiceReqState.Reviewing ||
+            user.serviceRequests?.driveMotorcycle?.state === ServiceReqState.Reviewing
+        );
+    };
+
     const isAbleToBeDriver = (user: UserInterface): boolean => {
         let isAble = true;
 
@@ -187,9 +209,7 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
             user.serviceRequests?.driveCar?.state === ServiceReqState.Approved ||
             user.serviceRequests?.driveMotorcycle?.state === ServiceReqState.Approved;
 
-        let hasRequestsReviwing: boolean =
-            user.serviceRequests?.driveCar?.state === ServiceReqState.Reviewing ||
-            user.serviceRequests?.driveMotorcycle?.state === ServiceReqState.Reviewing;
+        let hasRequestsReviwing: boolean = hasDriverActiveRequests(user);
 
         let belongsToDriverService: boolean = belongsToTheService(user, enterprise);
         let { isAbleToRegisterASingleVehicule } =
@@ -233,6 +253,7 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
     };
 
     const registerAsUserServer = (user: UserInterface): void => {
+        setUserToAdd(user);
         if (isAbleToBeUserServer(user)) {
             setFormState({
                 ...formState,
@@ -292,6 +313,19 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
         return isAble;
     };
 
+    const hasActiveRequests = (user: UserInterface): boolean => {
+        switch (enterprise.type) {
+            case "driver":
+                return hasDriverActiveRequests(user);
+            case "laundry":
+                return hasLaundryActiveRequests(user);
+            case "tow":
+                return hasCraneActiveRequests(user);
+            case "mechanical":
+                return hasMechanicActiveRequests(user);
+        }
+    };
+
     const isAbleToBeSupportUser = (user: UserInterface): boolean => {
         switch (enterprise.type) {
             case "driver":
@@ -328,16 +362,6 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
             setUserEmail({
                 ...userEmail,
                 message: "El usuario no esta en la misma localizacion que el servicio",
-            });
-            setFormState({
-                ...formState,
-                loading: false,
-            });
-            setUserToAdd(undefined);
-        } else if (userFound.id && userFound.id === enterprise.userId) {
-            setUserEmail({
-                ...userEmail,
-                message: "El usuario es administrador del servicio",
             });
             setFormState({
                 ...formState,
@@ -539,6 +563,31 @@ const EnterpriseUserAdder = ({ enterprise }: { enterprise: Enterprise }) => {
                             </button>
                         </div>
                     )}
+                    {userLogged.id &&
+                        userLogged.id === enterprise.userId &&
+                        !belongsToTheService(userLogged, enterprise) &&
+                        !hasActiveRequests(userLogged) && (
+                            <div className="margin-top-25">
+                                <div className="separator-horizontal"></div>
+                                <div className="margin-top-25">
+                                    <h1 className="text | big bolder">
+                                        ¿Quieres registrarte en este servicio?
+                                    </h1>
+                                    <p className="text | light margin-top-15">
+                                        Como dueño o administrador de este servicio,
+                                        tambien puedes hacer una solicitud para trabajar
+                                        como usuario servicio con este servicio.
+                                    </p>
+                                    <button
+                                        type="button"
+                                        className="general-button text | bold green touchable margin-top-25"
+                                        onClick={() => registerAsUserServer(userLogged)}
+                                    >
+                                        Registrarme como Usuario Servidor
+                                    </button>
+                                </div>
+                            </div>
+                        )}
                 </div>
             )}
 

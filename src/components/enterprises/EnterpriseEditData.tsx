@@ -639,7 +639,7 @@ const EnterpriseEditData = ({
                     )}
                 </section>
             )}
-            {pageState.currentPage === "register-user" && (
+            {user.data && pageState.currentPage === "register-user" && (
                 <div
                     data-state={
                         formState.loading ||
@@ -649,7 +649,10 @@ const EnterpriseEditData = ({
                             : "loaded"
                     }
                 >
-                    <EnterpriseUserAdder enterprise={enterpriseData} />
+                    <EnterpriseUserAdder
+                        userLogged={user.data}
+                        enterprise={enterpriseData}
+                    />
                 </div>
             )}
 
