@@ -3,8 +3,8 @@ import { UserRequest, Vehicle } from "@/interfaces/UserRequest";
 import {
     deleteImagesIfLimitOfApproves,
     MIN_NUM_OF_APPROVALS,
+    saveReview,
     setFirstService,
-    updateService,
 } from "@/utils/requests/services/ServicesRequester";
 import PersonalData from "../../data_renderer/personal_data/PersonalData";
 import SelfieRenderer from "../../data_renderer/personal_data/SelfieRenderer";
@@ -13,7 +13,6 @@ import ReqButtonRes from "../../data_renderer/form/ReqButtonRes";
 import { useContext, useEffect, useState } from "react";
 import { driveReqCollection } from "@/utils/requests/services/DriveRequester";
 import { AuthContext } from "@/context/AuthContext";
-import { Timestamp } from "firebase/firestore";
 import { getUserById, updateUser } from "@/utils/requests/UserRequester";
 import {
     ServiceRequestsInterface,
@@ -49,51 +48,12 @@ const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 const isLimitToReviews: boolean =
                     serviceReq.reviewedByHistory !== undefined &&
                     serviceReq.reviewedByHistory.length + 1 === MIN_NUM_OF_APPROVALS;
-                const serviceReview = {
-                    adminId: user.data.id,
-                    dateTime: Timestamp.now(),
-                    aproved: wasApproved,
-                };
-                var newReviewServiceHistory = serviceReq.reviewedByHistory
-                    ? [...serviceReq.reviewedByHistory, serviceReview]
-                    : [serviceReview];
-                var toUpdateReq: Partial<UserRequest> = {
-                    reviewedByHistory: newReviewServiceHistory,
-                    active: isLimitToReviews ? false : true,
-                    aproved: isLimitToReviews ? wasApproved : serviceReq.aproved,
-                };
-                if (isLimitToReviews && serviceReq.vehicles) {
-                    const imgDeleted = {
-                        ref: "deleted",
-                        url: "",
-                    };
-
-                    // Delete vehicle licenses images
-                    /* var vehiclesWithoutImages = serviceReq.vehicles.map((vehicle) => {
-                        return {
-                            ...vehicle,
-                            license: {
-                                ...vehicle.license,
-                                backImgUrl: imgDeleted,
-                                frontImgUrl: imgDeleted,
-                            },
-                        };
-                    }); */
-
-                    toUpdateReq = {
-                        ...toUpdateReq,
-                        realTimePhotoImgUrl: imgDeleted,
-                    };
-
-                    if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
-                        toUpdateReq = {
-                            ...toUpdateReq,
-                            newProfilePhotoImgUrl: imgDeleted,
-                        };
-                    }
-                }
-
-                await updateService(serviceReq.id, toUpdateReq, driveReqCollection);
+                await saveReview(
+                    serviceReq,
+                    user.data.id,
+                    wasApproved,
+                    driveReqCollection,
+                );
 
                 if (isLimitToReviews) {
                     var car = getVehicle(VehicleType.CAR);

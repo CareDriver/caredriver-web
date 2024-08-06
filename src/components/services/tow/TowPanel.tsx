@@ -1,20 +1,28 @@
 "use client";
 
+import Popup from "@/components/form/Popup";
 import PageLoader from "@/components/PageLoader";
+import EnterpriseFetcher from "@/components/requests/data_renderer/enterprise/EnterpriseFetcher";
+import FieldDeleted from "@/components/requests/data_renderer/form/FieldDeleted";
 import { AuthContext } from "@/context/AuthContext";
 import Plus from "@/icons/Plus";
 import SackDollar from "@/icons/SackDollar";
 import Truck from "@/icons/Truck";
+import { Enterprise } from "@/interfaces/Enterprise";
 import { ServiceVehicles, UserInterface } from "@/interfaces/UserInterface";
 import { vehicleModeRenderV2, VehicleTransmission } from "@/interfaces/VehicleInterface";
 import { updateUser } from "@/utils/requests/UserRequester";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
+import "@/styles/modules/popup.css";
 
 const TowPanel = () => {
     const { user, loadingUser } = useContext(AuthContext);
     const [addingNew, setAddingNew] = useState(false);
+
+    const [enteprise, setEnterprise] = useState<Enterprise | undefined | null>(null);
+    const [isLookingEnterprise, setLookingEnterprise] = useState(false);
 
     const getFormatDate = (fecha: Date): string => {
         const day: number = fecha.getDate();
@@ -96,6 +104,54 @@ const TowPanel = () => {
             : VehicleTransmission.AUTOMATIC;
     };
 
+    const renderButtonEnterprise = () => {
+        if (
+            user.data !== null &&
+            user.data.towEnterpriseId !== undefined &&
+            user.data.towEnterpriseId.trim().length > 0
+        ) {
+            var entepriseId: string = user.data.towEnterpriseId;
+            return (
+                <>
+                    <button
+                        className="small-general-button text | bold | margin-top-25 margin-bottom-25"
+                        type="button"
+                        onClick={() => setLookingEnterprise(true)}
+                    >
+                        Ver empresa asociada
+                    </button>
+                    <div className="separator-horizontal"></div>
+                    <Popup
+                        isOpen={isLookingEnterprise}
+                        close={() => setLookingEnterprise(false)}
+                    >
+                        <div>
+                            <h2 className="text | bolder big-medium">
+                                Empresa operadora de grua donde trabajas
+                            </h2>
+                            <EnterpriseFetcher
+                                enterprise={enteprise}
+                                setEnterprise={setEnterprise}
+                                enterpriseId={entepriseId}
+                                type="tow"
+                            />
+                        </div>
+                    </Popup>
+                </>
+            );
+        } else {
+            return (
+                <div className="margin-top-25">
+                    <div className="max-width-60">
+                        <FieldDeleted description="No estas asociado a ninguna empresa operadora de grua." />
+                        <div className="margin-top-50"></div>
+                    </div>
+                    <div className="separator-horizontal"></div>
+                </div>
+            );
+        }
+    };
+
     return loadingUser ? (
         <PageLoader />
     ) : user.data ? (
@@ -105,6 +161,7 @@ const TowPanel = () => {
                 <SackDollar />
                 Ve a nuestra Aplicación Móvil y empieza a Ofrecer tu servicio!
             </p>
+            {renderButtonEnterprise()}
             {user.data.serviceVehicles && user.data.serviceVehicles.tow && (
                 <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">

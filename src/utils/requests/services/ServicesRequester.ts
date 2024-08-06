@@ -216,3 +216,59 @@ export const saveBalanceGift = async (user: UserInterface, adminId: string) => {
         console.log(e);
     }
 };
+
+export const saveReview = async (
+    serviceReq: UserRequest,
+    reviewerId: string,
+    wasApproved: boolean,
+    collection: CollectionReference,
+) => {
+    const isLimitToReviews: boolean =
+        serviceReq.reviewedByHistory !== undefined &&
+        serviceReq.reviewedByHistory.length + 1 === MIN_NUM_OF_APPROVALS;
+    const serviceReview = {
+        adminId: reviewerId,
+        dateTime: Timestamp.now(),
+        aproved: wasApproved,
+    };
+    var newReviewServiceHistory = serviceReq.reviewedByHistory
+        ? [...serviceReq.reviewedByHistory, serviceReview]
+        : [serviceReview];
+    var toUpdateReq: Partial<UserRequest> = {
+        reviewedByHistory: newReviewServiceHistory,
+        active: isLimitToReviews ? false : true,
+        aproved: isLimitToReviews ? wasApproved : serviceReq.aproved,
+    };
+    if (isLimitToReviews && serviceReq.vehicles) {
+        const imgDeleted = {
+            ref: "deleted",
+            url: "",
+        };
+
+        // Delete vehicle licenses images
+        /* var vehiclesWithoutImages = serviceReq.vehicles.map((vehicle) => {
+                        return {
+                            ...vehicle,
+                            license: {
+                                ...vehicle.license,
+                                backImgUrl: imgDeleted,
+                                frontImgUrl: imgDeleted,
+                            },
+                        };
+                    }); */
+
+        toUpdateReq = {
+            ...toUpdateReq,
+            realTimePhotoImgUrl: imgDeleted,
+        };
+
+/*         if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
+            toUpdateReq = {
+                ...toUpdateReq,
+                newProfilePhotoImgUrl: imgDeleted,
+            };
+        } */
+    }
+
+    await updateService(serviceReq.id, toUpdateReq, collection);
+};

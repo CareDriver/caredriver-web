@@ -11,7 +11,6 @@ export const isValidForm = (
     vehicle: VehicleForm,
     userConfirmation: PhotoField,
     acceptedTerms: boolean,
-    pdf: PDFField,
     idCardForm: IdCardForm,
 ): boolean => {
     var isValid = !personalData.fullname.message && !personalData.photo.message;
@@ -29,9 +28,9 @@ export const isValidForm = (
         !vehicle.license.behindPhoto.message &&
         !vehicle.license.frontPhoto.message;
 
-    if (isValid) {
+    /* if (isValid) {
         isValid = !pdf.message;
-    }
+    } */
 
     if (isValid) {
         isValid = !userConfirmation.message && acceptedTerms;
@@ -45,7 +44,6 @@ export const verifyNoEmptyData = (
     vehicle: VehicleForm,
     userConfirmation: PhotoField,
     acceptedTerms: boolean,
-    pdf: PDFField,
     idCardForm: IdCardForm,
 ): boolean => {
     var isNotEmpty =
@@ -65,9 +63,9 @@ export const verifyNoEmptyData = (
         vehicle.license.behindPhoto.value !== null &&
         vehicle.license.frontPhoto.value !== null;
 
-    if (isNotEmpty) {
+    /* if (isNotEmpty) {
         isNotEmpty = pdf.value !== null;
-    }
+    } */
 
     if (isNotEmpty) {
         isNotEmpty = userConfirmation.value !== null && acceptedTerms;

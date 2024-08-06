@@ -77,11 +77,7 @@ const AddNewVehicle = ({
         license: defaultLicense,
     });
 
-    const [pdf, setPdf] = useState<PDFField>({
-        value: null,
-        message: null,
-    });
-
+    
     const [userConfirmation, setUserConfirmation] = useState<PhotoField>(defaultPhoto);
     const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
     const [formState, setFormState] = useState({
@@ -89,7 +85,12 @@ const AddNewVehicle = ({
         loading: false,
     });
 
-    const uploadPDF = async (): Promise<ImgWithRef | null> => {
+    /* const [pdf, setPdf] = useState<PDFField>({
+        value: null,
+        message: null,
+    }); */
+
+    /* const uploadPDF = async (): Promise<ImgWithRef | null> => {
         if (pdf.value) {
             try {
                 return await uploadFileBase64(DirectoryPath.Documents, pdf.value);
@@ -99,7 +100,7 @@ const AddNewVehicle = ({
         }
 
         return null;
-    };
+    }; */
 
     const uploadImages = async () => {
         let vehiclesData: Vehicle[] = [];
@@ -174,7 +175,6 @@ const AddNewVehicle = ({
         vehiclesData: Vehicle[],
         newProfilePhotoImgUrl: string | ImgWithRef,
         realTimePhotoImgUrl: ImgWithRef,
-        pdfRef: ImgWithRef,
     ) => {
         if (requesterUser) {
             var formId = nanoid(30);
@@ -240,7 +240,6 @@ const AddNewVehicle = ({
                 vehicle,
                 userConfirmation,
                 acceptedTerms,
-                pdf,
                 personalData.idCard,
             );
             if (isValid) {
@@ -249,7 +248,6 @@ const AddNewVehicle = ({
                     vehicle,
                     userConfirmation,
                     acceptedTerms,
-                    pdf,
                     personalData.idCard,
                 );
                 if (isValid && requesterUser) {
@@ -265,31 +263,28 @@ const AddNewVehicle = ({
                             error: "Error al subir imágenes, inténtalo de nuevo por favor",
                         });
 
-                        const pdfRef = await toast.promise(uploadPDF(), {
+                        /* const pdfRef = await toast.promise(uploadPDF(), {
                             pending: "Subiendo PDF",
                             success: "PDF subido",
                             error: "Error al subir el PDF, inténtalo de nuevo",
+                        }); */
+                        await toast.promise(
+                            uploadForm(
+                                vehiclesData,
+                                newProfilePhotoImgUrl,
+                                realTimePhotoImgUrl,
+                            ),
+                            {
+                                pending: "Enviando el formulario, por favor espera",
+                                success: "Formulario enviado",
+                                error: "Error al enviar el formulario, inténtalo de nuevo por favor",
+                            },
+                        );
+                        window.location.reload();
+                        setFormState({
+                            loading: false,
+                            isValid: true,
                         });
-                        if (pdfRef) {
-                            await toast.promise(
-                                uploadForm(
-                                    vehiclesData,
-                                    newProfilePhotoImgUrl,
-                                    realTimePhotoImgUrl,
-                                    pdfRef,
-                                ),
-                                {
-                                    pending: "Enviando el formulario, por favor espera",
-                                    success: "Formulario enviado",
-                                    error: "Error al enviar el formulario, inténtalo de nuevo por favor",
-                                },
-                            );
-                            window.location.replace("/services/drive");
-                            setFormState({
-                                loading: false,
-                                isValid: true,
-                            });
-                        }
                     } catch (e) {
                         setFormState({
                             loading: false,
@@ -327,7 +322,6 @@ const AddNewVehicle = ({
                     vehicle,
                     userConfirmation,
                     acceptedTerms,
-                    pdf,
                     personalData.idCard,
                 ),
             }),
@@ -396,7 +390,7 @@ const AddNewVehicle = ({
                 />
                 <SingleVehicleForm vehicle={vehicle} setVehicle={setVehicle} />
 
-                <AntecedentsPdf file={pdf} setFile={setPdf} />
+                {/* <AntecedentsPdf file={pdf} setFile={setPdf} /> */}
 
                 <SelfieConfirmer
                     image={userConfirmation}

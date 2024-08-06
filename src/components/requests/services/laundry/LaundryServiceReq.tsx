@@ -3,6 +3,7 @@ import { UserRequest } from "@/interfaces/UserRequest";
 import {
     deleteImagesIfLimitOfApproves,
     MIN_NUM_OF_APPROVALS,
+    saveReview,
     setFirstService,
     updateService,
 } from "@/utils/requests/services/ServicesRequester";
@@ -44,39 +45,12 @@ const LaundryServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 const isLimitToReviews: boolean =
                     serviceReq.reviewedByHistory !== undefined &&
                     serviceReq.reviewedByHistory.length + 1 === MIN_NUM_OF_APPROVALS;
-                const serviceReview = {
-                    adminId: user.data.id,
-                    dateTime: Timestamp.fromDate(new Date()),
-                    aproved: wasApproved,
-                };
-                var newReviewServiceHistory = serviceReq.reviewedByHistory
-                    ? [...serviceReq.reviewedByHistory, serviceReview]
-                    : [serviceReview];
-                var toUpdateReq: Partial<UserRequest> = {
-                    reviewedByHistory: newReviewServiceHistory,
-                    active: isLimitToReviews ? false : true,
-                    aproved: isLimitToReviews ? wasApproved : serviceReq.aproved,
-                };
-                if (isLimitToReviews) {
-                    const imgDeleted = {
-                        ref: "deleted",
-                        url: "",
-                    };
-
-                    toUpdateReq = {
-                        ...toUpdateReq,
-                        realTimePhotoImgUrl: imgDeleted,
-                    };
-
-                    if (typeof serviceReq.newProfilePhotoImgUrl !== "string") {
-                        toUpdateReq = {
-                            ...toUpdateReq,
-                            newProfilePhotoImgUrl: imgDeleted,
-                        };
-                    }
-                }
-
-                await updateService(serviceReq.id, toUpdateReq, laundryReqCollection);
+                await saveReview(
+                    serviceReq,
+                    user.data.id,
+                    wasApproved,
+                    laundryReqCollection,
+                );
 
                 if (isLimitToReviews) {
                     if (userData) {
@@ -118,7 +92,7 @@ const LaundryServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 user.data.id,
                             );
                         }
-                        
+
                         await updateUser(serviceReq.userId, userToUpdate);
                         if (enterprise && wasApproved) {
                             await toast.promise(

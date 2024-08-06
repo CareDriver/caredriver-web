@@ -14,10 +14,17 @@ import Link from "next/link";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import DriveInstrucctions from "./DriveInstrucctions";
+import Popup from "@/components/form/Popup";
+import { Enterprise } from "@/interfaces/Enterprise";
+import FieldDeleted from "@/components/requests/data_renderer/form/FieldDeleted";
+import "@/styles/modules/popup.css";
+import EnterpriseFetcher from "@/components/requests/data_renderer/enterprise/EnterpriseFetcher";
 
 const DrivePanel = () => {
     const { user, loadingUser } = useContext(AuthContext);
     const [addingNew, setAddingNew] = useState(false);
+    const [enteprise, setEnterprise] = useState<Enterprise | undefined | null>(null);
+    const [isLookingEnterprise, setLookingEnterprise] = useState(false);
 
     const getColorButtonLicense = (date: Date) => {
         var difference = differenceOnDays(date);
@@ -87,6 +94,54 @@ const DrivePanel = () => {
         }
     };
 
+    const renderButtonEnterprise = () => {
+        if (
+            user.data !== null &&
+            user.data.driverEnterpriseId !== undefined &&
+            user.data.driverEnterpriseId.trim().length > 0
+        ) {
+            var entepriseId: string = user.data.driverEnterpriseId;
+            return (
+                <>
+                    <button
+                        className="small-general-button text | bold | margin-top-25 margin-bottom-25"
+                        type="button"
+                        onClick={() => setLookingEnterprise(true)}
+                    >
+                        Ver empresa asociada
+                    </button>
+                    <div className="separator-horizontal"></div>
+                    <Popup
+                        isOpen={isLookingEnterprise}
+                        close={() => setLookingEnterprise(false)}
+                    >
+                        <div>
+                            <h2 className="text | bolder big-medium">
+                                Empresa de choferes donde trabajas
+                            </h2>
+                            <EnterpriseFetcher
+                                enterprise={enteprise}
+                                setEnterprise={setEnterprise}
+                                enterpriseId={entepriseId}
+                                type="driver"
+                            />
+                        </div>
+                    </Popup>
+                </>
+            );
+        } else {
+            return (
+                <div className="margin-top-25">
+                    <div className="max-width-60">
+                        <FieldDeleted description="No estas asociado a una empresa de choferes" />
+                        <div className="margin-top-50"></div>
+                    </div>
+                    <div className="separator-horizontal"></div>
+                </div>
+            );
+        }
+    };
+
     const getMissMode = (modes: VehicleTransmission[]): VehicleTransmission => {
         return modes[0] === VehicleTransmission.AUTOMATIC
             ? VehicleTransmission.MECHANICAL
@@ -103,6 +158,7 @@ const DrivePanel = () => {
                 Ya eres chofer, ve a nuestra Aplicación Móvil y empieza a Ofrecer tu
                 servicio!
             </p>
+            {renderButtonEnterprise()}
             {user.data.serviceVehicles && user.data.serviceVehicles.car && (
                 <div className="margin-top-50">
                     <h2 className="text icon-wrapper | medium-big bold lb">
