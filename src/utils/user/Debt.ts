@@ -12,13 +12,13 @@
                       ...user.balanceHistory,
                       {
                           ...debt,
-                          date: Timestamp.fromDate(new Date()),
+                          date: Timestamp.now(),
                       },
                   ]
                 : [
                       {
                           ...debt,
-                          date: Timestamp.fromDate(new Date()),
+                          date: Timestamp.now(),
                       },
                   ];
             await toast.promise(

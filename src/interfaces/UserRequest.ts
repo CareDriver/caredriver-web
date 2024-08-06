@@ -59,7 +59,7 @@ export const emptyVehicleCar: Vehicle = {
         mode: [VehicleTransmission.AUTOMATIC],
     },
     license: {
-        expiredDateLicense: Timestamp.fromDate(new Date()),
+        expiredDateLicense: Timestamp.now(),
         licenseNumber: "",
         backImgUrl: emptyPhotoWithRef,
         frontImgUrl: emptyPhotoWithRef,

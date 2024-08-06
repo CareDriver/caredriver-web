@@ -43,7 +43,7 @@ const ServicesServedByUser = ({
         page: 1,
         pages: null,
         lastDoc: undefined,
-        value: Timestamp.fromDate(new Date()),
+        value: Timestamp.now(),
         isSearching: false,
         wereThereResults: true,
     });

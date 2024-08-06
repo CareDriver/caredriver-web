@@ -203,7 +203,7 @@ export const saveBalanceGift = async (user: UserInterface, adminId: string) => {
         const balanceHistoryId = nanoid();
         await saveBalanceHistoryItem(balanceHistoryId, {
             id: balanceHistoryId,
-            dateTime: Timestamp.fromDate(new Date()),
+            dateTime: Timestamp.now(),
             oldBalance: user.balance,
             previousBalance: {
                 amount: user.balance.amount + 5,

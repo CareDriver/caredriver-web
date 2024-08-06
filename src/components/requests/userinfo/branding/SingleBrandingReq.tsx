@@ -75,7 +75,7 @@ const SingleBrandingReq = ({ reqId }: { reqId: string }) => {
             });
             try {
                 if (wasApproved) {
-                    const date = Timestamp.fromDate(new Date());
+                    const date = Timestamp.now();
                     await updateUser(userReq.id, {
                         branding: {
                             dateLimit: Timestamp.fromDate(getOneMonthAhead()),

@@ -81,7 +81,7 @@ const FormToSeeInfo = ({
                 var infoDoc: ReasonForInformationInterface = {
                     id: docId,
                     userId: user.data.id,
-                    informationViewDate: Timestamp.fromDate(new Date()),
+                    informationViewDate: Timestamp.now(),
                 };
 
                 if (validReason) {

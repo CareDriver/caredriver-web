@@ -95,7 +95,7 @@ export const emptyIdCard: IdentityCard = {
     frontCard: emptyPhotoWithRef,
     backCard: emptyPhotoWithRef,
     location: "",
-    updatedDate: Timestamp.fromDate(new Date()),
+    updatedDate: Timestamp.now(),
 };
 
 export interface ServiceRequestsInterface {

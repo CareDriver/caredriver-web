@@ -36,7 +36,7 @@ export const uploadNewCard = async (idCard: IdCardForm, userId: string) => {
                 frontCard: frontCardRef,
                 backCard: backCardRef,
                 location: idCard.location.value,
-                updatedDate: Timestamp.fromDate(new Date()),
+                updatedDate: Timestamp.now(),
             },
         });
     } catch (e) {}

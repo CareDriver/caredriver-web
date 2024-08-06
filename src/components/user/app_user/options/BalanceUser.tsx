@@ -61,7 +61,7 @@ const BalanceUser = ({
                 const balanceHistoryId = nanoid();
                 var balanceItem: BalanceHistoryItem = {
                     id: balanceHistoryId,
-                    dateTime: Timestamp.fromDate(new Date()),
+                    dateTime: Timestamp.now(),
                     oldBalance: user.balance,
                     previousBalance: debt,
                     userWhoChanged: adminUser.id,
@@ -92,14 +92,14 @@ const BalanceUser = ({
                           ...user.balanceHistory,
                           {
                               ...debt,
-                              date: Timestamp.fromDate(new Date()),
+                              date: Timestamp.now(),
                               balanceRechargeId: balanceHistoryId,
                           },
                       ]
                     : [
                           {
                               ...debt,
-                              date: Timestamp.fromDate(new Date()),
+                              date: Timestamp.now(),
                               balanceRechargeId: balanceHistoryId,
                           },
                       ];
