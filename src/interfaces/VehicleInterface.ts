@@ -10,6 +10,13 @@ export enum VehicleTransmission {
     MECHANICAL = "mechanical",
 }
 
+export enum VehicleSize {
+    BIG = "big",
+    MEDIUM = "medium",
+    SMALL = "small",
+    MOTORCYCLE = "motorcycle"
+}
+
 export interface VehicleInterface {
     id: number; // Id of the vehicle
     name: string; // The name of the vehicle
@@ -17,6 +24,14 @@ export interface VehicleInterface {
     type: VehicleType; // Type of the vehicle, either 'car' or 'motorcycle'
     transmission?: VehicleTransmission; // Type of transmission, either 'automatic' or 'mechanical'
     usedTimes: number; // Number of trips vehicle was used
+    size?: VehicleSize;
+}
+
+export const getVehicleSizeLabel = {
+    [VehicleSize.BIG]: "Grande",
+    [VehicleSize.MEDIUM]: "Mediano",
+    [VehicleSize.SMALL]: "Pequeño",
+    [VehicleSize.MOTORCYCLE]: "Moto",
 }
 
 // Object of an empty new vehicle to add
@@ -26,6 +41,7 @@ export const newVehicle = (): VehicleInterface => {
         name: "",
         description: "",
         type: VehicleType.CAR,
+        size: VehicleSize.MEDIUM,
         transmission: VehicleTransmission.AUTOMATIC,
         usedTimes: 0,
     };
@@ -33,6 +49,13 @@ export const newVehicle = (): VehicleInterface => {
 
 type VehicleTypeOption = {
     value: VehicleType;
+    label: string;
+    icon: string;
+    checkedColor: string;
+};
+
+type VehicleSizeOption = {
+    value: VehicleSize;
     title: string;
     icon: string;
 };
@@ -66,8 +89,15 @@ export const vehicleModeRenderV2 = {
 
 // Vehicle types to render
 export const vehicleTypes: VehicleTypeOption[] = [
-    { value: VehicleType.CAR, title: "Auto", icon: "car" },
-    { value: VehicleType.MOTORCYCLE, title: "Moto", icon: "motorbike" },
+    { value: VehicleType.CAR, label: "Auto", icon: "car", checkedColor: "#FFF" },
+    { value: VehicleType.MOTORCYCLE, label: "Moto", icon: "motorbike", checkedColor: "#FFF" },
+];
+
+// Vehicle sizes to render
+export const vehicleSizes: VehicleSizeOption[] = [
+    { value: VehicleSize.SMALL, title: "Pequeño", icon: "car-sports" },
+    { value: VehicleSize.MEDIUM, title: "Mediano", icon: "car-hatchback" },
+    { value: VehicleSize.BIG, title: "Grande", icon: "car-estate" },
 ];
 
 // Vehicle tarnsmissions to render

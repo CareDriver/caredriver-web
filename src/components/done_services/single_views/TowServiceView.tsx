@@ -4,7 +4,7 @@ import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import { toformatDate } from "@/utils/parser/ForDate";
 import UsersOnService from "./UsersOnService";
 import Car from "@/icons/Car";
-import { vehicleModeRenderV2, vehicleTypeRender } from "@/interfaces/VehicleInterface";
+import { getVehicleSizeLabel, vehicleModeRenderV2, vehicleTypeRender } from "@/interfaces/VehicleInterface";
 import FieldDeleted from "@/components/requests/data_renderer/form/FieldDeleted";
 import SericeDonePrice from "./Price";
 import MapRealTime from "@/components/requests/data_renderer/map/MapRealTime";
@@ -51,13 +51,21 @@ const TowServiceView = ({ service }: { service: ServiceRequestInterface }) => {
                 <p className="text | medium gray-dark">
                     <b>Nombre:</b> {service.vehicle?.name}
                 </p>
-                <p className="text | medium gray-dark">
-                    <b>Descripcion:</b> {service.vehicle?.description}
-                </p>
+                {service.vehicle?.description &&
+                    service.vehicle?.description.trim().length > 0 && (
+                        <p className="text | medium gray-dark">
+                            <b>Descripcion:</b> {service.vehicle?.description}
+                        </p>
+                    )}
                 {service.vehicle?.transmission && (
                     <p className="text | medium gray-dark">
                         <b>Transmisión:</b>{" "}
                         {vehicleModeRenderV2[service.vehicle?.transmission]}
+                    </p>
+                )}
+                {service.vehicle?.size && (
+                    <p className="text | medium gray-dark">
+                        <b>Tamaño:</b> {getVehicleSizeLabel[service.vehicle.size]}
                     </p>
                 )}
             </div>
