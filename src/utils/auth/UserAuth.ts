@@ -35,7 +35,7 @@ export const createUserData = (
         phoneNumber: credentials.phone.value,
         photoUrl: emptyPhotoWithRef,
 
-        comments: [],
+        // comments: [],
         vehicles: [],
         services: [Services.Normal],
 
@@ -63,7 +63,7 @@ export const createUserDataWithPhoto = (
     credentials: SignUpInterface,
     photo: ImgWithRef | null,
 ): UserInterface => {
-    var newUser = {
+    var newUser: UserInterface = {
         id: id,
         fakeId,
         role: role,
@@ -71,7 +71,7 @@ export const createUserDataWithPhoto = (
         phoneNumber: credentials.phone.value,
         photoUrl: emptyPhotoWithRef,
 
-        comments: [],
+        // comments: [],
         vehicles: [],
         services: [Services.Normal],
 

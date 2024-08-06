@@ -42,7 +42,7 @@ const buildUser = (
             phoneNumber: userData?.phoneNumber === undefined ? "" : userData.phoneNumber,
             photoUrl:
                 userData?.photoUrl === undefined ? emptyPhotoWithRef : userData.photoUrl,
-            comments: userData?.comments === undefined ? [] : userData.comments,
+            // comments: userData?.comments === undefined ? [] : userData.comments,
             vehicles: userData?.vehicles === undefined ? [] : userData.vehicles,
             services: userData?.services === undefined ? [] : userData.services,
             servicesData:

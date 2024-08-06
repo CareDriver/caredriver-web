@@ -59,7 +59,7 @@ export interface UserInterface {
     email?: string; // User's email
     identityCard?: IdentityCard; // User's Id card
 
-    comments: string[]; // Array of comments given by drivers
+    // comments: string[]; // Array of comments given by drivers
     vehicles: VehicleInterface[]; // Array of vehicles associated with the user
     services: Services[]; // The services the user can provide, just "normal" if it's a non-service user
 
