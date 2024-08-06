@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 const DoSomething = () => {
     useEffect(() => {
-        /* changeEnterprises()
+        /* putFakedId("tow")
             .then(() => console.log("success"))
             .catch((e) => console.log(e)); */
     }, []);

@@ -14,8 +14,10 @@ import {
     query,
     startAfter,
     Timestamp,
+    updateDoc,
     where,
 } from "firebase/firestore";
+import { nanoid } from "nanoid";
 
 const driveDoneServicesColl = collection(firestore, Collections.DriverServices);
 const mechanicDoneServicesColl = collection(firestore, Collections.MechanicalServices);

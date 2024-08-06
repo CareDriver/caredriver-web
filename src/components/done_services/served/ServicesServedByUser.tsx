@@ -279,12 +279,14 @@ const ServicesServedByUser = ({
                     loader={<DataLoaderIndicator />}
                 >
                     <div className="service-req-wrapper">
-                        {dataState.data.map((req, i) =>
-                            getServiceItem(
-                                `/admin/users/${serviceUserId}/services/${type}/${req.id}`,
-                                req,
-                                `service-req-by-user-${i}`,
-                            ),
+                        {dataState.data.map(
+                            (req, i) =>
+                                req.fakedId &&
+                                getServiceItem(
+                                    `/admin/users/${serviceUserId}/services/${type}/${req.fakedId}`,
+                                    req,
+                                    `service-req-by-user-${i}`,
+                                ),
                         )}
                     </div>
                 </InfiniteScroll>

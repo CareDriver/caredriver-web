@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import PageLoader from "../PageLoader";
 import { getNameServiceCollection } from "@/utils/requests/services/UserMadeServices";
 import { firestore } from "@/firebase/FirebaseConfig";
-import { doc, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { removeLastRoute } from "@/utils/parser/ForPahtname";
 import { usePathname } from "next/navigation";
@@ -27,8 +27,13 @@ const SingleServiceDone = ({
     const pathname = usePathname();
 
     useEffect(() => {
-        const unsubscribe = onSnapshot(doc(firestore, collectionPath, id), (doc) => {
-            if (doc.exists()) {
+        const q = query(
+            collection(firestore, collectionPath),
+            where("fakedId", "==", id),
+        );
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            if (!querySnapshot.empty) {
+                const doc = querySnapshot.docs[0];
                 setData(doc.data() as ServiceRequestInterface);
             } else {
                 toast.error("Servicio no encontrado");
@@ -37,6 +42,16 @@ const SingleServiceDone = ({
         });
 
         return () => unsubscribe();
+        /* const unsubscribe = onSnapshot(doc(firestore, collectionPath, id), (doc) => {
+            if (doc.exists()) {
+                setData(doc.data() as ServiceRequestInterface);
+            } else {
+                toast.error("Servicio no encontrado");
+                window.location.replace(removeLastRoute(pathname));
+            }
+        });
+
+        return () => unsubscribe(); */
     }, []);
 
     const getServiceView = (service: ServiceRequestInterface) => {

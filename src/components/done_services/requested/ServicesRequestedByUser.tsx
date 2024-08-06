@@ -18,7 +18,7 @@ import FullLocationServiceItem from "../items/FullLocationServiceItem";
 import ReasonAndLocationServiceItem from "../items/ReasonAndLocationServiceItem";
 import { ServicesRender } from "@/interfaces/Services";
 import "@/styles/components/user-services-served.css";
-import "@/styles/components/service-req.css"
+import "@/styles/components/service-req.css";
 
 const ServicesRequestedByUser = ({
     serviceUserId,
@@ -281,12 +281,14 @@ const ServicesRequestedByUser = ({
                     }
                 >
                     <div className="service-req-wrapper">
-                        {dataState.data.map((req, i) =>
-                            getServiceItem(
-                                `/admin/users/${serviceUserId}/servicerequests/${type}/${req.id}`,
-                                req,
-                                `servie-requested-${i}`,
-                            ),
+                        {dataState.data.map(
+                            (req, i) =>
+                                req.fakedId &&
+                                getServiceItem(
+                                    `/admin/users/${serviceUserId}/servicerequests/${type}/${req.fakedId}`,
+                                    req,
+                                    `servie-requested-${i}`,
+                                ),
                         )}
                     </div>
                 </InfiniteScroll>

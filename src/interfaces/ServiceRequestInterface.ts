@@ -7,6 +7,7 @@ import { Locations } from "./Locations";
 // This will manage services requests the user
 export interface ServiceRequestInterface {
     id?: string; // Unique identifier for the trip
+    fakedId?: string;
     userId: string | null; // Identifier of the user associated with the trip
     vehicle: VehicleInterface | null; // The vehicle associated with the trip
     // The serviceUserId will be empty ("") while no service user proposal was accepted
@@ -59,7 +60,7 @@ export interface ServiceRequestInterface {
     proposalId?: string; // the id  of the accepted proposal
     serviceUserAlreadyRated?: boolean; // If the service user was already rated by the normal user
     requestUserAlreadyRated?: boolean; // If the normal user was already rated by the service user
-    location?: Locations
+    location?: Locations;
 }
 
 // Type to set a service request definition
