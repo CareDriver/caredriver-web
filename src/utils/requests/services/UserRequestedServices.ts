@@ -40,11 +40,6 @@ export const getServiceRequestedCollection = (
     }
 };
 
-export const getServicerRequestedByFakeId = async(id: string,
-    collection: CollectionReference,) => {
-
-}
-
 export const getServicerRequestedById = async (
     id: string,
     collection: CollectionReference,

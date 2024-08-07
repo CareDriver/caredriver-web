@@ -11,7 +11,19 @@ import {
     getServicesRequestedNumPages,
     getServicesRequestedPaginated,
 } from "@/utils/requests/services/UserRequestedServices";
-import { CollectionReference, DocumentSnapshot, Timestamp } from "firebase/firestore";
+import {
+    collection,
+    CollectionReference,
+    DocumentSnapshot,
+    limit,
+    onSnapshot,
+    orderBy,
+    query,
+    QueryDocumentSnapshot,
+    startAfter,
+    Timestamp,
+    where,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import FullLocationServiceItem from "../items/FullLocationServiceItem";
@@ -19,6 +31,9 @@ import ReasonAndLocationServiceItem from "../items/ReasonAndLocationServiceItem"
 import { ServicesRender } from "@/interfaces/Services";
 import "@/styles/components/user-services-served.css";
 import "@/styles/components/service-req.css";
+import { firestore } from "@/firebase/FirebaseConfig";
+import { getNameServiceCollection } from "@/utils/requests/services/UserMadeServices";
+import { toast } from "react-toastify";
 
 const ServicesRequestedByUser = ({
     serviceUserId,
@@ -27,9 +42,135 @@ const ServicesRequestedByUser = ({
     serviceUserId: string;
     type: "driver" | "mechanic" | "tow" | "laundry";
 }) => {
-    const collection: CollectionReference = getServiceRequestedCollection(type);
-    const numPerPage = 10;
-    const [dataState, setDataState] = useState<{
+    const COLLECTION_PATH = getNameServiceCollection(type);
+    const PAGE_SIZE = 10;
+    const [deadline, setDeadline] = useState(Timestamp.now());
+    const [documents, setDocuments] = useState<ServiceRequestInterface[]>([]);
+    const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+
+    const updateDocuments = (newDocs: ServiceRequestInterface[]) => {
+        setDocuments((prevDocuments) => {
+            const updatedDocs = prevDocuments.map((doc) => {
+                const newDoc = newDocs.find((d) => d.id === doc.id);
+                return newDoc ? newDoc : doc;
+            });
+
+            const newUniqueDocs = newDocs.filter(
+                (newDoc) => !updatedDocs.some((doc) => doc.id === newDoc.id),
+            );
+
+            return [...updatedDocs, ...newUniqueDocs];
+        });
+    };
+
+    const fetchDocuments = (startAfterDoc: QueryDocumentSnapshot | null = null) => {
+        setLoading(true);
+
+        const adjustedDeadline = Timestamp.fromDate(
+            new Date(deadline.seconds * 1000 + 86400000),
+        );
+
+        let q;
+        if (startAfterDoc) {
+            q = query(
+                collection(firestore, COLLECTION_PATH),
+                limit(PAGE_SIZE),
+                where("userId", "==", serviceUserId),
+                where("createdAt", "<=", adjustedDeadline),
+                orderBy("createdAt", "desc"),
+                startAfter(startAfterDoc),
+            );
+        } else {
+            q = query(
+                collection(firestore, COLLECTION_PATH),
+                limit(PAGE_SIZE),
+                where("userId", "==", serviceUserId),
+                where("createdAt", "<=", adjustedDeadline),
+                orderBy("createdAt", "desc"),
+            );
+        }
+
+        try {
+            onSnapshot(q, (snapshot) => {
+                if (!snapshot.empty) {
+                    const docs = snapshot.docs.map((doc) => {
+                        let serviceData = doc.data() as ServiceRequestInterface;
+                        serviceData.id = doc.id;
+                        return serviceData;
+                    });
+                    updateDocuments(docs);
+                    const lastVisible = snapshot.docs[snapshot.docs.length - 1];
+                    setLastDoc(lastVisible);
+                } else {
+                    setHasMore(false);
+                    toast.info("No hay mas resultados")
+                }
+                setLoading(false);
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    useEffect(() => {
+        fetchDocuments();
+    }, [deadline]);
+
+    const handleLoadMore = () => {
+        if (lastDoc) {
+            fetchDocuments(lastDoc);
+        }
+    };
+
+    const handleDeadlineChange = (event: any) => {
+        const selectedDate = event.target.value;
+        setDeadline(Timestamp.fromDate(new Date(selectedDate)));
+        setDocuments([]);
+        setLastDoc(null);
+    };
+
+    return (
+        <div>
+            <input
+                type="date"
+                onChange={handleDeadlineChange}
+                value={new Date(deadline.seconds * 1000).toISOString().split("T")[0]}
+            />
+            {documents.map((serviceData, i) => (
+                <div key={i}>
+                    <h1>{i + 1}</h1>
+                    <h3>Id: {serviceData.id}</h3>
+                    <h3>fakedId: {serviceData.fakedId}</h3>
+                    {serviceData.createdAt && (
+                        <h4>{getFormatDate(serviceData.createdAt.toDate())}</h4>
+                    )}
+                    {serviceData.price && serviceData.price.price && (
+                        <h3 className="text | bolder margin-bottom-25">
+                            {serviceData.price.price} {serviceData.price.currency}
+                        </h3>
+                    )}
+
+                    <div className="margin-bottom-15">
+                        <h4 className="text | bold gray-dark">Desde</h4>
+                        <p className="text | gray-dark">
+                            {serviceData.pickupLocation.locationName}
+                        </p>
+                    </div>
+                    <div className="separator-horizontal"></div>
+                </div>
+            ))}
+            {loading && <p>Cargando...</p>}
+            {hasMore && (
+                <button onClick={handleLoadMore} disabled={loading}>
+                    Cargar más
+                </button>
+            )}
+        </div>
+    );
+
+    /* const [dataState, setDataState] = useState<{
         data: ServiceRequestInterface[] | null;
         page: number;
         pages: number | null;
@@ -51,8 +192,8 @@ const ServicesRequestedByUser = ({
         getServicesRequestedFilterNumPages(
             serviceUserId,
             dataState.value,
-            numPerPage,
-            collection,
+            PAGE_SIZE,
+            COLLECTION,
         )
             .then((pages) => {
                 setDataState({
@@ -66,7 +207,7 @@ const ServicesRequestedByUser = ({
     };
 
     const calculateNormalNumPages = async () => {
-        getServicesRequestedNumPages(serviceUserId, numPerPage, collection)
+        getServicesRequestedNumPages(serviceUserId, PAGE_SIZE, COLLECTION)
             .then((pages) => {
                 setDataState({
                     ...dataState,
@@ -84,9 +225,9 @@ const ServicesRequestedByUser = ({
             serviceUserId,
             dataState.value,
             "next",
-            collection,
+            COLLECTION,
             startAfterDoc,
-            numPerPage,
+            PAGE_SIZE,
         )
             .then((result) => {
                 var newData;
@@ -112,9 +253,9 @@ const ServicesRequestedByUser = ({
         getServicesRequestedPaginated(
             serviceUserId,
             "next",
-            collection,
+            COLLECTION,
             startAfterDoc,
-            numPerPage,
+            PAGE_SIZE,
         )
             .then((result) => {
                 var newData;
@@ -159,9 +300,9 @@ const ServicesRequestedByUser = ({
                     serviceUserId,
                     dataState.value,
                     "next",
-                    collection,
+                    COLLECTION,
                     startAfterDoc,
-                    numPerPage,
+                    PAGE_SIZE,
                 )
                     .then((result) => {
                         var newData;
@@ -186,9 +327,9 @@ const ServicesRequestedByUser = ({
                 getServicesRequestedPaginated(
                     serviceUserId,
                     "next",
-                    collection,
+                    COLLECTION,
                     startAfterDoc,
-                    numPerPage,
+                    PAGE_SIZE,
                 )
                     .then((result) => {
                         var newData;
@@ -306,7 +447,7 @@ const ServicesRequestedByUser = ({
         </div>
     ) : (
         <PageLoader />
-    );
+    ); */
 };
 
 export default ServicesRequestedByUser;
