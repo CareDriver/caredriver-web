@@ -1,20 +1,8 @@
 "use client";
 
-import PageLoader from "@/components/PageLoader";
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
-import { userReqTypes } from "@/interfaces/UserRequest";
-import { getFormatDate, inputToDate } from "@/utils/parser/ForDate";
-import {
-    getServiceRequestedCollection,
-    getServicesRequestedFilterNumPages,
-    getServicesRequestedFilterPaginated,
-    getServicesRequestedNumPages,
-    getServicesRequestedPaginated,
-} from "@/utils/requests/services/UserRequestedServices";
 import {
     collection,
-    CollectionReference,
-    DocumentSnapshot,
     limit,
     onSnapshot,
     orderBy,
@@ -25,22 +13,22 @@ import {
     where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 import FullLocationServiceItem from "../items/FullLocationServiceItem";
 import ReasonAndLocationServiceItem from "../items/ReasonAndLocationServiceItem";
-import { ServicesRender } from "@/interfaces/Services";
 import "@/styles/components/user-services-served.css";
 import "@/styles/components/service-req.css";
 import { firestore } from "@/firebase/FirebaseConfig";
 import { getNameServiceCollection } from "@/utils/requests/services/UserMadeServices";
-import { toast } from "react-toastify";
+import { TypeOfServiceDone } from "../constants/TypeOfServiceDone";
 
 const ServicesRequestedByUser = ({
     serviceUserId,
     type,
+    typeOfService,
 }: {
     serviceUserId: string;
     type: "driver" | "mechanic" | "tow" | "laundry";
+    typeOfService: TypeOfServiceDone;
 }) => {
     const COLLECTION_PATH = getNameServiceCollection(type);
     const PAGE_SIZE = 10;
@@ -105,7 +93,6 @@ const ServicesRequestedByUser = ({
                     setLastDoc(lastVisible);
                 } else {
                     setHasMore(false);
-                    toast.info("No hay mas resultados")
                 }
                 setLoading(false);
             });
@@ -131,248 +118,6 @@ const ServicesRequestedByUser = ({
         setLastDoc(null);
     };
 
-    return (
-        <div>
-            <input
-                type="date"
-                onChange={handleDeadlineChange}
-                value={new Date(deadline.seconds * 1000).toISOString().split("T")[0]}
-            />
-            {documents.map((serviceData, i) => (
-                <div key={i}>
-                    <h1>{i + 1}</h1>
-                    <h3>Id: {serviceData.id}</h3>
-                    <h3>fakedId: {serviceData.fakedId}</h3>
-                    {serviceData.createdAt && (
-                        <h4>{getFormatDate(serviceData.createdAt.toDate())}</h4>
-                    )}
-                    {serviceData.price && serviceData.price.price && (
-                        <h3 className="text | bolder margin-bottom-25">
-                            {serviceData.price.price} {serviceData.price.currency}
-                        </h3>
-                    )}
-
-                    <div className="margin-bottom-15">
-                        <h4 className="text | bold gray-dark">Desde</h4>
-                        <p className="text | gray-dark">
-                            {serviceData.pickupLocation.locationName}
-                        </p>
-                    </div>
-                    <div className="separator-horizontal"></div>
-                </div>
-            ))}
-            {loading && <p>Cargando...</p>}
-            {hasMore && (
-                <button onClick={handleLoadMore} disabled={loading}>
-                    Cargar más
-                </button>
-            )}
-        </div>
-    );
-
-    /* const [dataState, setDataState] = useState<{
-        data: ServiceRequestInterface[] | null;
-        page: number;
-        pages: number | null;
-        lastDoc: DocumentSnapshot | undefined;
-        value: Timestamp;
-        isSearching: boolean;
-        wereThereResults: boolean;
-    }>({
-        data: null,
-        page: 1,
-        pages: null,
-        lastDoc: undefined,
-        value: Timestamp.now(),
-        isSearching: false,
-        wereThereResults: true,
-    });
-
-    const calculateSearchPages = async () => {
-        getServicesRequestedFilterNumPages(
-            serviceUserId,
-            dataState.value,
-            PAGE_SIZE,
-            COLLECTION,
-        )
-            .then((pages) => {
-                setDataState({
-                    ...dataState,
-                    pages,
-                });
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
-
-    const calculateNormalNumPages = async () => {
-        getServicesRequestedNumPages(serviceUserId, PAGE_SIZE, COLLECTION)
-            .then((pages) => {
-                setDataState({
-                    ...dataState,
-                    pages,
-                });
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
-
-    const getSearchData = async () => {
-        const startAfterDoc = dataState.lastDoc;
-        getServicesRequestedFilterPaginated(
-            serviceUserId,
-            dataState.value,
-            "next",
-            COLLECTION,
-            startAfterDoc,
-            PAGE_SIZE,
-        )
-            .then((result) => {
-                var newData;
-                if (dataState.data) {
-                    newData = [...dataState.data, ...result.result];
-                } else {
-                    newData = result.result;
-                }
-
-                setDataState({
-                    ...dataState,
-                    data: newData,
-                    lastDoc: result.lastDoc,
-                });
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
-
-    const getAllUsersData = async () => {
-        const startAfterDoc = dataState.lastDoc;
-        getServicesRequestedPaginated(
-            serviceUserId,
-            "next",
-            COLLECTION,
-            startAfterDoc,
-            PAGE_SIZE,
-        )
-            .then((result) => {
-                var newData;
-                if (dataState.data) {
-                    newData = [...dataState.data, ...result.result];
-                } else {
-                    newData = result.result;
-                }
-
-                setDataState({
-                    ...dataState,
-                    data: newData,
-                    lastDoc: result.lastDoc,
-                });
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    };
-
-    const search = async () => {
-        setDataState({
-            ...dataState,
-            data: null,
-            lastDoc: undefined,
-            pages: null,
-            page: 1,
-            isSearching: true,
-        });
-    };
-
-    const handleNextClick = async () => {
-        if (dataState.page === dataState.pages) {
-            setDataState({
-                ...dataState,
-                wereThereResults: false,
-            });
-        } else {
-            if (dataState.isSearching) {
-                const startAfterDoc = dataState.lastDoc;
-                getServicesRequestedFilterPaginated(
-                    serviceUserId,
-                    dataState.value,
-                    "next",
-                    COLLECTION,
-                    startAfterDoc,
-                    PAGE_SIZE,
-                )
-                    .then((result) => {
-                        var newData;
-                        if (dataState.data) {
-                            newData = [...dataState.data, ...result.result];
-                        } else {
-                            newData = result.result;
-                        }
-
-                        setDataState({
-                            ...dataState,
-                            data: newData,
-                            lastDoc: result.lastDoc,
-                            page: dataState.page + 1,
-                        });
-                    })
-                    .catch((e) => {
-                        console.log(e);
-                    });
-            } else {
-                const startAfterDoc = dataState.lastDoc;
-                getServicesRequestedPaginated(
-                    serviceUserId,
-                    "next",
-                    COLLECTION,
-                    startAfterDoc,
-                    PAGE_SIZE,
-                )
-                    .then((result) => {
-                        var newData;
-                        if (dataState.data) {
-                            newData = [...dataState.data, ...result.result];
-                        } else {
-                            newData = result.result;
-                        }
-
-                        setDataState({
-                            ...dataState,
-                            data: newData,
-                            lastDoc: result.lastDoc,
-                            page: dataState.page + 1,
-                        });
-                    })
-                    .catch((e) => {
-                        console.log(e);
-                    });
-            }
-        }
-    };
-
-    useEffect(() => {
-        if (!dataState.pages) {
-            if (dataState.isSearching) {
-                calculateSearchPages();
-            } else {
-                calculateNormalNumPages();
-            }
-        }
-    }, [dataState.pages]);
-
-    useEffect(() => {
-        if (dataState.data === null) {
-            if (dataState.isSearching) {
-                getSearchData();
-            } else {
-                getAllUsersData();
-            }
-        }
-    }, [dataState.data]);
-
     const getServiceItem = (
         link: string,
         service: ServiceRequestInterface,
@@ -387,67 +132,59 @@ const ServicesRequestedByUser = ({
         }
     };
 
-    return dataState.data ? (
-        <div className="render-data-wrapper">
+    const theareNoResults = (): boolean => {
+        return documents.length === 0 && !hasMore;
+    };
+
+    return (
+        <div
+            className={`render-data-wrapper ${
+                theareNoResults() && "auto-height max-height-100"
+            }`}
+        >
             <h2 className="text | bolder big margin-bottom-25">
-                Servicios hechos como {ServicesRender[type]}
+                Servicios {typeOfService}
             </h2>
-            <div className="margin-bottom-50">
-                <fieldset className="filter-date-wrapper">
-                    <button className="filter-date-button" onClick={search}>
-                        Filtrar por pedidos hasta :{"  "}
-                    </button>
-                    <input
-                        type="date"
-                        className="filter-date-input"
-                        value={dataState.value.toDate().toISOString().split("T")[0]}
-                        onChange={(e) => {
-                            setDataState({
-                                ...dataState,
-                                value: Timestamp.fromDate(inputToDate(e)),
-                            });
-                        }}
-                    />
-                </fieldset>
+
+            <fieldset className="filter-date-wrapper">
+                <input
+                    type="date"
+                    className="filter-date-input"
+                    onChange={handleDeadlineChange}
+                    value={new Date(deadline.seconds * 1000).toISOString().split("T")[0]}
+                />
+            </fieldset>
+
+            <div className="margin-top-25"></div>
+            <div className="service-req-wrapper">
+                {/* TODO:  remove the filter*/}
+                {documents
+                    .filter((s) => s.fakedId !== undefined)
+                    .map((serviceData, i) =>
+                        getServiceItem(
+                            `/admin/users/${serviceUserId}/servicerequests/${type}/${serviceData.fakedId}`,
+                            serviceData,
+                            `service-requested-${i}`,
+                        ),
+                    )}
             </div>
-            {dataState.data.length > 0 ? (
-                <InfiniteScroll
-                    dataLength={dataState.data.length}
-                    next={handleNextClick}
-                    hasMore={dataState.page !== dataState.pages}
-                    loader={
-                        <span className="text | bolder | margin-top-25">
-                            Cargando mas datos...
-                        </span>
-                    }
-                >
-                    <div className="service-req-wrapper">
-                        {dataState.data.map(
-                            (req, i) =>
-                                req.fakedId &&
-                                getServiceItem(
-                                    `/admin/users/${serviceUserId}/servicerequests/${type}/${req.fakedId}`,
-                                    req,
-                                    `servie-requested-${i}`,
-                                ),
-                        )}
-                    </div>
-                </InfiniteScroll>
-            ) : (
-                <div className="empty-wrapper | auto-height">
-                    <h2>
-                        {dataState.isSearching
-                            ? `No se encontró ninguna petición hasta la fecha ${getFormatDate(
-                                  dataState.value.toDate(),
-                              )}`
-                            : `El usuario no ha hecho ninguna petición por un ${userReqTypes[type]}`}
-                    </h2>
+
+            {theareNoResults() && (
+                <div>
+                    <h2>{"No se encontraron servicios"}</h2>
+                    <span className="circles-right-bottomv2 green"></span>
                 </div>
             )}
+
+            <div className="margin-top-25"></div>
+            {loading && <span className="loader"></span>}
+            {hasMore && (
+                <button onClick={handleLoadMore} disabled={loading}>
+                    Cargar más
+                </button>
+            )}
         </div>
-    ) : (
-        <PageLoader />
-    ); */
+    );
 };
 
 export default ServicesRequestedByUser;
