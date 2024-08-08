@@ -13,24 +13,24 @@ import {
     where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import FullLocationServiceItem from "../items/FullLocationServiceItem";
-import ReasonAndLocationServiceItem from "../items/ReasonAndLocationServiceItem";
+import CardForServicePerfWithLocation from "../cards/CardForServicePerfWithLocation";
+import CardForServicePerfWithReason from "../cards/CardForServicePerfWithReason";
 import "@/styles/components/user-services-served.css";
 import "@/styles/components/service-req.css";
 import { firestore } from "@/firebase/FirebaseConfig";
 import { getNameServiceCollection } from "@/utils/requests/services/UserMadeServices";
-import { TypeOfServiceDone } from "../constants/TypeOfServiceDone";
+import { TypeOfServicePerformed } from "../constants/TypeOfServicePerformed";
 
-const ServicesRequestedByUser = ({
-    serviceUserId,
-    type,
+const ListOfServicesPerfByUser = ({
+    userId,
     typeOfService,
+    typeOfPerf,
 }: {
-    serviceUserId: string;
-    type: "driver" | "mechanic" | "tow" | "laundry";
-    typeOfService: TypeOfServiceDone;
+    userId: string;
+    typeOfService: "driver" | "mechanic" | "tow" | "laundry";
+    typeOfPerf: TypeOfServicePerformed;
 }) => {
-    const COLLECTION_PATH = getNameServiceCollection(type);
+    const COLLECTION_PATH = getNameServiceCollection(typeOfService);
     const PAGE_SIZE = 10;
     const [deadline, setDeadline] = useState(Timestamp.now());
     const [documents, setDocuments] = useState<ServiceRequestInterface[]>([]);
@@ -65,7 +65,7 @@ const ServicesRequestedByUser = ({
             q = query(
                 collection(firestore, COLLECTION_PATH),
                 limit(PAGE_SIZE),
-                where("userId", "==", serviceUserId),
+                where("userId", "==", userId),
                 where("createdAt", "<=", adjustedDeadline),
                 orderBy("createdAt", "desc"),
                 startAfter(startAfterDoc),
@@ -74,7 +74,7 @@ const ServicesRequestedByUser = ({
             q = query(
                 collection(firestore, COLLECTION_PATH),
                 limit(PAGE_SIZE),
-                where("userId", "==", serviceUserId),
+                where("userId", "==", userId),
                 where("createdAt", "<=", adjustedDeadline),
                 orderBy("createdAt", "desc"),
             );
@@ -118,16 +118,26 @@ const ServicesRequestedByUser = ({
         setLastDoc(null);
     };
 
-    const getServiceItem = (
-        link: string,
-        service: ServiceRequestInterface,
-        key: string,
-    ) => {
-        if (type === "driver" || type === "tow") {
-            return <FullLocationServiceItem link={link} service={service} key={key} />;
+    const getServiceItem = (service: ServiceRequestInterface, key: string) => {
+        if (typeOfService === "driver" || typeOfService === "tow") {
+            return (
+                <CardForServicePerfWithLocation
+                    userId={userId}
+                    typeOfService={typeOfService}
+                    typeOfPerf={typeOfPerf}
+                    service={service}
+                    key={key}
+                />
+            );
         } else {
             return (
-                <ReasonAndLocationServiceItem link={link} service={service} key={key} />
+                <CardForServicePerfWithReason
+                    userId={userId}
+                    typeOfService={typeOfService}
+                    typeOfPerf={typeOfPerf}
+                    service={service}
+                    key={key}
+                />
             );
         }
     };
@@ -143,7 +153,7 @@ const ServicesRequestedByUser = ({
             }`}
         >
             <h2 className="text | bolder big margin-bottom-25">
-                Servicios {typeOfService}
+                Servicios {typeOfPerf}
             </h2>
 
             <fieldset className="filter-date-wrapper">
@@ -157,16 +167,9 @@ const ServicesRequestedByUser = ({
 
             <div className="margin-top-25"></div>
             <div className="service-req-wrapper">
-                {/* TODO:  remove the filter*/}
-                {documents
-                    .filter((s) => s.fakedId !== undefined)
-                    .map((serviceData, i) =>
-                        getServiceItem(
-                            `/admin/users/${serviceUserId}/servicerequests/${type}/${serviceData.fakedId}`,
-                            serviceData,
-                            `service-requested-${i}`,
-                        ),
-                    )}
+                {documents.map((serviceData, i) =>
+                    getServiceItem(serviceData, `service-requested-${i}`),
+                )}
             </div>
 
             {theareNoResults() && (
@@ -177,9 +180,16 @@ const ServicesRequestedByUser = ({
             )}
 
             <div className="margin-top-25"></div>
-            {loading && <span className="loader"></span>}
+            {loading && <span className="loader-green"></span>}
+            {!hasMore && documents.length > 0 && (
+                <h4 className="text | light">No hay mas resultados ...</h4>
+            )}
             {hasMore && (
-                <button onClick={handleLoadMore} disabled={loading}>
+                <button
+                    className="text small-general-button | bold gray"
+                    onClick={handleLoadMore}
+                    disabled={loading}
+                >
                     Cargar más
                 </button>
             )}
@@ -187,4 +197,4 @@ const ServicesRequestedByUser = ({
     );
 };
 
-export default ServicesRequestedByUser;
+export default ListOfServicesPerfByUser;

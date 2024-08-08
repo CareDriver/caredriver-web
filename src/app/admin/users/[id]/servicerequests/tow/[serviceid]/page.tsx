@@ -1,4 +1,4 @@
-import SingleServiceDone from "@/components/done_services/SingleServiceDone";
+import SingleServiceDone from "@/components/services_performed/SingleServiceDone";
 import FormToSeeInfo from "@/components/permission/FormToSeeInfo";
 import PageUserInfoPermission from "@/components/permission/page/concrets/PageUserInfoPermission";
 
