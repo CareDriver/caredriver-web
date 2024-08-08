@@ -1,5 +1,5 @@
 
-import { TypeOfServicePerformed } from "@/components/services_performed/constants/TypeOfServicePerformed";
+import { TypeOfServicePerformed } from "@/components/services_performed/models/TypeOfServicePerformed";
 import ListOfServicesPerfByUser from "@/components/services_performed/lists_of_cards/ListOfServicesPerfByUser";
 import FormToSeeInfo from "@/components/permission/FormToSeeInfo";
 import PageUserInfoPermission from "@/components/permission/page/concrets/PageUserInfoPermission";

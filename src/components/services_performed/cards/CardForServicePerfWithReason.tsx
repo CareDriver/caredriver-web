@@ -1,5 +1,5 @@
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
-import { TypeOfServicePerformed } from "../constants/TypeOfServicePerformed";
+import { TypeOfServicePerformed } from "../models/TypeOfServicePerformed";
 import BaseCardForServicePerf from "./BaseCardForServicePerf";
 
 const CardForServicePerfWithReason = ({

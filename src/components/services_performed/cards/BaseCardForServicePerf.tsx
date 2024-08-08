@@ -1,8 +1,8 @@
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import { getFormatDate } from "@/utils/parser/ForDate";
 import Link from "next/link";
-import { getServiceStatus } from "../utils/ServiceStatusGetter";
-import { TypeOfServicePerformed } from "../constants/TypeOfServicePerformed";
+import { getServicePerfStatus } from "../utils/ServiceStatusGetter";
+import { TypeOfServicePerformed } from "../models/TypeOfServicePerformed";
 
 const BaseCardForServicePerf = ({
     userId,
@@ -21,7 +21,7 @@ const BaseCardForServicePerf = ({
     const LINK_FOR_PERF =
         typeOfPerf === TypeOfServicePerformed.Requested ? "servicerequests" : "services";
     const LINK_TO = `/admin/users/${userId}/${LINK_FOR_PERF}/${typeOfService}/${service.fakedId}`;
-    let serviceState = getServiceStatus(service);
+    let serviceState = getServicePerfStatus(service);
 
     const renderBodyCard = () => (
         <>
