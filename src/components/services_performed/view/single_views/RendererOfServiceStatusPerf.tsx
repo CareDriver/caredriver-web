@@ -1,5 +1,5 @@
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
-import { getServicePerfStatus } from "../utils/ServiceStatusGetter";
+import { getServicePerfStatus } from "../../model/utils/ServiceStatusGetter";
 
 const RendererOfServiceStatusPerf = ({
     service,

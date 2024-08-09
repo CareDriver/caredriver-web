@@ -18,8 +18,8 @@ import CardForServicePerfWithReason from "../cards/CardForServicePerfWithReason"
 import "@/styles/components/user-services-served.css";
 import "@/styles/components/service-req.css";
 import { firestore } from "@/firebase/FirebaseConfig";
-import { getPathFromPerformedServicesCollection } from "@/components/services_performed/utils/CollectionGetter";
-import { TypeOfServicePerformed } from "../models/TypeOfServicePerformed";
+import { TypeOfServicePerformed } from "../../model/models/TypeOfServicePerformed";
+import { getPathCollectionOfServicesPerf } from "../../model/utils/CollectionGetter";
 
 const ListOfServicesPerfByUser = ({
     userId,
@@ -30,7 +30,7 @@ const ListOfServicesPerfByUser = ({
     typeOfService: "driver" | "mechanic" | "tow" | "laundry";
     typeOfPerf: TypeOfServicePerformed;
 }) => {
-    const COLLECTION_PATH = getPathFromPerformedServicesCollection(typeOfService);
+    const COLLECTION_PATH = getPathCollectionOfServicesPerf(typeOfService);
     const PAGE_SIZE = 10;
     const [deadline, setDeadline] = useState(Timestamp.now());
     const [documents, setDocuments] = useState<ServiceRequestInterface[]>([]);

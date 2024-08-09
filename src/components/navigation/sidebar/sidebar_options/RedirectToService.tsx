@@ -1,0 +1,33 @@
+"use client";
+
+import Popup from "@/components/form/Popup";
+import { useState } from "react";
+import RedirectorFormByFakedId from "../../../services_performed/view/forms/RedirectorFormByFakedId";
+import MagnifyingGlass from "@/icons/MagnifyingGlass";
+import "@/styles/modules/popup.css";
+
+const RedirectToService = () => {
+    const [isOpen, setOpen] = useState(false);
+
+    const open = () => setOpen(true);
+    const close = () => setOpen(false);
+
+    return (
+        <>
+            <button onClick={open} className="sidebar-option">
+                <MagnifyingGlass />
+                <span>Ir a un servicio</span>
+            </button>
+            <Popup close={close} isOpen={isOpen}>
+                <div>
+                    <h2 className="text | bolder big-medium capitalize margin-bottom-25">
+                        Buscar servicio por ID
+                    </h2>
+                    <RedirectorFormByFakedId />
+                </div>
+            </Popup>
+        </>
+    );
+};
+
+export default RedirectToService;

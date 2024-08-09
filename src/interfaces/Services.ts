@@ -1,3 +1,5 @@
+export type ServiceType = "driver" | "mechanic" | "tow" | "laundry";
+
 export enum Services {
     Normal = "Normal",
     Driver = "Conductor",

@@ -1,9 +1,10 @@
 import { Timestamp } from "firebase/firestore";
 import { Locations } from "./Locations";
 import { LicenseInterface } from "./PersonalDocumentsInterface";
-import { ServiceReqState, Services } from "./Services";
+import { ServiceReqState, Services, ServiceType } from "./Services";
 import { VehicleTransmission, VehicleType } from "./VehicleInterface";
 import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
+import { ChangeEvent } from "react";
 
 export interface VehicleTypeAndMode {
     type: VehicleType;
@@ -26,6 +27,15 @@ export const userReqTypes = {
     tow: "Operador de Grúa",
     laundry: "Lavadero",
 };
+
+export const TYPES_OF_SERVICE = ["driver", "mechanic", "tow", "laundry"];
+
+export function inputToServiceType(input: string): ServiceType {
+    let defaulServiceType: ServiceType = "driver";
+    return TYPES_OF_SERVICE.includes(input as ServiceType)
+        ? (input as ServiceType)
+        : defaulServiceType;
+}
 
 export interface UserRequest {
     id: string;
@@ -89,7 +99,7 @@ export const driveReqBuilder = (
     realTimePhotoImgUrl: ImgWithRef,
     services: Services[],
     location: Locations,
-    driverEnterprise: string
+    driverEnterprise: string,
 ): UserRequest => {
     return {
         id,
@@ -103,7 +113,7 @@ export const driveReqBuilder = (
         services: services,
         location,
         vehicles,
-        driverEnterprise
+        driverEnterprise,
     };
 };
 
@@ -120,7 +130,7 @@ export const emptyDriveReq = (): UserRequest => {
         services: [],
         location: Locations.CochabambaBolivia,
         vehicles: [],
-        driverEnterprise: ""
+        driverEnterprise: "",
     };
 };
 

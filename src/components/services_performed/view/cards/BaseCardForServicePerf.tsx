@@ -1,8 +1,9 @@
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import { getFormatDate } from "@/utils/parser/ForDate";
 import Link from "next/link";
-import { getServicePerfStatus } from "../utils/ServiceStatusGetter";
-import { TypeOfServicePerformed } from "../models/TypeOfServicePerformed";
+import { getServicePerfStatus } from "../../model/utils/ServiceStatusGetter";
+import { TypeOfServicePerformed } from "../../model/models/TypeOfServicePerformed";
+import { buildLinkForServicePerformed } from "../../model/utils/LinkBuilder";
 
 const BaseCardForServicePerf = ({
     userId,
@@ -18,9 +19,12 @@ const BaseCardForServicePerf = ({
     children: undefined | React.ReactNode;
 }) => {
     const HAS_FAKED_ID = service.fakedId !== undefined;
-    const LINK_FOR_PERF =
-        typeOfPerf === TypeOfServicePerformed.Requested ? "servicerequests" : "services";
-    const LINK_TO = `/admin/users/${userId}/${LINK_FOR_PERF}/${typeOfService}/${service.fakedId}`;
+    const LINK_TO = buildLinkForServicePerformed(
+        userId,
+        service.fakedId,
+        typeOfService,
+        typeOfPerf,
+    );
     let serviceState = getServicePerfStatus(service);
 
     const renderBodyCard = () => (
@@ -41,7 +45,9 @@ const BaseCardForServicePerf = ({
     );
 
     const renderStatusCard = () => (
-        <span className={`service-item-state text |  bolder | ${serviceState.style}`}>
+        <span
+            className={`service-item-state text |  bolder | ${serviceState.style}`}
+        >
             Estado : {serviceState.state}
         </span>
     );

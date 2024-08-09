@@ -1,6 +1,8 @@
 import { Collections } from "@/firebase/CollecionNames";
+import { firestore } from "@/firebase/FirebaseConfig";
+import { collection } from "firebase/firestore";
 
-export function getPathFromPerformedServicesCollection(
+export function getPathCollectionOfServicesPerf(
     type: "driver" | "mechanic" | "tow" | "laundry",
 ): Collections {
     switch (type) {
@@ -13,4 +15,11 @@ export function getPathFromPerformedServicesCollection(
         default:
             return Collections.CarWashServices;
     }
+}
+
+export function getCollectionOfServicesPerf(
+    type: "driver" | "mechanic" | "tow" | "laundry",
+) {
+    let collectionPath = getPathCollectionOfServicesPerf(type);
+    return collection(firestore, collectionPath);
 }
