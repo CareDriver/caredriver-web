@@ -1,5 +1,5 @@
 import EnterpriseEditData from "@/components/enterprises/EnterpriseEditData";
-import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
+import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
 
 const MechanicWorkshopEditPage = ({ params }: { params: any }) => {
     return (

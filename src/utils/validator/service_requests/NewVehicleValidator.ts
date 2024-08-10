@@ -1,4 +1,4 @@
-import { PDFField } from "@/components/form/PDFUploader";
+import { PDFField } from "@/components/form/view/attachment_fields/PDFUploader";
 import {
     IdCardForm,
     PersonalDataFormField,

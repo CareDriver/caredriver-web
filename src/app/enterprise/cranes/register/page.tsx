@@ -1,5 +1,5 @@
 import CraneRegistration from "@/components/enterprises/crane/CraneRegistration";
-import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
+import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
 
 const CraneworkshopRegisterPage = () => {
     return (

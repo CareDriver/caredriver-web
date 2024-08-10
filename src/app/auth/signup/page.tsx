@@ -1,11 +1,14 @@
-import AuthWrapper from "@/components/auth/AuthWrapper";
-import SignUp from "@/components/auth/SignUp";
+import AuthContainer from "@/components/app_modules/auth/views/containers/AuthContainer";
+import AuthProviderContainer from "@/components/app_modules/auth/views/containers/AuthProviderContainer";
+import SignUpForm from "@/components/app_modules/auth/views/sign_up/SignUpForm";
 
 const SignUpPage = () => {
     return (
-        <AuthWrapper>
-            <SignUp />
-        </AuthWrapper>
+        <AuthProviderContainer>
+            <AuthContainer authTitle="Registrate !">
+                <SignUpForm />
+            </AuthContainer>
+        </AuthProviderContainer>
     );
 };
 

@@ -1,5 +1,5 @@
 import CraneRegistrationByAdmin from "@/components/enterprises/crane/CraneRegistrationByAdmin";
-import PageEnterprisePermission from "@/components/permission/page/concrets/PageEnterprisePermission";
+import PageEnterprisePermission from "@/components/permission_handlers/page/concrets/PageEnterprisePermission";
 
 const RegisterCraneByAdminPage = () => {
     return (

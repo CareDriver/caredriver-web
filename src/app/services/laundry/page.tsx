@@ -1,4 +1,4 @@
-import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
+import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
 import LaundryService from "@/components/services/laundry/LaundryService";
 import ServiceWrapper from "@/components/services/ServiceWrapper";
 

@@ -1,5 +1,5 @@
 import EnterpriseEditByAdmin from "@/components/enterprises/admin/EnterpriseEditByAdmin";
-import PageEnterprisePermission from "@/components/permission/page/concrets/PageEnterprisePermission";
+import PageEnterprisePermission from "@/components/permission_handlers/page/concrets/PageEnterprisePermission";
 
 const EditLaundryByAdminPage = ({ params }: { params: any }) => {
     return (

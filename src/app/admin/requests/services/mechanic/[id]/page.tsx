@@ -1,5 +1,5 @@
-import FormToSeeInfo from "@/components/permission/FormToSeeInfo";
-import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
+import FormToSeeInfo from "@/components/permission_handlers/FormToSeeInfo";
+import PageRequestPermission from "@/components/permission_handlers/page/concrets/PageRequestPermission";
 import SingleServiceReq from "@/components/requests/services/SingleServiceReq";
 
 const SingleMechanicReqPage = ({ params }: { params: any }) => {

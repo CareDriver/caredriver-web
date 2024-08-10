@@ -1,6 +1,6 @@
-import FormToSeeInfo from "@/components/permission/FormToSeeInfo";
-import PageUserInfoPermission from "@/components/permission/page/concrets/PageUserInfoPermission";
-import UserRenderer from "@/components/user/app_user/UserRenderer";
+import FormToSeeInfo from "@/components/permission_handlers/FormToSeeInfo";
+import PageUserInfoPermission from "@/components/permission_handlers/page/concrets/PageUserInfoPermission";
+import UserRenderer from "@/components/app_modules/user/app_user/UserRenderer";
 
 const SingleUserInformationPage = ({ params }: { params: any }) => {
     return (

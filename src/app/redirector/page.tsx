@@ -1,7 +1,7 @@
-import Redirector from "@/components/Redirector";
+import UserRedirect from "@/components/users/UserRedirect";
 
 const RedirectorPage = () => {
-    return <Redirector />;
+    return <UserRedirect />;
 };
 
 export default RedirectorPage;

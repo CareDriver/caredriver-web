@@ -1,6 +1,6 @@
 import TowService from "@/components/services/tow/TowService";
 import ServiceWrapper from "@/components/services/ServiceWrapper";
-import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
+import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
 
 const TowPage = () => {
     return (

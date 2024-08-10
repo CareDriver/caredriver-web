@@ -1,4 +1,4 @@
-import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
+import PageRequestPermission from "@/components/permission_handlers/page/concrets/PageRequestPermission";
 import ServiceReqsRenderer from "@/components/requests/services/ServiceReqsRenderer";
 
 const ReqsLaundryServicePage = () => {

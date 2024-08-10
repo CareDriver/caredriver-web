@@ -1,5 +1,5 @@
-import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
-import ChangePhotoReq from "@/components/user/server_user/ChangePhotoReq";
+import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
+import ChangePhotoReq from "@/components/app_modules/user/server_user/ChangePhotoReq";
 
 const UpdateUserPhoto = () => {
     return (

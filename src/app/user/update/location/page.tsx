@@ -1,5 +1,5 @@
-import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
-import ChangeLocationReq from "@/components/user/server_user/ChangeLocationReq";
+import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
+import ChangeLocationReq from "@/components/app_modules/user/server_user/ChangeLocationReq";
 
 const UserLocationPage = () => {
     return (

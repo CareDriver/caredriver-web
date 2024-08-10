@@ -5,7 +5,7 @@ import {
 } from "@/components/services/FormModels";
 import { InputState } from "../InputValidator";
 import { PhotoField } from "@/components/services/FormModels";
-import { PDFField } from "@/components/form/PDFUploader";
+import { PDFField } from "@/components/form/view/attachment_fields/PDFUploader";
 
 export const isValidLicenseNumber = (licenseNumber: string): InputState => {
     const regex: RegExp = /^[a-zA-Z0-9]+$/;

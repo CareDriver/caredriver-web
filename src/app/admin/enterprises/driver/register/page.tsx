@@ -1,5 +1,5 @@
 import DriverRegistrationByAdmin from "@/components/enterprises/driver/DriverRegistrationByAdmin";
-import PageEnterprisePermission from "@/components/permission/page/concrets/PageEnterprisePermission";
+import PageEnterprisePermission from "@/components/permission_handlers/page/concrets/PageEnterprisePermission";
 
 const RegisterDriverByAdminPage = () => {
     return (

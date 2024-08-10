@@ -1,4 +1,4 @@
-import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
+import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
 import DriveService from "@/components/services/drive/DriveService";
 import ServiceWrapper from "@/components/services/ServiceWrapper";
 

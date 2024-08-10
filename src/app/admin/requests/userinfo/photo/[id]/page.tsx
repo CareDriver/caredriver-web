@@ -1,5 +1,5 @@
-import FormToSeeInfo from "@/components/permission/FormToSeeInfo";
-import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
+import FormToSeeInfo from "@/components/permission_handlers/FormToSeeInfo";
+import PageRequestPermission from "@/components/permission_handlers/page/concrets/PageRequestPermission";
 import SingleUpPhotoReq from "@/components/requests/userinfo/photos/SingleUpPhotoReq";
 
 const SingleNewProfilePhotoReqPage = ({ params }: { params: any }) => {

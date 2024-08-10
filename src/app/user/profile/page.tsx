@@ -1,5 +1,5 @@
-import PageServerUserPermission from "@/components/permission/page/concrets/PageServerUserPermission";
-import UserProfile from "@/components/user/server_user/UserProfile";
+import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
+import UserProfile from "@/components/app_modules/user/server_user/UserProfile";
 
 const UserProfilePage = () => {
     return (

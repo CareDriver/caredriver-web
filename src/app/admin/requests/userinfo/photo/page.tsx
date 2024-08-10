@@ -1,4 +1,4 @@
-import PageRequestPermission from "@/components/permission/page/concrets/PageRequestPermission";
+import PageRequestPermission from "@/components/permission_handlers/page/concrets/PageRequestPermission";
 import UpPhotoReqsRenderer from "@/components/requests/userinfo/photos/UpPhotoReqsRenderer";
 
 const ListOfPhotosReqToUpdatePage = () => {
