@@ -1,14 +1,14 @@
-import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
-import MechanicService from "@/components/services/mechanic/MechanicService";
-import ServiceWrapper from "@/components/services/ServiceWrapper";
+import ServiceContainer from "@/components/app_modules/server_users/views/containers/ServiceContainer";
+import MechanicPanelRedirector from "@/components/app_modules/server_users/views/control_panels/server_users_panels/as_mechanic/MechanicPanelRedirector";
+import GuardForServerUsers from "@/components/guards/views/page_guards/concrets/GuardForServerUsers";
 
 const MechanicPage = () => {
     return (
-        <PageServerUserPermission>
-            <ServiceWrapper>
-                <MechanicService />
-            </ServiceWrapper>
-        </PageServerUserPermission>
+        <GuardForServerUsers>
+            <ServiceContainer>
+                <MechanicPanelRedirector />
+            </ServiceContainer>
+        </GuardForServerUsers>
     );
 };
 

@@ -1,7 +1,7 @@
 import IdCard from "@/icons/IdCard";
 import InputData from "../form/InputData";
 import { IdentityCard } from "@/interfaces/UserInterface";
-import FieldDeleted from "../form/FieldDeleted";
+import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 import ImageRenderer from "../form/ImageRenderer";
 import InpurDate from "../form/InpurDate";
 

@@ -12,7 +12,7 @@ import "@/styles/components/app-user.css";
 import { DEFAULT_PHOTO, getRole } from "@/utils/user/UserData";
 import "@/styles/components/debt-user.css";
 import { AuthContext } from "@/context/AuthContext";
-import CompPermissionValidator from "@/components/permission_handlers/component/CompPermissionValidator";
+import CompPermissionValidator from "@/components/permission_handlers/views/component/CompPermissionValidator";
 import {
     checkPermission,
     ROLES_FOR_DELETE_USERS,
@@ -20,7 +20,7 @@ import {
     ROLES_FOR_SERVER_USER_ACTIONS,
     ROLES_TO_VIEW_CONTACT_USERS,
     ROLES_TO_VIEW_USER_CREDENTIALS,
-} from "@/utils/validator/roles/RoleValidator";
+} from "@/components/permission_handlers/models/PermissionsByUserRole";
 import UserHistoryRenderer from "./concrets/UserHistoryRenderer";
 import UserContacts from "./options/UserContacts";
 import UserRoleSeter from "./options/UserRoleSeter";

@@ -1,7 +1,7 @@
 import { Enterprise } from "@/interfaces/Enterprise";
 import EnterpriseRenderer from "./EnterpriseRenderer";
 import Building from "@/icons/Building";
-import FieldDeleted from "../form/FieldDeleted";
+import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 
 const TowRenderer = ({ tow }: { tow: Enterprise | undefined }) => {
     return (

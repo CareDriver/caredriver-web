@@ -1,14 +1,14 @@
-import TowService from "@/components/services/tow/TowService";
-import ServiceWrapper from "@/components/services/ServiceWrapper";
-import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
+import CraneOperatorPanelRedirector from "@/components/app_modules/server_users/views/control_panels/server_users_panels/as_crane_operator/CraneOperatorPanelRedirector";
+import ServiceContainer from "@/components/app_modules/server_users/views/containers/ServiceContainer";
+import GuardForServerUsers from "@/components/guards/views/page_guards/concrets/GuardForServerUsers";
 
 const TowPage = () => {
     return (
-        <PageServerUserPermission>
-            <ServiceWrapper>
-                <TowService />
-            </ServiceWrapper>
-        </PageServerUserPermission>
+        <GuardForServerUsers>
+            <ServiceContainer>
+                <CraneOperatorPanelRedirector />
+            </ServiceContainer>
+        </GuardForServerUsers>
     );
 };
 

@@ -1,6 +1,6 @@
 import { Enterprise } from "@/interfaces/Enterprise";
 import EnterpriseRenderer from "./EnterpriseRenderer";
-import FieldDeleted from "../form/FieldDeleted";
+import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 import Car from "@/icons/Car";
 
 const DriverServiceRenderer = ({

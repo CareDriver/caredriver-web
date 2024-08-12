@@ -6,8 +6,8 @@ import PageLoader from "../../PageLoader";
 import "@/styles/components/profile.css";
 import { DEFAULT_PHOTO } from "@/utils/user/UserData";
 import UserDataUpdater from "./UserDataUpdater";
-import CompPermissionValidator from "@/components/permission_handlers/component/CompPermissionValidator";
-import { ROLES_TO_EDIT_USER_PROFILE } from "@/utils/validator/roles/RoleValidator";
+import CompPermissionValidator from "@/components/permission_handlers/views/component/CompPermissionValidator";
+import { ROLES_TO_EDIT_USER_PROFILE } from "@/components/permission_handlers/models/PermissionsByUserRole";
 
 const AppUserProfile = () => {
     const { user, loadingUser } = useContext(AuthContext);

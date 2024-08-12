@@ -1,5 +1,5 @@
-import FormToSeeInfo from "@/components/permission_handlers/FormToSeeInfo";
-import PageRequestPermission from "@/components/permission_handlers/page/concrets/PageRequestPermission";
+import FormToSeeInfo from "@/components/permission_handlers/views/consent_forms/FormToSeeInfo";
+import PageRequestPermission from "@/components/permission_handlers/views/page/concrets/PageRequestPermission";
 import SingleEnterpriseReq from "@/components/requests/enterprises/SingleEnterpriseReq";
 
 const SingleWorlshopReqRegistrationPage = ({ params }: { params: any }) => {

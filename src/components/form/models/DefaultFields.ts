@@ -1,5 +1,7 @@
 import {
     AttachmentField,
+    DateField,
+    EntityField,
     TextField,
     VerificationCodeField,
 } from "./FormFields";
@@ -9,8 +11,18 @@ export const DEFAUL_TEXT_FIELD: TextField = {
     message: null,
 };
 
+export const DEFAUL_DATE_FIELD: DateField = {
+    value: undefined,
+    message: null,
+};
+
+export const DEFAUL_ENTITY_FIELD: EntityField = {
+    value: undefined,
+    message: null,
+};
+
 export const DEFAUL_ATTACHMENT_FIELD: AttachmentField = {
-    value: null,
+    value: undefined,
     message: null,
 };
 

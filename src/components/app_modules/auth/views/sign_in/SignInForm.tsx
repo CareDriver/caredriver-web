@@ -9,7 +9,7 @@ import { SignIn } from "../../models/SignInSignatures";
 import EmailField from "@/components/form/view/fields/EmailField";
 import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
 import PasswordField from "@/components/form/view/fields/PasswordField";
-import { AuthenticatorContext } from "../../contexts/AuthenticationContext";
+import { AuthenticatorContext } from "../../contexts/AuthenticatorContext";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
 
 const SignInForm = () => {

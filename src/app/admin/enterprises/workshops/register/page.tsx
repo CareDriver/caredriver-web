@@ -1,5 +1,5 @@
 import WorkshopRegisterByAdmin from "@/components/enterprises/mechanicalworkshop/WorkshopRegisterByAdmin";
-import PageEnterprisePermission from "@/components/permission_handlers/page/concrets/PageEnterprisePermission";
+import PageEnterprisePermission from "@/components/permission_handlers/views/page/concrets/PageEnterprisePermission";
 
 const RegisterWorkshopByAdminPage = () => {
     return (

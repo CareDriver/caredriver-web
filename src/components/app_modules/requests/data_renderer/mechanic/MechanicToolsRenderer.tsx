@@ -1,6 +1,6 @@
 import ScrewdriverWrench from "@/icons/ScrewdriverWrench";
 import InputData from "../form/InputData";
-import FieldDeleted from "../form/FieldDeleted";
+import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 
 const MechanicToolsRenderer = ({ tools }: { tools: string | undefined }) => {
     return (

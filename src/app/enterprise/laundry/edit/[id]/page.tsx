@@ -1,5 +1,5 @@
 import EnterpriseEditData from "@/components/enterprises/EnterpriseEditData";
-import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
+import PageServerUserPermission from "@/components/permission_handlers/views/page/concrets/PageServerUserPermission";
 
 const EditLaundryEnterprisePage = ({ params }: { params: any }) => {
     return (

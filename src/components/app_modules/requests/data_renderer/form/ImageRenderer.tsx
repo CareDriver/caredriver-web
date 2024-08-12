@@ -1,7 +1,7 @@
 "use client";
 import { ImgWithRef } from "@/interfaces/ImageInterface";
 import { getUrl } from "@/utils/validator/ImageValidator";
-import FieldDeleted from "./FieldDeleted";
+import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 import Popup from "@/components/modules/Popup";
 import { useState } from "react";
 const ImageRenderer = ({

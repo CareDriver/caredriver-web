@@ -1,4 +1,4 @@
-import CompPermissionValidator from "@/components/permission_handlers/component/CompPermissionValidator";
+import CompPermissionValidator from "@/components/permission_handlers/views/component/CompPermissionValidator";
 import { UserInterface } from "@/interfaces/UserInterface";
 import ServiceReqsByUser from "../ServiceReqsByUser";
 import ServiceServedByUser from "../ServiceServedByUser";
@@ -9,7 +9,7 @@ import {
     ROLES_TO_SET_MIN_USER_BALANCE,
     ROLES_TO_SET_USER_BALANCE,
     ROLES_TO_VIEW_USERS_HISTORY,
-} from "@/utils/validator/roles/RoleValidator";
+} from "@/components/permission_handlers/models/PermissionsByUserRole";
 
 const UserHistoryRenderer = ({
     reviewUser,

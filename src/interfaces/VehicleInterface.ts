@@ -65,28 +65,6 @@ type VehicleTransmissionOption = {
     title: string;
 };
 
-export const vehicleTypeRender = {
-    car: "Automóvil",
-    motorcycle: "Motocicleta",
-    tow: "Grúa",
-};
-
-export const vehicleTypeRenderV2 = {
-    car: "del automóvil",
-    motorcycle: "de la motocicleta",
-    tow: "de la grúa",
-};
-
-export const vehicleModeRender = {
-    automatic: "automático",
-    mechanical: "mecánico",
-};
-
-export const vehicleModeRenderV2 = {
-    automatic: "automática",
-    mechanical: "mecánica",
-};
-
 // Vehicle types to render
 export const vehicleTypes: VehicleTypeOption[] = [
     { value: VehicleType.CAR, label: "Auto", icon: "car", checkedColor: "#FFF" },

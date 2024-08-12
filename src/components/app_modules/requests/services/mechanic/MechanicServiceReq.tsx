@@ -20,7 +20,7 @@ import { toast } from "react-toastify";
 import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
 import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
 import { Enterprise } from "@/interfaces/Enterprise";
-import FieldDeleted from "../../data_renderer/form/FieldDeleted";
+import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 import WorkshopRenderer from "../../data_renderer/enterprise/WorkshopRenderer";
 import { mechanicReqCollection } from "@/utils/requests/services/MechanicRequester";
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";

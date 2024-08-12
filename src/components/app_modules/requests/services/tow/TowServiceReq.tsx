@@ -26,7 +26,7 @@ import { toast } from "react-toastify";
 import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
 import { towReqCollection } from "@/utils/requests/services/TowRequester";
 import { Enterprise } from "@/interfaces/Enterprise";
-import FieldDeleted from "../../data_renderer/form/FieldDeleted";
+import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import TowRenderer from "../../data_renderer/enterprise/TowRenderer";

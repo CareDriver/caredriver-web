@@ -1,5 +1,5 @@
-import FormToSeeInfo from "@/components/permission_handlers/FormToSeeInfo";
-import PageUserInfoPermission from "@/components/permission_handlers/page/concrets/PageUserInfoPermission";
+import FormToSeeInfo from "@/components/permission_handlers/views/consent_forms/FormToSeeInfo";
+import PageUserInfoPermission from "@/components/permission_handlers/views/page/concrets/PageUserInfoPermission";
 import BaseRendererOfServicePerf from "@/components/app_modules/services_performed/view/single_views/BaseRendererOfServicePerf";
 
 const SingleDriveServiceDidByUserPage = ({ params }: { params: any }) => {

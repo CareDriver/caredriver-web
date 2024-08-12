@@ -1,6 +1,23 @@
 import { isNullOrEmptyText } from "@/utils/validator/text/TextValidator";
-import { TextField } from "../models/FormFields";
+import {
+    AttachmentField,
+    DateField,
+    EntityField,
+    TextField,
+} from "../models/FormFields";
 
 export function isValidTextField(field: TextField): boolean {
-    return !field.message && !isNullOrEmptyText(field.value);
+    return field.message === null && !isNullOrEmptyText(field.value);
+}
+
+export function isValidDateField(field: DateField): boolean {
+    return field.message === null && field.value !== undefined;
+}
+
+export function isValidAttachmentField(field: AttachmentField): boolean {
+    return field.message === null && field.value !== undefined;
+}
+
+export function isValidEntityField(field: EntityField): boolean {
+    return field.message === null && field.value !== undefined;
 }

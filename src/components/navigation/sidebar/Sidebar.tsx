@@ -16,7 +16,7 @@ import BalanceChargeSideBar from "./concrets/BalanceChargeSideBar";
 import {
     checkPermission,
     ROLES_FOR_SERVER_USER_ACTIONS,
-} from "@/utils/validator/roles/RoleValidator";
+} from "@/components/permission_handlers/models/PermissionsByUserRole";
 import Bars from "@/icons/Bars";
 
 const SideBar = () => {

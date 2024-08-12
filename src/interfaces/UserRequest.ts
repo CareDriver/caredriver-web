@@ -142,10 +142,10 @@ export const mechanicReqBuilder = (
     realTimePhotoImgUrl: ImgWithRef,
     services: Services[],
     location: Locations,
-    mechanicalWorkShop: string | null,
+    mechanicalWorkShop: string | undefined,
     mechanicTools: string,
 ): UserRequest => {
-    if (mechanicalWorkShop !== null) {
+    if (!mechanicalWorkShop) {
         return {
             id,
             userId,

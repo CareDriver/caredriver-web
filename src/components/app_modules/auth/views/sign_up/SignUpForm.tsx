@@ -18,7 +18,7 @@ import TextField from "@/components/form/view/fields/TextField";
 import PhoneField from "@/components/form/view/fields/PhoneField";
 import LocationField from "@/components/form/view/fields/LocationField";
 import Link from "next/link";
-import { AuthenticatorContext } from "../../contexts/AuthenticationContext";
+import { AuthenticatorContext } from "../../contexts/AuthenticatorContext";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import { genFakeId } from "@/utils/IdGenerator";
 import NumberField from "@/components/form/view/fields/NumberField";

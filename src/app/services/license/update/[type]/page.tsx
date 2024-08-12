@@ -1,14 +1,14 @@
-import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
-import LicenseUpdater from "@/components/services/LicenseUpdater";
-import ServiceWrapper from "@/components/services/ServiceWrapper";
+import ServiceContainer from "@/components/app_modules/server_users/views/containers/ServiceContainer";
+import UpdateLicenseForm from "@/components/app_modules/server_users/views/form_requests/personal_data/UpdateLicenseForm";
+import GuardForServerUsers from "@/components/guards/views/page_guards/concrets/GuardForServerUsers";
 
 const UpdateLicensePage = ({ params }: { params: any }) => {
     return (
-        <PageServerUserPermission>
-            <ServiceWrapper>
-                <LicenseUpdater type={params.type} />
-            </ServiceWrapper>
-        </PageServerUserPermission>
+        <GuardForServerUsers>
+            <ServiceContainer>
+                <UpdateLicenseForm type={params.type} />
+            </ServiceContainer>
+        </GuardForServerUsers>
     );
 };
 

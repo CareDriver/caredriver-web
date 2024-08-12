@@ -1,5 +1,5 @@
-import FormToSeeInfo from "@/components/permission_handlers/FormToSeeInfo";
-import PageRequestPermission from "@/components/permission_handlers/page/concrets/PageRequestPermission";
+import FormToSeeInfo from "@/components/permission_handlers/views/consent_forms/FormToSeeInfo";
+import PageRequestPermission from "@/components/permission_handlers/views/page/concrets/PageRequestPermission";
 import SingleServiceReq from "@/components/requests/services/SingleServiceReq";
 
 const SingleLaundryReqPage = ({ params }: { params: any }) => {

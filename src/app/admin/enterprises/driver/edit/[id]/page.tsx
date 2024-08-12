@@ -1,5 +1,5 @@
 import EnterpriseEditByAdmin from "@/components/enterprises/admin/EnterpriseEditByAdmin";
-import PageEnterprisePermission from "@/components/permission_handlers/page/concrets/PageEnterprisePermission";
+import PageEnterprisePermission from "@/components/permission_handlers/views/page/concrets/PageEnterprisePermission";
 
 const EditDriverByAdminPage = ({ params }: { params: any }) => {
     return (

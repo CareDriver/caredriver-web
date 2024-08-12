@@ -1,5 +1,5 @@
 import LaundryRegistrationByAdmin from "@/components/enterprises/laundry/LaundryRegistrationByAdmin";
-import PageEnterprisePermission from "@/components/permission_handlers/page/concrets/PageEnterprisePermission";
+import PageEnterprisePermission from "@/components/permission_handlers/views/page/concrets/PageEnterprisePermission";
 const RegisterLaundryByAdminPage = () => {
     return (
         <PageEnterprisePermission>

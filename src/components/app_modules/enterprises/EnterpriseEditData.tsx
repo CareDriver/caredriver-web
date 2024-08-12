@@ -36,7 +36,7 @@ import {
     EditENT_thereAreActiveReqsFromUser,
     EditENT_hasChanges,
 } from "@/utils/validator/enterprises/EditEnterpriseLimiter";
-import FieldDeleted from "../requests/data_renderer/form/FieldDeleted";
+import FieldDeleted from "../../form/view/field_renderers/FieldDeleted";
 import ChevronDown from "@/icons/ChevronDown";
 import { getLocation } from "@/utils/auth/UserAuth";
 import { locationList, Locations } from "@/interfaces/Locations";

@@ -1,7 +1,7 @@
 import UserRegistration from "@/components/auth/UserRegistration";
-import PagePermissionValidator from "@/components/permission_handlers/page/PagePermissionValidator";
+import PagePermissionValidator from "@/components/permission_handlers/views/page/PagePermissionValidator";
 import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
-import { ROLES_TO_ADD_USERS } from "@/utils/validator/roles/RoleValidator";
+import { ROLES_TO_ADD_USERS } from "@/components/permission_handlers/models/PermissionsByUserRole";
 
 const RegisterNewUserPage = () => {
     return (

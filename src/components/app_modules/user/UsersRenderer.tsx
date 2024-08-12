@@ -18,8 +18,8 @@ import "@/styles/components/users.css";
 import Search from "@/icons/Search";
 import Link from "next/link";
 import UserPlus from "@/icons/UserPlus";
-import CompPermissionValidator from "../../permission_handlers/component/CompPermissionValidator";
-import { ROLES_TO_ADD_USERS } from "@/utils/validator/roles/RoleValidator";
+import CompPermissionValidator from "../../permission_handlers/views/component/CompPermissionValidator";
+import { ROLES_TO_ADD_USERS } from "@/components/permission_handlers/models/PermissionsByUserRole";
 import DataLoading from "../../loaders/DataLoading";
 import PageLoading from "../../loaders/PageLoading";
 

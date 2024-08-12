@@ -6,8 +6,16 @@ export interface TextField extends BaseField {
     value: string;
 }
 
+export interface DateField extends BaseField {
+    value: Date | undefined;
+}
+
+export interface EntityField extends BaseField {
+    value: string | undefined;
+}
+
 export interface AttachmentField extends BaseField {
-    value: string | null;
+    value: string | undefined;
 }
 
 export interface VerificationCodeField extends BaseField {

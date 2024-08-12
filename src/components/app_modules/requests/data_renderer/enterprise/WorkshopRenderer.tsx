@@ -1,7 +1,7 @@
 import Warehouse from "@/icons/Warehouse";
 import { Enterprise } from "@/interfaces/Enterprise";
 import EnterpriseRenderer from "./EnterpriseRenderer";
-import FieldDeleted from "../form/FieldDeleted";
+import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 
 const WorkshopRenderer = ({ workshop }: { workshop: Enterprise | undefined }) => {
     return (

@@ -1,5 +1,5 @@
 import MechanicalWorkshopPanel from "@/components/enterprises/mechanicalworkshop/MechanicalWorkshopPanel";
-import PageServerUserPermission from "@/components/permission_handlers/page/concrets/PageServerUserPermission";
+import PageServerUserPermission from "@/components/permission_handlers/views/page/concrets/PageServerUserPermission";
 
 const MechanicalworkshopPage = () => {
     return (

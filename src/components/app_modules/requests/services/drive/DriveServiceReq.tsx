@@ -24,7 +24,7 @@ import { ServiceReqState, Services } from "@/interfaces/Services";
 import { toast } from "react-toastify";
 import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
-import FieldDeleted from "../../data_renderer/form/FieldDeleted";
+import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";

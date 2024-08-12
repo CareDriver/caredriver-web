@@ -1,6 +1,10 @@
 import { auth } from "@/firebase/FirebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
-import { defaultServiceReq, UserInterface, UserRole } from "@/interfaces/UserInterface";
+import {
+    defaultServiceReq,
+    UserInterface,
+    UserRole,
+} from "@/interfaces/UserInterface";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useState, useEffect } from "react";
 import { getUserById } from "@/utils/requests/UserRequester";
@@ -10,38 +14,37 @@ import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
 import { defaultBalance, defaultMinBalance } from "@/interfaces/Payment";
 import { deleteAllCookies } from "@/utils/temp_storage/CookiesHandler";
 
-interface UserInfo {
-    data: UserInterface | null;
-    hasPhoto: boolean;
-}
+type ContextType = {
+    user: UserInterface | undefined;
+    checkingUserAuth: boolean;
 
-type authContextType = {
-    user: UserInfo;
-    loadingUser: boolean;
     logout: () => void;
+    hasPhoto: () => boolean;
 };
 
-const authContextDefaultValues: authContextType = {
-    user: {
-        data: null,
-        hasPhoto: false,
-    },
-    loadingUser: true,
+const DEFAULT_CONTEXT: ContextType = {
+    user: undefined,
+    checkingUserAuth: true,
+
     logout: () => {},
+    hasPhoto: () => false,
 };
 
-const buildUser = (
+const loadUserLoggedData = (
     id: string,
     userData: UserInterface | undefined,
-): UserInterface | null => {
+): UserInterface | undefined => {
     if (userData) {
         return {
             id: id,
             fakeId: userData.fakeId,
             fullName: userData?.fullName === undefined ? "" : userData.fullName,
-            phoneNumber: userData?.phoneNumber === undefined ? "" : userData.phoneNumber,
+            phoneNumber:
+                userData?.phoneNumber === undefined ? "" : userData.phoneNumber,
             photoUrl:
-                userData?.photoUrl === undefined ? emptyPhotoWithRef : userData.photoUrl,
+                userData?.photoUrl === undefined
+                    ? emptyPhotoWithRef
+                    : userData.photoUrl,
             // comments: userData?.comments === undefined ? [] : userData.comments,
             vehicles: userData?.vehicles === undefined ? [] : userData.vehicles,
             services: userData?.services === undefined ? [] : userData.services,
@@ -63,13 +66,18 @@ const buildUser = (
                     ? defaultServiceReq
                     : userData.serviceRequests,
             location: userData?.location,
-            balance: userData?.balance === undefined ? defaultBalance : userData.balance,
+            balance:
+                userData?.balance === undefined
+                    ? defaultBalance
+                    : userData.balance,
             balanceHistory: userData?.balanceHistory,
             disable: userData?.disable,
             deleted: userData.deleted,
             serviceVehicles: userData?.serviceVehicles,
             role: userData?.role === undefined ? UserRole.User : userData.role,
-            identityCard: userData.identityCard ? userData.identityCard : undefined,
+            identityCard: userData.identityCard
+                ? userData.identityCard
+                : undefined,
             minimumBalance:
                 userData.minimumBalance === undefined
                     ? defaultMinBalance
@@ -82,24 +90,29 @@ const buildUser = (
         };
     }
 
-    return null;
+    return undefined;
 };
 
-export const AuthContext = createContext<authContextType>(authContextDefaultValues);
+export const AuthContext = createContext<ContextType>(DEFAULT_CONTEXT);
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
     const pathname = usePathname();
-    const [loadingUser, setLoadingUser] = useState(true);
-    const [user, setUser] = useState<UserInfo>({
-        data: null,
-        hasPhoto: false,
-    });
+    const [checkingUserAuth, setCheckUserAuth] = useState(true);
+    const [user, setUser] = useState<UserInterface | undefined>(undefined);
 
     const refirectToHome = () => {
         if (!pathname.includes("auth")) {
             router.push("/");
         }
+    };
+
+    const hasPhoto = (): boolean => {
+        return (
+            user !== undefined &&
+            user.photoUrl.url.length > 0 &&
+            user.photoUrl.url.trim().length > 0
+        );
     };
 
     useEffect(() => {
@@ -118,38 +131,24 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                     "Fuiste , comunícate con uno de nuestro administradores",
                                 );
                             } else {
-                                var userBuilt: UserInterface | null = buildUser(
-                                    userId,
-                                    userData,
-                                );
-                                setUser({
-                                    data: userBuilt,
-                                    hasPhoto:
-                                        userBuilt !== null &&
-                                        userBuilt.photoUrl.url.length > 0 &&
-                                        userBuilt.photoUrl.url.trim().length > 0,
-                                });
-                                setLoadingUser(false);
+                                let userLoaded: UserInterface | undefined =
+                                    loadUserLoggedData(userId, userData);
+                                setUser(userLoaded);
+                                setCheckUserAuth(false);
                             }
                         } else {
-                            setUser({
-                                data: null,
-                                hasPhoto: false,
-                            });
-                            setLoadingUser(false);
+                            setUser(undefined);
+                            setCheckUserAuth(false);
                             refirectToHome();
                         }
                     });
                 } catch (e) {
-                    setUser({
-                        data: null,
-                        hasPhoto: false,
-                    });
-                    setLoadingUser(false);
+                    setUser(undefined);
+                    setCheckUserAuth(false);
                     refirectToHome();
                 }
             } else {
-                setLoadingUser(false);
+                setCheckUserAuth(false);
                 refirectToHome();
             }
         });
@@ -158,10 +157,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const logoutWithReason = (reason: string) => {
         auth.signOut()
             .then(() => {
-                setUser({
-                    data: null,
-                    hasPhoto: false,
-                });
+                setUser(undefined);
                 toast.warning(reason);
                 router.push("/");
             })
@@ -175,10 +171,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         auth.signOut()
             .then(() => {
                 deleteAllCookies();
-                setUser({
-                    data: null,
-                    hasPhoto: false,
-                });
+                setUser(undefined);
                 toast.success("Sesión cerrada existosamente");
                 router.push("/");
             })
@@ -189,7 +182,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ loadingUser, user, logout }}>
+        <AuthContext.Provider
+            value={{ checkingUserAuth, user, logout, hasPhoto }}
+        >
             {children}
         </AuthContext.Provider>
     );

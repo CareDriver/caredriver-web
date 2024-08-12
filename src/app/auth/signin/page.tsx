@@ -1,14 +1,14 @@
-import AuthContainer from "@/components/app_modules/auth/views/containers/AuthContainer";
-import AuthProviderContainer from "@/components/app_modules/auth/views/containers/AuthProviderContainer";
+import AuthenticatorContainer from "@/components/app_modules/auth/views/containers/AuthenticatorContainer";
+import AuthenticatorProviderContainer from "@/components/app_modules/auth/views/containers/AuthenticatorProviderContainer";
 import SignInForm from "@/components/app_modules/auth/views/sign_in/SignInForm";
 
 const SignInPage = () => {
     return (
-        <AuthProviderContainer>
-            <AuthContainer authTitle="Inicia sesion">
+        <AuthenticatorProviderContainer>
+            <AuthenticatorContainer authTitle="Inicia sesion">
                 <SignInForm />
-            </AuthContainer>
-        </AuthProviderContainer>
+            </AuthenticatorContainer>
+        </AuthenticatorProviderContainer>
     );
 };
 

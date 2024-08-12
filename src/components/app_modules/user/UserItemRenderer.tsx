@@ -1,8 +1,8 @@
 import { UserInterface } from "@/interfaces/UserInterface";
 import { DEFAULT_PHOTO, getRole } from "@/utils/user/UserData";
 import Link from "next/link";
-import CompPermissionValidator from "../../permission_handlers/component/CompPermissionValidator";
-import { ROLES_TO_VIEW_USER_STATE } from "@/utils/validator/roles/RoleValidator";
+import CompPermissionValidator from "../../permission_handlers/views/component/CompPermissionValidator";
+import { ROLES_TO_VIEW_USER_STATE } from "@/components/permission_handlers/models/PermissionsByUserRole";
 
 const UserItemRenderer = ({
     user,

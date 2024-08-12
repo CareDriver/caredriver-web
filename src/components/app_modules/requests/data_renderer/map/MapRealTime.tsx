@@ -6,7 +6,7 @@ import { ref, onValue, off } from "firebase/database";
 import { CoordinateRegister, ServiceRoutes } from "@/interfaces/RouteNavigationInterface";
 import PageLoader from "../../../PageLoader";
 import PolylineMap from "./PolylineMap";
-import FieldDeleted from "../form/FieldDeleted";
+import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 
 const MapRealTime = ({
     databaseURL,

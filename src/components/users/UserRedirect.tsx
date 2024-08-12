@@ -9,7 +9,7 @@ import { ServiceReqState } from "@/interfaces/Services";
 import PageLoading from "../loaders/PageLoading";
 
 const UserRedirect = () => {
-    const { loadingUser, user } = useContext(AuthContext);
+    const { checkingUserAuth, user } = useContext(AuthContext);
     const router = useRouter();
 
     const redirectServerUser = (userData: UserInterface) => {
@@ -44,9 +44,9 @@ const UserRedirect = () => {
     };
 
     useEffect(() => {
-        if (!loadingUser && user.data) {
+        if (!checkingUserAuth && user) {
             toast.success("Inicio de sesión exitoso");
-            switch (user.data.role) {
+            switch (user.role) {
                 case UserRole.Support:
                 case UserRole.BalanceRecharge:
                     redirectToUsers();
@@ -57,13 +57,13 @@ const UserRedirect = () => {
                     break;
                 case UserRole.SupportTwo:
                 default:
-                    redirectServerUser(user.data);
+                    redirectServerUser(user);
                     break;
             }
         }
-    }, [loadingUser]);
+    }, [checkingUserAuth]);
 
-    return loadingUser && <PageLoading />;
+    return checkingUserAuth && <PageLoading />;
 };
 
 export default UserRedirect;

@@ -1,6 +1,6 @@
 import { ImgWithRef } from "@/interfaces/ImageInterface";
 import "@/styles/modules/form.css";
-import FieldDeleted from "./FieldDeleted";
+import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 
 const PDFRenderer = ({
     pdf,
