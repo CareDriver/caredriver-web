@@ -8,7 +8,7 @@ import EnterpriseItemReq from "./EnterpriseItemReq";
 import {
     getEnterpriseReqs,
     getEnterpriseReqsNumPages,
-} from "@/utils/requests/enterprise/EnterpriseRequester";
+} from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 import {
     Enterprise,
     EnterpriseTypeRender,

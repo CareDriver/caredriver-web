@@ -6,7 +6,7 @@ import {
 import { TextField } from "../../models/FormFields";
 import { TextFieldSetter } from "../../models/FieldSetters";
 import { TextFieldStateHandler } from "../../utils/TextFieldStateHandler";
-import { isPhoneValid } from "@/utils/validator/auth/CredentialsValidator";
+import { isPhoneValid } from "@/components/app_modules/users/validators/CredentialsValidator";
 
 interface Props {
     values: TextField;

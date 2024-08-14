@@ -9,7 +9,7 @@ import {
     createUserDataWithPhoto,
     handleInputChangeV2,
 } from "@/utils/auth/UserAuth";
-import { isValidName } from "@/utils/validator/auth/CredentialsValidator";
+import { isValidName } from "@/components/app_modules/users/validators/CredentialsValidator";
 import {
     isNotEmpty,
     thereAreNotErrorsSignUp,

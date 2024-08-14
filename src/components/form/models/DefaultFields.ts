@@ -2,6 +2,7 @@ import {
     AttachmentField,
     DateField,
     EntityField,
+    GeoPointField,
     TextField,
     VerificationCodeField,
 } from "./FormFields";
@@ -22,6 +23,11 @@ export const DEFAUL_ENTITY_FIELD: EntityField = {
 };
 
 export const DEFAUL_ATTACHMENT_FIELD: AttachmentField = {
+    value: undefined,
+    message: null,
+};
+
+export const DEFAUL_GEOPOINT_FIELD: GeoPointField = {
     value: undefined,
     message: null,
 };

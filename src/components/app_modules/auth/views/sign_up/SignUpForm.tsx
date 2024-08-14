@@ -3,7 +3,7 @@
 import "react-international-phone/style.css";
 import { auth } from "@/firebase/FirebaseConfig";
 import { checkEmailExists, saveUser } from "@/utils/requests/UserRequester";
-import { isValidName } from "@/utils/validator/auth/CredentialsValidator";
+import { isValidName } from "@/components/app_modules/users/validators/CredentialsValidator";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";

@@ -6,7 +6,7 @@ import { emptyPhotoWithRef, ImgWithRef } from "@/interfaces/ImageInterface";
 import { InputValidator } from "../validator/InputValidator";
 import { Dispatch, SetStateAction } from "react";
 import { locationList, Locations } from "@/interfaces/Locations";
-import { isPhoneValid } from "../validator/auth/CredentialsValidator";
+import { isPhoneValid } from "../../components/app_modules/users/validators/CredentialsValidator";
 import { defaultBalance, defaultMinBalance } from "@/interfaces/Payment";
 import { getUserById, saveUser } from "../requests/UserRequester";
 import { toast } from "react-toastify";

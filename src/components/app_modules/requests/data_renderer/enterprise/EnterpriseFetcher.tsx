@@ -1,7 +1,7 @@
 "use client";
 
 import { Enterprise } from "@/interfaces/Enterprise";
-import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
+import { getEnterpriseById } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 import { useEffect } from "react";
 import LaundryRenderer from "./LaundryRenderer";
 import WorkshopRenderer from "./WorkshopRenderer";

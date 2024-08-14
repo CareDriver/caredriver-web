@@ -3,7 +3,7 @@
 import { useContext, useEffect, useState } from "react";
 import UserIcon from "@/icons/UserIcon";
 
-import { isValidName } from "@/utils/validator/auth/CredentialsValidator";
+import { isValidName } from "@/components/app_modules/users/validators/CredentialsValidator";
 import { AuthContext } from "@/context/AuthContext";
 import { UserInterface } from "@/interfaces/UserInterface";
 import ImageUploader from "../../../../../form/view/attachment_fields/ImageUploader";

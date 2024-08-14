@@ -190,4 +190,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
+export const AuthProviderContainer = ({
+    children,
+}: {
+    children: React.ReactNode;
+}) => {
+    return <AuthProvider>{children}</AuthProvider>;
+};
+
 export default AuthProvider;

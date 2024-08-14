@@ -23,11 +23,7 @@ const DefaultContext: ContextType = {
 
 export const AuthenticatorContext = createContext<ContextType>(DefaultContext);
 
-const AuthenticatorProvider = ({
-    children,
-}: {
-    children: React.ReactNode;
-}) => {
+const AuthenticatorProvider = ({ children }: { children: React.ReactNode }) => {
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
     const [authWithProvider, setAuthWithProvider] = useState(false);
 
@@ -51,6 +47,14 @@ const AuthenticatorProvider = ({
             {children}
         </AuthenticatorContext.Provider>
     );
+};
+
+export const AuthenticatorProviderContainer = ({
+    children,
+}: {
+    children: React.ReactNode;
+}) => {
+    return <AuthenticatorProvider>{children}</AuthenticatorProvider>;
 };
 
 export default AuthenticatorProvider;

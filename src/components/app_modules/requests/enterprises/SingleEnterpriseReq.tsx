@@ -2,7 +2,7 @@
 
 import PageLoader from "@/components/PageLoader";
 import { Enterprise } from "@/interfaces/Enterprise";
-import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
+import { getEnterpriseById } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";

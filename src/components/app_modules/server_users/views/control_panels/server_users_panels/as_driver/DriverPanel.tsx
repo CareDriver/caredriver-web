@@ -8,7 +8,7 @@ import { useContext, useState } from "react";
 import DriverInstrucctions from "./DriverInstrucctions";
 import "@/styles/modules/popup.css";
 import PageLoading from "@/components/loaders/PageLoading";
-import ENTRendererAsPopup from "@/components/app_modules/enterprises/views/form_reviews/ENTRendererAsPopup";
+import ReviewEnterpriseAsPopup from "@/components/app_modules/enterprises/views/review_forms/ReviewEnterpriseAsPopup";
 import { MissingTransmissionAdder } from "@/components/app_modules/server_users/api/MissingTransmissionAdder";
 import RegisteredVehicleRenderer from "../../../form_reviews/vehicle_reviews/RegisteredVehicleRenderer";
 
@@ -36,7 +36,7 @@ const DriverPanel = () => {
                     Ya eres chofer, ve a nuestra Aplicación Móvil y empieza a
                     Ofrecer tu servicio!
                 </p>
-                <ENTRendererAsPopup enterpriseId={user.driverEnterpriseId} />
+                <ReviewEnterpriseAsPopup enterpriseId={user.driverEnterpriseId} />
 
                 {user.serviceVehicles?.car && (
                     <RegisteredVehicleRenderer

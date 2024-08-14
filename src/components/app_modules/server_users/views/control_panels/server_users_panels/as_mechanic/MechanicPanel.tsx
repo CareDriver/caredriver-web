@@ -4,7 +4,7 @@ import SackDollar from "@/icons/SackDollar";
 import { useContext } from "react";
 import "@/styles/modules/popup.css";
 import PageLoading from "@/components/loaders/PageLoading";
-import ENTRendererAsPopup from "@/components/app_modules/enterprises/views/form_reviews/ENTRendererAsPopup";
+import ReviewEnterpriseAsPopup from "@/components/app_modules/enterprises/views/review_forms/ReviewEnterpriseAsPopup";
 
 const MechanicPanel = () => {
     const { user, checkingUserAuth } = useContext(AuthContext);
@@ -24,7 +24,7 @@ const MechanicPanel = () => {
                     Ve a nuestra Aplicación Móvil y empieza a Ofrecer tu
                     servicio!
                 </p>
-                <ENTRendererAsPopup enterpriseId={user.mechanicalWorkShopId} />
+                <ReviewEnterpriseAsPopup enterpriseId={user.mechanicalWorkShopId} />
                 <span className="circles-right-bottomv2 green"></span>
             </div>
         )

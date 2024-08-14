@@ -1,4 +1,4 @@
-import { isValidEmail } from "@/utils/validator/auth/CredentialsValidator";
+import { isValidEmail } from "@/components/app_modules/users/validators/CredentialsValidator";
 import { TextFieldSetter, TextFieldWithSetter } from "../../models/FieldSetters";
 import { TextField } from "../../models/FormFields";
 import { TextFieldStateHandler } from "../../utils/TextFieldStateHandler";

@@ -1,5 +1,5 @@
 import { GeoPoint } from "firebase/firestore";
-import { Location } from "@/utils/map/Locator";
+import { Location } from "@/components/form/models/Locator";
 import { CoordinateRegister } from "@/interfaces/RouteNavigationInterface";
 
 export const toLocation = (point: GeoPoint): Location => {

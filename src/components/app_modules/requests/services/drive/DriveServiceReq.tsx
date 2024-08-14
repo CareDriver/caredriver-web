@@ -28,10 +28,10 @@ import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
-import { addUserServerToEnterprise } from "@/utils/requests/enterprise/EnterpriseUserAdder";
+import { addUserServerToEnterprise } from "@/components/app_modules/enterprises/api/EnterpriseUserAdder";
 import { Enterprise } from "@/interfaces/Enterprise";
 import DriverServiceRenderer from "../../data_renderer/enterprise/DriverServiceRenderer";
-import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
+import { getEnterpriseById } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 
 const DriveServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);

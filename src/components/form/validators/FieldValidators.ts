@@ -3,6 +3,7 @@ import {
     AttachmentField,
     DateField,
     EntityField,
+    GeoPointField,
     TextField,
 } from "../models/FormFields";
 
@@ -19,5 +20,9 @@ export function isValidAttachmentField(field: AttachmentField): boolean {
 }
 
 export function isValidEntityField(field: EntityField): boolean {
+    return field.message === null && field.value !== undefined;
+}
+
+export function isValidGeoPointField(field: GeoPointField): boolean {
     return field.message === null && field.value !== undefined;
 }

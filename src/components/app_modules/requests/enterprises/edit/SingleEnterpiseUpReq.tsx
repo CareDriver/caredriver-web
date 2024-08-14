@@ -2,12 +2,12 @@
 
 import PageLoader from "@/components/PageLoader";
 import { Enterprise, ReqEditEnterprise } from "@/interfaces/Enterprise";
-import { getEditEnterpriseReqById } from "@/utils/requests/enterprise/EditEnterpriseReq";
+import { getEditEnterpriseReqById } from "@/components/app_modules/enterprises/api/EditEnterpriseReq";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import EnterpriseUpReqRender from "./EnterpriseUpReqRender";
-import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
+import { getEnterpriseById } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 
 const SingleEnterpiseUpReq = ({

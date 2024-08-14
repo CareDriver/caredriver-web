@@ -11,7 +11,7 @@ import {
 import {
     getEditEnterpriseReqs,
     getEditEnterpriseReqsNumPages,
-} from "@/utils/requests/enterprise/EditEnterpriseReq";
+} from "@/components/app_modules/enterprises/api/EditEnterpriseReq";
 import EnterpriseUpItemReq from "./EnterpriseUpItemReq";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "@/styles/components/enterprise-req.css";

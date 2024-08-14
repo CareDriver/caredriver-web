@@ -12,7 +12,7 @@ import { useContext, useState } from "react";
 import {
     aproveEnterpriseReq,
     declineEnterpriseReq,
-} from "@/utils/requests/enterprise/EnterpriseRequester";
+} from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 import { AuthContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";

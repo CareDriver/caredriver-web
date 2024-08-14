@@ -2,9 +2,11 @@ import { GeoPoint } from "firebase/firestore";
 import { ImgWithRef } from "./ImageInterface";
 import { Locations } from "./Locations";
 
+export type UserRoleInEnterprise = "user" | "support"
+
 export interface EnterpriseUser {
     userId: string;
-    role: "user" | "support";
+    role: UserRoleInEnterprise;
 }
 
 export const UserRoleEnterpriseRender = {

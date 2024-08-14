@@ -1,12 +1,16 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
-import { DEFAULT_LOCATION, Location } from "@/utils/map/Locator";
-import { GOOGLEMAPS_TOKEN } from "@/components/form/models/MapSettings";
+import {
+    DEFAULT_LOCATION,
+    GOOGLEMAPS_TOKEN,
+} from "@/components/form/models/MapProperties";
+import { GeoPoint } from "firebase/firestore";
+import { geoPointToLatLng } from "../../utils/MapLocationHelper";
 
 interface Props {
-    location: Location | null;
-    setLocation: (location: Location) => void;
+    location: GeoPoint | undefined;
+    setLocation: (g: GeoPoint) => void;
 }
 
 const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
@@ -22,10 +26,10 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
 
             const { Map } = await loader.importLibrary("maps");
 
-            const position: Location = location ? location : DEFAULT_LOCATION;
+            const position = location ? location : DEFAULT_LOCATION;
 
             const mapOptions: google.maps.MapOptions = {
-                center: position,
+                center: geoPointToLatLng(position),
                 zoom: 17,
                 mapId: "GOOGLEMAP_FORM_ID",
             };
@@ -47,13 +51,13 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
             if (location) {
                 lastMarker = new AdvancedMarkerElement({
                     map,
-                    position: location,
+                    position: geoPointToLatLng(location),
                     content: pin.element,
                 });
             }
 
             map.addListener("click", (mapsMouseEvent: any) => {
-                var newPosition: Location = {
+                var newPosition = {
                     lat: mapsMouseEvent.latLng.toJSON().lat,
                     lng: mapsMouseEvent.latLng.toJSON().lng,
                 };
@@ -68,7 +72,7 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
                     });
                 }
 
-                setLocation(newPosition);
+                setLocation(new GeoPoint(newPosition.lat, newPosition.lng));
             });
         };
 

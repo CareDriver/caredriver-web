@@ -1,3 +1,5 @@
+import { GeoPoint } from "firebase/firestore";
+
 interface BaseField {
     message: null | string;
 }
@@ -16,6 +18,10 @@ export interface EntityField extends BaseField {
 
 export interface AttachmentField extends BaseField {
     value: string | undefined;
+}
+
+export interface GeoPointField extends BaseField {
+    value: GeoPoint | undefined;
 }
 
 export interface VerificationCodeField extends BaseField {

@@ -27,13 +27,13 @@ import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
 import { towReqCollection } from "@/utils/requests/services/TowRequester";
 import { Enterprise } from "@/interfaces/Enterprise";
 import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
-import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
+import { getEnterpriseById } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 import ContactReviewedUser from "../../data_renderer/form/ContactReviewedUser";
 import TowRenderer from "../../data_renderer/enterprise/TowRenderer";
 import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV2";
 import UserVerifierPrompter from "../../data_renderer/form/UserVerifierPrompter";
 import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
-import { addUserServerToEnterprise } from "@/utils/requests/enterprise/EnterpriseUserAdder";
+import { addUserServerToEnterprise } from "@/components/app_modules/enterprises/api/EnterpriseUserAdder";
 
 const TowServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);

@@ -18,7 +18,7 @@ import { ServiceRequestsInterface, UserInterface } from "@/interfaces/UserInterf
 import { ServiceReqState, Services } from "@/interfaces/Services";
 import { toast } from "react-toastify";
 import ApprovalsRenderer from "../../data_renderer/form/ApprovalsRenderer";
-import { getEnterpriseById } from "@/utils/requests/enterprise/EnterpriseRequester";
+import { getEnterpriseById } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 import { Enterprise } from "@/interfaces/Enterprise";
 import FieldDeleted from "../../../../form/view/field_renderers/FieldDeleted";
 import { mechanicReqCollection } from "@/utils/requests/services/MechanicRequester";
@@ -28,7 +28,7 @@ import UserStatusIndicatorV2 from "../../data_renderer/form/UserStatusIndicatorV
 import IdCardRenderer from "../../data_renderer/personal_data/IdCardRenderer";
 import LaundryRenderer from "../../data_renderer/enterprise/LaundryRenderer";
 import { laundryReqCollection } from "@/utils/requests/services/LaundryRequester";
-import { addUserServerToEnterprise } from "@/utils/requests/enterprise/EnterpriseUserAdder";
+import { addUserServerToEnterprise } from "@/components/app_modules/enterprises/api/EnterpriseUserAdder";
 
 const LaundryServiceReq = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user } = useContext(AuthContext);

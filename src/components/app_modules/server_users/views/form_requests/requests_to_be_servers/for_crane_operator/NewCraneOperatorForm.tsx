@@ -43,7 +43,7 @@ import {
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import VehicleForm from "../../vehicle_forms/VehicleForm";
 import PersonalDataForm from "../../personal_data/PersonalDataForm";
-import EnterpriseSelector from "@/components/app_modules/enterprises/EnterpriseSelector";
+import EnterpriseSelector from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelector";
 import ServiceStateRenderer from "../ServiceStateRenderer";
 import { CraneOperatorStatusHandler } from "@/components/app_modules/server_users/api/requests_status_handler/CraneOperatorStatusHandler";
 import PageLoading from "@/components/loaders/PageLoading";

@@ -33,7 +33,7 @@ import {
 } from "@/components/form/models/DefaultFields";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import PersonalDataForm from "../../personal_data/PersonalDataForm";
-import EnterpriseSelector from "@/components/app_modules/enterprises/EnterpriseSelector";
+import EnterpriseSelector from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelector";
 import PageLoading from "@/components/loaders/PageLoading";
 import ServiceStateRenderer from "../ServiceStateRenderer";
 import { LaundererStatusHandler } from "@/components/app_modules/server_users/api/requests_status_handler/LaundererStatusHandler";

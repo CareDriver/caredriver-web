@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
-import { Location } from "@/utils/map/Locator";
-import { GOOGLEMAPS_TOKEN } from "@/components/form/models/MapSettings";
+import { Location } from "@/components/form/models/Locator";
+import { GOOGLEMAPS_TOKEN } from "@/components/form/models/MapProperties";
 
 const MarkRenderer = ({ location }: { location: Location }) => {
     const mapRef = useRef<HTMLDivElement>(null);

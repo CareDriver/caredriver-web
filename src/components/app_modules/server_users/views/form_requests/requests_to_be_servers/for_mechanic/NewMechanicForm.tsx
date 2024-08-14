@@ -36,7 +36,7 @@ import {
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import PersonalDataForm from "../../personal_data/PersonalDataForm";
 import MechanicTools from "./MechanicTools";
-import EnterpriseSelector from "@/components/app_modules/enterprises/EnterpriseSelector";
+import EnterpriseSelector from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelector";
 import PageLoading from "@/components/loaders/PageLoading";
 import ServiceStateRenderer from "../ServiceStateRenderer";
 import { MechanicStatusHandler } from "@/components/app_modules/server_users/api/requests_status_handler/MechanicStatusHandler";

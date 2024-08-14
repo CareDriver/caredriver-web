@@ -14,14 +14,14 @@ import { useContext, useState } from "react";
 import {
     getEnterpriseById,
     updateEnterprise,
-} from "@/utils/requests/enterprise/EnterpriseRequester";
+} from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 import { AuthContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { deleteFile } from "@/utils/requests/FileUploader";
 import EnterpriseState from "../../data_renderer/enterprise/EnterpriseState";
 import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
-import { updateUpdateEnterprise } from "@/utils/requests/enterprise/EditEnterpriseReq";
+import { updateUpdateEnterprise } from "@/components/app_modules/enterprises/api/EditEnterpriseReq";
 
 const EnterpriseUpReqRender = ({
     enterprise,

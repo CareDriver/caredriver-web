@@ -3,7 +3,7 @@
 import Eye from "@/icons/Eye";
 import EyeSlash from "@/icons/EyeSlash";
 import { useState } from "react";
-import { isValidPassword } from "@/utils/validator/auth/CredentialsValidator";
+import { isValidPassword } from "@/components/app_modules/users/validators/CredentialsValidator";
 import { TextFieldSetter } from "@/components/form/models/FieldSetters";
 import { TextField } from "@/components/form/models/FormFields";
 import { TextFieldStateHandler } from "../../utils/TextFieldStateHandler";

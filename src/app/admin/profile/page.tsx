@@ -1,5 +1,5 @@
 import PagePermissionValidator from "@/components/permission_handlers/views/page/PagePermissionValidator";
-import AppUserProfile from "@/components/app_modules/user/app_user/AppUserProfile";
+import AppUserProfile from "@/components/app_modules/logged_user/app_user/AppUserProfile";
 import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
 import { ROLES_TO_SEE_NO_USER_PROFILE } from "@/components/permission_handlers/models/PermissionsByUserRole";
 

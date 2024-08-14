@@ -17,6 +17,7 @@ const TextField: React.FC<Props> = ({ field, legend }) => {
             <input
                 type="text"
                 placeholder=""
+                autoComplete="off"
                 value={field.values.value}
                 onChange={stateHandler.changeValue}
                 className="form-section-input"

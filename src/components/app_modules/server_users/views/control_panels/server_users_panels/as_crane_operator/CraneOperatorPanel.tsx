@@ -5,7 +5,7 @@ import SackDollar from "@/icons/SackDollar";
 import { useContext, useState } from "react";
 import "@/styles/modules/popup.css";
 import PageLoading from "@/components/loaders/PageLoading";
-import ENTRendererAsPopup from "@/components/app_modules/enterprises/views/form_reviews/ENTRendererAsPopup";
+import ReviewEnterpriseAsPopup from "@/components/app_modules/enterprises/views/review_forms/ReviewEnterpriseAsPopup";
 import { MissingTransmissionAdder } from "@/components/app_modules/server_users/api/MissingTransmissionAdder";
 import RegisteredVehicleRenderer from "../../../form_reviews/vehicle_reviews/RegisteredVehicleRenderer";
 
@@ -33,7 +33,7 @@ const CraneOperatorPanel = () => {
                     Ve a nuestra Aplicación Móvil y empieza a Ofrecer tu
                     servicio!
                 </p>
-                <ENTRendererAsPopup enterpriseId={user.towEnterpriseId} />
+                <ReviewEnterpriseAsPopup enterpriseId={user.towEnterpriseId} />
                 {user.serviceVehicles && user.serviceVehicles.tow && (
                     <RegisteredVehicleRenderer
                         legend="Operador de Grúa"
