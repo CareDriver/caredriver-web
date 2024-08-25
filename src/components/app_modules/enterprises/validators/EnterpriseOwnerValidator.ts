@@ -1,7 +1,7 @@
 import { countEnterprisesActives } from "../api/EnterpriseRequester";
 import { ServiceType } from "@/interfaces/Services";
 import { InputState } from "@/validators/InputValidatorSignature";
-import { UserInterface } from "@/interfaces/UserInterface";
+import { UserInterface, UserRole } from "@/interfaces/UserInterface";
 import { hasTheSameLocation } from "../utils/UserValidatorInEnterpriseHelper";
 import { Locations } from "@/interfaces/Locations";
 
@@ -45,11 +45,18 @@ export const verifyUserAvailabilityToBeEnterpriseOwner = async (
         };
     }
 
+    if (userFound.role !== UserRole.User) {
+        return {
+            isValid: false,
+            message: "El usuario no puede ser dueño de la empresa",
+        };
+    }
+
     if (!hasTheSameLocation(userFound, newEnterpriseLocation)) {
         return {
             isValid: false,
             message:
-                "El usuario no esta en la misma localizacion que el servicio",
+                "El usuario no esta en la misma localizacion que la empresa",
         };
     }
 

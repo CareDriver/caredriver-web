@@ -11,13 +11,17 @@ import SimpleUserCard from "../cards/SimpleUserCard";
 import EmailField from "@/components/form/view/fields/EmailField";
 import { PageStateContext } from "@/context/PageStateContext";
 import BaseSubForm from "@/components/form/view/forms/BaseSubForm";
-import { InputState } from "@/validators/InputValidatorSignature";
+
+type MessageFeedbackType = "success" | "fail";
 
 interface Props {
     form: {
         isValid: boolean;
         setValid: (d: boolean) => void;
-        stateFeedback?: InputState;
+        stateFeedback?: {
+            type: MessageFeedbackType;
+            message: string | null;
+        };
     };
     processTheUserFound: (userFound: UserInterface | undefined) => void;
 }
@@ -85,9 +89,7 @@ const UserSelector: React.FC<Props> = ({ form, processTheUserFound }) => {
             {userFound && <SimpleUserCard user={userFound} />}
             {form.stateFeedback?.message && (
                 <small
-                    className={
-                        form.stateFeedback.isValid ? "form-section-message success" : "form-section-message"
-                    }
+                    className={`form-section-message ${form.stateFeedback.type}`}
                 >
                     {form.stateFeedback.message}
                 </small>

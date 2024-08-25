@@ -26,8 +26,7 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
 
             const { Map } = await loader.importLibrary("maps");
 
-            const position = location ? location : DEFAULT_LOCATION;
-
+            const position: GeoPoint = location ? location : DEFAULT_LOCATION;
             const mapOptions: google.maps.MapOptions = {
                 center: geoPointToLatLng(position),
                 zoom: 17,

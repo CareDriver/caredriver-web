@@ -32,6 +32,7 @@ import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
 import { IEditedEnterpriseManager } from "../../../models/enterprise_managers_edited/IEditedEnterpriseManager";
 import { validateEnterpriseName } from "../../../validators/ValidatorsForConfirmationWithEnterprises";
+import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 
 interface Form {
     name: TextFieldForm;
@@ -51,14 +52,14 @@ const EnterpriseEditForm: React.FC<Props> = ({
     editedEnterpriseManager,
 }) => {
     const router = useRouter();
-    const { loading, setLoading } = useContext(PageStateContext);
+    const { loading, setLoadingAll } = useContext(PageStateContext);
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
-    const [isValid, setValid] = useState(true);
+    const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
 
     const handleSummbit = async (e: FormEvent) => {
         e.preventDefault();
         if (!loading) {
-            setLoading(true);
+            setLoadingAll(true, setFormState);
 
             if (
                 !isValidForm(form) ||
@@ -67,15 +68,19 @@ const EnterpriseEditForm: React.FC<Props> = ({
                 !form.logo.value
             ) {
                 toast.warning("Formulario invalido");
-                setLoading(false);
+                setLoadingAll(false, setFormState);
+
                 return;
             }
+
+            console.log(hasChanges(form, enterprise));
 
             if (!hasChanges(form, enterprise)) {
                 toast.info("Sin cambios para actualizar...", {
                     toastId: "no-changes-edit-ent-warning-toast",
                 });
-                setLoading(false);
+                setLoadingAll(false, setFormState);
+
                 return;
             }
 
@@ -85,13 +90,15 @@ const EnterpriseEditForm: React.FC<Props> = ({
                 enterprise.type,
             );
             if (!isValid) {
-                setLoading(false);
+                setLoadingAll(false, setFormState);
+
                 return;
             }
 
             let baseEnterprise = await formToEnterprise(form, enterprise);
             editedEnterpriseManager.handle(baseEnterprise);
-            setLoading(false);
+            setLoadingAll(false, setFormState);
+
             let routeToRedirect =
                 editedEnterpriseManager.getRedirectionAfterHandling(
                     enterprise.type,
@@ -107,7 +114,7 @@ const EnterpriseEditForm: React.FC<Props> = ({
     }, [enterprise]);
 
     useEffect(() => {
-        setValid(isValidForm(form));
+        setFormState((prev) => ({ ...prev, isValid: isValidForm(form) }));
     }, [form]);
 
     return (
@@ -118,13 +125,13 @@ const EnterpriseEditForm: React.FC<Props> = ({
                         legend: "Editar",
                     },
                     behavior: {
-                        loading: loading,
-                        isValid: isValid,
+                        loading: formState.loading,
+                        isValid: formState.isValid,
                     },
                 },
             }}
             behavior={{
-                loading: loading,
+                loading: loading || formState.loading,
                 onSummit: handleSummbit,
             }}
         >
@@ -259,6 +266,6 @@ function hasChanges(form: Form, currentEnterprise: Enterprise): boolean {
             form.location !== currentEnterprise.location) ||
         (form.coordinates.value !== undefined &&
             currentEnterprise.coordinates !== undefined &&
-            form.coordinates.value.isEqual(currentEnterprise.coordinates))
+            !form.coordinates.value.isEqual(currentEnterprise.coordinates))
     );
 }

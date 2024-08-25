@@ -8,6 +8,7 @@ import { verifyUserAvailabilityToBeEnterpriseOwner } from "../../../validators/E
 import { toast } from "react-toastify";
 import { PageStateContext } from "@/context/PageStateContext";
 import { ServiceType } from "@/interfaces/Services";
+import { isValidEntityField } from "@/components/form/validators/FieldValidators";
 
 interface Props {
     owner: {
@@ -25,6 +26,8 @@ const EnterpriseOwnerAdder: React.FC<Props> = ({ owner, enterprise }) => {
     const [userToBeOwner, setUserToBeOwner] = useState<
         UserInterface | undefined
     >(undefined);
+    const SUCCESS_USER_FOUND_MESSAGE =
+        "Usuario valido para ser dueño de la empresa";
 
     const processTheUserFound = async (
         userFound: UserInterface | undefined,
@@ -42,10 +45,9 @@ const EnterpriseOwnerAdder: React.FC<Props> = ({ owner, enterprise }) => {
             )
                 .then((res) => {
                     if (userToBeOwner.id) {
-                        setValid(res.isValid)
                         owner.setter({
                             value: userToBeOwner.id,
-                            message: res.message,
+                            message: res.isValid ? null : res.message,
                         });
                     }
                 })
@@ -76,12 +78,14 @@ const EnterpriseOwnerAdder: React.FC<Props> = ({ owner, enterprise }) => {
                     form={{
                         isValid: isValid,
                         setValid: setValid,
-                        stateFeedback: owner.values.message
-                            ? {
-                                  isValid: isValid,
-                                  message: owner.values.message,
-                              }
-                            : undefined,
+                        stateFeedback: {
+                            type: isValidEntityField(owner.values)
+                                ? "success"
+                                : "fail",
+                            message: isValidEntityField(owner.values)
+                                ? SUCCESS_USER_FOUND_MESSAGE
+                                : owner.values.message,
+                        },
                     }}
                     processTheUserFound={processTheUserFound}
                 />

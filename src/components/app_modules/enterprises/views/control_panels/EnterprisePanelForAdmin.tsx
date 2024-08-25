@@ -53,10 +53,19 @@ const EnterprisePanelForAdmin: React.FC<Props> = ({ id }) => {
     return (
         <section className="service-form-wrapper">
             <h1 className="text | big bolder">Administrar empresa</h1>
-            <EnterpriseEditForm
-                enterprise={enterprise}
-                editedEnterpriseManager={new EnterpriseManagerEditedAsAdmin()}
-            />
+
+            <div className="max-width-80">
+                <EnterpriseEditForm
+                    enterprise={enterprise}
+                    editedEnterpriseManager={
+                        new EnterpriseManagerEditedAsAdmin()
+                    }
+                />
+            </div>
+            <div className="max-width-80 margin-top-50">
+                <div className="separator-horizontal"></div>
+            </div>
+
             <FormToDisableEnterprise enterprise={enterprise} />
             <FormToDeleteEnterprise enterprise={enterprise} />
         </section>

@@ -21,6 +21,10 @@
     gap: 1.111111111rem;
 }
 
+.form-sub-container.small-form {
+    gap: 0.3rem;
+}
+
 .form-sub-container.row {
     flex-direction: row;
 }

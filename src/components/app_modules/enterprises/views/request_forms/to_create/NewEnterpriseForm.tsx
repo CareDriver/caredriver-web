@@ -40,7 +40,6 @@ import { validateEnterpriseName } from "../../../validators/ValidatorsForConfirm
 import { ServiceType } from "@/interfaces/Services";
 import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import { PageStateContext } from "@/context/PageStateContext";
-import { verifyUserAvailabilityToBeEnterpriseOwner } from "../../../validators/EnterpriseOwnerValidator";
 
 interface Form {
     name: TextFieldForm;
@@ -57,7 +56,7 @@ interface Props {
 
 const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
     const router = useRouter();
-    const { loading, isValid, setLoadingAll } = useContext(PageStateContext);
+    const { loading, setLoadingAll } = useContext(PageStateContext);
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
 
@@ -72,10 +71,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                 !form.coordinates.value ||
                 !form.userOwner.value
             ) {
-                setFormState({
-                    ...formState,
-                    loading: false,
-                });
+                setLoadingAll(false, setFormState);
                 toast.error("Formulario invalido", {
                     toastId: "toast-error-invalid-form",
                 });
@@ -128,7 +124,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
         }
     };
 
-    useEffect(() => {
+    useEffect(() => {        
         setFormState((prev) => ({
             ...prev,
             isValid: isValidForm(form),
@@ -145,7 +141,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                             legend: "Registrar",
                         },
                         behavior: {
-                            isValid: formState.isValid && isValid,
+                            isValid: formState.isValid,
                             loading: formState.loading,
                         },
                     },
