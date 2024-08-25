@@ -3,8 +3,10 @@ import { Locations } from "./Locations";
 import { LicenseInterface } from "./PersonalDocumentsInterface";
 import { ServiceReqState, Services, ServiceType } from "./Services";
 import { VehicleTransmission, VehicleType } from "./VehicleInterface";
-import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
-import { ChangeEvent } from "react";
+import {
+    EMPTY_REF_ATTACHMENT,
+    RefAttachment,
+} from "../components/form/models/RefAttachment";
 
 export interface VehicleTypeAndMode {
     type: VehicleType;
@@ -23,12 +25,18 @@ export interface Vehicle {
 
 export const userReqTypes = {
     driver: "Chofer",
-    mechanic: "Mecánico",
+    mechanical: "Mecánico",
     tow: "Operador de Grúa",
     laundry: "Lavadero",
 };
 
-export const TYPES_OF_SERVICE = ["driver", "mechanic", "tow", "laundry"];
+/* TODO: move to the module that belongs */
+export const TYPES_OF_SERVICE: ServiceType[] = [
+    "driver",
+    "mechanical",
+    "tow",
+    "laundry",
+];
 
 export function inputToServiceType(input: string): ServiceType {
     let defaulServiceType: ServiceType = "driver";
@@ -41,7 +49,7 @@ export interface UserRequest {
     id: string;
     userId: string; // same identifier of the user
     newFullName: string;
-    newProfilePhotoImgUrl: string | ImgWithRef; // if changing the name
+    newProfilePhotoImgUrl: string | RefAttachment; // if changing the name
     aproved?: boolean; // if the request was aproved, false when rejected or not reviewed yet
     active?: boolean; // will be true when it is a new request or update request and was not reviewed yet
     reviewedByHistory?: {
@@ -50,7 +58,7 @@ export interface UserRequest {
         dateTime: Timestamp;
         aproved: boolean; // if the request was aproved, false when rejected or not reviewed yet
     }[];
-    realTimePhotoImgUrl: ImgWithRef;
+    realTimePhotoImgUrl: RefAttachment;
     // the url of the real time user selfie for identification verification for the request
     mechanicalWorkShop?: string; // id of the mechanical user works for if is mechanic user
     towEnterprite?: string; // id of the tow enterprise user works for if is tow user
@@ -59,7 +67,7 @@ export interface UserRequest {
     services: Services[];
     location?: Locations; // just if user does not have a location registered yet.
     vehicles?: Vehicle[]; // vehicles that are in the request
-    policeRecordsPdf?: ImgWithRef;
+    policeRecordsPdf?: RefAttachment;
     mechanicTools?: string;
 }
 
@@ -71,16 +79,16 @@ export const emptyVehicleCar: Vehicle = {
     license: {
         expiredDateLicense: Timestamp.now(),
         licenseNumber: "",
-        backImgUrl: emptyPhotoWithRef,
-        frontImgUrl: emptyPhotoWithRef,
+        backImgUrl: EMPTY_REF_ATTACHMENT,
+        frontImgUrl: EMPTY_REF_ATTACHMENT,
     },
 };
 
 export const licenseBuilder = (
     licenseNumber: string,
     expiredDateLicense: Date,
-    frontImgUrl: ImgWithRef,
-    backImgUrl: ImgWithRef,
+    frontImgUrl: RefAttachment,
+    backImgUrl: RefAttachment,
 ): LicenseInterface => {
     return {
         licenseNumber,
@@ -94,9 +102,9 @@ export const driveReqBuilder = (
     id: string,
     userId: string,
     newFullName: string,
-    newProfilePhotoImgUrl: string | ImgWithRef,
+    newProfilePhotoImgUrl: string | RefAttachment,
     vehicles: Vehicle[],
-    realTimePhotoImgUrl: ImgWithRef,
+    realTimePhotoImgUrl: RefAttachment,
     services: Services[],
     location: Locations,
     driverEnterprise: string,
@@ -122,11 +130,11 @@ export const emptyDriveReq = (): UserRequest => {
         id: "",
         userId: "",
         newFullName: "",
-        newProfilePhotoImgUrl: emptyPhotoWithRef,
+        newProfilePhotoImgUrl: EMPTY_REF_ATTACHMENT,
         aproved: false,
         active: true,
         reviewedByHistory: [],
-        realTimePhotoImgUrl: emptyPhotoWithRef,
+        realTimePhotoImgUrl: EMPTY_REF_ATTACHMENT,
         services: [],
         location: Locations.CochabambaBolivia,
         vehicles: [],
@@ -138,8 +146,8 @@ export const mechanicReqBuilder = (
     id: string,
     userId: string,
     newFullName: string,
-    newProfilePhotoImgUrl: string | ImgWithRef,
-    realTimePhotoImgUrl: ImgWithRef,
+    newProfilePhotoImgUrl: string | RefAttachment,
+    realTimePhotoImgUrl: RefAttachment,
     services: Services[],
     location: Locations,
     mechanicalWorkShop: string | undefined,
@@ -181,8 +189,8 @@ export const laundryReqBuilder = (
     id: string,
     userId: string,
     newFullName: string,
-    newProfilePhotoImgUrl: string | ImgWithRef,
-    realTimePhotoImgUrl: ImgWithRef,
+    newProfilePhotoImgUrl: string | RefAttachment,
+    realTimePhotoImgUrl: RefAttachment,
     services: Services[],
     location: Locations,
     laundryEnterprite: string,
@@ -206,9 +214,9 @@ export const towReqBuilder = (
     id: string,
     userId: string,
     newFullName: string,
-    newProfilePhotoImgUrl: string | ImgWithRef,
+    newProfilePhotoImgUrl: string | RefAttachment,
     towEnterprite: string,
-    realTimePhotoImgUrl: ImgWithRef,
+    realTimePhotoImgUrl: RefAttachment,
     services: Services[],
     location: Locations,
     vehicles: Vehicle[],

@@ -1,18 +1,17 @@
 "use client";
-import { checkPermission } from "@/components/guards/utils/RoleValidator";
+import { checkPermission } from "@/components/guards/validators/RoleValidator";
 import PageLoading from "@/components/loaders/PageLoading";
 import { AuthContext } from "@/context/AuthContext";
 import { UserRole } from "@/interfaces/UserInterface";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const GuardOfPage = ({
-    roles,
-    children,
-}: {
+interface Props {
     roles: UserRole[];
     children: React.ReactNode;
-}) => {
+}
+
+const GuardOfPage: React.FC<Props> = ({ roles, children }) => {
     const { checkingUserAuth, user } = useContext(AuthContext);
     const [hasPermition, setPermition] = useState<boolean>(false);
 

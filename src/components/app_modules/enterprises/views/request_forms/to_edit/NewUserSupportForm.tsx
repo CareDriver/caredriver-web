@@ -1,8 +1,7 @@
 import { Enterprise, EnterpriseUser } from "@/interfaces/Enterprise";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { updateEnterprise } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
-import { DEFAULT_PHOTO } from "@/utils/user/UserData";
-import { validateEmialWithComparison } from "@/components/app_modules/users/validators/CredentialsValidator";
+import { DEFAULT_PHOTO } from "@/components/app_modules/users/models/MissingUserData";
 import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
@@ -11,6 +10,8 @@ import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import TextField from "@/components/form/view/fields/TextField";
+import { validateEmialWithComparison } from "@/components/app_modules/users/validators/for_confirmations/DataConfirmationValidator";
+import UserPhotoRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserPhotoRenderer";
 
 interface Props {
     userToAdd: UserInterface;
@@ -89,15 +90,7 @@ const NewUserSupportForm: React.FC<Props> = ({ userToAdd, enterprise }) => {
             </div>
 
             <div className="users-item | margin-top-25">
-                <img
-                    src={
-                        userToAdd.photoUrl.url === ""
-                            ? DEFAULT_PHOTO
-                            : userToAdd.photoUrl.url
-                    }
-                    alt=""
-                    className="users-item-photo"
-                />
+                <UserPhotoRenderer photo={userToAdd.photoUrl} />
                 <div>
                     <h2 className="text | bolder big-medium-v2 capitalize">
                         {userToAdd.fullName}

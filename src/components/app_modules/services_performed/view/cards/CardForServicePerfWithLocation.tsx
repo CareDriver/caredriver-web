@@ -1,6 +1,7 @@
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import BaseCardForServicePerf from "./BaseCardForServicePerf";
 import { TypeOfServicePerformed } from "../../model/models/TypeOfServicePerformed";
+import { ServiceType } from "@/interfaces/Services";
 
 const CardForServicePerfWithLocation = ({
     userId,
@@ -10,7 +11,7 @@ const CardForServicePerfWithLocation = ({
 }: {
     userId: string;
     service: ServiceRequestInterface;
-    typeOfService: "driver" | "mechanic" | "tow" | "laundry";
+    typeOfService: ServiceType;
     typeOfPerf: TypeOfServicePerformed;
 }) => {
     return (

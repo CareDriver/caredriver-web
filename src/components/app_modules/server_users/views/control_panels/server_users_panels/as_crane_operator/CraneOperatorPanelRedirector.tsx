@@ -4,7 +4,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { ServiceReqState } from "@/interfaces/Services";
 import { useContext, useEffect, useState } from "react";
 import CraneOperatorPanel from "./CraneOperatorPanel";
-import NewCraneOperatorForm from "../../../form_requests/requests_to_be_servers/for_crane_operator/NewCraneOperatorForm";
+import NewCraneOperatorForm from "../../../request_forms/requests_to_be_servers/for_crane_operator/NewCraneOperatorForm";
 import RequestInProgress from "../../RequestInProgress";
 import PageLoading from "@/components/loaders/PageLoading";
 

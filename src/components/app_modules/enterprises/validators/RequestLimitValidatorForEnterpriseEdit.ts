@@ -1,5 +1,6 @@
 import { Collections } from "@/firebase/CollecionNames";
 import { firestore } from "@/firebase/FirebaseConfig";
+import { ServiceType } from "@/interfaces/Services";
 import { collection, getDocs, query, where } from "firebase/firestore";
 
 const COLLECTION = collection(firestore, Collections.EditEnterprises);
@@ -8,7 +9,7 @@ export class RequestLimitValidatorForEnterpriseEdit {
     validate = async (
         userId: string,
         enterpriseId: string,
-        typeOfEnterprise: "mechanical" | "tow" | "laundry" | "driver",
+        typeOfEnterprise: ServiceType,
     ): Promise<boolean> => {
         try {
             const q = query(

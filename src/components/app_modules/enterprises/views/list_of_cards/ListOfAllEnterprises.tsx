@@ -7,25 +7,21 @@ import {
     getEnterprisesAdminNumPages,
     getEnterprisesAdminPaginated,
 } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
-import EnterpriseItem from "../cards/EnterpriseItem";
+import SimpleEnterpriseCard from "../cards/SimpleEnterpriseCard";
 import "@/styles/components/pagination.css";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Link from "next/link";
 import Plus from "@/icons/Plus";
 import "@/styles/components/enterprise.css";
-import {
-    getEmptyEnterprise,
-    getNewButtonTitle,
-    getRoute,
-    getTitleForRender,
-} from "@/utils/parser/ToSpanishEnterprise";
 import DataLoading from "@/components/loaders/DataLoading";
+import { ENTERPRISE_TO_SPANISH_AS_PLURAL } from "../../utils/EnterpriseSpanishTranslator";
+import { ServiceType } from "@/interfaces/Services";
+import {
+    routeToCreateNewEnterpriseForAdmin,
+    routeToManageEnterpriseAsAdmin,
+} from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 
-const ListOfAllEnterprises = ({
-    type,
-}: {
-    type: "mechanical" | "tow" | "laundry" | "driver";
-}) => {
+const ListOfAllEnterprises = ({ type }: { type: ServiceType }) => {
     const numPerPage = 12;
     const [data, setData] = useState<Enterprise[] | null>(null);
     const [page, setPage] = useState<number>(1);
@@ -67,16 +63,14 @@ const ListOfAllEnterprises = ({
     return data ? (
         <section className="enterprise-main-wrapper">
             <h1 className="text | big bolder capitalize">
-                {getTitleForRender(type)}
+                {ENTERPRISE_TO_SPANISH_AS_PLURAL[type]}
             </h1>
             <Link
                 className="small-general-button icon-wrapper | max-20 less-padding no-full center white-icon touchable"
-                href={`/admin/enterprises/${getRoute(type)}/register`}
+                href={routeToCreateNewEnterpriseForAdmin(type)}
             >
                 <Plus />
-                <span className="text | white bold">
-                    {getNewButtonTitle(type)}
-                </span>
+                <span className="text | white bold">Nueva empresa</span>
             </Link>
             {data.length > 0 ? (
                 <InfiniteScroll
@@ -86,20 +80,24 @@ const ListOfAllEnterprises = ({
                     loader={<DataLoading />}
                 >
                     <div className="enterprise-list">
-                        {data.map((product, i) => (
-                            <EnterpriseItem
-                                key={`enterprise-item-${i}`}
-                                route={`/admin/enterprises/${getRoute(
-                                    type,
-                                )}/edit/${product.id}`}
-                                enterprise={product}
-                            />
-                        ))}
+                        {data.map(
+                            (enterprise, i) =>
+                                enterprise.id && (
+                                    <SimpleEnterpriseCard
+                                        key={`enterprise-item-${i}`}
+                                        route={routeToManageEnterpriseAsAdmin(
+                                            type,
+                                            enterprise.id,
+                                        )}
+                                        enterprise={enterprise}
+                                    />
+                                ),
+                        )}
                     </div>
                 </InfiniteScroll>
             ) : (
                 <div className="empty-wrapper | auto-height">
-                    <h2>No hay {getEmptyEnterprise(type)}</h2>
+                    <h2 className="text">No se encontraron empresas</h2>
                 </div>
             )}
         </section>

@@ -1,5 +1,7 @@
 import Home from "@/components/home/Home";
 
-export default function App() {
+const Page = () => {
     return <Home />;
-}
+};
+
+export default Page;

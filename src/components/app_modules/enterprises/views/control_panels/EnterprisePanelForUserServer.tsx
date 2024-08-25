@@ -11,7 +11,7 @@ import UserAdderToEnterprise from "../request_forms/to_edit/UserAdderToEnterpris
 import Users from "@/icons/Users";
 import ListOfUsersOfAEnterprise from "../list_of_cards/ListOfUsersOfAEnterprise";
 import { UserInterface } from "@/interfaces/UserInterface";
-import EnterpriseRenderer from "../../../requests/data_renderer/enterprise/EnterpriseRenderer";
+import EnterpriseRenderer from "../data_renderers/EnterpriseRenderer";
 import { PageStateContext } from "@/context/PageStateContext";
 import EnterpriseEditForm from "../request_forms/to_edit/EnterpriseEditForm";
 import { EnterpriseManagerEditedAsServerUser } from "../../models/enterprise_managers_edited/EnterpriseManagerEditedAsServerUser";

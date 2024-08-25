@@ -1,21 +1,21 @@
 "use client";
 
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
-import { toformatDate } from "@/utils/parser/ForDate";
+import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
 import UsersOnService from "../UsersOnService";
 import Car from "@/icons/Car";
-import {
-    getVehicleSizeLabel,
-    vehicleModeRenderV2,
-    vehicleTypeRender,
-} from "@/interfaces/VehicleInterface";
-import FieldDeleted from "@/components/requests/data_renderer/form/FieldDeleted";
+import { getVehicleSizeLabel } from "@/interfaces/VehicleInterface";
 import RendererOfPriceOfServicePerf from "../RendererOfPriceOfServicePerf";
-import MapRealTime from "@/components/requests/data_renderer/map/MapRealTime";
 import { buildUrlDB } from "@/interfaces/RouteNavigationInterface";
 import { UserServices } from "@/interfaces/Services";
 import { Locations } from "@/interfaces/Locations";
 import RendererOfServiceStatusPerf from "../RendererOfServiceStatusPerf";
+import {
+    TRANSMITION_TO_SPANISH,
+    VEHICLE_CATEGORY_TO_SPANISH,
+} from "@/components/app_modules/server_users/models/VehicleFields";
+import FieldDeleted from "@/components/form/view/field_renderers/FieldDeleted";
+import MapRealTime from "@/components/form/view/field_renderers/MapRealTime";
 
 const TowServiceView = ({ service }: { service: ServiceRequestInterface }) => {
     return (
@@ -23,13 +23,13 @@ const TowServiceView = ({ service }: { service: ServiceRequestInterface }) => {
             <h1 className="text | bolder big">
                 Servicio{" "}
                 {service.createdAt &&
-                    `hecho el ${toformatDate(service.createdAt?.toDate())}`}
+                    `hecho el ${timestampDateInSpanish(service.createdAt)}`}
             </h1>
             <div className="row-wrapper | text">
                 <h2>
                     Servicio{" "}
                     {service.createdAt &&
-                        `hecho el ${toformatDate(service.createdAt?.toDate())}`}{" "}
+                        `hecho el ${timestampDateInSpanish(service.createdAt)}`}{" "}
                     -
                 </h2>
                 <RendererOfServiceStatusPerf service={service} />
@@ -41,7 +41,8 @@ const TowServiceView = ({ service }: { service: ServiceRequestInterface }) => {
                 <h2 className="text icon-wrapper | big-medium-v4 bold nb margin-bottom-15">
                     <Car />
                     Vehículo remolcado -{" "}
-                    {service.vehicle?.type && vehicleTypeRender[service.vehicle.type]}
+                    {service.vehicle?.type &&
+                        VEHICLE_CATEGORY_TO_SPANISH[service.vehicle.type]}
                 </h2>
                 <p className="text | medium gray-dark">
                     <b>Nombre:</b> {service.vehicle?.name}
@@ -55,12 +56,13 @@ const TowServiceView = ({ service }: { service: ServiceRequestInterface }) => {
                 {service.vehicle?.transmission && (
                     <p className="text | medium gray-dark">
                         <b>Transmisión:</b>{" "}
-                        {vehicleModeRenderV2[service.vehicle?.transmission]}
+                        {TRANSMITION_TO_SPANISH[service.vehicle?.transmission]}
                     </p>
                 )}
                 {service.vehicle?.size && (
                     <p className="text | medium gray-dark">
-                        <b>Tamaño:</b> {getVehicleSizeLabel[service.vehicle.size]}
+                        <b>Tamaño:</b>{" "}
+                        {getVehicleSizeLabel[service.vehicle.size]}
                     </p>
                 )}
             </div>
@@ -70,7 +72,9 @@ const TowServiceView = ({ service }: { service: ServiceRequestInterface }) => {
             <div className="max-width-50 margin-bottom-50">
                 <div className="margin-bottom-25">
                     <h3 className="text | medium bolder">Desde:</h3>
-                    <p className="text | medium">{service.pickupLocation.locationName}</p>
+                    <p className="text | medium">
+                        {service.pickupLocation.locationName}
+                    </p>
                 </div>
 
                 {service.deliveryLocation ? (
@@ -88,7 +92,9 @@ const TowServiceView = ({ service }: { service: ServiceRequestInterface }) => {
             <MapRealTime
                 databaseURL={buildUrlDB(
                     UserServices.Tow,
-                    service.location ? service.location : Locations.CochabambaBolivia,
+                    service.location
+                        ? service.location
+                        : Locations.CochabambaBolivia,
                 )}
                 serviceId={service.id}
                 isCanceled={service.canceled ? service.canceled : false}

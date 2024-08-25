@@ -1,6 +1,6 @@
 import { ServiceType } from "@/interfaces/Services";
 import { TypeOfServicePerformed } from "../models/TypeOfServicePerformed";
-import { isNullOrEmptyText } from "@/utils/validator/text/TextValidator";
+import { isNullOrEmptyText } from "@/validators/TextValidator";
 
 export function buildLinkForServicePerformed(
     userId: string | undefined | null,

@@ -4,7 +4,6 @@ import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import { PageStateContext } from "@/context/PageStateContext";
 import TriangleExclamation from "@/icons/TriangleExclamation";
 import { Enterprise } from "@/interfaces/Enterprise";
-import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 import { useRouter } from "next/navigation";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
@@ -13,6 +12,7 @@ import BaseForm from "@/components/form/view/forms/BaseForm";
 import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
 import TextField from "@/components/form/view/fields/TextField";
 import { validateConfirmationEnterpriseName } from "../../../validators/EnterpriseValidator";
+import { routeToAllEnterprisesAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
 
 interface Props {
     enterprise: Enterprise;
@@ -34,8 +34,7 @@ const FormToDeleteEnterprise: React.FC<Props> = ({ enterprise }) => {
                         success: "Empresa eliminada",
                         error: `Error al eliminar la empresa, inténtalo de nuevo por favor`,
                     });
-                    /* TODO: make builder for links */
-                    router.push(`/enterprise/${getRoute(enterprise.type)}`);
+                    router.push(routeToAllEnterprisesAsUser(enterprise.type));
                     setLoadingAll(false, setFormState);
                 } catch (e) {
                     setLoadingAll(false, setFormState);

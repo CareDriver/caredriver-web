@@ -37,7 +37,7 @@ const PDFUploader: React.FC<Props> = ({ uploader, content }) => {
 
     const removeFile = () => {
         uploader.setFile({
-            value: null,
+            value: undefined,
             message: "Necesitas subir un archivo PDF",
         });
     };

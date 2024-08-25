@@ -5,7 +5,7 @@ import { ServicesData } from "./ServicesDataInterface";
 import { BalanceHistory, Payment, Price } from "./Payment";
 import { Locations } from "./Locations";
 import { ServiceStateRequest, Vehicle } from "./UserRequest";
-import { emptyPhotoWithRef, ImgWithRef } from "./ImageInterface";
+import { EMPTY_REF_ATTACHMENT, RefAttachment } from "../components/form/models/RefAttachment";
 import { Branding } from "./BrandingInterface";
 
 export interface HistoryLocationInterface {
@@ -33,7 +33,7 @@ export enum UserRole {
     BalanceRecharge = "BalanceRecharge",
 }
 
-export const UserRoleRender = {
+export const USER_ROLE_TO_SPANISH = {
     User: "Usuario",
     Admin: "Administrador",
     Support: "Soporte",
@@ -55,7 +55,7 @@ export interface UserInterface {
     role?: UserRole; // the role that the user has in the application
     fullName: string; // Full name of the user
     phoneNumber: string; // Phone number of the user (includes country code, ej: +591 76543218)
-    photoUrl: ImgWithRef; // URL of the user's photo
+    photoUrl: RefAttachment; // URL of the user's photo
     email?: string; // User's email
     identityCard?: IdentityCard; // User's Id card
 
@@ -85,15 +85,15 @@ export interface UserInterface {
 }
 
 export interface IdentityCard {
-    frontCard: ImgWithRef;
-    backCard: ImgWithRef;
+    frontCard: RefAttachment;
+    backCard: RefAttachment;
     location: string;
     updatedDate: Timestamp;
 }
 
 export const emptyIdCard: IdentityCard = {
-    frontCard: emptyPhotoWithRef,
-    backCard: emptyPhotoWithRef,
+    frontCard: EMPTY_REF_ATTACHMENT,
+    backCard: EMPTY_REF_ATTACHMENT,
     location: "",
     updatedDate: Timestamp.now(),
 };

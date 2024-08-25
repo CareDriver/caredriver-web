@@ -1,8 +1,8 @@
-import AuthenticatorContainer from "@/components/app_modules/auth/views/containers/AuthenticatorContainer";
-import AuthenticatorProviderContainer from "@/components/app_modules/auth/views/containers/AuthenticatorProviderContainer";
-import SignInForm from "@/components/app_modules/auth/views/sign_in/SignInForm";
+import { AuthenticatorProviderContainer } from "@/components/auth/contexts/AuthenticatorContext";
+import AuthenticatorContainer from "@/components/auth/views/containers/AuthenticatorContainer";
+import SignInForm from "@/components/auth/views/sign_in/SignInForm";
 
-const SignInPage = () => {
+const Page = () => {
     return (
         <AuthenticatorProviderContainer>
             <AuthenticatorContainer authTitle="Inicia sesion">
@@ -12,4 +12,4 @@ const SignInPage = () => {
     );
 };
 
-export default SignInPage;
+export default Page;

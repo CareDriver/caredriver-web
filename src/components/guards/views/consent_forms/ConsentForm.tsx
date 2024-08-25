@@ -3,13 +3,13 @@
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { isValidChangeReason } from "@/utils/validator/debt/DebtValidator";
+import { isValidChangeReason } from "@/components/app_modules/users/validators/for_data/BalanceValidator";
 import { UserRole } from "@/interfaces/UserInterface";
 import {
     setVisitedToday,
     wasAlreadyVisited,
-} from "@/utils/temp_storage/VisitedHandler";
-import { saveReasonForInfo } from "@/utils/requests/ReasonForInfoRequester";
+} from "@/utils/encryptors/EncryptionGeneratorByDate";
+import { saveReasonForInfo } from "@/components/guards/api/ReasonForInfoRequester";
 import { ReasonForInformationInterface } from "@/interfaces/ReasonsForInformation";
 import { Timestamp } from "firebase/firestore";
 import { toast } from "react-toastify";
@@ -19,7 +19,7 @@ import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
 import Popup from "@/components/modules/Popup";
 import BaseFormWithTwoButtons from "@/components/form/view/forms/BaseFormWithTwoButtons";
-import { genDocId } from "@/utils/IdGenerator";
+import { genDocId } from "@/utils/generators/IdGenerator";
 
 interface Form {
     complaintId: TextFieldForm;

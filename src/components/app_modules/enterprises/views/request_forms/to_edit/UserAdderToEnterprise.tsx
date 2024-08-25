@@ -7,11 +7,11 @@ import { toast } from "react-toastify";
 import "@/styles/components/users.css";
 import NewUserSupportForm from "./NewUserSupportForm";
 import UserSelector from "../../../../users/views/selectors/UserSelector";
-import NewVehicleForm from "../../../../server_users/views/form_requests/requests_to_be_servers/for_driver/NewVehicleForm";
-import NewDriverForm from "../../../../server_users/views/form_requests/requests_to_be_servers/for_driver/NewDriverForm";
-import NewMechanicForm from "../../../../server_users/views/form_requests/requests_to_be_servers/for_mechanic/NewMechanicForm";
-import NewCraneOperatorForm from "../../../../server_users/views/form_requests/requests_to_be_servers/for_crane_operator/NewCraneOperatorForm";
-import NewLaundererForm from "../../../../server_users/views/form_requests/requests_to_be_servers/for_launderer/NewLaundererForm";
+import NewVehicleForm from "../../../../server_users/views/request_forms/requests_to_be_servers/for_driver/NewVehicleForm";
+import NewDriverForm from "../../../../server_users/views/request_forms/requests_to_be_servers/for_driver/NewDriverForm";
+import NewMechanicForm from "../../../../server_users/views/request_forms/requests_to_be_servers/for_mechanic/NewMechanicForm";
+import NewCraneOperatorForm from "../../../../server_users/views/request_forms/requests_to_be_servers/for_crane_operator/NewCraneOperatorForm";
+import NewLaundererForm from "../../../../server_users/views/request_forms/requests_to_be_servers/for_launderer/NewLaundererForm";
 import {
     checkRegistrationForSingleVehicule,
     hasTheSameLocationOfEnterprise,

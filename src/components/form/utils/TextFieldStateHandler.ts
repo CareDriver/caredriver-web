@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react";
 import { TextFieldSetter } from "../models/FieldSetters";
-import { InputValidator } from "@/utils/validator/InputValidator";
+import { InputValidator } from "@/validators/InputValidatorSignature";
 
 export class TextFieldStateHandler {
     setter: TextFieldSetter;

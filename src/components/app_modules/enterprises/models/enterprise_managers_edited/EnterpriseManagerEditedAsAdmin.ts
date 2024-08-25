@@ -1,8 +1,9 @@
 import { Enterprise } from "@/interfaces/Enterprise";
 import { IEditedEnterpriseManager } from "./IEditedEnterpriseManager";
 import { toast } from "react-toastify";
-import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 import { updateEnterprise } from "../../api/EnterpriseRequester";
+import { ServiceType } from "@/interfaces/Services";
+import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 
 export class EnterpriseManagerEditedAsAdmin
     implements IEditedEnterpriseManager
@@ -10,7 +11,7 @@ export class EnterpriseManagerEditedAsAdmin
     validateData = async (
         userId: string,
         enterpriseId: string,
-        enterpriseType: "mechanical" | "tow" | "laundry" | "driver",
+        enterpriseType: ServiceType,
     ): Promise<boolean> => {
         return true;
     };
@@ -30,9 +31,8 @@ export class EnterpriseManagerEditedAsAdmin
     };
 
     getRedirectionAfterHandling = (
-        enterpriseType: "mechanical" | "tow" | "laundry" | "driver",
+        enterpriseType: ServiceType,
     ): string | undefined => {
-        let route = `/admin/enterprises/${getRoute(enterpriseType)}`;
-        return route;
+        return routeToAllEnterprisesAsAdmin(enterpriseType);
     };
 }

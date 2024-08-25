@@ -1,3 +1,5 @@
+"use client";
+
 import { auth } from "@/firebase/FirebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import {
@@ -7,12 +9,13 @@ import {
 } from "@/interfaces/UserInterface";
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useState, useEffect } from "react";
-import { getUserById } from "@/utils/requests/UserRequester";
+import { getUserById } from "@/components/app_modules/users/api/UserRequester";
 import { servicesData } from "@/interfaces/ServicesDataInterface";
 import { toast } from "react-toastify";
-import { emptyPhotoWithRef } from "@/interfaces/ImageInterface";
+import { EMPTY_REF_ATTACHMENT } from "@/components/form/models/RefAttachment";
 import { defaultBalance, defaultMinBalance } from "@/interfaces/Payment";
-import { deleteAllCookies } from "@/utils/temp_storage/CookiesHandler";
+import { deleteAllCookies } from "@/utils/storage_handlers/CookieStoragerer";
+import { routeToHomePage } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
 
 type ContextType = {
     user: UserInterface | undefined;
@@ -43,7 +46,7 @@ const loadUserLoggedData = (
                 userData?.phoneNumber === undefined ? "" : userData.phoneNumber,
             photoUrl:
                 userData?.photoUrl === undefined
-                    ? emptyPhotoWithRef
+                    ? EMPTY_REF_ATTACHMENT
                     : userData.photoUrl,
             // comments: userData?.comments === undefined ? [] : userData.comments,
             vehicles: userData?.vehicles === undefined ? [] : userData.vehicles,
@@ -103,7 +106,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const refirectToHome = () => {
         if (!pathname.includes("auth")) {
-            router.push("/");
+            router.push(routeToHomePage());
         }
     };
 
@@ -159,11 +162,11 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             .then(() => {
                 setUser(undefined);
                 toast.warning(reason);
-                router.push("/");
+                router.push(routeToHomePage());
             })
             .catch(() => {
                 toast.error("Algo salio mal");
-                window.location.replace("/");
+                window.location.replace(routeToHomePage());
             });
     };
 
@@ -173,11 +176,11 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 deleteAllCookies();
                 setUser(undefined);
                 toast.success("Sesión cerrada existosamente");
-                router.push("/");
+                router.push(routeToHomePage());
             })
             .catch(() => {
                 toast.error("Algo salio mal");
-                window.location.replace("/");
+                window.location.replace(routeToHomePage());
             });
     };
 

@@ -1,15 +1,16 @@
 import { Enterprise } from "@/interfaces/Enterprise";
+import { ServiceType } from "@/interfaces/Services";
 
 export interface IEditedEnterpriseManager {
     validateData(
         userId: string,
         enterpriseId: string,
-        enterpriseType: "mechanical" | "tow" | "laundry" | "driver",
+        enterpriseType: ServiceType,
     ): Promise<boolean>;
 
     handle(enterprise: Enterprise): Promise<void>;
 
     getRedirectionAfterHandling(
-        enterpriseType: "mechanical" | "tow" | "laundry" | "driver",
+        enterpriseType: ServiceType,
     ): string | undefined;
 }

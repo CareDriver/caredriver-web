@@ -3,19 +3,23 @@
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import UsersOnService from "../UsersOnService";
 import Car from "@/icons/Car";
-import {
-    getVehicleSizeLabel,
-    vehicleModeRenderV2,
-    vehicleTypeRender,
-} from "@/interfaces/VehicleInterface";
+import { getVehicleSizeLabel } from "@/interfaces/VehicleInterface";
 import RendererOfPriceOfServicePerf from "../RendererOfPriceOfServicePerf";
-import MapRealTime from "@/components/requests/data_renderer/map/MapRealTime";
 import { buildUrlDB } from "@/interfaces/RouteNavigationInterface";
 import { UserServices } from "@/interfaces/Services";
 import { Locations } from "@/interfaces/Locations";
 import RendererOfServiceStatusPerf from "../RendererOfServiceStatusPerf";
+import {
+    TRANSMITION_TO_SPANISH,
+    VEHICLE_CATEGORY_TO_SPANISH,
+} from "@/components/app_modules/server_users/models/VehicleFields";
+import MapRealTime from "@/components/form/view/field_renderers/MapRealTime";
 
-const LaundryServiceView = ({ service }: { service: ServiceRequestInterface }) => {
+const LaundryServiceView = ({
+    service,
+}: {
+    service: ServiceRequestInterface;
+}) => {
     return (
         <section className="render-data-wrapper">
             <h1 className="text | bolder big">
@@ -36,7 +40,8 @@ const LaundryServiceView = ({ service }: { service: ServiceRequestInterface }) =
                 <h2 className="text icon-wrapper | big-medium-v4 bold nb margin-bottom-15">
                     <Car />
                     Vehículo lavado -{" "}
-                    {service.vehicle?.type && vehicleTypeRender[service.vehicle.type]}
+                    {service.vehicle?.type &&
+                        VEHICLE_CATEGORY_TO_SPANISH[service.vehicle.type]}
                 </h2>
                 <p className="text | medium gray-dark">
                     <b>Nombre:</b> {service.vehicle?.name}
@@ -50,12 +55,13 @@ const LaundryServiceView = ({ service }: { service: ServiceRequestInterface }) =
                 {service.vehicle?.transmission && (
                     <p className="text | medium gray-dark">
                         <b>Transmisión:</b>{" "}
-                        {vehicleModeRenderV2[service.vehicle?.transmission]}
+                        {TRANSMITION_TO_SPANISH[service.vehicle?.transmission]}
                     </p>
                 )}
                 {service.vehicle?.size && (
                     <p className="text | medium gray-dark">
-                        <b>Tamaño:</b> {getVehicleSizeLabel[service.vehicle.size]}
+                        <b>Tamaño:</b>{" "}
+                        {getVehicleSizeLabel[service.vehicle.size]}
                     </p>
                 )}
             </div>
@@ -64,13 +70,17 @@ const LaundryServiceView = ({ service }: { service: ServiceRequestInterface }) =
 
             <div className="max-width-50 margin-bottom-50">
                 <h3 className="text | medium bolder">Ubicación</h3>
-                <p className="text | medium">{service.pickupLocation.locationName}</p>
+                <p className="text | medium">
+                    {service.pickupLocation.locationName}
+                </p>
             </div>
 
             <MapRealTime
                 databaseURL={buildUrlDB(
                     UserServices.Laundry,
-                    service.location ? service.location : Locations.CochabambaBolivia,
+                    service.location
+                        ? service.location
+                        : Locations.CochabambaBolivia,
                 )}
                 serviceId={service.id}
                 isCanceled={service.canceled ? service.canceled : false}

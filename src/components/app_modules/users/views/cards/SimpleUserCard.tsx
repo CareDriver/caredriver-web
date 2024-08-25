@@ -1,16 +1,11 @@
 import { UserInterface } from "@/interfaces/UserInterface";
-import { DEFAULT_PHOTO } from "@/utils/user/UserData";
+import UserPhotoRenderer from "../data_renderers/for_user_data/UserPhotoRenderer";
+import "@/styles/components/users.css"
 
 const SimpleUserCard = ({ user }: { user: UserInterface }) => {
     return (
         <div className="users-item | margin-top-25">
-            <img
-                src={
-                    user.photoUrl.url === "" ? DEFAULT_PHOTO : user.photoUrl.url
-                }
-                alt=""
-                className="users-item-photo"
-            />
+            <UserPhotoRenderer photo={user.photoUrl} />
             <div>
                 <h2 className="text | bolder big-medium-v2 capitalize">
                     {user.fullName}

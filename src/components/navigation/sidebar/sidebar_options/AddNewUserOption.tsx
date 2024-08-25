@@ -1,12 +1,13 @@
 import UserPlus from "@/icons/UserPlus";
+import { routeToCreateNewUserAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 import Link from "next/link";
 
 const AddNewUserOption = ({ pathname }: { pathname: string }) => {
     return (
         <Link
-            href={"/admin/users/register"}
+            href={routeToCreateNewUserAsAdmin()}
             className={`sidebar-option ${
-                pathname.includes("users/register") && "selected"
+                pathname.includes(routeToCreateNewUserAsAdmin()) && "selected"
             }`}
         >
             <UserPlus />

@@ -1,7 +1,7 @@
-import UserRedirect from "@/components/users/UserRedirect";
+import UserRedirect from "@/components/app_modules/users/views/UserRedirect";
 
-const RedirectorPage = () => {
+const Page = () => {
     return <UserRedirect />;
 };
 
-export default RedirectorPage;
+export default Page;

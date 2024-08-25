@@ -37,7 +37,7 @@ const SelfieUploader: React.FC<Props> = ({ uploader, content }) => {
 
     const removeImage = () => {
         uploader.setImage({
-            value: null,
+            value: undefined,
             message: "Necesitas subir una imagen",
         });
     };

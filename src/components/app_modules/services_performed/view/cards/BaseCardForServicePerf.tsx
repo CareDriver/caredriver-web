@@ -1,9 +1,10 @@
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
-import { getFormatDate } from "@/utils/parser/ForDate";
+import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
 import Link from "next/link";
 import { getServicePerfStatus } from "../../model/utils/ServiceStatusGetter";
 import { TypeOfServicePerformed } from "../../model/models/TypeOfServicePerformed";
 import { buildLinkForServicePerformed } from "../../model/utils/LinkBuilder";
+import { ServiceType } from "@/interfaces/Services";
 
 const BaseCardForServicePerf = ({
     userId,
@@ -14,7 +15,7 @@ const BaseCardForServicePerf = ({
 }: {
     userId: string;
     service: ServiceRequestInterface;
-    typeOfService: "driver" | "mechanic" | "tow" | "laundry";
+    typeOfService: ServiceType;
     typeOfPerf: TypeOfServicePerformed;
     children: undefined | React.ReactNode;
 }) => {
@@ -31,7 +32,7 @@ const BaseCardForServicePerf = ({
         <>
             {service.createdAt && (
                 <h3 className="text | medium-big bolder">
-                    {getFormatDate(service.createdAt.toDate())}
+                    {timestampDateInSpanish(service.createdAt)}
                 </h3>
             )}
             {service.price && service.price.price && (
@@ -52,7 +53,7 @@ const BaseCardForServicePerf = ({
         </span>
     );
 
-    if (!HAS_FAKED_ID) {
+    if (!HAS_FAKED_ID || !LINK_TO) {
         return (
             <div
                 className={`service-item-wrapper | disabled | ${

@@ -1,5 +1,5 @@
-import { InputState } from "@/utils/validator/InputValidator";
-import { isNullOrEmptyText } from "@/utils/validator/text/TextValidator";
+import { InputState } from "@/validators/InputValidatorSignature";
+import { isNullOrEmptyText } from "@/validators/TextValidator";
 
 const FAKE_ID_REGEX = /^[a-zA-Z0-9_-]+$/;
 

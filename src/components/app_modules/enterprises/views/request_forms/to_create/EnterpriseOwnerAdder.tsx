@@ -3,11 +3,11 @@ import UserSelector from "@/components/app_modules/users/views/selectors/UserSel
 import { EntityField } from "@/components/form/models/FormFields";
 import { Locations } from "@/interfaces/Locations";
 import { UserInterface } from "@/interfaces/UserInterface";
-import { useContext } from "react";
-import { isValidToBeTheEnterpriseOwner } from "../../../validators/EnterpriseOwnerValidator";
+import { useContext, useEffect, useState } from "react";
+import { verifyUserAvailabilityToBeEnterpriseOwner } from "../../../validators/EnterpriseOwnerValidator";
 import { toast } from "react-toastify";
-import { hasTheSameLocation } from "../../../utils/UserValidatorInEnterpriseHelper";
 import { PageStateContext } from "@/context/PageStateContext";
+import { ServiceType } from "@/interfaces/Services";
 
 interface Props {
     owner: {
@@ -15,57 +15,55 @@ interface Props {
         setter: (e: EntityField) => void;
     };
     enterprise: {
-        type: "mechanical" | "tow" | "laundry" | "driver";
+        type: ServiceType;
         localization: Locations;
     };
 }
 
 const EnterpriseOwnerAdder: React.FC<Props> = ({ owner, enterprise }) => {
-    const { isValid, setValid } = useContext(PageStateContext);
+    const { isValid, setLoading, setValid } = useContext(PageStateContext);
+    const [userToBeOwner, setUserToBeOwner] = useState<
+        UserInterface | undefined
+    >(undefined);
+
     const processTheUserFound = async (
         userFound: UserInterface | undefined,
     ) => {
-        if (!userFound || !userFound.id) {
-            owner.setter({
-                value: undefined,
-                message: null,
-            });
-            return;
-        }
-
-        if (owner.values.value && userFound.id === owner.values.value) {
-            return;
-        }
-
-        if (!hasTheSameLocation(userFound, enterprise.localization)) {
-            toast.error(
-                "El usuario no esta en la misma localizacion que el servicio",
-            );
-            owner.setter({
-                value: undefined,
-                message: null,
-            });
-            return;
-        }
-
-        let isValidToBeOwner = await isValidToBeTheEnterpriseOwner(
-            userFound.id,
-            enterprise.type,
-        );
-
-        if (isValidToBeOwner) {
-            toast.success("El usuario es valido para ser dueño de la empresa");
-            owner.setter({
-                value: userFound.id,
-                message: null,
-            });
-        }
+        setUserToBeOwner(userFound);
     };
 
+    useEffect(() => {
+        if (userToBeOwner) {
+            setLoading(true);
+            verifyUserAvailabilityToBeEnterpriseOwner(
+                userToBeOwner,
+                enterprise.type,
+                enterprise.localization,
+            )
+                .then((res) => {
+                    if (userToBeOwner.id) {
+                        setValid(res.isValid)
+                        owner.setter({
+                            value: userToBeOwner.id,
+                            message: res.message,
+                        });
+                    }
+                })
+                .catch(() => {
+                    toast.error(
+                        "Error al verificar al usuario, intentanlo de nuevo por favor",
+                    );
+                })
+                .finally(() => {
+                    setLoading(false);
+                });
+        }
+    }, [enterprise.localization, userToBeOwner]);
+
     return (
-        <div className="service-form-wrapper">
+        <div>
             <div>
-                <h1 className="text | big bolder">Dueño de la empresa</h1>
+                <h1 className="text | bolder">Dueño de la empresa</h1>
                 <p className="text | light">
                     Busca al usuario que quieres que sea dueño de la empresa,
                     <b>
@@ -73,17 +71,20 @@ const EnterpriseOwnerAdder: React.FC<Props> = ({ owner, enterprise }) => {
                         empresa.
                     </b>
                 </p>
+
                 <UserSelector
                     form={{
                         isValid: isValid,
                         setValid: setValid,
+                        stateFeedback: owner.values.message
+                            ? {
+                                  isValid: isValid,
+                                  message: owner.values.message,
+                              }
+                            : undefined,
                     }}
                     processTheUserFound={processTheUserFound}
                 />
-                {/* TODO: add class to render as error */}
-                {owner.values.message && (
-                    <small>* {owner.values.message}</small>
-                )}
             </div>
         </div>
     );

@@ -1,8 +1,8 @@
-import AuthenticatorContainer from "@/components/app_modules/auth/views/containers/AuthenticatorContainer";
-import AuthenticatorProviderContainer from "@/components/app_modules/auth/views/containers/AuthenticatorProviderContainer";
-import SignUpForm from "@/components/app_modules/auth/views/sign_up/SignUpForm";
+import { AuthenticatorProviderContainer } from "@/components/auth/contexts/AuthenticatorContext";
+import AuthenticatorContainer from "@/components/auth/views/containers/AuthenticatorContainer";
+import SignUpForm from "@/components/auth/views/sign_up/SignUpForm";
 
-const SignUpPage = () => {
+const Page = () => {
     return (
         <AuthenticatorProviderContainer>
             <AuthenticatorContainer authTitle="Registrate !">
@@ -12,4 +12,4 @@ const SignUpPage = () => {
     );
 };
 
-export default SignUpPage;
+export default Page;

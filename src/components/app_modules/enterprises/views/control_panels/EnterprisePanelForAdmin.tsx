@@ -6,12 +6,12 @@ import { getEnterpriseById } from "@/components/app_modules/enterprises/api/Ente
 import { Enterprise } from "@/interfaces/Enterprise";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 import EnterpriseEditForm from "../request_forms/to_edit/EnterpriseEditForm";
 import { EnterpriseManagerEditedAsAdmin } from "../../models/enterprise_managers_edited/EnterpriseManagerEditedAsAdmin";
 import PageLoading from "@/components/loaders/PageLoading";
 import FormToDeleteEnterprise from "../request_forms/to_delete/FormToDeleteEnterprise";
 import FormToDisableEnterprise from "../request_forms/to_disable/FormToDisableEnterprise";
+import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 
 interface Props {
     id: string;
@@ -29,9 +29,8 @@ const EnterprisePanelForAdmin: React.FC<Props> = ({ id }) => {
                         toast.warning("Empresa no encontrada", {
                             toastId: "no-found-service-enterprise",
                         });
-                        router.push(
-                            `/admin/enterprises/${getRoute(data.type)}`,
-                        );
+
+                        router.push(routeToAllEnterprisesAsAdmin(data.type));
                         return;
                     }
 

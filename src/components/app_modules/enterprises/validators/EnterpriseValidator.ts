@@ -1,5 +1,5 @@
 import { UserInterface } from "@/interfaces/UserInterface";
-import { InputState } from "../../../../utils/validator/InputValidator";
+import { InputState } from "../../../../validators/InputValidatorSignature";
 import { Enterprise } from "@/interfaces/Enterprise";
 
 export const validateConfirmationEnterpriseName = (

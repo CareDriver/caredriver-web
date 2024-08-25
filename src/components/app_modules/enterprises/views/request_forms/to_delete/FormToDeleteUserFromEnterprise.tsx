@@ -7,21 +7,20 @@ import {
     UserInterface,
 } from "@/interfaces/UserInterface";
 import { FormEvent, useContext, useEffect, useState } from "react";
-import { validateEmialWithComparison } from "@/components/app_modules/users/validators/CredentialsValidator";
 import { toast } from "react-toastify";
 import { updateEnterprise } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
-import { updateUser } from "@/utils/requests/UserRequester";
+import { updateUser } from "@/components/app_modules/users/api/UserRequester";
 import { ServiceReqState, Services } from "@/interfaces/Services";
 import { deleteField } from "firebase/firestore";
 import {
     getServiceReqById,
     saveReview,
-} from "@/utils/requests/services/ServicesRequester";
-import { driveReqCollection } from "@/utils/requests/services/DriveRequester";
+} from "@/components/app_modules/server_users/api/ServicesRequester";
+import { driveReqCollection } from "@/components/app_modules/server_users/api/DriveRequester";
 import { UserRequest } from "@/interfaces/UserRequest";
-import { laundryReqCollection } from "@/utils/requests/services/LaundryRequester";
-import { towReqCollection } from "@/utils/requests/services/TowRequester";
-import { mechanicReqCollection } from "@/utils/requests/services/MechanicRequester";
+import { laundryReqCollection } from "@/components/app_modules/server_users/api/LaundryRequester";
+import { towReqCollection } from "@/components/app_modules/server_users/api/TowRequester";
+import { mechanicReqCollection } from "@/components/app_modules/server_users/api/MechanicRequester";
 import { AuthContext } from "@/context/AuthContext";
 import { UserValidatorInDriverEnterprise } from "../../../validators/user_validators_with_enterprises/UserValidatorInDriverEnterprise";
 import SimpleUserCard from "../../../../users/views/cards/SimpleUserCard";
@@ -31,6 +30,7 @@ import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import TextField from "@/components/form/view/fields/TextField";
+import { validateEmialWithComparison } from "@/components/app_modules/users/validators/for_confirmations/DataConfirmationValidator";
 
 interface Props {
     selectedUser: {

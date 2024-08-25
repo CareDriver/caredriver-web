@@ -1,12 +1,13 @@
 import UserIcon from "@/icons/UserIcon";
+import { routeToProfileAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForProfileAsAdmin";
 import Link from "next/link";
 
 const NoServerUserProfileOp = ({ pathname }: { pathname: string }) => {
     return (
         <Link
-            href={"/admin/profile"}
+            href={routeToProfileAsAdmin()}
             className={`sidebar-option ${
-                pathname.includes("/admin/profile") && "selected"
+                pathname.includes(routeToProfileAsAdmin()) && "selected"
             }`}
         >
             <UserIcon />

@@ -7,16 +7,17 @@ import {
     getNumPagesForSupportUsers,
     getPaginatedDataForSupportUsers,
 } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
-import EnterpriseItem from "../cards/EnterpriseItem";
+import SimpleEnterpriseCard from "../cards/SimpleEnterpriseCard";
 import "@/styles/components/pagination.css";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 import { UserInterface } from "@/interfaces/UserInterface";
 import DataLoading from "@/components/loaders/DataLoading";
+import { ServiceType } from "@/interfaces/Services";
+import { routeToManageEnterpriseAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
 
 interface Props {
     user: UserInterface;
-    typeOfEnterprise: "mechanical" | "tow" | "laundry" | "driver";
+    typeOfEnterprise: ServiceType;
 }
 
 const EnterpriseListForSupportUser: React.FC<Props> = ({
@@ -101,15 +102,19 @@ const EnterpriseListForSupportUser: React.FC<Props> = ({
             loader={<DataLoading />}
         >
             <div className="enterprise-list">
-                {data.map((product, i) => (
-                    <EnterpriseItem
-                        key={`enterprise-item-${i}`}
-                        route={`/enterprise/${getRoute(
-                            typeOfEnterprise,
-                        )}/edit/${product.id}`}
-                        enterprise={product}
-                    />
-                ))}
+                {data.map(
+                    (enterprise, i) =>
+                        enterprise.id && (
+                            <SimpleEnterpriseCard
+                                key={`enterprise-item-${i}`}
+                                route={routeToManageEnterpriseAsUser(
+                                    enterprise.type,
+                                    enterprise.id,
+                                )}
+                                enterprise={enterprise}
+                            />
+                        ),
+                )}
             </div>
         </InfiniteScroll>
     );

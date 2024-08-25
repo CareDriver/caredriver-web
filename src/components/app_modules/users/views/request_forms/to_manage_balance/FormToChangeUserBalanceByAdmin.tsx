@@ -1,0 +1,292 @@
+"use client";
+
+import MoneyBillWave from "@/icons/MoneyBillWave";
+import {
+    BalanceHistory,
+    BalanceHistoryItem,
+    Price,
+} from "@/interfaces/Payment";
+import { UserInterface, UserRole } from "@/interfaces/UserInterface";
+import { updateUser } from "@/components/app_modules/users/api/UserRequester";
+import {
+    isValidAmount,
+    isValidBankNumber,
+    isValidChangeReason,
+} from "@/components/app_modules/users/validators/for_data/BalanceValidator";
+import { Timestamp } from "firebase/firestore";
+import { SyntheticEvent, useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { saveBalanceHistoryItem } from "@/components/app_modules/users/api/BalanceHistoryRequester";
+import Popup from "@/components/modules/Popup";
+import BaseForm from "@/components/form/view/forms/BaseForm";
+import { TextField as TextFieldForm } from "@/components/form/models/FormFields";
+import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
+import { genDocId } from "@/utils/generators/IdGenerator";
+import { PageStateContext } from "@/context/PageStateContext";
+import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
+import TextField from "@/components/form/view/fields/TextField";
+import { isValidTextField } from "@/components/form/validators/FieldValidators";
+import SelectionField from "@/components/form/view/fields/SelectionField";
+
+type ReasonOfChangeType = "bankTransactionNumber" | "modificationReason";
+
+const REASON_OF_CHANGE_TYPES: ReasonOfChangeType[] = [
+    "bankTransactionNumber",
+    "modificationReason",
+];
+
+interface Form {
+    newBalance: TextFieldForm;
+    reasonOfChange: {
+        description: TextFieldForm;
+        type: ReasonOfChangeType;
+    };
+}
+
+const DEFAULT_FORM: Form = {
+    newBalance: DEFAUL_TEXT_FIELD,
+    reasonOfChange: {
+        description: DEFAUL_TEXT_FIELD,
+        type: "bankTransactionNumber",
+    },
+};
+
+const FormToChangeUserBalanceByAdmin = ({
+    user,
+    adminUser,
+}: {
+    user: UserInterface;
+    adminUser: UserInterface;
+}) => {
+    const isBalancer: boolean = adminUser.role === UserRole.BalanceRecharge;
+    const { loading, setLoadingAll } = useContext(PageStateContext);
+    const [form, setForm] = useState<Form>(DEFAULT_FORM);
+    const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
+    const [isOpenPopup, setOpenPopup] = useState(false);
+
+    const perform = async () => {
+        if (user.id && adminUser.id) {
+            try {
+                const debt: Price = isBalancer
+                    ? {
+                          amount:
+                              user.balance.amount +
+                              parseFloat(form.newBalance.value),
+                          currency: "Bs. (BOB)",
+                      }
+                    : {
+                          amount: parseFloat(form.newBalance.value),
+                          currency: "Bs. (BOB)",
+                      };
+                const DOC_ID = genDocId();
+                let balanceItem: BalanceHistoryItem = {
+                    id: DOC_ID,
+                    dateTime: Timestamp.now(),
+                    oldBalance: user.balance,
+                    previousBalance: debt,
+                    userWhoChanged: adminUser.id,
+                };
+                if (form.reasonOfChange.type === "bankTransactionNumber") {
+                    balanceItem = {
+                        ...balanceItem,
+                        bankTransactionNumber:
+                            form.reasonOfChange.description.value,
+                    };
+                } else {
+                    balanceItem = {
+                        ...balanceItem,
+                        modificationReason:
+                            form.reasonOfChange.description.value,
+                    };
+                }
+
+                await toast.promise(
+                    saveBalanceHistoryItem(DOC_ID, balanceItem),
+                    {
+                        pending: "Guardando justificativo",
+                        success: "Justificatio guardado",
+                        error: "Error al guardar tu justificatio, inténtalo de nuevo por favor",
+                    },
+                );
+
+                const newHistory: BalanceHistory[] = user.balanceHistory
+                    ? [
+                          ...user.balanceHistory,
+                          {
+                              ...debt,
+                              date: Timestamp.now(),
+                              balanceRechargeId: DOC_ID,
+                          },
+                      ]
+                    : [
+                          {
+                              ...debt,
+                              date: Timestamp.now(),
+                              balanceRechargeId: DOC_ID,
+                          },
+                      ];
+                await toast.promise(
+                    updateUser(user.id, {
+                        balance: debt,
+                        balanceHistory: newHistory,
+                    }),
+                    {
+                        pending: "Actualizando el saldo del usuario",
+                        success: "Saldo actualizado",
+                        error: "Error al actualizar el saldo, inténtalo de nuevo",
+                    },
+                );
+                window.location.reload();
+                setLoadingAll(false, setFormState);
+            } catch (e) {
+                setLoadingAll(false, setFormState);
+            }
+        }
+    };
+
+    const setDebt = async (e: SyntheticEvent) => {
+        e.preventDefault();
+        if (!loading) {
+            setLoadingAll(true, setFormState);
+            await perform();
+        }
+    };
+
+    useEffect(() => {
+        let isSettingTheReason = isOpenPopup;
+        if (isSettingTheReason) {
+            setFormState((prev) => ({
+                ...prev,
+                isValid:
+                    isValidTextField(form.newBalance) &&
+                    isValidTextField(form.reasonOfChange.description),
+            }));
+        } else {
+            setFormState((prev) => ({
+                ...prev,
+                isValid: isValidTextField(form.newBalance),
+            }));
+        }
+    }, []);
+
+    return (
+        <section className="profile-info-wrapper | margin-top-50 max-width-60">
+            <h2 className="profile-subtitle icon-wrapper | mb">
+                <MoneyBillWave />
+                Saldo |{" "}
+                {user.balance
+                    ? user.balance.amount + " " + user.balance.currency
+                    : "0"}
+            </h2>
+            <p className="text | gray-dark">
+                {isBalancer
+                    ? " Ingresa el monto que pago el usuario para aumentar su saldo (Solo puedes aumentar el saldo del usuario)"
+                    : "Ingresa el nuevo monto de saldo del usuario."}
+            </p>
+
+            <BaseForm
+                content={{
+                    button: {
+                        content: {
+                            legend: "Cambiar saldo",
+                        },
+                        behavior: {
+                            loading: formState.loading,
+                            isValid: formState.isValid,
+                        },
+                    },
+                }}
+                behavior={{
+                    loading: formState.loading || loading,
+                    onSummit: async () => setOpenPopup(true),
+                }}
+            >
+                <TextField
+                    field={{
+                        values: form.newBalance,
+                        setter: (b) =>
+                            setForm((prev) => ({ ...prev, newBalance: b })),
+                        validator: isValidAmount,
+                    }}
+                    legend="Nuevo saldo del usuario"
+                />
+            </BaseForm>
+
+            <Popup isOpen={isOpenPopup} close={() => setOpenPopup(false)}>
+                <div>
+                    <h2 className="text | big-medium bolder">
+                        Razón de cambio
+                    </h2>
+                    <p className="text | light">
+                        Escribe el número de transacción registrada en cuenta
+                        bancaria o la razón por la cual esta haciendo este
+                        cambio.
+                    </p>
+                </div>
+                <BaseForm
+                    content={{
+                        button: {
+                            content: {
+                                legend: "Cambiar saldo",
+                            },
+                            behavior: {
+                                loading: formState.loading,
+                                isValid: formState.isValid,
+                            },
+                        },
+                    }}
+                    behavior={{
+                        loading: formState.loading || loading,
+                        onSummit: setDebt,
+                    }}
+                >
+                    <SelectionField
+                        field={{
+                            value: form.reasonOfChange.type,
+                            setter: (v) =>
+                                setForm((prev) => ({
+                                    ...prev,
+                                    reasonOfChange: {
+                                        ...prev.reasonOfChange,
+                                        type: v as ReasonOfChangeType,
+                                    },
+                                })),
+                        }}
+                        options={REASON_OF_CHANGE_TYPES}
+                        legend="Tipo de rason de cambio"
+                        optionTranslator={(d) =>
+                            d === "bankTransactionNumber"
+                                ? "Numero de transaccion bancaria"
+                                : "Justificacion del cambio"
+                        }
+                    />
+                    <TextField
+                        field={{
+                            values: form.reasonOfChange.description,
+                            setter: (d) =>
+                                setForm((prev) => ({
+                                    ...prev,
+                                    reasonOfChange: {
+                                        ...prev.reasonOfChange,
+                                        description: d,
+                                    },
+                                })),
+                            validator:
+                                form.reasonOfChange.type ===
+                                "modificationReason"
+                                    ? isValidChangeReason
+                                    : isValidBankNumber,
+                        }}
+                        legend={
+                            form.reasonOfChange.type === "modificationReason"
+                                ? "Razón de la modificación"
+                                : "Número de transacción"
+                        }
+                    />
+                </BaseForm>
+            </Popup>
+        </section>
+    );
+};
+
+export default FormToChangeUserBalanceByAdmin;

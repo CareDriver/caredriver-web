@@ -1,6 +1,7 @@
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import { TypeOfServicePerformed } from "../../model/models/TypeOfServicePerformed";
 import BaseCardForServicePerf from "./BaseCardForServicePerf";
+import { ServiceType } from "@/interfaces/Services";
 
 const CardForServicePerfWithReason = ({
     userId,
@@ -10,7 +11,7 @@ const CardForServicePerfWithReason = ({
 }: {
     userId: string;
     service: ServiceRequestInterface;
-    typeOfService: "driver" | "mechanic" | "tow" | "laundry";
+    typeOfService: ServiceType;
     typeOfPerf: TypeOfServicePerformed;
 }) => {
     return (

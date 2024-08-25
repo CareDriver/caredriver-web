@@ -1,11 +1,10 @@
 "use client";
 import "react-international-phone/style.css";
 
-import { validateEnterpriseName } from "@/components/app_modules/enterprises/validators/EnterpriseValidator";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { sendEnterpriseReq } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 import { Enterprise } from "@/interfaces/Enterprise";
-import { uploadFileBase64 } from "@/utils/requests/FileUploader";
+import { uploadFileBase64 } from "@/utils/requesters/FileUploader";
 import { toast } from "react-toastify";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
@@ -23,7 +22,7 @@ import {
     DEFAUL_TEXT_FIELD,
 } from "@/components/form/models/DefaultFields";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
-import { genDocId } from "@/utils/IdGenerator";
+import { genDocId } from "@/utils/generators/IdGenerator";
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import MapLocationField from "@/components/form/view/fields/MapLocationField";
 import LocationField from "@/components/form/view/fields/LocationField";
@@ -37,6 +36,11 @@ import {
     isValidTextField,
 } from "@/components/form/validators/FieldValidators";
 import EnterpriseOwnerAdder from "./EnterpriseOwnerAdder";
+import { validateEnterpriseName } from "../../../validators/ValidatorsForConfirmationWithEnterprises";
+import { ServiceType } from "@/interfaces/Services";
+import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
+import { PageStateContext } from "@/context/PageStateContext";
+import { verifyUserAvailabilityToBeEnterpriseOwner } from "../../../validators/EnterpriseOwnerValidator";
 
 interface Form {
     name: TextFieldForm;
@@ -48,21 +52,19 @@ interface Form {
 }
 
 interface Props {
-    enterpriseType: "mechanical" | "tow" | "laundry" | "driver";
+    enterpriseType: ServiceType;
 }
 
 const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
     const router = useRouter();
+    const { loading, isValid, setLoadingAll } = useContext(PageStateContext);
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
 
     const handleSummbit = async (e: FormEvent) => {
         e.preventDefault();
-        if (!formState.loading) {
-            setFormState({
-                ...formState,
-                loading: true,
-            });
+        if (!loading && !formState.loading) {
+            setLoadingAll(true, setFormState);
 
             if (
                 !isValidForm(form) ||
@@ -118,12 +120,8 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                     error: "Error al crear la Empresa, inténtalo de nuevo por favor",
                 });
 
-                setFormState({
-                    ...formState,
-                    loading: false,
-                });
-                /* TODO: create link builders instead of this */
-                router.push("/admin/enterprises/driver");
+                setLoadingAll(false, setFormState);
+                router.push(routeToAllEnterprisesAsAdmin(enterpriseType));
             } catch (e) {
                 window.location.reload();
             }
@@ -131,23 +129,10 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
     };
 
     useEffect(() => {
-        setFormState({
-            ...formState,
+        setFormState((prev) => ({
+            ...prev,
             isValid: isValidForm(form),
-        });
-    }, [form]);
-
-    useEffect(() => {
-        setFormState({
-            ...formState,
-            isValid:
-                !form.name.message &&
-                !form.logo.message &&
-                !form.coordinates.message &&
-                form.name.value !== null &&
-                form.logo.value !== null &&
-                form.coordinates.value !== null,
-        });
+        }));
     }, [form]);
 
     return (
@@ -160,13 +145,14 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                             legend: "Registrar",
                         },
                         behavior: {
-                            isValid: formState.isValid,
+                            isValid: formState.isValid && isValid,
                             loading: formState.loading,
                         },
                     },
+                    styleClasses: "max-width-80",
                 }}
                 behavior={{
-                    loading: formState.loading,
+                    loading: loading || formState.loading,
                     onSummit: handleSummbit,
                 }}
             >

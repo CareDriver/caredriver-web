@@ -26,8 +26,8 @@ import {
     isValidTextField,
 } from "@/components/form/validators/FieldValidators";
 import { toast } from "react-toastify";
-import { isImageBase64 } from "@/utils/validator/ImageValidator";
-import { uploadFileBase64 } from "@/utils/requests/FileUploader";
+import { isImageBase64 } from "@/validators/ImageValidator";
+import { uploadFileBase64 } from "@/utils/requesters/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
 import { IEditedEnterpriseManager } from "../../../models/enterprise_managers_edited/IEditedEnterpriseManager";

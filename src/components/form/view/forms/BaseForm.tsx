@@ -5,6 +5,7 @@ import ButtonForm from "../buttons/ButtonForm";
 interface Props {
     content: {
         button: ButtonFormProps;
+        styleClasses?: string;
     };
     behavior: {
         loading: boolean;
@@ -16,7 +17,9 @@ interface Props {
 const BaseForm: React.FC<Props> = ({ content, behavior, children }) => {
     return (
         <form
-            className="form-sub-container"
+            className={`form-sub-container | margin-top-25 ${
+                content.styleClasses && content.styleClasses
+            }`}
             data-state={behavior.loading ? "loading" : "loaded"}
             onSubmit={behavior.onSummit}
         >

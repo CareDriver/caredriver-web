@@ -1,14 +1,15 @@
 import { Collections } from "@/firebase/CollecionNames";
 import { firestore } from "@/firebase/FirebaseConfig";
+import { ServiceType } from "@/interfaces/Services";
 import { collection } from "firebase/firestore";
 
 export function getPathCollectionOfServicesPerf(
-    type: "driver" | "mechanic" | "tow" | "laundry",
+    type: ServiceType,
 ): Collections {
     switch (type) {
         case "driver":
             return Collections.DriverServices;
-        case "mechanic":
+        case "mechanical":
             return Collections.MechanicalServices;
         case "tow":
             return Collections.TowsServices;
@@ -18,7 +19,7 @@ export function getPathCollectionOfServicesPerf(
 }
 
 export function getCollectionOfServicesPerf(
-    type: "driver" | "mechanic" | "tow" | "laundry",
+    type: ServiceType,
 ) {
     let collectionPath = getPathCollectionOfServicesPerf(type);
     return collection(firestore, collectionPath);

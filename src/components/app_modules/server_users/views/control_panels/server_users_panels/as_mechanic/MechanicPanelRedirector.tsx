@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import MechanicPanel from "./MechanicPanel";
 import RequestInProgress from "../../RequestInProgress";
 import PageLoading from "@/components/loaders/PageLoading";
-import NewMechanicForm from "../../../form_requests/requests_to_be_servers/for_mechanic/NewMechanicForm";
+import NewMechanicForm from "../../../request_forms/requests_to_be_servers/for_mechanic/NewMechanicForm";
 
 const MechanicPanelRedirector = () => {
     const { user, checkingUserAuth } = useContext(AuthContext);

@@ -20,6 +20,7 @@ import "@/styles/components/service-req.css";
 import { firestore } from "@/firebase/FirebaseConfig";
 import { TypeOfServicePerformed } from "../../model/models/TypeOfServicePerformed";
 import { getPathCollectionOfServicesPerf } from "../../model/utils/CollectionGetter";
+import { ServiceType } from "@/interfaces/Services";
 
 const ListOfServicesPerfByUser = ({
     userId,
@@ -27,7 +28,7 @@ const ListOfServicesPerfByUser = ({
     typeOfPerf,
 }: {
     userId: string;
-    typeOfService: "driver" | "mechanic" | "tow" | "laundry";
+    typeOfService: ServiceType;
     typeOfPerf: TypeOfServicePerformed;
 }) => {
     const COLLECTION_PATH = getPathCollectionOfServicesPerf(typeOfService);

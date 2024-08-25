@@ -2,7 +2,7 @@
 
 import Popup from "@/components/modules/Popup";
 import { useState } from "react";
-import RedirectorFormByFakedId from "../../../app_modules/services_performed/view/forms/RedirectorFormByFakedId";
+import RedirectorToServiceByFakeId from "../../../app_modules/services_performed/view/redirectors/RedirectorToServiceByFakeId";
 import MagnifyingGlass from "@/icons/MagnifyingGlass";
 import "@/styles/modules/popup.css";
 
@@ -23,7 +23,7 @@ const RedirectToService = () => {
                     <h2 className="text | bolder big-medium capitalize margin-bottom-25">
                         Buscar servicio por ID
                     </h2>
-                    <RedirectorFormByFakedId />
+                    <RedirectorToServiceByFakeId />
                 </div>
             </Popup>
         </>

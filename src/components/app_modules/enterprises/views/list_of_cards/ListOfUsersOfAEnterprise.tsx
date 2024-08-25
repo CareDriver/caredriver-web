@@ -1,7 +1,7 @@
 "use client";
 import { Enterprise, UserRoleInEnterprise } from "@/interfaces/Enterprise";
 import { UserInterface } from "@/interfaces/UserInterface";
-import { getUsersByTheirIds } from "@/utils/requests/UserRequester";
+import { getUsersByTheirIds } from "@/components/app_modules/users/api/UserRequester";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import InfiniteScroll from "react-infinite-scroll-component";

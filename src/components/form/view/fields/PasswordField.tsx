@@ -3,10 +3,10 @@
 import Eye from "@/icons/Eye";
 import EyeSlash from "@/icons/EyeSlash";
 import { useState } from "react";
-import { isValidPassword } from "@/components/app_modules/users/validators/CredentialsValidator";
 import { TextFieldSetter } from "@/components/form/models/FieldSetters";
 import { TextField } from "@/components/form/models/FormFields";
 import { TextFieldStateHandler } from "../../utils/TextFieldStateHandler";
+import { isValidPassword } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
 
 interface Props {
     values: TextField;

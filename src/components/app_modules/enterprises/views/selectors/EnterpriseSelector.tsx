@@ -1,9 +1,5 @@
 "use client";
-import {
-    Enterprise,
-    EnterpriseType,
-    EnterpriseTypeRenderPronoun,
-} from "@/interfaces/Enterprise";
+import { Enterprise } from "@/interfaces/Enterprise";
 import {
     getAllNumPages,
     getAllPaginatedData,
@@ -12,15 +8,15 @@ import { DocumentSnapshot } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import "@/styles/components/enterprise.css";
 import Plus from "@/icons/Plus";
-import { getEmptyEnterprise } from "@/utils/parser/ToSpanishEnterprise";
 import { AuthContext } from "@/context/AuthContext";
 import { Locations } from "@/interfaces/Locations";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { EntityField } from "@/components/form/models/FormFields";
 import { EntityFieldSetter } from "@/components/form/models/FieldSetters";
+import { ServiceType } from "@/interfaces/Services";
 
 interface Props {
-    typeOfEnterprise: EnterpriseType;
+    typeOfEnterprise: ServiceType;
     field: {
         values: EntityField;
         setter: EntityFieldSetter;
@@ -95,7 +91,7 @@ const EnterpriseSelector: React.FC<Props> = ({ typeOfEnterprise, field }) => {
                 field.setter({
                     value: undefined,
                     message:
-                        typeOfEnterprise === EnterpriseType.Mechanical
+                        typeOfEnterprise === "mechanical"
                             ? null
                             : `La empresa fue seleccionada, elije otra`,
                 });

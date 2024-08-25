@@ -3,14 +3,15 @@
 import React, { useEffect, useState } from "react";
 import { Enterprise } from "@/interfaces/Enterprise";
 import { getUserEnterprises } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
-import EnterpriseItem from "../cards/EnterpriseItem";
+import SimpleEnterpriseCard from "../cards/SimpleEnterpriseCard";
 import "@/styles/components/pagination.css";
-import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
 import { UserInterface } from "@/interfaces/UserInterface";
+import { ServiceType } from "@/interfaces/Services";
+import { routeToManageEnterpriseAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
 
 interface Props {
     user: UserInterface;
-    typeOfEnterprise: "mechanical" | "tow" | "laundry" | "driver";
+    typeOfEnterprise: ServiceType;
 }
 
 const EnterpriseListForUserServer: React.FC<Props> = ({
@@ -47,15 +48,19 @@ const EnterpriseListForUserServer: React.FC<Props> = ({
 
     return (
         <div className="enterprise-list">
-            {data.map((product, i) => (
-                <EnterpriseItem
-                    key={`enterprise-item-${i}`}
-                    route={`/enterprise/${getRoute(typeOfEnterprise)}/edit/${
-                        product.id
-                    }`}
-                    enterprise={product}
-                />
-            ))}
+            {data.map(
+                (enterprise, i) =>
+                    enterprise.id && (
+                        <SimpleEnterpriseCard
+                            key={`enterprise-item-${i}`}
+                            route={routeToManageEnterpriseAsUser(
+                                enterprise.type,
+                                enterprise.id,
+                            )}
+                            enterprise={enterprise}
+                        />
+                    ),
+            )}
         </div>
     );
 

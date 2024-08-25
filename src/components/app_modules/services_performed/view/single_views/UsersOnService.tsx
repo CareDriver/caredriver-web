@@ -1,14 +1,14 @@
 "use client";
 
-import FieldDeleted from "@/components/requests/data_renderer/form/FieldDeleted";
 import HelmetSafety from "@/icons/HelmetSafety";
 import UserIcon from "@/icons/UserIcon";
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import { ServicesDataInterface } from "@/interfaces/ServicesDataInterface";
 import { UserInterface } from "@/interfaces/UserInterface";
-import { getUserById } from "@/utils/requests/UserRequester";
+import { getUserById } from "@/components/app_modules/users/api/UserRequester";
 import { useEffect, useState } from "react";
 import "@/styles/components/app-user.css";
+import FieldDeleted from "@/components/form/view/field_renderers/FieldDeleted";
 
 interface UserServiceInfo {
     fullName: string;
@@ -19,10 +19,12 @@ interface UserServiceInfo {
 }
 
 const UsersOnService = ({ service }: { service: ServiceRequestInterface }) => {
-    const [serverUser, setServerUser] = useState<UserServiceInfo | null | undefined>(
+    const [serverUser, setServerUser] = useState<
+        UserServiceInfo | null | undefined
+    >(null);
+    const [reqUser, setReqUser] = useState<UserServiceInfo | null | undefined>(
         null,
     );
-    const [reqUser, setReqUser] = useState<UserServiceInfo | null | undefined>(null);
 
     const renderUser = (user: UserServiceInfo) => {
         return (
@@ -33,9 +35,13 @@ const UsersOnService = ({ service }: { service: ServiceRequestInterface }) => {
                     className="user-info-photo-size-v2"
                 />
                 <div className="user-info-subwrapper">
-                    <h3 className="text | big-medium-v2 bolder">{user.fullName}</h3>
+                    <h3 className="text | big-medium-v2 bolder">
+                        {user.fullName}
+                    </h3>
                     {user.email && (
-                        <h4 className="text | medium-big bold gray-dark">{user.email}</h4>
+                        <h4 className="text | medium-big bold gray-dark">
+                            {user.email}
+                        </h4>
                     )}
                     <h4 className="text | medium-big bold gray-dark">
                         {user.phoneNumber}
@@ -102,7 +108,9 @@ const UsersOnService = ({ service }: { service: ServiceRequestInterface }) => {
                 {serverUser === null ? (
                     <span className="loader"></span>
                 ) : serverUser === undefined ? (
-                    <FieldDeleted description={"El usuario servidor no fue asignado"} />
+                    <FieldDeleted
+                        description={"El usuario servidor no fue asignado"}
+                    />
                 ) : (
                     renderUser(serverUser)
                 )}
@@ -115,7 +123,9 @@ const UsersOnService = ({ service }: { service: ServiceRequestInterface }) => {
                     <span className="loader"></span>
                 ) : reqUser === undefined ? (
                     <FieldDeleted
-                        description={"El usuario que pidio el servicio no fue encontrado"}
+                        description={
+                            "El usuario que pidio el servicio no fue encontrado"
+                        }
                     />
                 ) : (
                     renderUser(reqUser)

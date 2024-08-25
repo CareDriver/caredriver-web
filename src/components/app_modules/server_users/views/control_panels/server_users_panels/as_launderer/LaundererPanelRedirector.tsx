@@ -4,7 +4,7 @@ import { AuthContext } from "@/context/AuthContext";
 import { ServiceReqState } from "@/interfaces/Services";
 
 import { useContext, useEffect, useState } from "react";
-import NewLaundererForm from "../../../form_requests/requests_to_be_servers/for_launderer/NewLaundererForm";
+import NewLaundererForm from "../../../request_forms/requests_to_be_servers/for_launderer/NewLaundererForm";
 import RequestInProgress from "../../RequestInProgress";
 import LaundererPanel from "./LaundererPanel";
 import PageLoading from "@/components/loaders/PageLoading";

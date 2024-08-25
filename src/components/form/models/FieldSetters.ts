@@ -6,7 +6,7 @@ import {
     GeoPointField,
     TextField,
 } from "./FormFields";
-import { InputValidator } from "@/utils/validator/InputValidator";
+import { InputValidator } from "@/validators/InputValidatorSignature";
 import { UserRole } from "@/interfaces/UserInterface";
 import { VehicleTransmission } from "@/interfaces/VehicleInterface";
 
@@ -21,6 +21,8 @@ export type EntityFieldSetter = FieldSetter<EntityField>;
 export type AttachmentFieldSetter = FieldSetter<AttachmentField>;
 
 export type LocationFieldSetter = FieldSetter<Locations>;
+
+export type OptionFieldSetter = FieldSetter<string>;
 
 export type TransmitionFieldSetter = FieldSetter<VehicleTransmission>;
 

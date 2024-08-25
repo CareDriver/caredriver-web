@@ -1,17 +1,23 @@
 import ChevronDown from "@/icons/ChevronDown";
-import { UserRole, UserRoleRender } from "@/interfaces/UserInterface";
+import { UserRole, USER_ROLE_TO_SPANISH } from "@/interfaces/UserInterface";
 import { RoleFieldSetter } from "../../models/FieldSetters";
 import { ChangeEvent } from "react";
 interface Props {
     role: UserRole;
     setter: RoleFieldSetter;
+    roles?: UserRole[];
 }
-const UserRoleField: React.FC<Props> = ({ role, setter }) => {
-    const VALID_ROLES_TO_REGISTER = [
-        UserRole.Support,
-        UserRole.SupportTwo,
-        UserRole.BalanceRecharge,
-    ];
+
+const USER_ROLES: UserRole[] = [
+    UserRole.User,
+    UserRole.BalanceRecharge,
+    UserRole.Support,
+    UserRole.SupportTwo,
+    UserRole.Admin,
+];
+
+const UserRoleField: React.FC<Props> = ({ role, setter, roles }) => {
+    const ROLES_OPTIONS = roles ? roles : USER_ROLES;
 
     const changeRole = (e: ChangeEvent<HTMLSelectElement>) => {
         let newRole = e.target.value as UserRole;
@@ -26,9 +32,9 @@ const UserRoleField: React.FC<Props> = ({ role, setter }) => {
                 onChange={changeRole}
                 value={role}
             >
-                {VALID_ROLES_TO_REGISTER.map((role, i) => (
+                {ROLES_OPTIONS.map((role, i) => (
                     <option key={`role-option-${i}`} value={role}>
-                        {UserRoleRender[role]}
+                        {USER_ROLE_TO_SPANISH[role]}
                     </option>
                 ))}
             </select>

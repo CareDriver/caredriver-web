@@ -6,9 +6,10 @@ import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import PageLoading from "@/components/loaders/PageLoading";
 import EnterpriseListForSupportUser from "../list_of_cards/EnterpriseListForSupportUser";
+import { ServiceType } from "@/interfaces/Services";
 
 interface Props {
-    typeOfEnterprise: "mechanical" | "tow" | "laundry" | "driver";
+    typeOfEnterprise: ServiceType;
 }
 
 const EnterprisesPanelForServerUsers: React.FC<Props> = ({ typeOfEnterprise }) => {
@@ -21,8 +22,8 @@ const EnterprisesPanelForServerUsers: React.FC<Props> = ({ typeOfEnterprise }) =
     return (
         user && (
             <section className="enterprise-main-wrapper">
-                <h1 className="text | big bolder">Empresas</h1>
-                <p className="text | light">
+                <h1 className="text | big bolder">Empresas Relacionadas</h1>
+                <p className="text | bold">
                     Empresas donde eres administrador
                 </p>
                 <EnterpriseListForUserServer
@@ -30,7 +31,7 @@ const EnterprisesPanelForServerUsers: React.FC<Props> = ({ typeOfEnterprise }) =
                     typeOfEnterprise={typeOfEnterprise}
                 />
                 <div className="separator-horizontal"></div>
-                <p className="text | light">
+                <p className="text | bold">
                     Empresas donde eres usuario soporte
                 </p>
                 <EnterpriseListForSupportUser

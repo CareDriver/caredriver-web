@@ -1,3 +1,5 @@
+"use client";
+
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
 
@@ -17,8 +19,7 @@ type ContextType = {
 };
 
 const DEFAULT_CONTEXT: ContextType = {
-    loading: false,
-    isValid: true,
+    ...DEFAULT_FORM_STATE,
     setLoading: (e) => {},
     setValid: (e) => {},
     setLoadingAll: (d, formSetter) => {},

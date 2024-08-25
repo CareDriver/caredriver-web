@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react";
 import { DateFieldSetter } from "../models/FieldSetters";
-import { InputValidator } from "@/utils/validator/InputValidator";
+import { InputValidator } from "@/validators/InputValidatorSignature";
 
 export class DateFieldStateHandler {
     setter: DateFieldSetter;

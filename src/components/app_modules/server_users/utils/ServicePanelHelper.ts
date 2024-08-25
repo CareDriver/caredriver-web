@@ -1,5 +1,5 @@
 import { VehicleTransmission } from "@/interfaces/VehicleInterface";
-import { differenceOnDays } from "@/utils/parser/ForDate";
+import { differenceOnDays } from "@/utils/helpers/DateHelper";
 import { TRANSMITION_TO_SPANISH_V2 } from "../models/VehicleFields";
 import CarSide from "@/icons/CarSide";
 import Truck from "@/icons/Truck";

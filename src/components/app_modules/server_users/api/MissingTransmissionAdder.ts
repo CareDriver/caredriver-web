@@ -1,6 +1,6 @@
 import { ServiceVehicles, UserInterface } from "@/interfaces/UserInterface";
 import { VehicleTransmission } from "@/interfaces/VehicleInterface";
-import { updateUser } from "@/utils/requests/UserRequester";
+import { updateUser } from "@/components/app_modules/users/api/UserRequester";
 import { Dispatch, SetStateAction } from "react";
 import { toast } from "react-toastify";
 
@@ -45,17 +45,23 @@ export class MissingTransmissionAdder {
             return;
         }
 
-        if (this.user?.serviceVehicles && this.user?.serviceVehicles[type]) {
+        if (
+            this.user?.serviceVehicles &&
+            this.user.serviceVehicles[type] !== undefined &&
+            this.user.serviceVehicles[type]?.type !== undefined
+        ) {
             this.saveTransmissionAdded({
                 ...this.user.serviceVehicles,
                 [type]: {
                     ...this.user.serviceVehicles[type],
                     type: {
-                        ...this.user.serviceVehicles[type].type,
+                        ...this.user.serviceVehicles[type]?.type,
                         mode: [
-                            ...this.user.serviceVehicles[type].type.mode,
+                            ...(this.user.serviceVehicles[type]?.type?.mode ??
+                                []),
                             this.getMissTransmission(
-                                this.user.serviceVehicles[type].type.mode,
+                                this.user.serviceVehicles[type]?.type?.mode ??
+                                    [],
                             ),
                         ],
                     },
@@ -63,6 +69,7 @@ export class MissingTransmissionAdder {
             });
         }
     };
+
     getMissTransmission = (
         modes: VehicleTransmission[],
     ): VehicleTransmission => {

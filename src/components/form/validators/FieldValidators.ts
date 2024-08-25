@@ -1,4 +1,4 @@
-import { isNullOrEmptyText } from "@/utils/validator/text/TextValidator";
+import { isNullOrEmptyText } from "@/validators/TextValidator";
 import {
     AttachmentField,
     DateField,

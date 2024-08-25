@@ -139,7 +139,7 @@ const CraneRegistration = () => {
                             toast.info(
                                 "Tu solicitud sera revisada, por favor se paciente",
                             );
-                            router.push("/enterprise/cranes");
+                            router.push("");
                         } catch (e) {
                             window.location.reload();
                         }
@@ -198,7 +198,7 @@ const CraneRegistration = () => {
                             "Alcanzaste el limite de empresas de grua que puedes registrar",
                         );
                         toast.info("Las empresas que estan en revicion tambien cuentan");
-                        router.push("/enterprise/cranes");
+                        router.push("");
                     } else {
                         setCheckingAvailability(false);
                     }
@@ -207,7 +207,7 @@ const CraneRegistration = () => {
                 toast.error(
                     "Error al verificar disponibilidad para registrar el nuevo servicio",
                 );
-                router.push("/enterprise/cranes");
+                router.push("");
             }
         }
     }, [loadingUser]);

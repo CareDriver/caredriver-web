@@ -5,6 +5,7 @@ interface Props {
     content: {
         firstButton: ExecutableButtonProps;
         secondButton: ExecutableButtonProps;
+        styleClasses?: string;
     };
     behavior: {
         loading: boolean;
@@ -19,7 +20,9 @@ const BaseFormWithTwoButtons: React.FC<Props> = ({
 }) => {
     return (
         <div
-            className="form-sub-container"
+            className={`form-sub-container | margin-top-25 ${
+                content.styleClasses && content.styleClasses
+            }`}
             data-state={behavior.loading ? "loading" : "loaded"}
         >
             <>{children}</>

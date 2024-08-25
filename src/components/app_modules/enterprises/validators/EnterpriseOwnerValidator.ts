@@ -1,25 +1,69 @@
-import { toast } from "react-toastify";
 import { countEnterprisesActives } from "../api/EnterpriseRequester";
+import { ServiceType } from "@/interfaces/Services";
+import { InputState } from "@/validators/InputValidatorSignature";
+import { UserInterface } from "@/interfaces/UserInterface";
+import { hasTheSameLocation } from "../utils/UserValidatorInEnterpriseHelper";
+import { Locations } from "@/interfaces/Locations";
 
 export const MAX_NUMBER_ENTERPRISES = 5;
-
-export async function isValidToBeTheEnterpriseOwner(
+export async function verifyNumberOfUserEnterprises(
     userId: string,
-    enterpriseType: "mechanical" | "tow" | "laundry" | "driver",
-): Promise<boolean> {
+    enterpriseType: ServiceType,
+): Promise<InputState> {
     return countEnterprisesActives(userId, enterpriseType)
         .then((r) => {
             if (r < MAX_NUMBER_ENTERPRISES) {
-                return true;
+                return {
+                    isValid: true,
+                    message: "Usuario valido",
+                };
             } else {
-                toast.info("Limite alcanzado de servicios por usuario");
-                return false;
+                return {
+                    isValid: false,
+                    message: "Limite alcanzado de servicios por usuario",
+                };
             }
         })
         .catch((e) => {
-            toast.error(
-                "Error verificando servicios del usuario, intentalo de nuevo",
-            );
-            return false;
+            return {
+                isValid: false,
+                message:
+                    "Error verificando servicios del usuario, intentalo de nuevo",
+            };
         });
 }
+
+export const verifyUserAvailabilityToBeEnterpriseOwner = async (
+    userFound: UserInterface | undefined,
+    newEnterpriseType: ServiceType,
+    newEnterpriseLocation: Locations,
+): Promise<InputState> => {
+    if (!userFound || !userFound.id) {
+        return {
+            message: "Usuario no encontrado",
+            isValid: false,
+        };
+    }
+
+    if (!hasTheSameLocation(userFound, newEnterpriseLocation)) {
+        return {
+            isValid: false,
+            message:
+                "El usuario no esta en la misma localizacion que el servicio",
+        };
+    }
+
+    let validationResult = await verifyNumberOfUserEnterprises(
+        userFound.id,
+        newEnterpriseType,
+    );
+
+    if (!validationResult.isValid) {
+        return validationResult;
+    }
+
+    return {
+        isValid: true,
+        message: "Usuario valido para ser dueño de la empresa",
+    };
+};

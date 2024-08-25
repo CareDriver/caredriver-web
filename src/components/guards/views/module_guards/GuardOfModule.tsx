@@ -1,15 +1,13 @@
 import { UserInterface, UserRole } from "@/interfaces/UserInterface";
-import { checkPermission } from "../../utils/RoleValidator";
+import { checkPermission } from "../../validators/RoleValidator";
 
-const GuardOfModule = ({
-    user,
-    roles,
-    children,
-}: {
-    user: UserInterface | null;
+interface Props {
+    user?: UserInterface;
     roles: UserRole[];
     children: React.ReactNode;
-}) => {
+}
+
+const GuardOfModule: React.FC<Props> = ({ user, roles, children }) => {
     return user && checkPermission(user.role, roles) && <>{children}</>;
 };
 

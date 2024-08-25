@@ -4,18 +4,20 @@ import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
 import { TextField } from "@/components/form/models/FormFields";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import { UserInterface } from "@/interfaces/UserInterface";
-import { getUserByEmail } from "@/utils/requests/UserRequester";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { getUserByEmail } from "@/components/app_modules/users/api/UserRequester";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import SimpleUserCard from "../cards/SimpleUserCard";
-import BaseForm from "@/components/form/view/forms/BaseForm";
 import EmailField from "@/components/form/view/fields/EmailField";
 import { PageStateContext } from "@/context/PageStateContext";
+import BaseSubForm from "@/components/form/view/forms/BaseSubForm";
+import { InputState } from "@/validators/InputValidatorSignature";
 
 interface Props {
     form: {
         isValid: boolean;
         setValid: (d: boolean) => void;
+        stateFeedback?: InputState;
     };
     processTheUserFound: (userFound: UserInterface | undefined) => void;
 }
@@ -35,8 +37,7 @@ const UserSelector: React.FC<Props> = ({ form, processTheUserFound }) => {
         return userFound.email === emailToSearch;
     };
 
-    const lookForTheUser = async (e: FormEvent) => {
-        e.preventDefault();
+    const lookForTheUser = async () => {
         if (!loading) {
             setLoading(true);
             if (!isValidTextField(userEmail)) {
@@ -67,8 +68,8 @@ const UserSelector: React.FC<Props> = ({ form, processTheUserFound }) => {
                         message: "Usuario no encontrado",
                     }));
                 }
-
                 setUserFound(userFound);
+                setLoading(false);
             } catch (e) {
                 console.log(e);
             }
@@ -77,20 +78,31 @@ const UserSelector: React.FC<Props> = ({ form, processTheUserFound }) => {
 
     useEffect(() => {
         processTheUserFound(userFound);
-        setLoading(false);
     }, [userFound]);
 
     return (
         <div>
             {userFound && <SimpleUserCard user={userFound} />}
-            <BaseForm
+            {form.stateFeedback?.message && (
+                <small
+                    className={
+                        form.stateFeedback.isValid ? "form-section-message success" : "form-section-message"
+                    }
+                >
+                    {form.stateFeedback.message}
+                </small>
+            )}
+            <BaseSubForm
                 content={{
                     button: {
                         content: {
                             legend: "Buscar usuario",
-                            buttonClassStyle: "small-general-button",
+                            buttonClassStyle:
+                                "small-general-button | text bold",
                         },
                         behavior: {
+                            action: lookForTheUser,
+                            setLoading: setLoading,
                             loading: loading,
                             isValid: form.isValid,
                         },
@@ -98,11 +110,10 @@ const UserSelector: React.FC<Props> = ({ form, processTheUserFound }) => {
                 }}
                 behavior={{
                     loading: loading,
-                    onSummit: lookForTheUser,
                 }}
             >
                 <EmailField values={userEmail} setter={setUserEmail} />
-            </BaseForm>
+            </BaseSubForm>
         </div>
     );
 };

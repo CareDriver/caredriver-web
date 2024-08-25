@@ -93,6 +93,10 @@
     font-weight: bold;
 }
 
+.form-section-message.success {
+    color: var(--main-light);
+}
+
 input[type="password"] {
     letter-spacing: 0.222222222rem;
 }

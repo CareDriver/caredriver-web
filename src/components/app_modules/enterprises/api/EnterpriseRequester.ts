@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import { Collections } from "@/firebase/CollecionNames";
 import { Enterprise } from "@/interfaces/Enterprise";
+import { ServiceType } from "@/interfaces/Services";
 
 const enterpriseCollection = collection(firestore, Collections.Enterprises);
 
@@ -35,7 +36,7 @@ export const sendEnterpriseReq = async (
 
 export const countEnterprisesActives = async (
     userId: string,
-    type: "mechanical" | "tow" | "laundry" | "driver",
+    type: ServiceType,
 ): Promise<number> => {
     const enterpriseCollection = collection(firestore, Collections.Enterprises);
 
@@ -144,7 +145,7 @@ export const getEnterpriseById = async (id: string): Promise<Enterprise | undefi
 // PAGINATE ENTERPRISE DATA JUST FOR A USER
 
 export const getPaginatedData = async (
-    type: "mechanical" | "tow" | "laundry" | "driver",
+    type: ServiceType,
     userId: string,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
@@ -192,7 +193,7 @@ export const getPaginatedData = async (
 
 export const getNumPages = async (
     numPerPages: number,
-    type: "mechanical" | "tow" | "laundry" | "driver",
+    type: ServiceType,
     userId: string,
 ): Promise<number> => {
     const count = await getCountFromServer(
@@ -218,7 +219,7 @@ const isSupportInEnteprise = (userId: string, enterprise: Enterprise): boolean =
 };
 
 export const getUserEnterprises = async (
-    type: "mechanical" | "tow" | "laundry" | "driver",
+    type: ServiceType,
     userId: string,
 ) => {
     let dataQuery = query(
@@ -241,7 +242,7 @@ export const getUserEnterprises = async (
 
 // PAGINATE TO GET ENTERPRISES FOR USERS THAT ARE SUPPORT FOR THEIR
 export const getPaginatedDataForSupportUsers = async (
-    type: "mechanical" | "tow" | "laundry" | "driver",
+    type: ServiceType,
     userId: string,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
@@ -290,7 +291,7 @@ export const getPaginatedDataForSupportUsers = async (
 
 export const getNumPagesForSupportUsers = async (
     numPerPages: number,
-    type: "mechanical" | "tow" | "laundry" | "driver",
+    type: ServiceType,
     userId: string,
 ): Promise<number> => {
     const count = await getCountFromServer(
@@ -310,7 +311,7 @@ export const getNumPagesForSupportUsers = async (
 
 export const getAllPaginatedData = async (
     location: string,
-    type: "mechanical" | "tow" | "laundry" | "driver",
+    type: ServiceType,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
     endBeforeDoc?: DocumentSnapshot,
@@ -360,7 +361,7 @@ export const getAllPaginatedData = async (
 export const getAllNumPages = async (
     location: string,
     numPerPages: number,
-    type: "mechanical" | "tow" | "laundry" | "driver",
+    type: ServiceType,
 ): Promise<number> => {
     const count = await getCountFromServer(
         query(
@@ -379,7 +380,7 @@ export const getAllNumPages = async (
 // PAGINATE ENTERPRISE REQS
 
 export const getEnterpriseReqs = async (
-    type: "mechanical" | "tow" | "laundry" | "driver",
+    type: ServiceType,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
     endBeforeDoc?: DocumentSnapshot,
@@ -426,7 +427,7 @@ export const getEnterpriseReqs = async (
 
 export const getEnterpriseReqsNumPages = async (
     numPerPages: number,
-    type: "mechanical" | "tow" | "laundry" | "driver",
+    type: ServiceType,
 ): Promise<number> => {
     const count = await getCountFromServer(
         query(
@@ -444,7 +445,7 @@ export const getEnterpriseReqsNumPages = async (
 // PAGINATE ENTERPRISE DATA FOR ALL USERS, USED FOR MECHANIC AND TOW REQS
 
 export const getEnterprisesAdminPaginated = async (
-    type: "mechanical" | "tow" | "laundry" | "driver",
+    type: ServiceType,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
     endBeforeDoc?: DocumentSnapshot,
@@ -489,7 +490,7 @@ export const getEnterprisesAdminPaginated = async (
 
 export const getEnterprisesAdminNumPages = async (
     numPerPages: number,
-    type: "mechanical" | "tow" | "laundry" | "driver",
+    type: ServiceType,
 ): Promise<number> => {
     const count = await getCountFromServer(
         query(

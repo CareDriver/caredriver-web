@@ -2,9 +2,10 @@ import { Enterprise, ReqEditEnterprise } from "@/interfaces/Enterprise";
 import { IEditedEnterpriseManager } from "./IEditedEnterpriseManager";
 import { RequestLimitValidatorForEnterpriseEdit } from "../../validators/RequestLimitValidatorForEnterpriseEdit";
 import { toast } from "react-toastify";
-import { genDocId } from "@/utils/IdGenerator";
+import { genDocId } from "@/utils/generators/IdGenerator";
 import { sendEditEnterpriseReq } from "../../api/EditEnterpriseReq";
-import { getRoute } from "@/utils/parser/ToSpanishEnterprise";
+import { ServiceType } from "@/interfaces/Services";
+import { routeToAllEnterprisesAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
 
 export class EnterpriseManagerEditedAsServerUser
     implements IEditedEnterpriseManager
@@ -19,7 +20,7 @@ export class EnterpriseManagerEditedAsServerUser
     validateData = async (
         userId: string,
         enterpriseId: string,
-        enterpriseType: "mechanical" | "tow" | "laundry" | "driver",
+        enterpriseType: ServiceType,
     ): Promise<boolean> => {
         let thereAreActiveReqs = await toast.promise(
             this.requestLimitValidator.validate(
@@ -67,9 +68,8 @@ export class EnterpriseManagerEditedAsServerUser
     };
 
     getRedirectionAfterHandling = (
-        enterpriseType: "mechanical" | "tow" | "laundry" | "driver",
+        enterpriseType: ServiceType,
     ): string | undefined => {
-        let route = `/enterprise/${getRoute(enterpriseType)}`;
-        return route;
+        return routeToAllEnterprisesAsUser(enterpriseType);
     };
 }

@@ -1,4 +1,4 @@
-import { InputState } from "@/utils/validator/InputValidator";
+import { InputState } from "@/validators/InputValidatorSignature";
 
 export const validateEnterpriseName = (name: string): InputState => {
     const nameRegex: RegExp = /^\S[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;

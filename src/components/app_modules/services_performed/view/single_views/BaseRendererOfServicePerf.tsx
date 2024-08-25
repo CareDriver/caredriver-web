@@ -5,21 +5,22 @@ import { useEffect, useState } from "react";
 import { firestore } from "@/firebase/FirebaseConfig";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { toast } from "react-toastify";
-import { removeLastRoute } from "@/utils/parser/ForPahtname";
+import { removeLastRoute } from "@/utils/helpers/PahtHelper";
 import { usePathname } from "next/navigation";
 import DriverServiceView from "./concrete/DriverServiceView";
 import MechanicServiceView from "./concrete/MechanicServiceView";
 import TowServiceView from "./concrete/TowServiceView";
 import LaundryServiceView from "./concrete/LaundryServiceView";
-import PageLoader from "@/components/PageLoader";
 import { getPathCollectionOfServicesPerf } from "../../model/utils/CollectionGetter";
+import { ServiceType } from "@/interfaces/Services";
+import PageLoading from "@/components/loaders/PageLoading";
 
 const BaseRendererOfServicePerf = ({
     id,
     type,
 }: {
     id: string;
-    type: "driver" | "mechanic" | "tow" | "laundry";
+    type: ServiceType;
 }) => {
     const COLLECTION_PATH = getPathCollectionOfServicesPerf(type);
     const [data, setData] = useState<ServiceRequestInterface | null>(null);
@@ -47,7 +48,7 @@ const BaseRendererOfServicePerf = ({
         switch (type) {
             case "driver":
                 return <DriverServiceView service={service} />;
-            case "mechanic":
+            case "mechanical":
                 return <MechanicServiceView service={service} />;
             case "tow":
                 return <TowServiceView service={service} />;
@@ -56,7 +57,7 @@ const BaseRendererOfServicePerf = ({
         }
     };
 
-    return data ? getServiceView(data) : <PageLoader />;
+    return data ? getServiceView(data) : <PageLoading />;
 };
 
 export default BaseRendererOfServicePerf;

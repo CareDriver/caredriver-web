@@ -1,0 +1,104 @@
+"use client";
+
+import { AuthContext } from "@/context/AuthContext";
+import { useContext } from "react";
+import "@/styles/components/profile.css";
+import Link from "next/link";
+import PenToSquare from "@/icons/PenToSquare";
+import LocationDot from "@/icons/LocationDot";
+import PageLoading from "@/components/loaders/PageLoading";
+import UserPhotoRenderer from "../data_renderers/for_user_data/UserPhotoRenderer";
+import FormToRequestBalanceRecharge from "../request_forms/to_manage_balance/FormToRequestBalanceRecharge";
+import {
+    routeToRenewLocationAsUser,
+    routeToRenewPhotoAsUser,
+} from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
+
+const UserProfileForServerUser = () => {
+    const { user, checkingUserAuth } = useContext(AuthContext);
+
+    if (checkingUserAuth) {
+        return <PageLoading />;
+    }
+
+    return (
+        user && (
+            <section className="user-page-wrapper">
+                <section className="profile-wrapper">
+                    <UserPhotoRenderer photo={user.photoUrl} />
+                    <div className="profile-info-wrapper">
+                        <h1 className="profile-fullname">{user.fullName}</h1>
+                        <h2 className="profile-email">{user.email}</h2>
+                    </div>
+                </section>
+
+                <section className="margin-top-50">
+                    <Link
+                        className="icon-wrapper small-general-button text | gray gray-icon bolder touchable"
+                        href={routeToRenewPhotoAsUser()}
+                    >
+                        <PenToSquare />
+                        Cambiar mi foto
+                    </Link>
+                </section>
+
+                <section className="profile-info-wrapper | max-width-60 margin-top-25 margin-bottom-25">
+                    <h2 className="profile-subtitle icon-wrapper">
+                        <LocationDot />
+                        Mi Ubicación
+                    </h2>
+                    <span className="location-field">{user.location}</span>
+                    <div className="margin-top-5">
+                        <Link
+                            className="icon-wrapper small-general-button text | gray gray-icon bolder touchable"
+                            href={routeToRenewLocationAsUser()}
+                        >
+                            <PenToSquare />
+                            Cambiar mi ubicación
+                        </Link>
+                    </div>
+                </section>
+
+                <i className="separator-horizontal | max-width-60"></i>
+
+                <FormToRequestBalanceRecharge user={user} />
+                <span className="circles-right-bottomv2 green"></span>
+            </section>
+        )
+    );
+};
+
+export default UserProfileForServerUser;
+
+// Branding option
+/* 
+{user.branding &&
+                        (differenceOnDays(user.branding.dateLimit.toDate()) >
+                        0 ? (
+                            <section className="profile-info-wrapper | fit-width row-wrapper-item">
+                                <h2 className="profile-subtitle icon-wrapper">
+                                    <Bullhorn />
+                                    Branding
+                                </h2>
+                                <span className="location-field">
+                                    Valido hasta el{" "}
+                                    {
+                                        user.branding.dateLimit
+                                            .toDate()
+                                            .toISOString()
+                                            .split("T")[0]
+                                    }
+                                </span>
+                            </section>
+                        ) : (
+                            <section className="profile-info-wrapper | row-wrapper-item">
+                                <h2 className="profile-subtitle icon-wrapper">
+                                    <Bullhorn />
+                                    Branding
+                                </h2>
+                                <span className="location-field | red">
+                                    Expiro tu fecha limite!
+                                </span>
+                            </section>
+                        ))}
+*/

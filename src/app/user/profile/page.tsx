@@ -1,12 +1,12 @@
-import PageServerUserPermission from "@/components/permission_handlers/views/page/concrets/PageServerUserPermission";
-import UserProfile from "@/components/app_modules/logged_user/server_user/UserProfile";
+import UserProfileForServerUser from "@/components/app_modules/users/views/control_panels/UserProfileForServerUser";
+import GuardForServerUsers from "@/components/guards/views/page_guards/concrets/GuardForServerUsers";
 
-const UserProfilePage = () => {
+const Page = () => {
     return (
-        <PageServerUserPermission>
-            <UserProfile />
-        </PageServerUserPermission>
+        <GuardForServerUsers>
+            <UserProfileForServerUser />
+        </GuardForServerUsers>
     );
 };
 
-export default UserProfilePage;
+export default Page;

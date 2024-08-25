@@ -1,4 +1,4 @@
-export type ServiceType = "driver" | "mechanic" | "tow" | "laundry";
+export type ServiceType = "mechanical" | "tow" | "laundry" | "driver";
 
 export enum Services {
     Normal = "Normal",

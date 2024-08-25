@@ -1,7 +1,7 @@
 import { ServiceReqState } from "@/interfaces/Services";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { HandleableServiceStatus } from "./HandleableServiceStatus";
-import { updateUser } from "@/utils/requests/UserRequester";
+import { updateUser } from "@/components/app_modules/users/api/UserRequester";
 
 export class LaundererStatusHandler implements HandleableServiceStatus {
     user: UserInterface | undefined;
