@@ -67,7 +67,9 @@ const saveUser = async (
  * @returns A Promise that resolves to the user object if found, or undefined if not found.
  * @throws If there was an error retrieving the user.
  */
-const getUserById = async (userId: string): Promise<UserInterface | undefined> => {
+const getUserById = async (
+    userId: string,
+): Promise<UserInterface | undefined> => {
     try {
         const userDoc = await getDoc(doc(usersCollection, userId));
         if (userDoc.exists()) {
@@ -81,7 +83,27 @@ const getUserById = async (userId: string): Promise<UserInterface | undefined> =
     }
 };
 
-export const getUsersByTheirIds = async (usersId: string[]): Promise<UserInterface[]> => {
+export const getUserByFakeId = async (
+    fakeUserId: string,
+): Promise<UserInterface | undefined> => {
+    try {
+        const q = query(usersCollection, where("fakeId", "==", fakeUserId));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            let userDoc = querySnapshot.docs[0];
+            let user = userDoc.data() as UserInterface;
+            user.id = userDoc.id;
+            return user;
+        }
+        return undefined;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getUsersByTheirIds = async (
+    usersId: string[],
+): Promise<UserInterface[]> => {
     const q = query(usersCollection, where("id", "in", usersId));
     const querySnapshot = await getDocs(q);
     const users: UserInterface[] = [];

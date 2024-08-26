@@ -1,7 +1,13 @@
 "use client";
 
 import TriangleExclamation from "@/icons/TriangleExclamation";
-import { SyntheticEvent, useContext, useState } from "react";
+import {
+    FormEvent,
+    SyntheticEvent,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { toast } from "react-toastify";
 import { updateUser } from "@/components/app_modules/users/api/UserRequester";
@@ -20,6 +26,8 @@ import TextField from "@/components/form/view/fields/TextField";
 import { isValidChangeReason } from "@/components/app_modules/users/validators/for_data/BalanceValidator";
 import { validateEmialWithComparison } from "../../../validators/for_confirmations/DataConfirmationValidator";
 import { routeToAllUsersAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
+import Trash from "@/icons/Trash";
+import { isValidTextField } from "@/components/form/validators/FieldValidators";
 
 interface Form {
     confirmation: TextFieldForm;
@@ -43,7 +51,7 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
 
-    const handleSubmit = async (e: SyntheticEvent) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!formState.loading) {
             setLoadingAll(true, setFormState);
@@ -99,11 +107,27 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
         }
     };
 
+    useEffect(() => {
+        if (isOpenPopup) {
+            setFormState((prev) => ({
+                ...prev,
+                isValid:
+                    isValidTextField(form.confirmation) &&
+                    isValidTextField(form.reason),
+            }));
+        } else {
+            setFormState((prev) => ({
+                ...prev,
+                isValid: isValidTextField(form.confirmation),
+            }));
+        }
+    }, [form]);
+
     return (
-        <div className={`form-sub-container | margin-top-50 max-width-60`}>
-            <h2 className="text icon-wrapper | red red-icon medium-big bold">
-                <TriangleExclamation />
-                Zona Peligrosa
+        <div className={`form-sub-container | margin-top-50 max-width-40`}>
+            <h2 className="text icon-wrapper | red red-icon medium-big bolder">
+                <Trash />
+                Eliminar usuario
             </h2>
             <p>
                 Esta acción no se puede revertir, aunque no se afectara los
@@ -115,6 +139,8 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                     button: {
                         content: {
                             legend: "Eliminar usuario",
+                            buttonClassStyle:
+                                "small-general-button red | text bolder",
                         },
                         behavior: {
                             loading: formState.loading,
@@ -124,14 +150,17 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                 }}
                 behavior={{
                     loading: formState.loading || loading,
-                    onSummit: async () => setOpenPopup(true),
+                    onSummit: async (e: FormEvent<HTMLFormElement>) => {
+                        e.preventDefault();
+                        setOpenPopup(true);
+                    },
                 }}
             >
                 <TextField
                     field={{
-                        values: form.reason,
+                        values: form.confirmation,
                         setter: (d) =>
-                            setForm((prev) => ({ ...prev, reason: d })),
+                            setForm((prev) => ({ ...prev, confirmation: d })),
                         validator: (d) =>
                             validateEmialWithComparison(d, user.email),
                     }}
@@ -154,12 +183,13 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                         button: {
                             content: {
                                 legend: "Eliminar usuario",
+                                buttonClassStyle: "general-button red",
                             },
                             behavior: {
                                 loading: formState.loading,
                                 isValid: formState.isValid,
                             },
-                        },
+                        }
                     }}
                     behavior={{
                         loading: formState.loading || loading,
@@ -172,7 +202,7 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                             setter: (d) =>
                                 setForm((prev) => ({
                                     ...prev,
-                                    changeReason: d,
+                                    reason: d,
                                 })),
                             validator: isValidChangeReason,
                         }}

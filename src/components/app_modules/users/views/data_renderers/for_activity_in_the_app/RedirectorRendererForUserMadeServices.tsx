@@ -141,7 +141,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
 
     return (
         <div className="form-sub-container | margin-top-25 margin-bottom-25 max-width-60">
-            <h2 className="icon-wrapper profile-subtitle | bold mb">
+            <h2 className="icon-wrapper lb | text medium-big bolder">
                 <HelmetSafety />
                 Servicios
             </h2>

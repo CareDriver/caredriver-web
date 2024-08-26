@@ -1,7 +1,13 @@
 "use client";
 
 import TriangleExclamation from "@/icons/TriangleExclamation";
-import { SyntheticEvent, useContext, useState } from "react";
+import {
+    FormEvent,
+    SyntheticEvent,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { toast } from "react-toastify";
 import { saveActionOnUser } from "@/components/app_modules/users/api/ActionOnUserRegister";
@@ -18,6 +24,7 @@ import TextField from "@/components/form/view/fields/TextField";
 import { isValidChangeReason } from "@/components/app_modules/users/validators/for_data/BalanceValidator";
 import { validateEmialWithComparison } from "../../../validators/for_confirmations/DataConfirmationValidator";
 import { genDocId } from "@/utils/generators/IdGenerator";
+import { isValidTextField } from "@/components/form/validators/FieldValidators";
 
 interface Form {
     confirmation: TextFieldForm;
@@ -105,7 +112,7 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
         }
     };
 
-    const handleSubmit = async (e: SyntheticEvent) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!loading || !formState.loading) {
             setLoadingAll(true, setFormState);
@@ -142,11 +149,27 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
         }
     };
 
+    useEffect(() => {
+        if (isOpenPopup) {
+            setFormState((prev) => ({
+                ...prev,
+                isValid:
+                    isValidTextField(form.confirmation) &&
+                    isValidTextField(form.reason),
+            }));
+        } else {
+            setFormState((prev) => ({
+                ...prev,
+                isValid: isValidTextField(form.confirmation),
+            }));
+        }
+    }, [form]);
+
     return (
-        <div className={`form-sub-container | margin-top-50 max-width-60`}>
-            <h2 className="text icon-wrapper | yellow yellow-icon medium-big bold">
+        <div className={`form-sub-container | margin-top-50 max-width-40`}>
+            <h2 className="text medium-big bolder yellow | icon-wrapper yellow-icon">
                 <TriangleExclamation />
-                Zona Peligrosa
+                {isDisable ? "Habilitar usuario" : "Deshabilitar usuario"}
             </h2>
             <p>
                 El usuario no podra usar la aplicacion mientras este
@@ -160,23 +183,29 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                             legend: isDisable
                                 ? "Habilitar usuario"
                                 : "Deshabilitar usuario",
+                            buttonClassStyle:
+                                "small-general-button yellow | text bolder",
                         },
                         behavior: {
                             loading: formState.loading,
                             isValid: formState.isValid,
                         },
                     },
+                    styleClasses: "small-form",
                 }}
                 behavior={{
                     loading: formState.loading || loading,
-                    onSummit: async () => setOpenPopup(true),
+                    onSummit: async (e: FormEvent<HTMLFormElement>) => {
+                        e.preventDefault();
+                        setOpenPopup(true);
+                    },
                 }}
             >
                 <TextField
                     field={{
-                        values: form.reason,
+                        values: form.confirmation,
                         setter: (d) =>
-                            setForm((prev) => ({ ...prev, reason: d })),
+                            setForm((prev) => ({ ...prev, confirmation: d })),
                         validator: (d) =>
                             validateEmialWithComparison(d, user.email),
                     }}
@@ -203,6 +232,7 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                                 legend: isDisable
                                     ? "Habilitar usuario"
                                     : "Deshabilitar usuario",
+                                buttonClassStyle: "general-button yellow"
                             },
                             behavior: {
                                 loading: formState.loading,
@@ -221,7 +251,7 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                             setter: (d) =>
                                 setForm((prev) => ({
                                     ...prev,
-                                    changeReason: d,
+                                    reason: d,
                                 })),
                             validator: isValidChangeReason,
                         }}

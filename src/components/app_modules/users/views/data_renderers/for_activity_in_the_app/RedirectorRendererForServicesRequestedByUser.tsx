@@ -12,7 +12,7 @@ const RedirectorRendererForServicesRequestedByUser = ({
 }) => {
     return (
         <div className="form-sub-container | margin-top-25 margin-bottom-25 max-width-60">
-            <h2 className="icon-wrapper profile-subtitle">
+            <h2 className="icon-wrapper | text medium-big bolder">
                 <UserIcon />
                 Servicios solicitados como usuario normal
             </h2>

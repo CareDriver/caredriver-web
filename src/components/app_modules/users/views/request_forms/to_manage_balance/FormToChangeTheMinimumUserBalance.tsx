@@ -14,10 +14,15 @@ import { isValidAmount } from "@/components/app_modules/users/validators/for_dat
 import { SyntheticEvent, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const FormToChangeTheMinimumUserBalance = ({ user }: { user: UserInterface }) => {
+const FormToChangeTheMinimumUserBalance = ({
+    user,
+}: {
+    user: UserInterface;
+}) => {
     const { loading, setLoading, setLoadingAll } = useContext(PageStateContext);
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
-    const [minBalance, setMinBalance] = useState<TextFieldForm>(DEFAUL_TEXT_FIELD);
+    const [minBalance, setMinBalance] =
+        useState<TextFieldForm>(DEFAUL_TEXT_FIELD);
 
     const perform = async () => {
         if (user.id && user.balance) {
@@ -36,7 +41,6 @@ const FormToChangeTheMinimumUserBalance = ({ user }: { user: UserInterface }) =>
                     },
                 );
                 window.location.reload();
-                setLoading(false);
             } catch (e) {
                 setLoading(false);
             }
@@ -57,11 +61,11 @@ const FormToChangeTheMinimumUserBalance = ({ user }: { user: UserInterface }) =>
             ...prev,
             isValid: isValidTextField(minBalance),
         }));
-    }, []);
+    }, [minBalance]);
 
     return (
         <section className="profile-info-wrapper | margin-top-50 max-width-60">
-            <h2 className="profile-subtitle icon-wrapper | mb">
+            <h2 className="text medium-big bolder | icon-wrapper lb">
                 <MoneyBillWave />
                 Saldo mínimo |{" "}
                 {user.minimumBalance
@@ -80,12 +84,15 @@ const FormToChangeTheMinimumUserBalance = ({ user }: { user: UserInterface }) =>
                     button: {
                         content: {
                             legend: "Cambiar saldo mínimo",
+                            buttonClassStyle:
+                                "small-general-button | text bolder",
                         },
                         behavior: {
                             loading: formState.loading,
                             isValid: formState.isValid,
                         },
                     },
+                    styleClasses: "small-form max-width-40",
                 }}
                 behavior={{
                     loading: formState.loading || loading,

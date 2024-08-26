@@ -14,7 +14,13 @@ import {
     isValidChangeReason,
 } from "@/components/app_modules/users/validators/for_data/BalanceValidator";
 import { Timestamp } from "firebase/firestore";
-import { SyntheticEvent, useContext, useEffect, useState } from "react";
+import {
+    FormEvent,
+    SyntheticEvent,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import { toast } from "react-toastify";
 import { saveBalanceHistoryItem } from "@/components/app_modules/users/api/BalanceHistoryRequester";
 import Popup from "@/components/modules/Popup";
@@ -137,20 +143,45 @@ const FormToChangeUserBalanceByAdmin = ({
                     },
                 );
                 window.location.reload();
-                setLoadingAll(false, setFormState);
             } catch (e) {
                 setLoadingAll(false, setFormState);
             }
         }
     };
 
-    const setDebt = async (e: SyntheticEvent) => {
+    const setDebt = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!loading) {
             setLoadingAll(true, setFormState);
             await perform();
         }
     };
+
+    useEffect(() => {
+        let isValid: boolean;
+        let message: string;
+
+        if (form.reasonOfChange.type === "modificationReason") {
+            ({ isValid, message } = isValidChangeReason(
+                form.reasonOfChange.description.value,
+            ));
+        } else {
+            ({ isValid, message } = isValidBankNumber(
+                form.reasonOfChange.description.value,
+            ));
+        }
+
+        setForm((prev) => ({
+            ...prev,
+            reasonOfChange: {
+                ...prev.reasonOfChange,
+                description: {
+                    ...prev.reasonOfChange.description,
+                    message: isValid ? null : message,
+                },
+            },
+        }));
+    }, [form.reasonOfChange.type]);
 
     useEffect(() => {
         let isSettingTheReason = isOpenPopup;
@@ -167,11 +198,11 @@ const FormToChangeUserBalanceByAdmin = ({
                 isValid: isValidTextField(form.newBalance),
             }));
         }
-    }, []);
+    }, [form]);
 
     return (
         <section className="profile-info-wrapper | margin-top-50 max-width-60">
-            <h2 className="profile-subtitle icon-wrapper | mb">
+            <h2 className="text medium-big bolder | icon-wrapper lb">
                 <MoneyBillWave />
                 Saldo |{" "}
                 {user.balance
@@ -189,16 +220,22 @@ const FormToChangeUserBalanceByAdmin = ({
                     button: {
                         content: {
                             legend: "Cambiar saldo",
+                            buttonClassStyle:
+                                "small-general-button | text bolder",
                         },
                         behavior: {
                             loading: formState.loading,
                             isValid: formState.isValid,
                         },
                     },
+                    styleClasses: "small-form max-width-40",
                 }}
                 behavior={{
                     loading: formState.loading || loading,
-                    onSummit: async () => setOpenPopup(true),
+                    onSummit: async (e: FormEvent<HTMLFormElement>) => {
+                        e.preventDefault();
+                        setOpenPopup(true);
+                    },
                 }}
             >
                 <TextField

@@ -1,7 +1,7 @@
 "use client";
 
 import { UserInterface } from "@/interfaces/UserInterface";
-import { getUserById } from "@/components/app_modules/users/api/UserRequester";
+import { getUserByFakeId } from "@/components/app_modules/users/api/UserRequester";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -33,6 +33,7 @@ import FormFoChangeUserRoleToAdmin from "../request_forms/to_change_role/FormFoC
 import FormToDeleteUserByAdmin from "../request_forms/to_change_state/FormToDeleteUserByAdmin";
 import { getUserRoleDetails } from "../../utils/UserRoleGetter";
 import { routeToAllUsersAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
+import "@/styles/components/users.css"
 
 const UserProfileForAppUser = ({ userId }: { userId: string }) => {
     const router = useRouter();
@@ -44,7 +45,7 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
     } | null>(null);
 
     useEffect(() => {
-        getUserById(userId)
+        getUserByFakeId(userId)
             .then((res) => {
                 if (res) {
                     setUser(res);
@@ -71,23 +72,21 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
 
                 <div className="user-info-subwrapper">
                     <h1 className="text | big bolder">{user.fullName}</h1>
-                    <h3 className="text | gray-dark bold">{user.email}</h3>
+                    <h3 className="text | medium-big gray-dark">{user.email}</h3>
                     <GuardOfModule
                         user={adminUser}
                         roles={ROLES_TO_VIEW_USER_CREDENTIALS}
                     >
                         <>
-                            <h3 className="text | gray-dark bold">
+                            <h3 className="text | gray-dark medium-big">
                                 {user.location}
                             </h3>
-                            <h3 className="text | gray-dark bold margin-bottom-15">
+                            <h3 className="text | gray-dark medium-big margin-bottom-15">
                                 {user.phoneNumber}
                             </h3>
 
                             {role ? (
-                                <h4
-                                    className={`users-item-role text | right bold ${role.color}`}
-                                >
+                                <h4 className={`text | bolder ${role.color}`}>
                                     {role.text}
                                 </h4>
                             ) : (
