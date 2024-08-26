@@ -2,30 +2,24 @@ import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
 import Link from "next/link";
 import { getServicePerfStatus } from "../../model/utils/ServiceStatusGetter";
-import { TypeOfServicePerformed } from "../../model/models/TypeOfServicePerformed";
-import { buildLinkForServicePerformed } from "../../model/utils/LinkBuilder";
 import { ServiceType } from "@/interfaces/Services";
+import { routeToServicePerformed } from "@/utils/route_builders/as_admin/RouteBuilderForServiceAsAdmin";
 
-const BaseCardForServicePerf = ({
-    userId,
-    service,
-    typeOfService,
-    typeOfPerf,
-    children,
-}: {
-    userId: string;
+interface Props {
     service: ServiceRequestInterface;
     typeOfService: ServiceType;
-    typeOfPerf: TypeOfServicePerformed;
     children: undefined | React.ReactNode;
+}
+
+const BaseCardForServicePerf: React.FC<Props> = ({
+    service,
+    typeOfService,
+    children,
 }) => {
     const HAS_FAKED_ID = service.fakedId !== undefined;
-    const LINK_TO = buildLinkForServicePerformed(
-        userId,
-        service.fakedId,
-        typeOfService,
-        typeOfPerf,
-    );
+    const LINK_TO = service.fakedId
+        ? routeToServicePerformed(typeOfService, service.fakedId)
+        : undefined;
     let serviceState = getServicePerfStatus(service);
 
     const renderBodyCard = () => (

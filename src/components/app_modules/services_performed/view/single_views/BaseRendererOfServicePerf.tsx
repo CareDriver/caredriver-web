@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import { firestore } from "@/firebase/FirebaseConfig";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { toast } from "react-toastify";
-import { removeLastRoute } from "@/utils/helpers/PahtHelper";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import DriverServiceView from "./concrete/DriverServiceView";
 import MechanicServiceView from "./concrete/MechanicServiceView";
 import TowServiceView from "./concrete/TowServiceView";
@@ -14,6 +13,7 @@ import LaundryServiceView from "./concrete/LaundryServiceView";
 import { getPathCollectionOfServicesPerf } from "../../model/utils/CollectionGetter";
 import { ServiceType } from "@/interfaces/Services";
 import PageLoading from "@/components/loaders/PageLoading";
+import { routeToAllUsersAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 
 const BaseRendererOfServicePerf = ({
     id,
@@ -23,8 +23,9 @@ const BaseRendererOfServicePerf = ({
     type: ServiceType;
 }) => {
     const COLLECTION_PATH = getPathCollectionOfServicesPerf(type);
+
+    const router = useRouter();
     const [data, setData] = useState<ServiceRequestInterface | null>(null);
-    const pathname = usePathname();
 
     useEffect(() => {
         const q = query(
@@ -36,8 +37,8 @@ const BaseRendererOfServicePerf = ({
                 const doc = querySnapshot.docs[0];
                 setData(doc.data() as ServiceRequestInterface);
             } else {
-                toast.error("Servicio no encontrado");
-                window.location.replace(removeLastRoute(pathname));
+                toast.error("Servicio no encontrado...");
+                router.push(routeToAllUsersAsAdmin());
             }
         });
 

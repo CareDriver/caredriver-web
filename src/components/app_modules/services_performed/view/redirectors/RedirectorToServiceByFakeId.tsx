@@ -14,14 +14,13 @@ import { validateFakeId } from "../../model/validators/FakeIdValidator";
 import { isNullOrEmptyText } from "@/validators/TextValidator";
 import { toast } from "react-toastify";
 import { findServicePerfByFakeId } from "../../model/fetchers/ServicePerfFetcher";
-import { buildLinkForServicePerformed } from "../../model/utils/LinkBuilder";
 import { TypeOfServicePerformed } from "../../model/models/TypeOfServicePerformed";
+import { routeToServicePerformed } from "@/utils/route_builders/as_admin/RouteBuilderForServiceAsAdmin";
 
 const RedirectorToServiceByFakeId = () => {
     const [typeOfService, setTypeOfService] = useState<ServiceType>("driver");
-    const [serviceFakedId, setServiceFakeId] = useState<TextField>(
-        DEFAUL_TEXT_FIELD,
-    );
+    const [serviceFakedId, setServiceFakeId] =
+        useState<TextField>(DEFAUL_TEXT_FIELD);
     const [formState, setFormState] = useState<{
         loading: boolean;
         isValid: boolean;
@@ -73,11 +72,9 @@ const RedirectorToServiceByFakeId = () => {
                 });
                 return;
             }
-            let link = buildLinkForServicePerformed(
-                serviceFound.serviceUserId,
-                serviceFakedId.value,
+            let link = routeToServicePerformed(
                 typeOfService,
-                TypeOfServicePerformed.Served,
+                serviceFakedId.value,
             );
 
             if (!link) {

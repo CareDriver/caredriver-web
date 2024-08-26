@@ -39,6 +39,6 @@ export function routeToServicePerformed(
 ): string {
     return "/admin/service/only/performed/"
         .concat(serviceRoute(type))
-        .concat("")
+        .concat("/")
         .concat(serviceId);
 }

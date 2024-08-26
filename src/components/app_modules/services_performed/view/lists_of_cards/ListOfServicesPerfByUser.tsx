@@ -21,23 +21,45 @@ import { firestore } from "@/firebase/FirebaseConfig";
 import { TypeOfServicePerformed } from "../../model/models/TypeOfServicePerformed";
 import { getPathCollectionOfServicesPerf } from "../../model/utils/CollectionGetter";
 import { ServiceType } from "@/interfaces/Services";
+import { UserInterface } from "@/interfaces/UserInterface";
+import { getUserByFakeId } from "@/components/app_modules/users/api/UserRequester";
+import { useRouter } from "next/navigation";
+import { routeToAllUsersAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
+import { toast } from "react-toastify";
+import PageLoading from "@/components/loaders/PageLoading";
 
-const ListOfServicesPerfByUser = ({
-    userId,
-    typeOfService,
-    typeOfPerf,
-}: {
+interface Props {
     userId: string;
     typeOfService: ServiceType;
     typeOfPerf: TypeOfServicePerformed;
+}
+
+const ListOfServicesPerfByUser: React.FC<Props> = ({
+    userId,
+    typeOfService,
+    typeOfPerf,
 }) => {
     const COLLECTION_PATH = getPathCollectionOfServicesPerf(typeOfService);
     const PAGE_SIZE = 10;
+
+    const router = useRouter();
+    const [user, setUser] = useState<UserInterface | undefined>(undefined);
     const [deadline, setDeadline] = useState(Timestamp.now());
     const [documents, setDocuments] = useState<ServiceRequestInterface[]>([]);
     const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot | null>(null);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+
+    useEffect(() => {
+        getUserByFakeId(userId).then((res) => {
+            if (res && res.id) {
+                setUser(res);
+            } else {
+                toast.error("Usuario no encontrado");
+                router.push(routeToAllUsersAsAdmin());
+            }
+        });
+    }, []);
 
     const updateDocuments = (newDocs: ServiceRequestInterface[]) => {
         setDocuments((prevDocuments) => {
@@ -54,7 +76,13 @@ const ListOfServicesPerfByUser = ({
         });
     };
 
-    const fetchDocuments = (startAfterDoc: QueryDocumentSnapshot | null = null) => {
+    const fetchDocuments = (
+        startAfterDoc: QueryDocumentSnapshot | null = null,
+    ) => {
+        if (!user?.id) {
+            return;
+        }
+
         setLoading(true);
 
         const adjustedDeadline = Timestamp.fromDate(
@@ -66,7 +94,7 @@ const ListOfServicesPerfByUser = ({
             q = query(
                 collection(firestore, COLLECTION_PATH),
                 limit(PAGE_SIZE),
-                where("userId", "==", userId),
+                where("userId", "==", user.id),
                 where("createdAt", "<=", adjustedDeadline),
                 orderBy("createdAt", "desc"),
                 startAfter(startAfterDoc),
@@ -75,7 +103,7 @@ const ListOfServicesPerfByUser = ({
             q = query(
                 collection(firestore, COLLECTION_PATH),
                 limit(PAGE_SIZE),
-                where("userId", "==", userId),
+                where("userId", "==", user.id),
                 where("createdAt", "<=", adjustedDeadline),
                 orderBy("createdAt", "desc"),
             );
@@ -103,8 +131,10 @@ const ListOfServicesPerfByUser = ({
     };
 
     useEffect(() => {
-        fetchDocuments();
-    }, [deadline]);
+        if (user) {
+            fetchDocuments();
+        }
+    }, [user, deadline]);
 
     const handleLoadMore = () => {
         if (lastDoc) {
@@ -123,9 +153,7 @@ const ListOfServicesPerfByUser = ({
         if (typeOfService === "driver" || typeOfService === "tow") {
             return (
                 <CardForServicePerfWithLocation
-                    userId={userId}
                     typeOfService={typeOfService}
-                    typeOfPerf={typeOfPerf}
                     service={service}
                     key={key}
                 />
@@ -133,9 +161,7 @@ const ListOfServicesPerfByUser = ({
         } else {
             return (
                 <CardForServicePerfWithReason
-                    userId={userId}
                     typeOfService={typeOfService}
-                    typeOfPerf={typeOfPerf}
                     service={service}
                     key={key}
                 />
@@ -146,6 +172,10 @@ const ListOfServicesPerfByUser = ({
     const theareNoResults = (): boolean => {
         return documents.length === 0 && !hasMore;
     };
+
+    if (!user) {
+        return <PageLoading />;
+    }
 
     return (
         <div
@@ -162,7 +192,11 @@ const ListOfServicesPerfByUser = ({
                     type="date"
                     className="filter-date-input"
                     onChange={handleDeadlineChange}
-                    value={new Date(deadline.seconds * 1000).toISOString().split("T")[0]}
+                    value={
+                        new Date(deadline.seconds * 1000)
+                            .toISOString()
+                            .split("T")[0]
+                    }
                 />
             </fieldset>
 

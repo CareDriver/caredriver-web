@@ -1,26 +1,18 @@
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import BaseCardForServicePerf from "./BaseCardForServicePerf";
-import { TypeOfServicePerformed } from "../../model/models/TypeOfServicePerformed";
 import { ServiceType } from "@/interfaces/Services";
 
-const CardForServicePerfWithLocation = ({
-    userId,
-    service,
-    typeOfService,
-    typeOfPerf,
-}: {
-    userId: string;
+interface Props {
     service: ServiceRequestInterface;
     typeOfService: ServiceType;
-    typeOfPerf: TypeOfServicePerformed;
+}
+
+const CardForServicePerfWithLocation: React.FC<Props> = ({
+    service,
+    typeOfService,
 }) => {
     return (
-        <BaseCardForServicePerf
-            userId={userId}
-            service={service}
-            typeOfService={typeOfService}
-            typeOfPerf={typeOfPerf}
-        >
+        <BaseCardForServicePerf service={service} typeOfService={typeOfService}>
             <>
                 <div className="margin-bottom-15">
                     <h4 className="text | bold gray-dark">Desde</h4>

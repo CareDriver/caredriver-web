@@ -3,7 +3,13 @@
 import UserLock from "@/icons/UserLock";
 import { UserInterface, UserRole, userRoles } from "@/interfaces/UserInterface";
 import { updateUser } from "@/components/app_modules/users/api/UserRequester";
-import { SyntheticEvent, useContext, useEffect, useState } from "react";
+import {
+    FormEvent,
+    SyntheticEvent,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import { toast } from "react-toastify";
 import { saveActionOnUser } from "@/components/app_modules/users/api/ActionOnUserRegister";
 import { nanoid } from "nanoid";
@@ -43,7 +49,7 @@ const FormFoChangeUserRoleToAdmin: React.FC<Props> = ({ user, adminUser }) => {
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
     const [form, setForm] = useState<Form>(DEFAULT_FORM(user));
 
-    const handleSubmit = async (e: SyntheticEvent) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (!loading) {
             setLoadingAll(true, setFormState);
@@ -76,8 +82,6 @@ const FormFoChangeUserRoleToAdmin: React.FC<Props> = ({ user, adminUser }) => {
                         error: "Error al cambiar el rol del usuario, inténtalo de nuevo por favor",
                     },
                 );
-                setLoadingAll(false, setFormState);
-
                 window.location.reload();
             } else {
                 toast.error("No se puede encontrar al usuario");
@@ -87,10 +91,17 @@ const FormFoChangeUserRoleToAdmin: React.FC<Props> = ({ user, adminUser }) => {
     };
 
     useEffect(() => {
-        setFormState((prev) => ({
-            ...prev,
-            isValid: isValidTextField(form.changeReason),
-        }));
+        if (isOpenPopup) {
+            setFormState((prev) => ({
+                ...prev,
+                isValid: isValidTextField(form.changeReason),
+            }));
+        } else {
+            setFormState((prev) => ({
+                ...prev,
+                isValid: user.role !== form.newRole,
+            }));
+        }
     }, [form]);
 
     return (
@@ -105,18 +116,22 @@ const FormFoChangeUserRoleToAdmin: React.FC<Props> = ({ user, adminUser }) => {
                     button: {
                         content: {
                             legend: "Cambiar rol",
-                            buttonClassStyle: "small-general-button | text bolder"
+                            buttonClassStyle:
+                                "small-general-button | text bolder",
                         },
                         behavior: {
                             loading: formState.loading,
                             isValid: formState.isValid,
                         },
                     },
-                    styleClasses: "small-form | max-width-40"
+                    styleClasses: "small-form | max-width-40",
                 }}
                 behavior={{
                     loading: formState.loading || loading,
-                    onSummit: async () => setOpenPopup(true),
+                    onSummit: async (e: FormEvent<HTMLFormElement>) => {
+                        e.preventDefault();
+                        setOpenPopup(true);
+                    },
                 }}
             >
                 <UserRoleField
