@@ -31,8 +31,8 @@ import { uploadFileBase64 } from "@/utils/requesters/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
 import { IEditedEnterpriseManager } from "../../../models/enterprise_managers_edited/IEditedEnterpriseManager";
-import { validateEnterpriseName } from "../../../validators/ValidatorsForConfirmationWithEnterprises";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
+import { validateEnterpriseName } from "../../../validators/EnterpriseValidator";
 
 interface Form {
     name: TextFieldForm;
@@ -129,6 +129,7 @@ const EnterpriseEditForm: React.FC<Props> = ({
                         isValid: formState.isValid,
                     },
                 },
+                styleClasses: "max-width-80",
             }}
             behavior={{
                 loading: loading || formState.loading,
@@ -166,14 +167,20 @@ const EnterpriseEditForm: React.FC<Props> = ({
                 location={form.location}
                 setter={(d) => setForm((prev) => ({ ...prev, location: d }))}
             />
-            <MapLocationField
-                field={{
-                    values: form.coordinates,
-                    setter: (d) =>
-                        setForm((prev) => ({ ...prev, coordinates: d })),
-                }}
-                legend="Ubicación geografica de la empresa"
-            />
+            {form.coordinates.value ? (
+                <MapLocationField
+                    field={{
+                        values: form.coordinates,
+                        setter: (d) =>
+                            setForm((prev) => ({ ...prev, coordinates: d })),
+                    }}
+                    legend="Ubicación geografica de la empresa"
+                />
+            ) : (
+                <span className="loader-gray-medium small-loader | text gray bold">
+                    Cargando ubicacion geografica
+                </span>
+            )}
         </BaseForm>
     );
 };

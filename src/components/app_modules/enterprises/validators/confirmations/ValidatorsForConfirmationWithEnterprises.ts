@@ -1,6 +1,9 @@
 import { InputState } from "@/validators/InputValidatorSignature";
 
-export const validateEnterpriseName = (name: string): InputState => {
+export const validateConfirmationEnterpriseName = (
+    name: string,
+    enterpriseName: string,
+): InputState => {
     const nameRegex: RegExp = /^\S[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
 
     if (name.trim() === "") {
@@ -19,6 +22,11 @@ export const validateEnterpriseName = (name: string): InputState => {
             isValid: false,
             message:
                 "No puedes ingresar mas de 150 caracteres para el nombre de la Empresa",
+        };
+    } else if (name !== enterpriseName) {
+        return {
+            isValid: false,
+            message: "El nombre ingresado no es el mismo que la empresa",
         };
     } else {
         return {

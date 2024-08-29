@@ -263,18 +263,12 @@ const NewVehicleForm: React.FC<Props> = ({
                 },
             );
             window.location.reload();
-            setFormState((prev) => ({
-                ...prev,
-                loading: false,
-                isValid: true,
-            }));
         } catch (e) {
             setFormState((prev) => ({
                 ...prev,
                 loading: false,
                 isValid: false,
             }));
-            window.location.reload();
         }
     };
 

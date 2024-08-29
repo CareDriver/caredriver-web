@@ -29,7 +29,7 @@ export class LaundererStatusHandler implements HandleableServiceStatus {
         }
 
         return {
-            title: "Solicitud para trabajar como Lavadero con nosotros!",
+            title: "Solicitud para trabajar como Lavadero",
             description:
                 "Necesitamos verificar que todos los datos que se llenen sean validos antes registrar al nuevo usuario servidor.",
         };

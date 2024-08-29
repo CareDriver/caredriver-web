@@ -11,7 +11,10 @@ import SelfieRenderer from "../../../../../form/view/field_renderers/SelfieRende
 import VehiclesWithCategoryRenderer from "../../data_renderers/for_vehicles/VehiclesWithCategoryRenderer";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
-import { getUserById, updateUser } from "@/components/app_modules/users/api/UserRequester";
+import {
+    getUserById,
+    updateUser,
+} from "@/components/app_modules/users/api/UserRequester";
 import {
     ServiceRequestsInterface,
     ServiceVehicles,
@@ -37,7 +40,11 @@ import {
     ReviewState,
 } from "@/components/form/models/Reviews";
 
-const CraneOperatorReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
+const CraneOperatorReviewForm = ({
+    serviceReq,
+}: {
+    serviceReq: UserRequest;
+}) => {
     const { user: adminUser } = useContext(AuthContext);
     const [reviewState, setReviewState] =
         useState<ReviewState>(DEFAULT_REVIEW_STATE);
@@ -271,6 +278,25 @@ const CraneOperatorReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) =>
                 content={{
                     firstButton: {
                         content: {
+                            legend: "Rechazar",
+                            buttonClassStyle: wasReviewed()
+                                ? "hidden"
+                                : "general-button gray",
+                            loaderClassStyle: "loader-gray",
+                        },
+                        behavior: {
+                            loading: reviewState.loading,
+                            setLoading: (l) =>
+                                setReviewState((prev) => ({
+                                    ...prev,
+                                    loading: l,
+                                })),
+                            isValid: !wasReviewed(),
+                            action: decline,
+                        },
+                    },
+                    secondButton: {
+                        content: {
                             legend: "Aprobar",
                             buttonClassStyle: wasReviewed()
                                 ? "hidden"
@@ -285,24 +311,6 @@ const CraneOperatorReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) =>
                                 })),
                             isValid: !wasReviewed(),
                             action: approve,
-                        },
-                    },
-                    secondButton: {
-                        content: {
-                            legend: "Rechazar",
-                            buttonClassStyle: wasReviewed()
-                                ? "hidden"
-                                : "general-button gray",
-                        },
-                        behavior: {
-                            loading: reviewState.loading,
-                            setLoading: (l) =>
-                                setReviewState((prev) => ({
-                                    ...prev,
-                                    loading: l,
-                                })),
-                            isValid: !wasReviewed(),
-                            action: decline,
                         },
                     },
                 }}
@@ -351,7 +359,7 @@ const CraneOperatorReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) =>
                 )}
 
                 {requesterUser && (
-                    <UserStateRenderer user={requesterUser} />
+                    <UserStateWithMessageRenderer userData={requesterUser} />
                 )}
             </BaseFormWithTwoButtons>
         </div>

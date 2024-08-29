@@ -36,7 +36,7 @@ import {
     isValidTextField,
 } from "@/components/form/validators/FieldValidators";
 import EnterpriseOwnerAdder from "./EnterpriseOwnerAdder";
-import { validateEnterpriseName } from "../../../validators/ValidatorsForConfirmationWithEnterprises";
+import { validateEnterpriseName } from "../../../validators/confirmations/ValidatorsForConfirmationWithEnterprises";
 import { ServiceType } from "@/interfaces/Services";
 import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import { PageStateContext } from "@/context/PageStateContext";

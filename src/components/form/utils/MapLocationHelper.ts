@@ -16,7 +16,11 @@ export function getCurrentLocation(): GeoPoint {
     return currentLocation;
 }
 
-export function geoPointToLatLng(geo: GeoPoint) {
+export function geoPointToLatLng(geo: GeoPoint | undefined) {
+    if (!geo) {
+        return undefined;
+    }
+
     return {
         lat: geo.latitude,
         lng: geo.longitude,

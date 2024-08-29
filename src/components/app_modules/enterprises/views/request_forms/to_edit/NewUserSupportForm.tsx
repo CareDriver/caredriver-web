@@ -1,7 +1,6 @@
 import { Enterprise, EnterpriseUser } from "@/interfaces/Enterprise";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { updateEnterprise } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
-import { DEFAULT_PHOTO } from "@/components/app_modules/users/models/MissingUserData";
 import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";

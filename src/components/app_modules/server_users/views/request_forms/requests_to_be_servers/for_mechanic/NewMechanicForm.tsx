@@ -191,16 +191,11 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                 },
             );
             window.location.reload();
-            setFormState({
-                loading: false,
-                isValid: true,
-            });
         } catch (e) {
             setFormState({
                 loading: false,
                 isValid: false,
             });
-            window.location.reload();
         }
     };
 

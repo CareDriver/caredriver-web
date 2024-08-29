@@ -1,6 +1,5 @@
 import TriangleExclamation from "@/icons/TriangleExclamation";
 import { UserInterface } from "@/interfaces/UserInterface";
-import UserStateRenderer from "./UserStateRenderer";
 
 const UserStateWithMessageRenderer = ({
     userData,
@@ -10,9 +9,7 @@ const UserStateWithMessageRenderer = ({
     return (
         <div>
             {userData !== null ? (
-                userData !== undefined ? (
-                    <UserStateRenderer user={userData} />
-                ) : (
+                userData === undefined && (
                     <span className="icon-wrapper text | yellow-icon bold yellow">
                         <TriangleExclamation />
                         El usuario no fue encontrado, puede que su cuenta haya

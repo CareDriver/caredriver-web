@@ -153,7 +153,7 @@ export const mechanicReqBuilder = (
     mechanicalWorkShop: string | undefined,
     mechanicTools: string,
 ): UserRequest => {
-    if (!mechanicalWorkShop) {
+    if (mechanicalWorkShop) {
         return {
             id,
             userId,

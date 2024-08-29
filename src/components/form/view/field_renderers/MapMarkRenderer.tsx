@@ -56,6 +56,7 @@ const MapMarkRenderer = ({ location }: { location: GeoPoint }) => {
             style={{
                 height: "50vh",
                 width: "100%",
+                borderRadius: "0.9375rem"
             }}
             ref={mapRef}
         ></div>

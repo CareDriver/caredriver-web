@@ -10,10 +10,10 @@ import { deleteEnterprise } from "../../../api/EnterpriseRequester";
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
 import TextField from "@/components/form/view/fields/TextField";
-import { validateConfirmationEnterpriseName } from "../../../validators/EnterpriseValidator";
 import Trash from "@/icons/Trash";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
+import { validateConfirmationEnterpriseName } from "../../../validators/confirmations/ValidatorsForConfirmationWithEnterprises";
 
 interface Props {
     enterprise: Enterprise;

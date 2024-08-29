@@ -85,7 +85,6 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
                     await deleteFile(req.newPhoto.ref);
                 }
                 await deleteChangePhotoReq(req.id);
-                setLoading(false);
                 router.push(routeToUserRequestsToRenewPhotoAsAdmin());
             } catch (e) {
                 setLoading(false);
@@ -129,6 +128,21 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
                 content={{
                     firstButton: {
                         content: {
+                            legend: "Rechazar",
+                            buttonClassStyle: !req.active
+                                ? "hidden"
+                                : "general-button gray",
+                            loaderClassStyle: "loader-gray",
+                        },
+                        behavior: {
+                            loading: loading || isNull(userReq),
+                            isValid: !req.active && !isNull(userReq),
+                            setLoading: (l) => setLoading(l),
+                            action: decline,
+                        },
+                    },
+                    secondButton: {
+                        content: {
                             legend: "Aprobar",
                             buttonClassStyle: !req.active
                                 ? "hidden"
@@ -141,25 +155,13 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
                             action: approve,
                         },
                     },
-                    secondButton: {
-                        content: {
-                            legend: "Rechazar",
-                            buttonClassStyle: !req.active
-                                ? "hidden"
-                                : "general-button gray",
-                        },
-                        behavior: {
-                            loading: loading || isNull(userReq),
-                            isValid: !req.active && !isNull(userReq),
-                            setLoading: (l) => setLoading(l),
-                            action: decline,
-                        },
-                    },
                 }}
                 behavior={{
                     loading: loading,
                 }}
             >
+                {userReq && <UserStateRenderer user={userReq} />}
+
                 {userReq ? (
                     <PersonalDataRenderer
                         location={userReq.location}
@@ -177,25 +179,25 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
                     <span className="loader-green"></span>
                 )}
 
-                <h2 className="text icon-wrapper | medium-big bold margin-top-25 margin-bottom-25">
-                    <Camera />
-                    Nueva Foto de Perfil
-                </h2>
-                <ImageRenderer
-                    content={{
-                        image: req.newPhoto,
-                        legend: "Foto de Perfil",
-                        noFoundReason:
-                            "No se ha encontrado la nueva foto de perfil",
-                    }}
-                    imageInCircle={true}
-                />
+                <div>
+                    <h2 className="text icon-wrapper | medium-big bold margin-top-25 margin-bottom-25">
+                        <Camera />
+                        Nueva Foto de Perfil
+                    </h2>
+                    <ImageRenderer
+                        content={{
+                            image: req.newPhoto,
+                            legend: "Foto de Perfil",
+                            noFoundReason:
+                                "No se ha encontrado la nueva foto de perfil",
+                        }}
+                        imageInCircle={true}
+                    />
+                </div>
 
                 <p className="text | light margin-top-25">
                     La nueva foto sera eliminada si se rechaza la solicitud
                 </p>
-
-                {userReq && <UserStateRenderer user={userReq} />}
             </BaseFormWithTwoButtons>
         </div>
     );

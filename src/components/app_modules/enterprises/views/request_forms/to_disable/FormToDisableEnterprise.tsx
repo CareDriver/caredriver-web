@@ -11,8 +11,8 @@ import { updateEnterprise } from "../../../api/EnterpriseRequester";
 import TriangleExclamation from "@/icons/TriangleExclamation";
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import TextField from "@/components/form/view/fields/TextField";
-import { validateConfirmationEnterpriseName } from "../../../validators/EnterpriseValidator";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
+import { validateConfirmationEnterpriseName } from "../../../validators/confirmations/ValidatorsForConfirmationWithEnterprises";
 
 interface Props {
     enterprise: Enterprise;

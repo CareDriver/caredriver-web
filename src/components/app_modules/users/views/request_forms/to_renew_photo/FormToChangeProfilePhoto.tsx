@@ -101,10 +101,6 @@ const FormToChangeProfilePhoto = () => {
                     error: "Error al enviar la petición, inténtalo de nuevo por favor",
                 },
             );
-            setFormState((prev) => ({
-                ...prev,
-                loading: false,
-            }));
             router.push(routeToProfileAsUser());
         } catch (e) {
             setFormState((prev) => ({
@@ -112,7 +108,6 @@ const FormToChangeProfilePhoto = () => {
                 loading: false,
                 isValid: true,
             }));
-            window.location.reload();
         }
     };
 

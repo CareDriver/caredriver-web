@@ -75,10 +75,6 @@ const FormToChangeUserLocation = () => {
                     },
                 );
 
-                setFormState({
-                    loading: false,
-                    isValid: true,
-                });
                 sendMessage(location, user.location);
                 window.location.replace("/user/profile");
             } catch (e) {
@@ -86,7 +82,6 @@ const FormToChangeUserLocation = () => {
                     loading: false,
                     isValid: true,
                 });
-                window.location.reload();
             }
         }
     };

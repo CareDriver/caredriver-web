@@ -1,11 +1,6 @@
-import { UserInterface } from "@/interfaces/UserInterface";
 import { InputState } from "../../../../validators/InputValidatorSignature";
-import { Enterprise } from "@/interfaces/Enterprise";
 
-export const validateConfirmationEnterpriseName = (
-    name: string,
-    enterpriseName: string,
-): InputState => {
+export const validateEnterpriseName = (name: string): InputState => {
     const nameRegex: RegExp = /^\S[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$/;
 
     if (name.trim() === "") {
@@ -25,11 +20,6 @@ export const validateConfirmationEnterpriseName = (
             message:
                 "No puedes ingresar mas de 150 caracteres para el nombre de la Empresa",
         };
-    } else if (name !== enterpriseName) {
-        return {
-            isValid: false,
-            message: "El nombre ingresado no es el mismo que la empresa",
-        };
     } else {
         return {
             isValid: true,
@@ -37,14 +27,3 @@ export const validateConfirmationEnterpriseName = (
         };
     }
 };
-
-export function userBelongsToEnterprise(
-    user: UserInterface,
-    enterprise: Enterprise,
-): boolean {
-    return (
-        user.id !== undefined &&
-        enterprise.addedUsersId !== undefined &&
-        enterprise.addedUsersId.includes(user.id)
-    );
-}

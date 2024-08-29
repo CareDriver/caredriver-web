@@ -31,7 +31,6 @@ const SignInForm = () => {
             form.password.value.trim(),
         )
             .then((res) => {
-                setLoading(false);
                 window.location.replace("/redirector");
             })
             .catch((e) => {

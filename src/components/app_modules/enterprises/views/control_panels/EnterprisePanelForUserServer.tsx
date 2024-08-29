@@ -15,7 +15,7 @@ import EnterpriseRenderer from "../data_renderers/EnterpriseRenderer";
 import { PageStateContext } from "@/context/PageStateContext";
 import EnterpriseEditForm from "../request_forms/to_edit/EnterpriseEditForm";
 import { EnterpriseManagerEditedAsServerUser } from "../../models/enterprise_managers_edited/EnterpriseManagerEditedAsServerUser";
-import { isTheEnterpriseOwner } from "../../utils/UserValidatorInEnterpriseHelper";
+import { isTheEnterpriseOwner } from "../../validators/validators_of_user_aggregators_to_enterprise/as_members/UserAggregatorValidatorToEnterpriseHelper";
 import PageLoading from "@/components/loaders/PageLoading";
 import { useContext, useEffect, useState } from "react";
 import FormToDeleteEnterprise from "../request_forms/to_delete/FormToDeleteEnterprise";
@@ -68,7 +68,6 @@ const EnterprisePanelForUserServer: React.FC<Props> = ({ id }) => {
                     <h1 className="text | big bolder">
                         Administracion de la empresa
                     </h1>
-                    <div className="separator-horizontal"></div>
                     {getHandleEnterpriseView(
                         {
                             user: user,

@@ -1,13 +1,16 @@
 import { ServiceReqState } from "@/interfaces/Services";
 import { UserInterface } from "@/interfaces/UserInterface";
-import { userBelongsToEnterprise } from "../EnterpriseValidator";
 import { toast } from "react-toastify";
 import { Enterprise } from "@/interfaces/Enterprise";
-import { IUserValidatableInEnterprise } from "./IUserValidatableInEnterprise";
-import { checkRegistrationForSingleVehicule } from "../../utils/UserValidatorInEnterpriseHelper";
+import { IUserAggregatorValidatorToEnterpriseAsMember } from "../IUserAggregatorValidatorToEnterpriseAsMember";
+import {
+    checkRegistrationForSingleVehicule,
+    userBelongsToEnterprise,
+} from "@/components/app_modules/enterprises/validators/validators_of_user_aggregators_to_enterprise/as_members/UserAggregatorValidatorToEnterpriseHelper";
+import { InputState } from "@/validators/InputValidatorSignature";
 
-export class UserValidatorInDriverEnterprise
-    implements IUserValidatableInEnterprise
+export class ValidatorToAddUserToDriverEnterpriseAsMember
+    implements IUserAggregatorValidatorToEnterpriseAsMember
 {
     enterprise: Enterprise;
 
@@ -35,9 +38,7 @@ export class UserValidatorInDriverEnterprise
         );
     };
 
-    isAbleToBeUserServer = (user: UserInterface): boolean => {
-        let isAble = true;
-
+    isAbleToBeUserServer = (user: UserInterface): InputState => {
         let isDriver: boolean =
             user.serviceRequests?.driveCar?.state ===
                 ServiceReqState.Approved ||
@@ -53,42 +54,40 @@ export class UserValidatorInDriverEnterprise
         let { isAbleToRegisterASingleVehicule } =
             checkRegistrationForSingleVehicule(user);
 
-        if (isAble && hasRequestsReviwing) {
-            isAble = false;
-            toast.error(
-                "El usuario ya tiene una peticion en progreso, espera a que sea revisada",
-            );
+        if (hasRequestsReviwing) {
+            return {
+                isValid: false,
+                message:
+                    "El usuario ya tiene una peticion en progreso, espera a que sea revisada",
+            };
         }
 
-        if (isAble && isDriver && !belongsToDriverService) {
-            isAble = false;
-            toast.error(
-                "El usuario ya fue agregado a otro servicio como chofer",
-            );
+        if (isDriver && !belongsToDriverService) {
+            return {
+                isValid: false,
+                message:
+                    "El usuario ya fue agregado a otro servicio como chofer",
+            };
         }
 
-        if (
-            isAble &&
-            belongsToDriverService &&
-            !isAbleToRegisterASingleVehicule
-        ) {
-            isAble = false;
-            toast.error("El usuario ya fue agregado al servicio");
+        if (belongsToDriverService && !isAbleToRegisterASingleVehicule) {
+            return {
+                isValid: false,
+                message: "El usuario ya fue agregado al servicio",
+            };
         }
 
-        if (
-            isAble &&
-            belongsToDriverService &&
-            isAbleToRegisterASingleVehicule
-        ) {
+        if (belongsToDriverService && isAbleToRegisterASingleVehicule) {
             toast.info("El usuario solo puede registrar el vehiculo faltante");
         }
 
-        return isAble;
+        return {
+            isValid: true,
+            message: "El usuario es valido para ser conductor",
+        };
     };
 
-    isAbleToBeSupportUser = (user: UserInterface): boolean => {
-        let isAble = true;
+    isAbleToBeSupportUser = (user: UserInterface): InputState => {
         let hasActiveRequests: boolean =
             user.serviceRequests !== undefined &&
             (user.serviceRequests.driveCar?.state ===
@@ -101,18 +100,24 @@ export class UserValidatorInDriverEnterprise
             this.enterprise,
         );
 
-        if (isAble && hasActiveRequests) {
-            isAble = false;
-            toast.error(
-                "El usuario tiene peticiones activas para ser usuario servidor para este tipo de servicio",
-            );
+        if (hasActiveRequests) {
+            return {
+                isValid: false,
+                message:
+                    "El usuario tiene peticiones activas para ser usuario servidor para este tipo de servicio",
+            };
         }
 
-        if (isAble && isAlreadyUserServer) {
-            isAble = false;
-            toast.error("El usuario ya pertenece al servicio");
+        if (isAlreadyUserServer) {
+            return {
+                isValid: false,
+                message: "El usuario ya pertenece al servicio",
+            };
         }
 
-        return isAble;
+        return {
+            isValid: true,
+            message: "El usuario es valido para usuario soporte",
+        };
     };
 }

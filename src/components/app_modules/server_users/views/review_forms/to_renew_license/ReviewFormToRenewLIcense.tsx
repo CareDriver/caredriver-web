@@ -181,6 +181,7 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
                             buttonClassStyle: req.active
                                 ? "general-button | yellow"
                                 : "hidden",
+                            loaderClassStyle: "loader-black",
                         },
                         behavior: {
                             action: decline,
@@ -230,7 +231,7 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
                 <LicenseReviewForm license={req} />
                 <SelfieRenderer image={req.realTimePhotoImgUrl} />
 
-                {userData && <UserStateRenderer user={userData} />}
+                {userReq && <UserStateWithMessageRenderer userData={userReq} />}
             </BaseFormWithTwoButtons>
         </div>
     );

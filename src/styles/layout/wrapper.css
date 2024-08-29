@@ -101,6 +101,14 @@
     padding: 10px 0;
 }
 
+.min-width-60 {
+    min-width: 60vw;
+}
+
+.min-width-80 {
+    min-width: 80%;
+}
+
 .max-width-40 {
     max-width: 40%;
 }

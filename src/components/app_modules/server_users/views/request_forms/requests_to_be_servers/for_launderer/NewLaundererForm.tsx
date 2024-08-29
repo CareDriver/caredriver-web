@@ -186,18 +186,12 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                 },
             );
             window.location.reload();
-            setFormState((prev) => ({
-                ...prev,
-                loading: false,
-                isValid: true,
-            }));
         } catch (e) {
             setFormState((prev) => ({
                 ...prev,
                 loading: false,
                 isValid: false,
             }));
-            window.location.reload();
         }
     };
 

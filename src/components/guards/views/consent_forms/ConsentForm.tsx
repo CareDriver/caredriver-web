@@ -168,7 +168,7 @@ const ConsentForm: React.FC<Props> = ({ id, moduleTarget, children }) => {
                                 content: {
                                     legend: "Cancelar",
                                     buttonClassStyle: "general-button gray",
-                                    loaderClassStyle: "loader-black",
+                                    loaderClassStyle: "loader-gray",
                                 },
                                 behavior: {
                                     action: cancelar,

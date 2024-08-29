@@ -44,7 +44,7 @@ const EnterpriseRendererAsPopup: React.FC<Props> = ({ enterpriseId }) => {
                     }))
                 }
             >
-                <div>
+                <div className="min-width-60">
                     <h2 className="text | bolder big-medium">
                         Empresa asociada
                     </h2>

@@ -1,8 +1,8 @@
-import { countEnterprisesActives } from "../api/EnterpriseRequester";
+import { countEnterprisesActives } from "../../../api/EnterpriseRequester";
 import { ServiceType } from "@/interfaces/Services";
 import { InputState } from "@/validators/InputValidatorSignature";
 import { UserInterface, UserRole } from "@/interfaces/UserInterface";
-import { hasTheSameLocation } from "../utils/UserValidatorInEnterpriseHelper";
+import { hasTheSameLocation } from "../as_members/UserAggregatorValidatorToEnterpriseHelper";
 import { Locations } from "@/interfaces/Locations";
 
 export const MAX_NUMBER_ENTERPRISES = 5;

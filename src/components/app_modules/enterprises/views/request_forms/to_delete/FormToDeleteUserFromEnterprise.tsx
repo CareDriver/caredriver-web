@@ -22,7 +22,6 @@ import { laundryReqCollection } from "@/components/app_modules/server_users/api/
 import { towReqCollection } from "@/components/app_modules/server_users/api/TowRequester";
 import { mechanicReqCollection } from "@/components/app_modules/server_users/api/MechanicRequester";
 import { AuthContext } from "@/context/AuthContext";
-import { UserValidatorInDriverEnterprise } from "../../../validators/user_validators_with_enterprises/UserValidatorInDriverEnterprise";
 import SimpleUserCard from "../../../../users/views/cards/SimpleUserCard";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import { TextField as TextFieldForm } from "@/components/form/models/FormFields";
@@ -31,6 +30,7 @@ import BaseForm from "@/components/form/view/forms/BaseForm";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import TextField from "@/components/form/view/fields/TextField";
 import { validateEmialWithComparison } from "@/components/app_modules/users/validators/for_confirmations/DataConfirmationValidator";
+import { ValidatorToAddUserToDriverEnterpriseAsMember } from "../../../validators/validators_of_user_aggregators_to_enterprise/as_members/concrete/ValidatorToAddUserToDriverEnterpriseAsMember";
 
 interface Props {
     selectedUser: {
@@ -48,7 +48,9 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
     const [emailConfirmation, setEmailConfirmation] =
         useState<TextFieldForm>(DEFAUL_TEXT_FIELD);
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
-    const driverValidator = new UserValidatorInDriverEnterprise(enterprise);
+    const driverValidator = new ValidatorToAddUserToDriverEnterpriseAsMember(
+        enterprise,
+    );
 
     const refuseUserDriverRequests = async (
         userWithRequests: UserInterface,
@@ -397,8 +399,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
         user && (
             <>
                 <SimpleUserCard user={selectedUser.data} />
-                <div className="separator-horizontal"></div>
-                <div>
+                <div className="margin-top-25">
                     <h2 className="text icon-wrapper | red red-icon medium-big bold">
                         <TriangleExclamation />
                         Zona Peligrosa

@@ -1,9 +1,19 @@
 import { UserInterface } from "@/interfaces/UserInterface";
-import { userBelongsToEnterprise } from "../validators/EnterpriseValidator";
 import { ServiceReqState } from "@/interfaces/Services";
 import { Enterprise } from "@/interfaces/Enterprise";
-import { toast } from "react-toastify";
 import { Locations } from "@/interfaces/Locations";
+import { InputState } from "@/validators/InputValidatorSignature";
+
+export function userBelongsToEnterprise(
+    user: UserInterface,
+    enterprise: Enterprise,
+): boolean {
+    return (
+        user.id !== undefined &&
+        enterprise.addedUsersId !== undefined &&
+        enterprise.addedUsersId.includes(user.id)
+    );
+}
 
 export function hasTheSameLocation(
     userFound: UserInterface,
@@ -27,7 +37,7 @@ export function isAbleToBeSupportIntoEnterprise(
     user: UserInterface,
     enterprise: Enterprise,
     type: "mechanic" | "tow" | "laundry",
-): boolean {
+): InputState {
     let isAble = true;
 
     let hasActiveRequests: boolean =
@@ -40,18 +50,24 @@ export function isAbleToBeSupportIntoEnterprise(
     );
 
     if (isAble && hasActiveRequests) {
-        isAble = false;
-        toast.error(
-            "El usuario tiene peticiones activas para ser usuario servidor para este tipo de servicio",
-        );
+        return {
+            isValid: false,
+            message:
+                "El usuario tiene peticiones activas para ser usuario servidor para este tipo de servicio",
+        };
     }
 
     if (isAble && isAlreadyUserServer) {
-        isAble = false;
-        toast.error("El usuario ya pertenece al servicio");
+        return {
+            isValid: false,
+            message: "El usuario ya pertenece al servicio",
+        };
     }
 
-    return isAble;
+    return {
+        isValid: true,
+        message: "El usuario es valido para usuario soporte",
+    };
 }
 
 export function checkRegistrationForSingleVehicule(user: UserInterface): {

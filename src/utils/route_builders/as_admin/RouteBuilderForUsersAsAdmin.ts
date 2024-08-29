@@ -21,5 +21,5 @@ export function routeToUserRequestsToRenewPhotoAsAdmin(): string {
 export function routeToReviewUserRequestToRenewPhotoAsAdmin(
     reqId: string,
 ): string {
-    return routeToUserRequestsToRenewPhotoAsAdmin().concat(reqId);
+    return routeToUserRequestsToRenewPhotoAsAdmin().concat("/").concat(reqId);
 }

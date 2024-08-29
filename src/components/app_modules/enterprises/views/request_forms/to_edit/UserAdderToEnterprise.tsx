@@ -1,7 +1,7 @@
 "use client";
 
 import { Enterprise } from "@/interfaces/Enterprise";
-import { UserInterface } from "@/interfaces/UserInterface";
+import { UserInterface, UserRole } from "@/interfaces/UserInterface";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import "@/styles/components/users.css";
@@ -15,14 +15,18 @@ import NewLaundererForm from "../../../../server_users/views/request_forms/reque
 import {
     checkRegistrationForSingleVehicule,
     hasTheSameLocationOfEnterprise,
-} from "../../../utils/UserValidatorInEnterpriseHelper";
-import { userBelongsToEnterprise } from "../../../validators/EnterpriseValidator";
-import { IUserValidatableInEnterprise } from "../../../validators/user_validators_with_enterprises/IUserValidatableInEnterprise";
-import { UserValidatorInDriverEnterprise } from "../../../validators/user_validators_with_enterprises/UserValidatorInDriverEnterprise";
-import { UserValidatorInWorkshop } from "../../../validators/user_validators_with_enterprises/UserValidatorInWorkshop";
-import { UserValidatorInLaundry } from "../../../validators/user_validators_with_enterprises/UserValidatorInLaundry";
-import { UserValidatorInTow } from "../../../validators/user_validators_with_enterprises/UserValidatorInTow";
+    userBelongsToEnterprise,
+} from "../../../validators/validators_of_user_aggregators_to_enterprise/as_members/UserAggregatorValidatorToEnterpriseHelper";
 import { PageStateContext } from "@/context/PageStateContext";
+import Users from "@/icons/Users";
+import UserTie from "@/icons/UserTie";
+import { IUserAggregatorValidatorToEnterpriseAsMember } from "../../../validators/validators_of_user_aggregators_to_enterprise/as_members/IUserAggregatorValidatorToEnterpriseAsMember";
+import { ValidatorToAddUserToDriverEnterpriseAsMember } from "../../../validators/validators_of_user_aggregators_to_enterprise/as_members/concrete/ValidatorToAddUserToDriverEnterpriseAsMember";
+import { ValidatorToAddUserToWorkshopEnterpriseAsMember } from "../../../validators/validators_of_user_aggregators_to_enterprise/as_members/concrete/ValidatorToAddUserToWorkshopEnterpriseAsMember";
+import { ValidatorToAddUserToLaundryEnterpriseAsMember } from "../../../validators/validators_of_user_aggregators_to_enterprise/as_members/concrete/ValidatorToAddUserToLaundryEnterpriseAsMember";
+import { ValidatorToAddUserToCraneEnterpriseAsMember } from "../../../validators/validators_of_user_aggregators_to_enterprise/as_members/concrete/ValidatorToAddUserToCraneEnterpriseAsMember";
+import UserGear from "@/icons/UserGear";
+import HelmetSafety from "@/icons/HelmetSafety";
 
 interface UserToAdd {
     data: UserInterface | undefined;
@@ -41,7 +45,13 @@ interface Props {
 
 const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
     const { loading } = useContext(PageStateContext);
-    const [isValid, setValid] = useState(false);
+    const [formState, setFormState] = useState<{
+        isValid: boolean;
+        message: string | null;
+    }>({
+        isValid: false,
+        message: null,
+    });
     const [userToAdd, setUserToAdd] = useState<UserToAdd>(DEAFULT_USER_TO_ADD);
     const validator = getValidator(enterprise);
 
@@ -55,12 +65,15 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
             ...prev,
             data: user,
         }));
-        if (validator.isAbleToBeUserServer(user)) {
+
+        const { isValid, message } = validator.isAbleToBeUserServer(user);
+        if (isValid) {
             setUserToAdd((prev) => ({
                 ...prev,
                 role: "ServerUser",
             }));
         }
+        setFormState((prev) => ({ ...prev, isValid, message }));
     };
 
     const registerAsSupportUser = (user: UserInterface | undefined): void => {
@@ -73,23 +86,45 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
             ...prev,
             data: user,
         }));
-        if (validator.isAbleToBeSupportUser(user)) {
+        const { isValid, message } = validator.isAbleToBeSupportUser(user);
+        if (isValid) {
             setUserToAdd((prev) => ({
                 ...prev,
                 role: "SupportUser",
             }));
         }
+        setFormState((prev) => ({ ...prev, isValid, message }));
     };
 
     const checkUserAvailability = (userFound: UserInterface | undefined) => {
+        /**
+         * no processing due to this validation already exits
+         * on the user selector
+         */
         if (!userFound) {
             return;
         }
 
-        if (hasTheSameLocationOfEnterprise(userFound, enterprise)) {
-            toast.error(
-                "El usuario no esta en la misma localizacion que el servicio",
-            );
+        if (!hasTheSameLocationOfEnterprise(userFound, enterprise)) {
+            setFormState((prev) => ({
+                ...prev,
+                isValid: false,
+                message:
+                    "El usuario no esta en la misma localizacion que el servicio",
+            }));
+        } else if (userFound.role !== UserRole.User) {
+            setFormState((prev) => ({
+                ...prev,
+                isValid: false,
+
+                message: "El usuario no puede ser miembro de la empresa",
+            }));
+        } else {
+            setFormState((prev) => ({
+                ...prev,
+                isValid: true,
+                message: null,
+            }));
         }
 
         setUserToAdd((prev) => ({
@@ -152,13 +187,16 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
     };
 
     return (
-        <div data-state={loading ? "loading" : "loaded"}>
+        <>
             {!userToAdd.role && (
                 <div className="service-form-wrapper">
-                    <div>
-                        <h1 className="text | big bolder">
-                            Agregar usuario al servicio
-                        </h1>
+                    <h1 className="text | big bolder">Agregar usuarios</h1>
+                    <div className="margin-top-25">
+                        <h2 className="text | medium-big bolder | icon-wrapper lb">
+                            <Users />
+                            Registrar usuarios servidores | Agregar usuarios
+                            soporte
+                        </h2>
                         <p className="text | light">
                             Primero busca al usuario que quieres agregar por su
                             correo,{" "}
@@ -168,36 +206,48 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
 
                     <UserSelector
                         form={{
-                            isValid: isValid,
-                            setValid: setValid,
+                            isValid: formState.isValid,
+                            setValid: (d) =>
+                                setFormState((prev) => ({
+                                    ...prev,
+                                    isValid: d,
+                                })),
+                            stateFeedback: {
+                                type: formState.isValid ? "success" : "fail",
+                                message: formState.message,
+                            },
                         }}
                         processTheUserFound={checkUserAvailability}
                     />
-                    {userToAdd.data !== undefined &&
-                        userToAdd.role !== undefined && (
-                            <div className="margin-top-25 row-wrapper">
-                                <h3 className="text">Agregar usuario como</h3>
-                                <div className="separator-horizontal"></div>
+                    {userToAdd.data !== undefined && (
+                        <div className="margin-top-25">
+                            <h3 className="text | bold">
+                                Agregar usuario como:
+                            </h3>
+                            <div className="margin-top-15 row-wrapper">
                                 <button
                                     type="button"
-                                    className="small-general-button text | bold green touchable"
+                                    className="small-general-button text | bold green touchable | icon-wrapper white-icon"
                                     onClick={() =>
                                         registerAsUserServer(userToAdd.data)
                                     }
                                 >
+                                    <HelmetSafety />
                                     Usuario Servidor
                                 </button>
                                 <button
                                     type="button"
-                                    className="small-general-button text | bold green touchable"
+                                    className="small-general-button text | bold green touchable | icon-wrapper white-icon lb"
                                     onClick={() =>
                                         registerAsSupportUser(userToAdd.data)
                                     }
                                 >
+                                    <UserGear />
                                     Usuario Soporte
                                 </button>
                             </div>
-                        )}
+                        </div>
+                    )}
                     {userLogged.id &&
                         userLogged.id === enterprise.userId &&
                         !userBelongsToEnterprise(userLogged, enterprise) &&
@@ -205,22 +255,24 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                             <div className="margin-top-25">
                                 <div className="separator-horizontal"></div>
                                 <div className="margin-top-25">
-                                    <h1 className="text | big bolder">
-                                        ¿Quieres registrarte en este servicio?
+                                    <h1 className="text | medium-big bolder | icon-wrapper">
+                                        <UserTie />
+                                        Registrate como usuario servidor
                                     </h1>
                                     <p className="text | light margin-top-15">
-                                        Como dueño o administrador de este
-                                        servicio, tambien puedes hacer una
+                                        Como dueño o administrador de esta
+                                        empresa, tambien puedes hacer una
                                         solicitud para trabajar como usuario
-                                        servicio con este servicio.
+                                        servidor asociada a esta empresa.
                                     </p>
                                     <button
                                         type="button"
-                                        className="small-general-button text | bold green touchable margin-top-25"
+                                        className="small-general-button text | bold green touchable margin-top-25  | icon-wrapper white-icon"
                                         onClick={() =>
                                             registerAsUserServer(userLogged)
                                         }
                                     >
+                                        <HelmetSafety />
                                         Registrarme como Usuario Servidor
                                     </button>
                                 </div>
@@ -232,21 +284,27 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
             {userToAdd.data &&
                 userToAdd.role &&
                 getEnterpriseUserAdder(userToAdd.role, userToAdd.data)}
-        </div>
+        </>
     );
 };
 
 export default UserAdderToEnterprise;
 
-function getValidator(enterprise: Enterprise): IUserValidatableInEnterprise {
+function getValidator(
+    enterprise: Enterprise,
+): IUserAggregatorValidatorToEnterpriseAsMember {
     switch (enterprise.type) {
         case "driver":
-            return new UserValidatorInDriverEnterprise(enterprise);
+            return new ValidatorToAddUserToDriverEnterpriseAsMember(enterprise);
         case "mechanical":
-            return new UserValidatorInWorkshop(enterprise);
+            return new ValidatorToAddUserToWorkshopEnterpriseAsMember(
+                enterprise,
+            );
         case "laundry":
-            return new UserValidatorInLaundry(enterprise);
+            return new ValidatorToAddUserToLaundryEnterpriseAsMember(
+                enterprise,
+            );
         default:
-            return new UserValidatorInTow(enterprise);
+            return new ValidatorToAddUserToCraneEnterpriseAsMember(enterprise);
     }
 }

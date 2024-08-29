@@ -44,7 +44,7 @@ export class DriverStatusHandler implements HandleableServiceStatus {
         }
 
         return {
-            title: "Solicitud para trabajar como chofer con nosotros!",
+            title: "Solicitud para trabajar como Chofer",
             description:
                 "Necesitamos verificar que todos los datos que se llenen sean validos antes registrar al nuevo usuario servidor.",
         };

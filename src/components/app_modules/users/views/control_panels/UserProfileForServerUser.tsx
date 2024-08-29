@@ -13,6 +13,7 @@ import {
     routeToRenewLocationAsUser,
     routeToRenewPhotoAsUser,
 } from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
+import "@/styles/components/users.css"
 
 const UserProfileForServerUser = () => {
     const { user, checkingUserAuth } = useContext(AuthContext);

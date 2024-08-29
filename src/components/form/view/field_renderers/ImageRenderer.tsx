@@ -23,9 +23,8 @@ const ImageRenderer: React.FC<Props> = ({ content, imageInCircle }) => {
             : content.noFoundReason;
     const imageUrl = content.image ? getUrl(content.image) : undefined;
 
-    if (!content.image || !isNullOrEmptyText(imageUrl)) {
-        <FieldDeleted description={NO_FOUND_DESCR} />;
-        return;
+    if (!imageUrl || isNullOrEmptyText(imageUrl)) {
+        return <FieldDeleted description={NO_FOUND_DESCR} />;
     }
 
     return (

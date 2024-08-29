@@ -28,7 +28,7 @@ export class CraneOperatorStatusHandler implements HandleableServiceStatus {
         }
 
         return {
-            title: "Solicitud para trabajar como Operador de Grúa con nosotros!",
+            title: "Solicitud para trabajar como Operador de Grúa",
             description:
                 "Necesitamos verificar que todos los datos que se llenen sean validos antes registrar al nuevo usuario servidor.",
         };

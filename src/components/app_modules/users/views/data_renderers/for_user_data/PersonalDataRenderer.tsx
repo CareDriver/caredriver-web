@@ -30,6 +30,7 @@ const PersonalDataRenderer: React.FC<Props> = ({
                     content={{
                         image: photo,
                         legend: "Foto de perfil",
+                        noFoundReason: "El usuario no tiene foto de perfil"
                     }}
                     imageInCircle={true}
                 />

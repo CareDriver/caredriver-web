@@ -4,7 +4,7 @@ import { EntityField } from "@/components/form/models/FormFields";
 import { Locations } from "@/interfaces/Locations";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { useContext, useEffect, useState } from "react";
-import { verifyUserAvailabilityToBeEnterpriseOwner } from "../../../validators/EnterpriseOwnerValidator";
+import { verifyUserAvailabilityToBeEnterpriseOwner } from "../../../validators/validators_of_user_aggregators_to_enterprise/as_owners/EnterpriseOwnerValidator";
 import { toast } from "react-toastify";
 import { PageStateContext } from "@/context/PageStateContext";
 import { ServiceType } from "@/interfaces/Services";

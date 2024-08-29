@@ -38,7 +38,6 @@ const UserContactsRendererForForm: React.FC<Props> = ({ email, phoneNumber }) =>
                     </button>
                 )}
             </div>
-            <div className="separator-horizontal"></div>
         </div>
     );
 };

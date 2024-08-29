@@ -29,7 +29,7 @@ export class MechanicStatusHandler implements HandleableServiceStatus {
         }
 
         return {
-            title: "Solicitud para trabajar como Mecánico con nosotros!",
+            title: "Solicitud para trabajar como Mecánico",
             description:
                 "Necesitamos verificar que todos los datos que se llenen sean validos antes registrar al nuevo usuario servidor.",
         };

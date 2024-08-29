@@ -129,6 +129,26 @@ const ReviewFormForCreatingAnEnterprise = ({
                 content={{
                     firstButton: {
                         content: {
+                            legend: "Rechazar",
+                            buttonClassStyle:
+                                reviewState.reviewed || !enterprise.active
+                                    ? "hidden"
+                                    : "general-button gray",
+                            loaderClassStyle: "loader-gray",
+                        },
+                        behavior: {
+                            loading: reviewState.loading,
+                            setLoading: (l) =>
+                                setReviewState((prev) => ({
+                                    ...prev,
+                                    loading: l,
+                                })),
+                            isValid: !reviewState.reviewed,
+                            action: decline,
+                        },
+                    },
+                    secondButton: {
+                        content: {
                             legend: "Aprobar",
                             buttonClassStyle:
                                 reviewState.reviewed || !enterprise.active
@@ -144,25 +164,6 @@ const ReviewFormForCreatingAnEnterprise = ({
                                 })),
                             isValid: !reviewState.reviewed,
                             action: approve,
-                        },
-                    },
-                    secondButton: {
-                        content: {
-                            legend: "Rechazar",
-                            buttonClassStyle:
-                                reviewState.reviewed || !enterprise.active
-                                    ? "hidden"
-                                    : undefined,
-                        },
-                        behavior: {
-                            loading: reviewState.loading,
-                            setLoading: (l) =>
-                                setReviewState((prev) => ({
-                                    ...prev,
-                                    loading: l,
-                                })),
-                            isValid: !reviewState.reviewed,
-                            action: decline,
                         },
                     },
                 }}
