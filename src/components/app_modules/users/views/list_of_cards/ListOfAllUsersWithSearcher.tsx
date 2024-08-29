@@ -315,6 +315,7 @@ const ListOfAllUsersWithSearcher = () => {
                             (user, i) =>
                                 user.fakeId && (
                                     <Link
+                                        className="touchable"
                                         key={`user-${i}`}
                                         href={routeToManageUserAsAdmin(
                                             user.fakeId,
