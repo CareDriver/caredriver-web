@@ -1,25 +1,28 @@
 import UserPlus from "@/icons/UserPlus";
 import Users from "@/icons/Users";
+import {
+    routeToAllUsersAsAdmin,
+    routeToCreateNewUserAsAdmin,
+} from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 import Link from "next/link";
 
 const RegisterSection = ({ pathname }: { pathname: string }) => {
     return (
         <li className="sidebar-options">
             <Link
-                href={"/admin/users"}
+                href={routeToAllUsersAsAdmin()}
                 className={`sidebar-option ${
-                    pathname.includes("users") &&
-                    !pathname.includes("register") &&
-                    "selected"
+                    pathname.includes("users") && "selected"
                 }`}
             >
                 <Users />
                 <span>Usuarios</span>
             </Link>
             <Link
-                href={"/admin/users/register"}
+                href={routeToCreateNewUserAsAdmin()}
                 className={`sidebar-option ${
-                    pathname.includes("users/register") && "selected"
+                    pathname.includes(routeToCreateNewUserAsAdmin()) &&
+                    "selected"
                 }`}
             >
                 <UserPlus />

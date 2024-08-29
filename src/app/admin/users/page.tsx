@@ -1,15 +1,15 @@
-import PagePermissionValidator from "@/components/permission/page/PagePermissionValidator";
-import UsersRenderer from "@/components/users/UsersRenderer";
+import ListOfAllUsersWithSearcher from "@/components/app_modules/users/views/list_of_cards/ListOfAllUsersWithSearcher";
+import { ROLES_TO_VIEW_USERS } from "@/components/guards/models/PermissionsByUserRole";
+import GuardOfPage from "@/components/guards/views/page_guards/base/GuardOfPage";
 import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
-import { ROLES_TO_VIEW_USERS } from "@/utils/validator/roles/RoleValidator";
 
 const ListOfUsersOntheApplicationPage = () => {
     return (
-        <PagePermissionValidator roles={ROLES_TO_VIEW_USERS}>
+        <GuardOfPage roles={ROLES_TO_VIEW_USERS}>
             <WrapperWithSideBar>
-                <UsersRenderer />
+                <ListOfAllUsersWithSearcher />
             </WrapperWithSideBar>
-        </PagePermissionValidator>
+        </GuardOfPage>
     );
 };
 

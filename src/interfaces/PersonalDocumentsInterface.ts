@@ -1,12 +1,12 @@
 import { Timestamp } from "firebase/firestore";
-import { ImgWithRef } from "./ImageInterface";
+import { RefAttachment } from "../components/form/models/RefAttachment";
 
 // Interface for a license document
 export interface LicenseInterface {
     licenseNumber: string; // Driver's license number
     expiredDateLicense: Timestamp; // The date the license is going to expire
-    frontImgUrl?: ImgWithRef; // The url of the front image of the license
-    backImgUrl?: ImgWithRef; // The url of the back image of the license
+    frontImgUrl?: RefAttachment; // The url of the front image of the license
+    backImgUrl?: RefAttachment; // The url of the back image of the license
 }
 
 export interface LicenseUpdateReq {
@@ -16,9 +16,9 @@ export interface LicenseUpdateReq {
     vehicleType: "car" | "motorcycle" | "tow";
     licenseNumber: string; // Driver's license number
     expiredDateLicense: Timestamp; // The date the license is going to expire
-    frontImgUrl?: ImgWithRef; // The url of the front image of the license
-    backImgUrl?: ImgWithRef;
-    realTimePhotoImgUrl: ImgWithRef;
+    frontImgUrl?: RefAttachment; // The url of the front image of the license
+    backImgUrl?: RefAttachment;
+    realTimePhotoImgUrl: RefAttachment;
     aproved: boolean;
     active: boolean;
 }

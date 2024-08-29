@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase/firestore";
-import { ImgWithRef } from "./ImageInterface";
+import { RefAttachment } from "../components/form/models/RefAttachment";
 
 export interface Branding {
     dateLimit: Timestamp;
@@ -9,7 +9,7 @@ export interface Branding {
 
 export interface BrandingRequest {
     id: string;
-    brandingImage: ImgWithRef;
+    brandingImage: RefAttachment;
     userName: string;
     userId: string;
     reviewedId?: string;

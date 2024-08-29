@@ -1,5 +1,4 @@
 import AddressCar from "@/icons/AddressCar";
-import Bullhorn from "@/icons/Bullhorn";
 import Camera from "@/icons/Camera";
 import Car from "@/icons/Car";
 import MechanicReq from "@/icons/MechanicReq";
@@ -8,57 +7,60 @@ import Taxi from "@/icons/Taxi";
 import TowReq from "@/icons/TowReq";
 import Truck from "@/icons/Truck";
 import Wrench from "@/icons/Wrench";
+import { routeToRequestsToEditEnterpriseAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
+import { routeToUserRequestsToRenewPhotoAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
+import {
+    routeToRequestsToBeUserServerAsAdmin,
+    routeToRequestsToRenewLicenseAsAdmin,
+} from "@/utils/route_builders/as_admin/RouteBuilderForUserServerAsAdmin";
 import Link from "next/link";
 
 const RequestsSection = ({ pathname }: { pathname: string }) => {
     return (
         <>
-            <span className="text | medium bolder | margin-bottom-15">Solicitudes</span>
+            <span className="text | medium bolder | margin-bottom-15">
+                Solicitudes
+            </span>
             <li className="sidebar-options | margin-bottom-25">
                 <Link
-                    href={"/admin/requests/services/driver"}
+                    href={routeToRequestsToBeUserServerAsAdmin("driver")}
                     className={`sidebar-option ${
-                        pathname.includes("drive") &&
-                        !pathname.includes("enterprises") &&
-                        !pathname.includes("users") &&
-                        "selected"
+                        pathname.includes(
+                            routeToRequestsToBeUserServerAsAdmin("driver"),
+                        ) && "selected"
                     }`}
                 >
                     <Car />
                     <span>Chofer</span>
                 </Link>
                 <Link
-                    href={"/admin/requests/services/mechanic"}
+                    href={routeToRequestsToBeUserServerAsAdmin("mechanical")}
                     className={`sidebar-option ${
-                        pathname.includes("mechanic") &&
-                        !pathname.includes("enterprises") &&
-                        !pathname.includes("users") &&
-                        "selected"
+                        pathname.includes(
+                            routeToRequestsToBeUserServerAsAdmin("mechanical"),
+                        ) && "selected"
                     }`}
                 >
                     <Wrench />
                     <span>Mecánico</span>
                 </Link>
                 <Link
-                    href={"/admin/requests/services/tow"}
+                    href={routeToRequestsToBeUserServerAsAdmin("tow")}
                     className={`sidebar-option ${
-                        pathname.includes("tow") &&
-                        !pathname.includes("enterprises") &&
-                        !pathname.includes("enterprises") &&
-                        !pathname.includes("users") &&
-                        "selected"
+                        pathname.includes(
+                            routeToRequestsToBeUserServerAsAdmin("tow"),
+                        ) && "selected"
                     }`}
                 >
                     <Truck />
                     <span>Grúa</span>
                 </Link>
                 <Link
-                    href={"/admin/requests/services/laundry"}
+                    href={routeToRequestsToBeUserServerAsAdmin("laundry")}
                     className={`sidebar-option ${
-                        pathname.includes("laundry") &&
-                        !pathname.includes("users") &&
-                        !pathname.includes("enterprises") &&
-                        "selected"
+                        pathname.includes(
+                            routeToRequestsToBeUserServerAsAdmin("laundry"),
+                        ) && "selected"
                     }`}
                 >
                     <Soap />
@@ -67,76 +69,88 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                 <div>
                     <i className="separator-horizontal"></i>
                 </div>
-                <Link
-                    href={"/admin/requests/enterprises/driver"}
+                {/* <Link
+                    href={""}
                     className={`sidebar-option ${
-                        pathname.includes("/requests/enterprises/driver") && "selected"
+                        pathname.includes("/requests/enterprises/driver") &&
+                        "selected"
                     }`}
                 >
                     <Taxi />
                     <span>Nuevas Emp. de Choferes</span>
-                </Link>
+                </Link> */}
+
                 <Link
-                    href={"/admin/requests/enterprises/editdriver"}
+                    href={routeToRequestsToEditEnterpriseAsAdmin("driver")}
                     className={`sidebar-option ${
-                        pathname.includes("/requests/enterprises/editdriver") &&
-                        "selected"
+                        pathname.includes(
+                            routeToRequestsToEditEnterpriseAsAdmin("driver"),
+                        ) && "selected"
                     }`}
                 >
                     <Taxi />
                     <span>Editar Emp. de Choferes</span>
                 </Link>
-                <Link
-                    href={"/admin/requests/enterprises/workshops"}
+                {/* <Link
+                    href={""}
                     className={`sidebar-option lb-icon ${
-                        pathname.includes("/requests/enterprises/workshops") && "selected"
+                        pathname.includes("/requests/enterprises/workshops") &&
+                        "selected"
                     }`}
                 >
                     <MechanicReq />
                     <span>Nuevos Talleres</span>
-                </Link>
+                </Link> */}
                 <Link
-                    href={"/admin/requests/enterprises/editworkshops"}
+                    href={routeToRequestsToEditEnterpriseAsAdmin("mechanical")}
                     className={`sidebar-option lb-icon ${
-                        pathname.includes("requests/enterprises/editworkshops") &&
-                        "selected"
+                        pathname.includes(
+                            routeToRequestsToEditEnterpriseAsAdmin(
+                                "mechanical",
+                            ),
+                        ) && "selected"
                     }`}
                 >
                     <MechanicReq />
                     <span>Editar Talleres</span>
                 </Link>
-                <Link
-                    href={"/admin/requests/enterprises/cranes"}
+                {/*  <Link
+                    href={""}
                     className={`sidebar-option ${
-                        pathname.includes("/requests/enterprises/cranes") && "selected"
+                        pathname.includes("/requests/enterprises/cranes") &&
+                        "selected"
                     }`}
                 >
                     <TowReq />
                     <span>Nuevas Emp. de Grúa</span>
-                </Link>
+                </Link> */}
                 <Link
-                    href={"/admin/requests/enterprises/editcranes"}
+                    href={routeToRequestsToEditEnterpriseAsAdmin("tow")}
                     className={`sidebar-option ${
-                        pathname.includes("requests/enterprises/editcranes") && "selected"
+                        pathname.includes(
+                            routeToRequestsToEditEnterpriseAsAdmin("tow"),
+                        ) && "selected"
                     }`}
                 >
                     <TowReq />
                     <span>Editar Emp. de Grúa</span>
                 </Link>
-                <Link
-                    href={"/admin/requests/enterprises/laundry"}
+                {/* <Link
+                    href={""}
                     className={`sidebar-option ${
-                        pathname.includes("/requests/enterprises/laundry") && "selected"
+                        pathname.includes("/requests/enterprises/laundry") &&
+                        "selected"
                     }`}
                 >
                     <Soap />
                     <span>Nuevos Lavaderos</span>
-                </Link>
+                </Link> */}
                 <Link
-                    href={"/admin/requests/enterprises/editlaundry"}
+                    href={routeToRequestsToEditEnterpriseAsAdmin("laundry")}
                     className={`sidebar-option ${
-                        pathname.includes("requests/enterprises/editlaundry") &&
-                        "selected"
+                        pathname.includes(
+                            routeToRequestsToEditEnterpriseAsAdmin("laundry"),
+                        ) && "selected"
                     }`}
                 >
                     <Soap />
@@ -147,32 +161,36 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     <i className="separator-horizontal"></i>
                 </div>
                 <Link
-                    href={"/admin/requests/userinfo/photo"}
+                    href={routeToUserRequestsToRenewPhotoAsAdmin()}
                     className={`sidebar-option ${
-                        pathname.includes("/userinfo/photo") && "selected"
+                        pathname.includes(
+                            routeToUserRequestsToRenewPhotoAsAdmin(),
+                        ) && "selected"
                     }`}
                 >
                     <Camera />
                     <span>Nuevas Fotos de Perfil</span>
                 </Link>
                 <Link
-                    href={"/admin/requests/userinfo/license"}
+                    href={routeToRequestsToRenewLicenseAsAdmin()}
                     className={`sidebar-option ${
-                        pathname.includes("/userinfo/license") && "selected"
+                        pathname.includes(
+                            routeToRequestsToRenewLicenseAsAdmin(),
+                        ) && "selected"
                     }`}
                 >
                     <AddressCar />
                     <span>Renovacion de Licencias</span>
                 </Link>
-                <Link
-                    href={"/admin/requests/userinfo/branding"}
+                {/*                 <Link
+                    href={""}
                     className={`sidebar-option ${
                         pathname.includes("branding") && "selected"
                     }`}
                 >
                     <Bullhorn />
                     <span>Verificación de Branding</span>
-                </Link>
+                </Link> */}
             </li>
         </>
     );

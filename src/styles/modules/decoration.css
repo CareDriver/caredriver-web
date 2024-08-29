@@ -47,6 +47,10 @@
     margin: 0.833333333rem 0;
 }
 
+.disabled {
+    opacity: 0.8;
+}
+
 .circles-right-bottomv2 {
     font-size: 16px;
 

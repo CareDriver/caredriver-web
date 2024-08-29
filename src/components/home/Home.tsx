@@ -5,23 +5,24 @@ import "@/styles/components/home.css";
 import "@/styles/base/reset.css";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import { routeToSingIn } from "@/utils/route_builders/as_not_logged/RouteBuilderForAuth";
 
 const Home = () => {
-    const { loadingUser, user } = useContext(AuthContext);
+    const { checkingUserAuth, user } = useContext(AuthContext);
 
     useEffect(() => {
-        if (!loadingUser) {
-            if (user.data) {
+        if (!checkingUserAuth) {
+            if (user) {
                 window.location.replace("/redirector");
             }
         }
-    }, [loadingUser]);
+    }, [checkingUserAuth]);
 
     return (
         <main className="home-container">
             <span className="circles"></span>
-            <img src="/images/logowithname.png" alt="" className="home-image"/>
-            <Link href={"/auth/signin"} className="action-button touchable">
+            <img src="/images/logowithname.png" alt="" className="home-image" />
+            <Link href={routeToSingIn()} className="action-button touchable">
                 Comenzar
             </Link>
             <span className="circles-right-bottom"></span>

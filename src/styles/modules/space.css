@@ -37,3 +37,7 @@
 .margin-bottom-50 {
     margin-bottom: 2.777777778rem;
 }
+
+.hidden {
+    display: none !important;
+}

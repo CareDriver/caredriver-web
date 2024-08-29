@@ -9,8 +9,15 @@ import AddNewUserOption from "../sidebar_options/AddNewUserOption";
 import EnterpriseRegistersSection from "../sidebar_sections/EnterpriseRegistersSection";
 import NoServerUserProfileOp from "../sidebar_options/NoServerUserProfileOp";
 import LogoutOption from "../sidebar_options/LogoutOption";
+import RedirectToService from "../sidebar_options/RedirectToService";
 
-const AdminSideBar = ({ pathname, logout }: { pathname: string; logout: () => void }) => {
+const AdminSideBar = ({
+    pathname,
+    logout,
+}: {
+    pathname: string;
+    logout: () => void;
+}) => {
     return (
         <>
             <UserRoleSideBar role={UserRole.Admin}>
@@ -18,16 +25,22 @@ const AdminSideBar = ({ pathname, logout }: { pathname: string; logout: () => vo
             </UserRoleSideBar>
             <RequestsSection pathname={pathname} />
 
-            <span className="text | medium bolder | margin-bottom-15">Registros</span>
+            <span className="text | medium bolder | margin-bottom-15">
+                Registros
+            </span>
             <li className="sidebar-options">
                 <UsersOption pathname={pathname} />
                 <AddNewUserOption pathname={pathname} />
+                <RedirectToService />
             </li>
             <div>
                 <i className="separator-horizontal"></i>
             </div>
             <EnterpriseRegistersSection pathname={pathname} />
-            <span className="text | medium bolder | margin-bottom-15">Perfil</span>
+
+            <span className="text | medium bolder | margin-bottom-15">
+                Perfil
+            </span>
 
             <li className="sidebar-options">
                 <NoServerUserProfileOp pathname={pathname} />

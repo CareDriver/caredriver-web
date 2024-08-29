@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-// import { TWILIO_PHONE, TWILIO_CLIENT } from "../../../twilio/Config.ts";
 
 export async function POST(request) {
     try {
@@ -25,19 +24,3 @@ export async function POST(request) {
         return NextResponse.json({ error: "error, inténtalo de nuevo por favor" });
     }
 }
-
-/* 
-try {
-        const { code, toPhone } = await request.json();
-        const messsage = await TWILIO_CLIENT.messages.create({
-            body: `Tu código de verificación es ${code}`,
-            from: TWILIO_PHONE,
-            to: toPhone,
-        });
-
-        return NextResponse.json(messsage.status);
-    } catch (e) {
-        console.log(e);
-        return NextResponse.json({ error: "error, inténtalo de nuevo por favor" });
-    }
-*/

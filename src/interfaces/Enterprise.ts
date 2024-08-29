@@ -1,25 +1,26 @@
 import { GeoPoint } from "firebase/firestore";
-import { ImgWithRef } from "./ImageInterface";
+import { RefAttachment } from "../components/form/models/RefAttachment";
 import { Locations } from "./Locations";
+import { ServiceType } from "./Services";
+
+export type UserRoleInEnterprise = "user" | "support";
 
 export interface EnterpriseUser {
     userId: string;
-    role: "user" | "support";
+    role: UserRoleInEnterprise;
 }
 
-export enum EnterpriseType {
-    Mechanical = "mechanical",
-    Tow = "tow",
-    Laundry = "laundry",
-    Driver = "driver",
-}
+export const UserRoleEnterpriseRender = {
+    user: "Usuario Servidor",
+    support: "Soporte",
+};
 
 // Interface for crane companies
 export interface Enterprise {
     id?: string;
-    type: "mechanical" | "tow" | "laundry" | "driver";
+    type: ServiceType;
     name: string;
-    logoImgUrl: ImgWithRef;
+    logoImgUrl: RefAttachment;
     coordinates?: GeoPoint; // Mandatory just for mechanics
     latitude?: number;
     longitude?: number;
@@ -37,31 +38,3 @@ export interface Enterprise {
 export interface ReqEditEnterprise extends Enterprise {
     enterpriseId: string;
 }
-
-export const EnterpriseTypeRender = {
-    mechanical: "taller mecánico",
-    tow: "empresa operadora de grúa",
-    laundry: "lavadero de vehículos",
-    driver: "empresa de choferes",
-};
-
-export const EnterpriseTypeRenderPronoun = {
-    mechanical: "el taller mecánico",
-    tow: "la empresa operadora de grúa",
-    laundry: "el lavadero de vehículos",
-    driver: "la empresa de choferes",
-};
-
-export const EnterpriseTypeRenderPronounV2 = {
-    mechanical: "del taller mecánico",
-    tow: "de la empresa operadora de grúa",
-    laundry: "del lavadero de vehículos",
-    driver: "de la empresa de choferes",
-};
-
-export const EnterpriseTypeRenderPronounV3 = {
-    mechanical: "un taller mecánico",
-    tow: "una empresa operadora de grúa",
-    laundry: "un lavadero de vehículos",
-    driver: "una empresa de choferes",
-};

@@ -8,8 +8,15 @@ import Warehouse from "@/icons/Warehouse";
 import Wrench from "@/icons/Wrench";
 import Link from "next/link";
 import LogoutOption from "../sidebar_options/LogoutOption";
-import Bullhorn from "@/icons/Bullhorn";
 import Taxi from "@/icons/Taxi";
+import { routeToRequestToBeServerUserAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
+import { routeToAllEnterprisesAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
+import {
+    routeToProfileAsUser,
+    routeToRenewLocationAsUser,
+    routeToRenewPhotoAsUser,
+} from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
+import Camera from "@/icons/Camera";
 
 const ServerUserSideBar = ({
     pathname,
@@ -25,110 +32,137 @@ const ServerUserSideBar = ({
             </span>
             <li className="sidebar-options margin-bottom-25">
                 <Link
-                    href={"/services/drive"}
+                    href={routeToRequestToBeServerUserAsUser("driver")}
                     className={`sidebar-option ${
-                        (pathname.includes("drive") ||
-                            pathname.includes("car") ||
-                            pathname.includes("motorcycle")) &&
-                        !pathname.includes("enterprise") &&
-                        "selected"
+                        pathname.includes(
+                            routeToRequestToBeServerUserAsUser("driver"),
+                        ) && "selected"
                     }`}
                 >
                     <Car />
                     <span>Chofer</span>
                 </Link>
                 <Link
-                    href={"/services/mechanic"}
+                    href={routeToRequestToBeServerUserAsUser("mechanical")}
                     className={`sidebar-option ${
-                        pathname.includes("mechanic") && "selected"
+                        pathname.includes(
+                            routeToRequestToBeServerUserAsUser("mechanical"),
+                        ) && "selected"
                     }`}
                 >
                     <Wrench />
                     <span>Mecánico</span>
                 </Link>
                 <Link
-                    href={"/services/tow"}
-                    className={`sidebar-option ${pathname.includes("tow") && "selected"}`}
+                    href={routeToRequestToBeServerUserAsUser("tow")}
+                    className={`sidebar-option ${
+                        pathname.includes(
+                            routeToRequestToBeServerUserAsUser("tow"),
+                        ) && "selected"
+                    }`}
                 >
                     <Truck />
                     <span>Grúa</span>
                 </Link>
                 <Link
-                    href={"/services/laundry"}
+                    href={routeToRequestToBeServerUserAsUser("laundry")}
                     className={`sidebar-option ${
-                        pathname.includes("/services/laundry") && "selected"
+                        pathname.includes(
+                            routeToRequestToBeServerUserAsUser("laundry"),
+                        ) && "selected"
                     }`}
                 >
                     <Soap />
                     <span>Lavadero</span>
                 </Link>
             </li>
-            <span className="text | medium bolder | margin-bottom-15">Registros</span>
+            <span className="text | medium bolder | margin-bottom-15">
+                Registros
+            </span>
 
             <li className="sidebar-options | margin-bottom-25">
                 <Link
-                    href={"/enterprise/driver"}
+                    href={routeToAllEnterprisesAsUser("driver")}
                     className={`sidebar-option ${
-                        pathname.includes("/enterprise/driver") && "selected"
+                        pathname.includes(
+                            routeToAllEnterprisesAsUser("driver"),
+                        ) && "selected"
                     }`}
                 >
                     <Taxi />
                     <span>Empresas de Choferes</span>
                 </Link>
                 <Link
-                    href={"/enterprise/workshops"}
+                    href={routeToAllEnterprisesAsUser("mechanical")}
                     className={`sidebar-option ${
-                        pathname.includes("workshops") && "selected"
+                        pathname.includes(
+                            routeToAllEnterprisesAsUser("mechanical"),
+                        ) && "selected"
                     }`}
                 >
                     <Warehouse />
                     <span>Talleres</span>
                 </Link>
                 <Link
-                    href={"/enterprise/cranes"}
+                    href={routeToAllEnterprisesAsUser("tow")}
                     className={`sidebar-option ${
-                        pathname.includes("cranes") && "selected"
+                        pathname.includes(routeToAllEnterprisesAsUser("tow")) &&
+                        "selected"
                     }`}
                 >
                     <Building />
                     <span>Empresas de Grúa</span>
                 </Link>
                 <Link
-                    href={"/enterprise/laundry"}
+                    href={routeToAllEnterprisesAsUser("laundry")}
                     className={`sidebar-option ${
-                        pathname.includes("/enterprise/laundry") && "selected"
+                        pathname.includes(
+                            routeToAllEnterprisesAsUser("laundry"),
+                        ) && "selected"
                     }`}
                 >
                     <Soap />
                     <span>Lavaderos</span>
                 </Link>
             </li>
-            <span className="text | medium bolder | margin-bottom-15">Perfil</span>
+            <span className="text | medium bolder | margin-bottom-15">
+                Perfil
+            </span>
 
             <li className="sidebar-options">
                 <Link
-                    href={"/user/profile"}
+                    href={routeToProfileAsUser()}
                     className={`sidebar-option ${
-                        (pathname.includes("profile") || pathname.includes("photo")) &&
-                        "selected"
+                        pathname === routeToProfileAsUser() && "selected"
                     }`}
                 >
                     <UserIcon />
                     <span>Mi Perfil</span>
                 </Link>
+
                 <Link
-                    href={"/user/branding"}
+                    href={routeToRenewPhotoAsUser()}
+                    className={`sidebar-option ${
+                        pathname === routeToRenewPhotoAsUser() && "selected"
+                    }`}
+                >
+                    <Camera />
+                    <span>Foto de Perfil</span>
+                </Link>
+                {/*                 <Link
+                    href={""}
                     className={`sidebar-option ${
                         pathname.includes("branding") && "selected"
                     }`}
                 >
                     <Bullhorn />
                     <span>Branding</span>
-                </Link>
+                </Link> */}
                 <Link
-                    href={"/user/update/location"}
+                    href={routeToRenewLocationAsUser()}
                     className={`sidebar-option ${
-                        pathname.includes("location") && "selected"
+                        pathname.includes(routeToRenewLocationAsUser()) &&
+                        "selected"
                     }`}
                 >
                     <LocationDot />

@@ -7,8 +7,15 @@ import UsersOption from "../sidebar_options/UsersOption";
 import NoServerUserProfileOp from "../sidebar_options/NoServerUserProfileOp";
 import LogoutOption from "../sidebar_options/LogoutOption";
 import UserGear from "@/icons/UserGear";
+import RedirectToService from "../sidebar_options/RedirectToService";
 
-const SupportTwoSideBar = ({ pathname, logout }: { pathname: string; logout: () => void }) => {
+const SupportTwoSideBar = ({
+    pathname,
+    logout,
+}: {
+    pathname: string;
+    logout: () => void;
+}) => {
     return (
         <>
             <UserRoleSideBar role={UserRole.SupportTwo}>
@@ -17,12 +24,17 @@ const SupportTwoSideBar = ({ pathname, logout }: { pathname: string; logout: () 
 
             <RequestsSection pathname={pathname} />
 
-            <span className="text | medium bolder | margin-bottom-15">Registros</span>
+            <span className="text | medium bolder | margin-bottom-15">
+                Registros
+            </span>
             <li className="sidebar-options">
                 <UsersOption pathname={pathname} />
+                <RedirectToService />
             </li>
 
-            <span className="text | medium bolder | margin-top-25 margin-bottom-15">Perfil</span>
+            <span className="text | medium bolder | margin-top-25 margin-bottom-15">
+                Perfil
+            </span>
 
             <li className="sidebar-options">
                 <NoServerUserProfileOp pathname={pathname} />

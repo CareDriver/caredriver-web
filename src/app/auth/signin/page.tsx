@@ -1,12 +1,15 @@
-import AuthWrapper from "@/components/auth/AuthWrapper";
-import SignIn from "@/components/auth/SignIn";
+import { AuthenticatorProviderContainer } from "@/components/auth/contexts/AuthenticatorContext";
+import AuthenticatorContainer from "@/components/auth/views/containers/AuthenticatorContainer";
+import SignInForm from "@/components/auth/views/sign_in/SignInForm";
 
-const SignInPage = () => {
+const Page = () => {
     return (
-        <AuthWrapper>
-            <SignIn />
-        </AuthWrapper>
+        <AuthenticatorProviderContainer>
+            <AuthenticatorContainer authTitle="Inicia sesion">
+                <SignInForm />
+            </AuthenticatorContainer>
+        </AuthenticatorProviderContainer>
     );
 };
 
-export default SignInPage;
+export default Page;
