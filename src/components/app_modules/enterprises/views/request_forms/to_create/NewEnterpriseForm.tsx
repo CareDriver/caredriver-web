@@ -36,10 +36,10 @@ import {
     isValidTextField,
 } from "@/components/form/validators/FieldValidators";
 import EnterpriseOwnerAdder from "./EnterpriseOwnerAdder";
-import { validateEnterpriseName } from "../../../validators/confirmations/ValidatorsForConfirmationWithEnterprises";
 import { ServiceType } from "@/interfaces/Services";
 import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import { PageStateContext } from "@/context/PageStateContext";
+import { validateEnterpriseName } from "../../../validators/EnterpriseValidator";
 
 interface Form {
     name: TextFieldForm;
@@ -124,7 +124,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
         }
     };
 
-    useEffect(() => {        
+    useEffect(() => {
         setFormState((prev) => ({
             ...prev,
             isValid: isValidForm(form),
