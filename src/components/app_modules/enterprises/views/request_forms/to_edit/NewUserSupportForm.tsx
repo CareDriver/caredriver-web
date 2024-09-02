@@ -57,10 +57,6 @@ const NewUserSupportForm: React.FC<Props> = ({ userToAdd, enterprise }) => {
                     },
                 );
                 window.location.reload();
-                setFormState((prev) => ({
-                    ...prev,
-                    loading: false,
-                }));
             } else {
                 toast.error("Completa el formulario con datos validos");
                 setFormState((prev) => ({

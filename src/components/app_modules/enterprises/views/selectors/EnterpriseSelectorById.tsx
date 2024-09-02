@@ -1,8 +1,8 @@
 "use client";
 import { Enterprise } from "@/interfaces/Enterprise";
 import "@/styles/components/enterprise.css";
-import { EntityDataField } from "@/components/form/models/FormFields";
-import { EntityDataFieldSetter } from "@/components/form/models/FieldSetters";
+import { EntityField } from "@/components/form/models/FormFields";
+import { EntityFieldSetter } from "@/components/form/models/FieldSetters";
 import { ServiceType } from "@/interfaces/Services";
 import { InputValidator } from "@/validators/InputValidatorSignature";
 import BaseEnterpriseSelector from "./BaseEnterpriseSelector";
@@ -10,13 +10,16 @@ import BaseEnterpriseSelector from "./BaseEnterpriseSelector";
 interface Props {
     typeOfEnterprise: ServiceType;
     field: {
-        values: EntityDataField<Enterprise>;
-        setter: EntityDataFieldSetter<Enterprise>;
+        values: EntityField;
+        setter: EntityFieldSetter;
         validator?: InputValidator;
     };
 }
 
-const EnterpriseSelector: React.FC<Props> = ({ typeOfEnterprise, field }) => {
+const EnterpriseSelectorById: React.FC<Props> = ({
+    typeOfEnterprise,
+    field,
+}) => {
     const selectEnterprise = (enterprise: Enterprise | undefined): void => {
         if (!enterprise) {
             field.setter({
@@ -27,15 +30,15 @@ const EnterpriseSelector: React.FC<Props> = ({ typeOfEnterprise, field }) => {
                         : `Por favor selecciona una empresa`,
             });
         } else {
-            if (field.validator) {                
-                const { isValid, message } = field.validator(enterprise);
+            if (field.validator) {
+                const { isValid, message } = field.validator(enterprise.id);
                 field.setter({
-                    value: enterprise,
+                    value: enterprise.id,
                     message: isValid ? null : message,
                 });
             } else {
                 field.setter({
-                    value: enterprise,
+                    value: enterprise.id,
                     message: null,
                 });
             }
@@ -52,4 +55,4 @@ const EnterpriseSelector: React.FC<Props> = ({ typeOfEnterprise, field }) => {
     );
 };
 
-export default EnterpriseSelector;
+export default EnterpriseSelectorById;

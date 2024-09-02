@@ -17,4 +17,5 @@ export enum Collections {
     ReasonsForInformation = "reasons-to-see-information",
     BrandingRequests = "branding-requests",
     ActionOnUsers = "action-on-users",
+    ChangeEnterpriseRequests = "request-for-change-enterprise",
 }

@@ -2,6 +2,7 @@ import { Locations } from "@/interfaces/Locations";
 import {
     AttachmentField,
     DateField,
+    EntityDataField,
     EntityField,
     GeoPointField,
     TextField,
@@ -17,6 +18,8 @@ export type TextFieldSetter = FieldSetter<TextField>;
 export type DateFieldSetter = FieldSetter<DateField>;
 
 export type EntityFieldSetter = FieldSetter<EntityField>;
+
+export type EntityDataFieldSetter<T> = FieldSetter<EntityDataField<T>>;
 
 export type AttachmentFieldSetter = FieldSetter<AttachmentField>;
 

@@ -5,7 +5,7 @@ const BASE_ROUTER = "/user/userserver";
 export function routeToRenewLicenseAsUser(
     typeOfVehicle: "tow" | "car" | "motorcycle",
 ): string {
-    const vehicleRouter = () => {
+    const serviceRoute = () => {
         switch (typeOfVehicle) {
             case "car":
                 return "driver/car";
@@ -16,22 +16,41 @@ export function routeToRenewLicenseAsUser(
         }
     };
 
-    return BASE_ROUTER.concat("/renew/").concat(vehicleRouter());
+    return BASE_ROUTER.concat("/renew/license/").concat(serviceRoute());
 }
 
-function serviceRoute(type: ServiceType): string {
-    switch (type) {
-        case "driver":
-            return "driver";
-        case "mechanical":
-            return "mechanic";
-        case "laundry":
-            return "lauderer";
-        default:
-            return "craneoperator";
-    }
+export function routeToRenewEnterpriseAsUser(
+    typeOfVehicle: ServiceType,
+): string {
+    const serviceRoute = (type: ServiceType): string => {
+        switch (type) {
+            case "driver":
+                return "driverenterprise";
+            case "mechanical":
+                return "mechanicalworkshop";
+            case "laundry":
+                return "laundry";
+            default:
+                return "crane";
+        }
+    };
+
+    return BASE_ROUTER.concat("/renew/enterprise/").concat(serviceRoute(typeOfVehicle));
 }
 
 export function routeToRequestToBeServerUserAsUser(type: ServiceType): string {
-    return BASE_ROUTER.concat("/request/new/").concat(serviceRoute(type));
+    const serviceRoute = (type: ServiceType): string => {
+        switch (type) {
+            case "driver":
+                return "driver";
+            case "mechanical":
+                return "mechanic";
+            case "laundry":
+                return "launderer";
+            default:
+                return "craneoperator";
+        }
+    };
+
+    return BASE_ROUTER.concat("/service/").concat(serviceRoute(type));
 }

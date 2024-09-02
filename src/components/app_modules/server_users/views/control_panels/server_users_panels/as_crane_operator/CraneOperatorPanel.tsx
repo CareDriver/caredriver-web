@@ -8,6 +8,7 @@ import PageLoading from "@/components/loaders/PageLoading";
 import EnterpriseRendererAsPopup from "@/components/app_modules/enterprises/views/data_renderers/EnterpriseRendererAsPopup";
 import { MissingTransmissionAdder } from "@/components/app_modules/server_users/api/MissingTransmissionAdder";
 import RegisteredVehicleRenderer from "../../../data_renderers/for_vehicles/RegisteredVehicleRenderer";
+import UserAssociatedEnterpriseRenderer from "../../../data_renderers/UserAssociatedEnterpriseRenderer";
 
 const CraneOperatorPanel = () => {
     const { user, checkingUserAuth } = useContext(AuthContext);
@@ -33,7 +34,10 @@ const CraneOperatorPanel = () => {
                     Ve a nuestra Aplicación Móvil y empieza a Ofrecer tu
                     servicio!
                 </p>
-                <EnterpriseRendererAsPopup enterpriseId={user.towEnterpriseId} />
+                <UserAssociatedEnterpriseRenderer
+                    typeOfEnterprise="tow"
+                    user={user}
+                />
                 {user.serviceVehicles && user.serviceVehicles.tow && (
                     <RegisteredVehicleRenderer
                         legend="Operador de Grúa"

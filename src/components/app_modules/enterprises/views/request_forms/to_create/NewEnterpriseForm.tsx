@@ -116,7 +116,6 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                     error: "Error al crear la Empresa, inténtalo de nuevo por favor",
                 });
 
-                setLoadingAll(false, setFormState);
                 router.push(routeToAllEnterprisesAsAdmin(enterpriseType));
             } catch (e) {
                 window.location.reload();

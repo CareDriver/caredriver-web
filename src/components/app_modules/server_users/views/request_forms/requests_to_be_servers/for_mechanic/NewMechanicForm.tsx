@@ -38,7 +38,6 @@ import {
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import PersonalDataForm from "../../../../../users/views/request_forms/to_manage_data/PersonalDataForm";
 import MechanicTools from "./MechanicTools";
-import EnterpriseSelector from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelector";
 import PageLoading from "@/components/loaders/PageLoading";
 import ServiceStateRenderer from "../ServiceStateRenderer";
 import { MechanicStatusHandler } from "@/components/app_modules/server_users/api/requests_status_handler/MechanicStatusHandler";
@@ -47,6 +46,7 @@ import {
     isValidAttachmentField,
     isValidTextField,
 } from "@/components/form/validators/FieldValidators";
+import EnterpriseSelectorById from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelectorById";
 
 interface Form {
     personalData: PersonalData;
@@ -251,7 +251,7 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                                 Taller mecánico {"(Opcional)"}
                             </h2>
 
-                            <EnterpriseSelector
+                            <EnterpriseSelectorById
                                 typeOfEnterprise="mechanical"
                                 field={{
                                     values: form.enterprise,

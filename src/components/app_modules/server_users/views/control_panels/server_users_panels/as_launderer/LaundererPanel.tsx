@@ -5,6 +5,7 @@ import { useContext } from "react";
 import "@/styles/modules/popup.css";
 import PageLoading from "@/components/loaders/PageLoading";
 import EnterpriseRendererAsPopup from "@/components/app_modules/enterprises/views/data_renderers/EnterpriseRendererAsPopup";
+import UserAssociatedEnterpriseRenderer from "../../../data_renderers/UserAssociatedEnterpriseRenderer";
 
 const LaundererPanel = () => {
     const { user, checkingUserAuth } = useContext(AuthContext);
@@ -24,7 +25,10 @@ const LaundererPanel = () => {
                     Ve a nuestra Aplicación Móvil y empieza a Ofrecer tu
                     servicio!
                 </p>
-                <EnterpriseRendererAsPopup enterpriseId={user.laundryEnterpriseId} />
+                <UserAssociatedEnterpriseRenderer
+                    typeOfEnterprise="laundry"
+                    user={user}
+                />
                 <span className="circles-right-bottomv2 green"></span>
             </div>
         )

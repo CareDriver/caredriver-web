@@ -12,6 +12,8 @@ export interface Payment extends Price {
 
 export interface BalanceHistory extends Payment {
     balanceRechargeId?: string;
+    note?: string;
+    newBalance: Price;
 }
 
 export const defaultBalance: Price = {

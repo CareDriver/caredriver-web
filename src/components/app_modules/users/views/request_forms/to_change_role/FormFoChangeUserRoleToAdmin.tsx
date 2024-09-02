@@ -23,8 +23,8 @@ import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import Popup from "@/components/modules/Popup";
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import TextField from "@/components/form/view/fields/TextField";
-import { isValidChangeReason } from "@/components/app_modules/users/validators/for_data/BalanceValidator";
 import UserRoleField from "@/components/form/view/fields/UserRoleField";
+import { isValidChangeReason } from "@/validators/JustificationValidator";
 
 interface Form {
     changeReason: TextFieldForm;

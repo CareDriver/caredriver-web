@@ -2,6 +2,7 @@ import AddressCar from "@/icons/AddressCar";
 import Camera from "@/icons/Camera";
 import Car from "@/icons/Car";
 import MechanicReq from "@/icons/MechanicReq";
+import Repeat from "@/icons/Repeat";
 import Soap from "@/icons/Soap";
 import Taxi from "@/icons/Taxi";
 import TowReq from "@/icons/TowReq";
@@ -12,6 +13,7 @@ import { routeToUserRequestsToRenewPhotoAsAdmin } from "@/utils/route_builders/a
 import {
     routeToRequestsToBeUserServerAsAdmin,
     routeToRequestsToRenewLicenseAsAdmin,
+    routeToUserRequestsToChangeEnterpriseAsAdmin,
 } from "@/utils/route_builders/as_admin/RouteBuilderForUserServerAsAdmin";
 import Link from "next/link";
 
@@ -181,6 +183,17 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                 >
                     <AddressCar />
                     <span>Renovacion de Licencias</span>
+                </Link>
+                <Link
+                    href={routeToUserRequestsToChangeEnterpriseAsAdmin()}
+                    className={`sidebar-option ${
+                        pathname.includes(
+                            routeToUserRequestsToChangeEnterpriseAsAdmin(),
+                        ) && "selected"
+                    }`}
+                >
+                    <Repeat />
+                    <span>Cambiar de empresa</span>
                 </Link>
                 {/*                 <Link
                     href={""}
