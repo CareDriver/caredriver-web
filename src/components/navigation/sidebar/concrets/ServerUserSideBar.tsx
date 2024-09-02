@@ -9,7 +9,10 @@ import Wrench from "@/icons/Wrench";
 import Link from "next/link";
 import LogoutOption from "../sidebar_options/LogoutOption";
 import Taxi from "@/icons/Taxi";
-import { routeToRequestToBeServerUserAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
+import {
+    routeToRenewEnterpriseAsUser,
+    routeToRequestToBeServerUserAsUser,
+} from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
 import { routeToAllEnterprisesAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
 import {
     routeToProfileAsUser,
@@ -34,9 +37,13 @@ const ServerUserSideBar = ({
                 <Link
                     href={routeToRequestToBeServerUserAsUser("driver")}
                     className={`sidebar-option ${
-                        pathname.includes(
+                        (pathname.includes(
                             routeToRequestToBeServerUserAsUser("driver"),
-                        ) && "selected"
+                        ) ||
+                            pathname.includes(
+                                routeToRenewEnterpriseAsUser("driver"),
+                            )) &&
+                        "selected"
                     }`}
                 >
                     <Car />
@@ -45,9 +52,13 @@ const ServerUserSideBar = ({
                 <Link
                     href={routeToRequestToBeServerUserAsUser("mechanical")}
                     className={`sidebar-option ${
-                        pathname.includes(
+                        (pathname.includes(
                             routeToRequestToBeServerUserAsUser("mechanical"),
-                        ) && "selected"
+                        ) ||
+                            pathname.includes(
+                                routeToRenewEnterpriseAsUser("mechanical"),
+                            )) &&
+                        "selected"
                     }`}
                 >
                     <Wrench />
@@ -56,9 +67,13 @@ const ServerUserSideBar = ({
                 <Link
                     href={routeToRequestToBeServerUserAsUser("tow")}
                     className={`sidebar-option ${
-                        pathname.includes(
+                        (pathname.includes(
                             routeToRequestToBeServerUserAsUser("tow"),
-                        ) && "selected"
+                        ) ||
+                            pathname.includes(
+                                routeToRenewEnterpriseAsUser("tow"),
+                            )) &&
+                        "selected"
                     }`}
                 >
                     <Truck />
@@ -67,9 +82,13 @@ const ServerUserSideBar = ({
                 <Link
                     href={routeToRequestToBeServerUserAsUser("laundry")}
                     className={`sidebar-option ${
-                        pathname.includes(
+                        (pathname.includes(
                             routeToRequestToBeServerUserAsUser("laundry"),
-                        ) && "selected"
+                        ) ||
+                            pathname.includes(
+                                routeToRenewEnterpriseAsUser("laundry"),
+                            )) &&
+                        "selected"
                     }`}
                 >
                     <Soap />

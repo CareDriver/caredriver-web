@@ -38,3 +38,15 @@ export function routeToReviewRequestToRenewLicenseAsAdmin(
 ): string {
     return routeToRequestsToRenewLicenseAsAdmin().concat("/").concat(reqId);
 }
+
+export function routeToUserRequestsToChangeEnterpriseAsAdmin(): string {
+    return BASE_ROUTE.concat("/request/renew/enterprise");
+}
+
+export function routeToReviewRequestToChangeEnterpriseAsAdmin(
+    reqId: string,
+): string {
+    return routeToUserRequestsToChangeEnterpriseAsAdmin()
+        .concat("/")
+        .concat(reqId);
+}

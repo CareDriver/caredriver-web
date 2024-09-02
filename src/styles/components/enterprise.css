@@ -24,7 +24,6 @@
 .enterprise-item {
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
     gap: 0.277777778rem;
 
@@ -47,14 +46,12 @@
 }
 
 .enterprise-item-title {
-    max-width: 70%;
     font-size: 1.3rem;
     font-weight: 700;
-
-    text-align: center;
 }
 
 .enterprise-item-logo {
+    margin-inline: auto;
     border-radius: 50%;
     width: 10rem;
     height: 10rem;

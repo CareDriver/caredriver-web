@@ -11,6 +11,10 @@ import PageLoading from "@/components/loaders/PageLoading";
 import EnterpriseRendererAsPopup from "@/components/app_modules/enterprises/views/data_renderers/EnterpriseRendererAsPopup";
 import { MissingTransmissionAdder } from "@/components/app_modules/server_users/api/MissingTransmissionAdder";
 import RegisteredVehicleRenderer from "../../../data_renderers/for_vehicles/RegisteredVehicleRenderer";
+import Link from "next/link";
+import { routeToRenewEnterpriseAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
+import FieldDeleted from "@/components/form/view/field_renderers/FieldDeleted";
+import UserAssociatedEnterpriseRenderer from "../../../data_renderers/UserAssociatedEnterpriseRenderer";
 
 const DriverPanel = () => {
     const { user, checkingUserAuth } = useContext(AuthContext);
@@ -36,7 +40,11 @@ const DriverPanel = () => {
                     Ya eres chofer, ve a nuestra Aplicación Móvil y empieza a
                     Ofrecer tu servicio!
                 </p>
-                <EnterpriseRendererAsPopup enterpriseId={user.driverEnterpriseId} />
+
+                <UserAssociatedEnterpriseRenderer
+                    typeOfEnterprise="driver"
+                    user={user}
+                />
 
                 {user.serviceVehicles?.car && (
                     <RegisteredVehicleRenderer

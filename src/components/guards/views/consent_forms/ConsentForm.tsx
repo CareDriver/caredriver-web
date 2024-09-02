@@ -3,7 +3,6 @@
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { isValidChangeReason } from "@/components/app_modules/users/validators/for_data/BalanceValidator";
 import { UserRole } from "@/interfaces/UserInterface";
 import {
     setVisitedToday,
@@ -20,6 +19,7 @@ import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
 import Popup from "@/components/modules/Popup";
 import BaseFormWithTwoButtons from "@/components/form/view/forms/BaseFormWithTwoButtons";
 import { genDocId } from "@/utils/generators/IdGenerator";
+import { isValidChangeReason } from "@/validators/JustificationValidator";
 
 interface Form {
     complaintId: TextFieldForm;

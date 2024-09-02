@@ -34,7 +34,6 @@ const EnterpriseRendererAsPopup: React.FC<Props> = ({ enterpriseId }) => {
             >
                 Ver empresa asociada
             </button>
-            <div className="separator-horizontal"></div>
             <Popup
                 isOpen={enteprise.isBeingReviewed}
                 close={() =>

@@ -1,6 +1,7 @@
 import {
     AttachmentField,
     DateField,
+    EntityDataField,
     EntityField,
     GeoPointField,
     TextField,
@@ -18,6 +19,11 @@ export const DEFAUL_DATE_FIELD: DateField = {
 };
 
 export const DEFAUL_ENTITY_FIELD: EntityField = {
+    value: undefined,
+    message: null,
+};
+
+export const DEFAUL_ENTITY_DATA_FIELD: EntityDataField<any> = {
     value: undefined,
     message: null,
 };

@@ -2,6 +2,7 @@ import { isNullOrEmptyText } from "@/validators/TextValidator";
 import {
     AttachmentField,
     DateField,
+    EntityDataField,
     EntityField,
     GeoPointField,
     TextField,
@@ -20,6 +21,10 @@ export function isValidAttachmentField(field: AttachmentField): boolean {
 }
 
 export function isValidEntityField(field: EntityField): boolean {
+    return field.message === null && field.value !== undefined;
+}
+
+export function isValidEntityDataField(field: EntityDataField<any>): boolean {
     return field.message === null && field.value !== undefined;
 }
 

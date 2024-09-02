@@ -50,9 +50,9 @@ const FormToDisableEnterprise: React.FC<Props> = ({ enterprise }) => {
                         }),
                         messages,
                     );
-                    router.refresh();
+                    window.location.reload();
                 } catch (e) {
-                    router.refresh();
+                    setLoadingAll(false, setFormState);
                 }
             }
         }

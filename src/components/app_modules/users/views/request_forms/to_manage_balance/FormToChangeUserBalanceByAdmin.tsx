@@ -11,16 +11,9 @@ import { updateUser } from "@/components/app_modules/users/api/UserRequester";
 import {
     isValidAmount,
     isValidBankNumber,
-    isValidChangeReason,
 } from "@/components/app_modules/users/validators/for_data/BalanceValidator";
 import { Timestamp } from "firebase/firestore";
-import {
-    FormEvent,
-    SyntheticEvent,
-    useContext,
-    useEffect,
-    useState,
-} from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { saveBalanceHistoryItem } from "@/components/app_modules/users/api/BalanceHistoryRequester";
 import Popup from "@/components/modules/Popup";
@@ -33,6 +26,7 @@ import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import TextField from "@/components/form/view/fields/TextField";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import SelectionField from "@/components/form/view/fields/SelectionField";
+import { isValidChangeReason } from "@/validators/JustificationValidator";
 
 type ReasonOfChangeType = "bankTransactionNumber" | "modificationReason";
 
@@ -64,7 +58,6 @@ const FormToChangeUserBalanceByAdmin = ({
     user: UserInterface;
     adminUser: UserInterface;
 }) => {
-    const isBalancer: boolean = adminUser.role === UserRole.BalanceRecharge;
     const { loading, setLoadingAll } = useContext(PageStateContext);
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
@@ -73,23 +66,16 @@ const FormToChangeUserBalanceByAdmin = ({
     const perform = async () => {
         if (user.id && adminUser.id) {
             try {
-                const debt: Price = isBalancer
-                    ? {
-                          amount:
-                              user.balance.amount +
-                              parseFloat(form.newBalance.value),
-                          currency: "Bs. (BOB)",
-                      }
-                    : {
-                          amount: parseFloat(form.newBalance.value),
-                          currency: "Bs. (BOB)",
-                      };
+                const NEW_BALANCE: Price = {
+                    amount: parseFloat(form.newBalance.value),
+                    currency: "Bs. (BOB)",
+                };
                 const DOC_ID = genDocId();
                 let balanceItem: BalanceHistoryItem = {
                     id: DOC_ID,
                     dateTime: Timestamp.now(),
                     oldBalance: user.balance,
-                    previousBalance: debt,
+                    previousBalance: NEW_BALANCE,
                     userWhoChanged: adminUser.id,
                 };
                 if (form.reasonOfChange.type === "bankTransactionNumber") {
@@ -115,25 +101,20 @@ const FormToChangeUserBalanceByAdmin = ({
                     },
                 );
 
+                // TODO: ask for the correct to register a balance history
+                const newBalanceForHistory: BalanceHistory = {
+                    ...NEW_BALANCE,
+                    date: Timestamp.now(),
+                    balanceRechargeId: DOC_ID,
+                    newBalance: NEW_BALANCE,
+                    note: form.reasonOfChange.description.value,
+                };
                 const newHistory: BalanceHistory[] = user.balanceHistory
-                    ? [
-                          ...user.balanceHistory,
-                          {
-                              ...debt,
-                              date: Timestamp.now(),
-                              balanceRechargeId: DOC_ID,
-                          },
-                      ]
-                    : [
-                          {
-                              ...debt,
-                              date: Timestamp.now(),
-                              balanceRechargeId: DOC_ID,
-                          },
-                      ];
+                    ? [...user.balanceHistory, newBalanceForHistory]
+                    : [newBalanceForHistory];
                 await toast.promise(
                     updateUser(user.id, {
-                        balance: debt,
+                        balance: NEW_BALANCE,
                         balanceHistory: newHistory,
                     }),
                     {
@@ -210,9 +191,8 @@ const FormToChangeUserBalanceByAdmin = ({
                     : "0"}
             </h2>
             <p className="text | gray-dark">
-                {isBalancer
-                    ? " Ingresa el monto que pago el usuario para aumentar su saldo (Solo puedes aumentar el saldo del usuario)"
-                    : "Ingresa el nuevo monto de saldo del usuario."}
+                Ingresa el nuevo monto sera el que tendra el usuario, necesitas
+                justiticar la razon del cambio.
             </p>
 
             <BaseForm

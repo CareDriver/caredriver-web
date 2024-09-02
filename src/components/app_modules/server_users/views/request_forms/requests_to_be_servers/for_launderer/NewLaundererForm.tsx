@@ -35,7 +35,6 @@ import {
 } from "@/components/form/models/DefaultFields";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import PersonalDataForm from "../../../../../users/views/request_forms/to_manage_data/PersonalDataForm";
-import EnterpriseSelector from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelector";
 import PageLoading from "@/components/loaders/PageLoading";
 import ServiceStateRenderer from "../ServiceStateRenderer";
 import { LaundererStatusHandler } from "@/components/app_modules/server_users/api/requests_status_handler/LaundererStatusHandler";
@@ -44,6 +43,7 @@ import {
     isValidAttachmentField,
     isValidEntityField,
 } from "@/components/form/validators/FieldValidators";
+import EnterpriseSelectorById from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelectorById";
 
 interface Form {
     personalData: PersonalData;
@@ -240,7 +240,7 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                                 Lavadero
                             </h2>
 
-                            <EnterpriseSelector
+                            <EnterpriseSelectorById
                                 typeOfEnterprise="laundry"
                                 field={{
                                     values: form.enterprise,

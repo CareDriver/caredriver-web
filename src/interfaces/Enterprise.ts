@@ -33,6 +33,7 @@ export interface Enterprise {
     location?: Locations;
     addedUsersId?: string[];
     addedUsers?: EnterpriseUser[];
+    commition?: boolean;
 }
 
 export interface ReqEditEnterprise extends Enterprise {

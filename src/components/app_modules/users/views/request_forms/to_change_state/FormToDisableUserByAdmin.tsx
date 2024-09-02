@@ -21,10 +21,10 @@ import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
 import { PageStateContext } from "@/context/PageStateContext";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import TextField from "@/components/form/view/fields/TextField";
-import { isValidChangeReason } from "@/components/app_modules/users/validators/for_data/BalanceValidator";
 import { validateEmialWithComparison } from "../../../validators/for_confirmations/DataConfirmationValidator";
 import { genDocId } from "@/utils/generators/IdGenerator";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
+import { isValidChangeReason } from "@/validators/JustificationValidator";
 
 interface Form {
     confirmation: TextFieldForm;

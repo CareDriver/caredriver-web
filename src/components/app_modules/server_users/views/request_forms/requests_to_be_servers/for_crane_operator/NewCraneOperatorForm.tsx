@@ -36,6 +36,7 @@ import {
 } from "@/components/app_modules/server_users/models/VehicleFields";
 import {
     AttachmentField,
+    EntityDataField,
     EntityField,
 } from "@/components/form/models/FormFields";
 import {
@@ -45,16 +46,16 @@ import {
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import VehicleForm from "../../vehicle_forms/VehicleForm";
 import PersonalDataForm from "../../../../../users/views/request_forms/to_manage_data/PersonalDataForm";
-import EnterpriseSelector from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelector";
 import ServiceStateRenderer from "../ServiceStateRenderer";
 import { CraneOperatorStatusHandler } from "@/components/app_modules/server_users/api/requests_status_handler/CraneOperatorStatusHandler";
 import PageLoading from "@/components/loaders/PageLoading";
 import {
     isValidAttachmentField,
-    isValidEntityField,
+    isValidEntityDataField,
 } from "@/components/form/validators/FieldValidators";
 import { isValidPersonalData } from "@/components/app_modules/server_users/validators/for_data/PersonalDataValidator";
 import { isValidVehicle } from "@/components/app_modules/server_users/validators/for_data/VehicleValidator";
+import EnterpriseSelectorById from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelectorById";
 
 interface Form {
     personalData: PersonalData;
@@ -316,7 +317,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
                                 Empresa de Grúa
                             </h2>
 
-                            <EnterpriseSelector
+                            <EnterpriseSelectorById
                                 typeOfEnterprise="tow"
                                 field={{
                                     values: form.enterprise,
@@ -390,7 +391,7 @@ function isValidForm(form: Form): boolean {
         isValidPersonalData(form.personalData) &&
         isValidVehicle(form.vehicle) &&
         isValidAttachmentField(form.selfie) &&
-        isValidEntityField(form.enterprise) &&
+        isValidEntityDataField(form.enterprise) &&
         form.termsCheck
     );
 }

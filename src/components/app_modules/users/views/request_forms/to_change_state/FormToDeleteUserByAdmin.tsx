@@ -23,11 +23,11 @@ import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
 import Popup from "@/components/modules/Popup";
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import TextField from "@/components/form/view/fields/TextField";
-import { isValidChangeReason } from "@/components/app_modules/users/validators/for_data/BalanceValidator";
 import { validateEmialWithComparison } from "../../../validators/for_confirmations/DataConfirmationValidator";
 import { routeToAllUsersAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 import Trash from "@/icons/Trash";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
+import { isValidChangeReason } from "@/validators/JustificationValidator";
 
 interface Form {
     confirmation: TextFieldForm;
