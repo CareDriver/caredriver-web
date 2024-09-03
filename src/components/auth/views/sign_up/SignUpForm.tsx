@@ -143,7 +143,9 @@ const SignUpForm = () => {
         }
 
         try {
-            let amountOfUsers = await checkEmailExists(form.email.value);
+            let amountOfUsers = await checkEmailExists(
+                form.email.value.toLocaleLowerCase(),
+            );
             if (amountOfUsers > 0) {
                 setForm((prev) => ({
                     ...prev,
@@ -304,7 +306,10 @@ const SignUpForm = () => {
                 />
             </BaseForm>
 
-            <Link href={routeToSingIn()} className="text | small center underline">
+            <Link
+                href={routeToSingIn()}
+                className="text | small center underline"
+            >
                 ¿Ya tienes cuenta? Inicia sesión
             </Link>
         </>
@@ -334,9 +339,9 @@ const isValidForm = (form: Form): boolean => {
 function formToNewUser(form: Form): UserInterface {
     return {
         ...EMPTY_USER_DATA,
-        fullName: form.fullName.value,
+        fullName: form.fullName.value.toLocaleLowerCase().trimEnd().trimStart(),
         phoneNumber: form.phone.value,
         location: form.location,
-        email: form.email.value.toLowerCase().trim(),
+        email: form.email.value.toLocaleLowerCase().trim(),
     };
 }

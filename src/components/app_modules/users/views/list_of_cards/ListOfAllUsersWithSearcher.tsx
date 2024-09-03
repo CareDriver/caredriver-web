@@ -55,7 +55,7 @@ const ListOfAllUsersWithSearcher = () => {
                     adminUser.role,
                     adminUser.email,
                     numPerPage,
-                    dataState.value,
+                    dataState.value.toLocaleLowerCase(),
                 );
                 setDataState({
                     ...dataState,
@@ -93,7 +93,7 @@ const ListOfAllUsersWithSearcher = () => {
                 var result = await getSearchUsersPaginated(
                     adminUser.role,
                     adminUser.email,
-                    dataState.value,
+                    dataState.value.toLocaleLowerCase(),
                     "next",
                     startAfterDoc,
                     endBeforeDoc,
@@ -184,7 +184,7 @@ const ListOfAllUsersWithSearcher = () => {
                         var result = await getSearchUsersPaginated(
                             adminUser.role,
                             adminUser.email,
-                            dataState.value,
+                            dataState.value.toLocaleLowerCase(),
                             "next",
                             startAfterDoc,
                             endBeforeDoc,

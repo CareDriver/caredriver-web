@@ -2,7 +2,6 @@
 
 import "react-international-phone/style.css";
 import { FormEvent, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import {
     UserInterface,
@@ -37,7 +36,6 @@ import { isValidName } from "../../../app_modules/users/validators/for_data/Cred
 import { genFakeId } from "@/utils/generators/IdGenerator";
 import BaseForm from "../../../form/view/forms/BaseForm";
 import { DEFAULT_FORM_STATE, FormState } from "../../../form/models/Forms";
-import { routeToAllUsersAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 
 interface Form {
     fullName: TextFieldForm;
@@ -50,7 +48,6 @@ interface Form {
 }
 
 const UserRegistrationForm = () => {
-    const router = useRouter();
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
 
@@ -98,7 +95,7 @@ const UserRegistrationForm = () => {
         const res = await fetch("/api/firebase", {
             method: "POST",
             body: JSON.stringify({
-                email: form.email.value,
+                email: form.email.value.toLocaleLowerCase(),
                 password: form.password.value,
             }),
             headers: {
@@ -128,7 +125,9 @@ const UserRegistrationForm = () => {
             }
 
             try {
-                const amountOfUsers = await checkEmailExists(form.email.value);
+                const amountOfUsers = await checkEmailExists(
+                    form.email.value.toLocaleLowerCase(),
+                );
 
                 if (amountOfUsers > 0) {
                     setFormState({
@@ -184,9 +183,7 @@ const UserRegistrationForm = () => {
 
     return (
         <div className="render-data-wrapper | max-width-60">
-            <h1 className="text | big bolder">
-                Registrar Nuevo Usuario
-            </h1>
+            <h1 className="text | big bolder">Registrar Nuevo Usuario</h1>
             <BaseForm
                 content={{
                     button: {
@@ -283,10 +280,10 @@ const isValidForm = (form: Form): boolean => {
 function formToNewUser(form: Form): UserInterface {
     let userData: UserInterface = {
         ...EMPTY_USER_DATA,
-        fullName: form.fullName.value,
+        fullName: form.fullName.value.toLocaleLowerCase().trimEnd().trimStart(),
         phoneNumber: form.phone.value,
         location: form.location,
-        email: form.email.value.toLowerCase().trim(),
+        email: form.email.value.toLocaleLowerCase().trim(),
         role: form.role,
     };
 
