@@ -33,7 +33,8 @@ import FormFoChangeUserRoleToAdmin from "../request_forms/to_change_role/FormFoC
 import FormToDeleteUserByAdmin from "../request_forms/to_change_state/FormToDeleteUserByAdmin";
 import { getUserRoleDetails } from "../../utils/UserRoleGetter";
 import { routeToAllUsersAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
-import "@/styles/components/users.css"
+import "@/styles/components/users.css";
+import { checkPermission } from "@/components/guards/validators/RoleValidator";
 
 const UserProfileForAppUser = ({ userId }: { userId: string }) => {
     const router = useRouter();
@@ -72,7 +73,9 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
 
                 <div className="user-info-subwrapper">
                     <h1 className="text | big bolder">{user.fullName}</h1>
-                    <h3 className="text | medium-big gray-dark">{user.email}</h3>
+                    <h3 className="text | medium-big gray-dark">
+                        {user.email}
+                    </h3>
                     <GuardOfModule
                         user={adminUser}
                         roles={ROLES_TO_VIEW_USER_CREDENTIALS}
@@ -111,10 +114,11 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                         </GuardOfModule>
                     )}
 
-                    <GuardOfModule
-                        user={user}
-                        roles={ROLES_FOR_SERVER_USER_ACTIONS}
-                    >
+                    {(!user.role ||
+                        checkPermission(
+                            user.role,
+                            ROLES_FOR_SERVER_USER_ACTIONS,
+                        )) && (
                         <>
                             {
                                 <GuardOfModule
@@ -151,12 +155,12 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                                         <ServiceServedByUser user={user} />
                                     )}
                                     <RedirectorRendererForServicesRequestedByUser
-                                        user={adminUser}
+                                        user={user}
                                     />
                                 </>
                             </GuardOfModule>
                         </>
-                    </GuardOfModule>
+                    )}
 
                     <GuardOfModule
                         user={adminUser}

@@ -15,7 +15,7 @@ import { isNullOrEmptyText } from "@/validators/TextValidator";
 import { toast } from "react-toastify";
 import { findServicePerfByFakeId } from "../../model/fetchers/ServicePerfFetcher";
 import { TypeOfServicePerformed } from "../../model/models/TypeOfServicePerformed";
-import { routeToServicePerformed } from "@/utils/route_builders/as_admin/RouteBuilderForServiceAsAdmin";
+import { routeToServicePerformed } from "@/utils/route_builders/for_services/RouteBuilderForServices";
 
 const RedirectorToServiceByFakeId = () => {
     const [typeOfService, setTypeOfService] = useState<ServiceType>("driver");

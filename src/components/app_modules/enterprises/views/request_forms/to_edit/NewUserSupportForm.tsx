@@ -11,6 +11,7 @@ import BaseForm from "@/components/form/view/forms/BaseForm";
 import TextField from "@/components/form/view/fields/TextField";
 import { validateEmialWithComparison } from "@/components/app_modules/users/validators/for_confirmations/DataConfirmationValidator";
 import UserPhotoRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserPhotoRenderer";
+import { getFakeIdSaved } from "@/utils/generators/IdGenerator";
 
 interface Props {
     userToAdd: UserInterface;
@@ -36,6 +37,7 @@ const NewUserSupportForm: React.FC<Props> = ({ userToAdd, enterprise }) => {
             ) {
                 let newSupportUser: EnterpriseUser = {
                     userId: userToAdd.id,
+                    fakeUserId: getFakeIdSaved(userToAdd.fakeId),
                     role: "support",
                 };
                 await toast.promise(

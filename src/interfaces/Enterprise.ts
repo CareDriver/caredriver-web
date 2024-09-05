@@ -7,6 +7,7 @@ export type UserRoleInEnterprise = "user" | "support";
 
 export interface EnterpriseUser {
     userId: string;
+    fakeUserId: string;
     role: UserRoleInEnterprise;
 }
 

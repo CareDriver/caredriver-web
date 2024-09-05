@@ -3,22 +3,28 @@ import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
 import Link from "next/link";
 import { getServicePerfStatus } from "../../model/utils/ServiceStatusGetter";
 import { ServiceType } from "@/interfaces/Services";
-import { routeToServicePerformed } from "@/utils/route_builders/as_admin/RouteBuilderForServiceAsAdmin";
+import { routeToServicePerformed } from "@/utils/route_builders/for_services/RouteBuilderForServices";
 
 interface Props {
     service: ServiceRequestInterface;
     typeOfService: ServiceType;
+    fakeUserServerId?: string;
     children: undefined | React.ReactNode;
 }
 
 const BaseCardForServicePerf: React.FC<Props> = ({
     service,
     typeOfService,
+    fakeUserServerId,
     children,
 }) => {
     const HAS_FAKED_ID = service.fakedId !== undefined;
     const LINK_TO = service.fakedId
-        ? routeToServicePerformed(typeOfService, service.fakedId)
+        ? routeToServicePerformed(
+              typeOfService,
+              service.fakedId,
+              fakeUserServerId,
+          )
         : undefined;
     let serviceState = getServicePerfStatus(service);
 
@@ -57,6 +63,10 @@ const BaseCardForServicePerf: React.FC<Props> = ({
             >
                 {renderBodyCard()}
                 {renderStatusCard()}
+                <div className="form-section-message">
+                    El servicio no fue registrado correctamente - No se pueden
+                    ver mas detalles
+                </div>
             </div>
         );
     }

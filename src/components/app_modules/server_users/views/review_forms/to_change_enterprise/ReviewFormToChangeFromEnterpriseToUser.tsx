@@ -35,6 +35,7 @@ import TextFieldRenderer from "@/components/form/view/field_renderers/TextFieldR
 import Building from "@/icons/Building";
 import { ENTERPRISE_TO_SPANISH } from "@/components/app_modules/enterprises/utils/EnterpriseSpanishTranslator";
 import { ServiceType } from "@/interfaces/Services";
+import { getFakeIdSaved } from "@/utils/generators/IdGenerator";
 
 interface Props {
     reqId: string;
@@ -137,6 +138,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
             newUsersWithRoles.push({
                 role: "user",
                 userId: user.id,
+                fakeUserId: getFakeIdSaved(user.fakeId),
             });
         }
 

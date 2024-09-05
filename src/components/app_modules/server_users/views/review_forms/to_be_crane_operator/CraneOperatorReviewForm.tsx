@@ -30,7 +30,6 @@ import FieldDeleted from "../../../../../form/view/field_renderers/FieldDeleted"
 import { getEnterpriseById } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 import UserContactsRendererForForm from "../../../../users/views/data_renderers/for_user_data/UserContactsRendererForForm";
 import CraneEnterpriseRenderer from "../../../../enterprises/views/data_renderers/CraneEnterpriseRenderer";
-import UserStateRenderer from "../../../../users/views/data_renderers/for_user_data/UserStateRenderer";
 import UserStateWithMessageRenderer from "../../../../users/views/data_renderers/for_user_data/UserStateWithMessageRenderer";
 import IdCardRenderer from "../../../../users/views/data_renderers/for_user_data/IdCardRenderer";
 import { addUserServerToEnterprise } from "@/components/app_modules/enterprises/api/EnterpriseUserAdder";
@@ -39,6 +38,7 @@ import {
     DEFAULT_REVIEW_STATE,
     ReviewState,
 } from "@/components/form/models/Reviews";
+import { getFakeIdSaved } from "@/utils/generators/IdGenerator";
 
 const CraneOperatorReviewForm = ({
     serviceReq,
@@ -164,6 +164,7 @@ const CraneOperatorReviewForm = ({
                                 addUserServerToEnterprise(
                                     enterprise,
                                     serviceReq.userId,
+                                    getFakeIdSaved(requesterUser.fakeId),
                                 ),
                                 {
                                     pending:

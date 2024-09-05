@@ -36,6 +36,8 @@ const BaseRendererOfServicePerf = ({
             if (!querySnapshot.empty) {
                 const doc = querySnapshot.docs[0];
                 setData(doc.data() as ServiceRequestInterface);
+                console.log(doc.data());
+                
             } else {
                 toast.error("Servicio no encontrado...");
                 router.push(routeToAllUsersAsAdmin());

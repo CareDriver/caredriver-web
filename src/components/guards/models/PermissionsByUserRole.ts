@@ -19,6 +19,12 @@ export const ROLES_TO_VIEW_USERS_INFO: UserRole[] = [
     UserRole.BalanceRecharge,
 ];
 
+export const ROLES_TO_VIEW_USER_SERVICES: UserRole[] = [
+    UserRole.Admin,
+    UserRole.Support,
+    UserRole.SupportTwo,
+];
+
 export const ROLES_TO_VIEW_USER_STATE: UserRole[] = [
     UserRole.Admin,
     UserRole.Support,

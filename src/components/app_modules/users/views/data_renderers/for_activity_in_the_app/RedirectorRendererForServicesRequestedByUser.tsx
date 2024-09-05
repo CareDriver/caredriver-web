@@ -1,7 +1,7 @@
 import Eye from "@/icons/Eye";
 import UserIcon from "@/icons/UserIcon";
 import { UserInterface } from "@/interfaces/UserInterface";
-import { routeToServicesRequestedByUser } from "@/utils/route_builders/as_admin/RouteBuilderForServiceAsAdmin";
+import { routeToServicesRequestedByUser } from "@/utils/route_builders/for_services/RouteBuilderForServices";
 import { routeToNoFound } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
 import Link from "next/link";
 
