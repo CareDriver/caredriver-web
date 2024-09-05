@@ -17,7 +17,7 @@ import {
     SERVER_USER_QUERY_PARAM,
     SERVICES_REQUESTED_BASE_PATH,
 } from "@/utils/route_builders/for_services/RouteBuilderForServices";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -32,6 +32,7 @@ const GuardForServices: React.FC<Props> = ({
     fakeServerUserId,
     children,
 }) => {
+    const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const { checkingUserAuth, user } = useContext(AuthContext);
@@ -42,18 +43,20 @@ const GuardForServices: React.FC<Props> = ({
         /* TODO: redirect to no found page like github
         https://europe1.discourse-cdn.com/business20/uploads/make/optimized/2X/1/13bde2c3bb2f6b4d6e52197d981011cb068f57f4_2_690x356.jpeg
         */
-        window.location.replace("/redirector");
+        router.push("/redirector");
         toast.warning("Permiso denegado", {
             toastId: "check-permition-validator-page",
         });
     };
 
-    const verifyPermissionForNormalUser = async (user: UserInterface) => {
+    const verifyPermissionForNormalUser = async (
+        user: UserInterface,
+        fakeServerUserId: string,
+    ) => {
         if (!user.id || !fakeServerUserId) {
             redirectToHome();
             return;
         }
-        // TODO: agregar fake id a la lista de usuarios
         if (wasAlreadyVisited(MODULE_TARGET, fakeServerUserId)) {
             setPermission(true);
             return;
@@ -110,9 +113,8 @@ const GuardForServices: React.FC<Props> = ({
                 let fakeUserId = fakeServerUserId
                     ? fakeServerUserId
                     : searchParams.get(SERVER_USER_QUERY_PARAM);
-                console.log(fakeUserId);
                 if (fakeUserId) {
-                    verifyPermissionForNormalUser(user);
+                    verifyPermissionForNormalUser(user, fakeUserId);
                 } else {
                     redirectToHome();
                 }

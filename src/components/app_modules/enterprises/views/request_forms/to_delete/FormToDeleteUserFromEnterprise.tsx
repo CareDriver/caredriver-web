@@ -398,7 +398,6 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
     return (
         user && (
             <>
-                <SimpleUserCard user={selectedUser.data} />
                 <div className="margin-top-25">
                     <h2 className="text icon-wrapper | red red-icon medium-big bold">
                         <TriangleExclamation />

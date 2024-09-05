@@ -34,8 +34,6 @@ export function routeToServicesServedByUser(
     return SERVICE_BASE_PATH.concat("/many/served/")
         .concat(serviceRoute(type))
         .concat("/")
-        .concat(userId)
-        .concat(`?${SERVER_USER_QUERY_PARAM}=`)
         .concat(userId);
 }
 
@@ -49,9 +47,11 @@ export function routeToServicePerformed(
         .concat("/")
         .concat(serviceId);
 
-    if (fakeServerUserId) {
-        path.concat(`?${SERVER_USER_QUERY_PARAM}=`).concat(fakeServerUserId);
+    if (!fakeServerUserId) {
+        return path;
+    } else {
+        return path
+            .concat(`?${SERVER_USER_QUERY_PARAM}=`)
+            .concat(fakeServerUserId);
     }
-
-    return path;
 }

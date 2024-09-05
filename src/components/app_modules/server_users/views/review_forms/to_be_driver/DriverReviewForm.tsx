@@ -37,7 +37,7 @@ import {
     DEFAULT_REVIEW_STATE,
     ReviewState,
 } from "@/components/form/models/Reviews";
-import { getFakeIdSaved } from "@/utils/generators/IdGenerator";
+import { getIdSaved } from "@/utils/generators/IdGenerator";
 
 const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user: adminUser } = useContext(AuthContext);
@@ -186,7 +186,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 addUserServerToEnterprise(
                                     enterprise,
                                     serviceReq.userId,
-                                    getFakeIdSaved(requesterUser.fakeId),
+                                    getIdSaved(requesterUser.fakeId),
                                 ),
                                 {
                                     pending:

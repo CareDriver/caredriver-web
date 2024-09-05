@@ -10,6 +10,13 @@ import FormToDeleteUserFromEnterprise from "../request_forms/to_delete/FormToDel
 import DataLoading from "@/components/loaders/DataLoading";
 import Popup from "@/components/modules/Popup";
 import SimpleUserCard from "@/components/app_modules/users/views/cards/SimpleUserCard";
+import Link from "next/link";
+import {
+    routeToServicePerformed,
+    routeToServicesServedByUser,
+} from "@/utils/route_builders/for_services/RouteBuilderForServices";
+import { getIdSaved } from "@/utils/generators/IdGenerator";
+import HelmetSafety from "@/icons/HelmetSafety";
 
 const ListOfUsersOfAEnterprise = ({
     enterprise,
@@ -128,6 +135,26 @@ const ListOfUsersOfAEnterprise = ({
                     isOpen={selectedUser !== undefined}
                     close={() => setSelectedUser(undefined)}
                 >
+                    <SimpleUserCard user={selectedUser} />
+
+                    <div className="margin-top-15">
+                        <h3 className="icon-wrapper | text bolder">
+                            <HelmetSafety />
+                            Servicios realizados
+                        </h3>
+                        <Link
+                            className="text underline | "
+                            href={routeToServicesServedByUser(
+                                enterprise.type,
+                                getIdSaved(selectedUser.fakeId),
+                            )}
+                        >
+                            Ir a los servicios del usuario
+                        </Link>
+                    </div>
+                    <div className="margin-top-25">
+                        <div className="separator-horizontal"></div>
+                    </div>
                     <FormToDeleteUserFromEnterprise
                         selectedUser={{
                             data: selectedUser,

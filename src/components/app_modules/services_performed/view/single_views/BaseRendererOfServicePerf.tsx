@@ -35,9 +35,7 @@ const BaseRendererOfServicePerf = ({
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             if (!querySnapshot.empty) {
                 const doc = querySnapshot.docs[0];
-                setData(doc.data() as ServiceRequestInterface);
-                console.log(doc.data());
-                
+                setData(doc.data() as ServiceRequestInterface);                
             } else {
                 toast.error("Servicio no encontrado...");
                 router.push(routeToAllUsersAsAdmin());

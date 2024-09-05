@@ -161,7 +161,7 @@ const ListOfServicesPerfByUser: React.FC<Props> = ({
                     service={service}
                     fakeUserServerId={
                         typeOfPerf === TypeOfServicePerformed.Served
-                            ? service.serviceUserId
+                            ? userId
                             : undefined
                     }
                     key={key}
@@ -174,7 +174,7 @@ const ListOfServicesPerfByUser: React.FC<Props> = ({
                     service={service}
                     fakeUserServerId={
                         typeOfPerf === TypeOfServicePerformed.Served
-                            ? service.serviceUserId
+                            ? userId
                             : undefined
                     }
                     key={key}
