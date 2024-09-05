@@ -4,6 +4,8 @@ import Link from "next/link";
 import { getServicePerfStatus } from "../../model/utils/ServiceStatusGetter";
 import { ServiceType } from "@/interfaces/Services";
 import { routeToServicePerformed } from "@/utils/route_builders/for_services/RouteBuilderForServices";
+import { ServiceStatus } from "../../model/models/TypeOfServiceStatus";
+import ServiceStatusRenderer from "../renderers/ServiceStatusRenderer";
 
 interface Props {
     service: ServiceRequestInterface;
@@ -45,24 +47,14 @@ const BaseCardForServicePerf: React.FC<Props> = ({
         </>
     );
 
-    const renderStatusCard = () => (
-        <span
-            className={`service-item-state text |  bolder | ${serviceState.style}`}
-        >
-            Estado : {serviceState.state}
-        </span>
-    );
-
     if (!HAS_FAKED_ID || !LINK_TO) {
         return (
             <div
-                className={`service-item-wrapper | disabled | ${
-                    service.canceled && "canceled-service"
-                }`}
+                className={`service-item-wrapper | disabled | ${serviceState.borderStyle}`}
                 title="El servicio no fue registrado correctamente"
             >
                 {renderBodyCard()}
-                {renderStatusCard()}
+                <ServiceStatusRenderer service={service} size="small" />
                 <div className="form-section-message">
                     El servicio no fue registrado correctamente - No se pueden
                     ver mas detalles
@@ -74,12 +66,10 @@ const BaseCardForServicePerf: React.FC<Props> = ({
     return (
         <Link
             href={LINK_TO}
-            className={`service-item-wrapper | touchable ${
-                service.canceled && "canceled-service"
-            }`}
+            className={`service-item-wrapper | touchable ${serviceState.borderStyle}`}
         >
             {renderBodyCard()}
-            {renderStatusCard()}
+            <ServiceStatusRenderer service={service} size="small" />
         </Link>
     );
 };

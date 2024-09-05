@@ -9,7 +9,15 @@
 }
 
 .service-item-wrapper.canceled-service {
-    border-color: var(--gray-medium);
+    border-color: var(--red);
+}
+
+.service-item-wrapper.finished-service {
+    border-color: var(--main-light);
+}
+
+.service-item-wrapper.active-service {
+    border-color: var(--yellow);
 }
 
 .service-item-state {

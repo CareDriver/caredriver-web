@@ -197,8 +197,9 @@ const ListOfServicesPerfByUser: React.FC<Props> = ({
                 theareNoResults() && "auto-height max-height-100"
             }`}
         >
-            <h2 className="text | bolder big margin-bottom-25">
-                Servicios {typeOfPerf}
+            <h2 className="text | bold big margin-bottom-25 capitalize">
+                Servicios{" "}
+                <i className="text | bolder big capitalize">{typeOfPerf}</i>
             </h2>
 
             <fieldset className="filter-date-wrapper">

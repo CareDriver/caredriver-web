@@ -8,7 +8,9 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import { getUserById } from "@/components/app_modules/users/api/UserRequester";
 import { useEffect, useState } from "react";
 import "@/styles/components/app-user.css";
+import "@/styles/components/users.css";
 import FieldDeleted from "@/components/form/view/field_renderers/FieldDeleted";
+import UserPhotoRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserPhotoRenderer";
 
 interface UserServiceInfo {
     fullName: string;
@@ -18,7 +20,11 @@ interface UserServiceInfo {
     normalServiceData?: ServicesDataInterface;
 }
 
-const UsersOnService = ({ service }: { service: ServiceRequestInterface }) => {
+const RendererOfTheUsersInvolvedInTheService = ({
+    service,
+}: {
+    service: ServiceRequestInterface;
+}) => {
     const [serverUser, setServerUser] = useState<
         UserServiceInfo | null | undefined
     >(null);
@@ -29,23 +35,15 @@ const UsersOnService = ({ service }: { service: ServiceRequestInterface }) => {
     const renderUser = (user: UserServiceInfo) => {
         return (
             <div className="user-info-wrapper">
-                <img
-                    src={user.photoUrl}
-                    alt="user photo"
-                    className="user-info-photo-size-v2"
-                />
+                <UserPhotoRenderer photo={user.photoUrl} />
                 <div className="user-info-subwrapper">
-                    <h3 className="text | big-medium-v2 bolder">
+                    <h3 className="text | big-medium-v4 bolder">
                         {user.fullName}
                     </h3>
                     {user.email && (
-                        <h4 className="text | medium-big bold gray-dark">
-                            {user.email}
-                        </h4>
+                        <h4 className="text | gray-dark">{user.email}</h4>
                     )}
-                    <h4 className="text | medium-big bold gray-dark">
-                        {user.phoneNumber}
-                    </h4>
+                    <h4 className="text | gray-dark">{user.phoneNumber}</h4>
                 </div>
             </div>
         );
@@ -100,8 +98,8 @@ const UsersOnService = ({ service }: { service: ServiceRequestInterface }) => {
 
     return (
         <>
-            <div className="margin-top-50 | max-width-80">
-                <h2 className="text icon-wrapper | user-title-responsive big-medium-v4 bold nb margin-bottom-15">
+            <div className="margin-top-50 | max-width-60">
+                <h2 className="text icon-wrapper | medium-big bolder margin-bottom-15">
                     <HelmetSafety /> Usuario servidor
                 </h2>
 
@@ -115,8 +113,8 @@ const UsersOnService = ({ service }: { service: ServiceRequestInterface }) => {
                     renderUser(serverUser)
                 )}
             </div>
-            <div className="margin-top-25 margin-bottom-50 | max-width-80">
-                <h2 className="text icon-wrapper | user-title-responsive big-medium-v4 bold nb margin-bottom-15">
+            <div className="margin-top-25 margin-bottom-25 | max-width-60">
+                <h2 className="text icon-wrapper | medium-big bolder margin-bottom-15">
                     <UserIcon /> Usuario solicitador del servicio
                 </h2>
                 {reqUser === null ? (
@@ -131,8 +129,9 @@ const UsersOnService = ({ service }: { service: ServiceRequestInterface }) => {
                     renderUser(reqUser)
                 )}
             </div>
+
         </>
     );
 };
 
-export default UsersOnService;
+export default RendererOfTheUsersInvolvedInTheService;
