@@ -14,7 +14,7 @@ import Popup from "@/components/modules/Popup";
 import { Enterprise } from "@/interfaces/Enterprise";
 import { getEnterpriseById } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 import EnterpriseRendererWithLoader from "@/components/app_modules/enterprises/views/data_renderers/EnterpriseRendererWithLoader";
-import { routeToServicesServedByUser } from "@/utils/route_builders/as_admin/RouteBuilderForServiceAsAdmin";
+import { routeToServicesServedByUser } from "@/utils/route_builders/for_services/RouteBuilderForServices";
 import { routeToNoFound } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
 
 interface ViewControl {

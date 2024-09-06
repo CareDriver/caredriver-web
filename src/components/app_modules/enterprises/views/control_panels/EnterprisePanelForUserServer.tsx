@@ -19,6 +19,7 @@ import { isTheEnterpriseOwner } from "../../validators/validators_of_user_aggreg
 import PageLoading from "@/components/loaders/PageLoading";
 import { useContext, useEffect, useState } from "react";
 import FormToDeleteEnterprise from "../request_forms/to_delete/FormToDeleteEnterprise";
+import { ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE } from "../../utils/EnterpriseSpanishTranslator";
 
 enum View {
     HANDLE_ENTERPRISE,
@@ -66,7 +67,12 @@ const EnterprisePanelForUserServer: React.FC<Props> = ({ id }) => {
             {view === View.HANDLE_ENTERPRISE && (
                 <section className="service-form-wrapper">
                     <h1 className="text | big bolder">
-                        Administracion de la empresa
+                        Administracion{" "}
+                        {
+                            ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE[
+                                enterprise.type
+                            ]
+                        }
                     </h1>
                     {getHandleEnterpriseView(
                         {

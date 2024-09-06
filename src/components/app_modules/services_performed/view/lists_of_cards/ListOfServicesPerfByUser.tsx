@@ -90,11 +90,15 @@ const ListOfServicesPerfByUser: React.FC<Props> = ({
         );
 
         let q;
+        let userFieldId =
+            typeOfPerf === TypeOfServicePerformed.Requested
+                ? "userId"
+                : "serviceUserId";
         if (startAfterDoc) {
             q = query(
                 collection(firestore, COLLECTION_PATH),
                 limit(PAGE_SIZE),
-                where("userId", "==", user.id),
+                where(userFieldId, "==", user.id),
                 where("createdAt", "<=", adjustedDeadline),
                 orderBy("createdAt", "desc"),
                 startAfter(startAfterDoc),
@@ -103,7 +107,7 @@ const ListOfServicesPerfByUser: React.FC<Props> = ({
             q = query(
                 collection(firestore, COLLECTION_PATH),
                 limit(PAGE_SIZE),
-                where("userId", "==", user.id),
+                where(userFieldId, "==", user.id),
                 where("createdAt", "<=", adjustedDeadline),
                 orderBy("createdAt", "desc"),
             );
@@ -155,6 +159,11 @@ const ListOfServicesPerfByUser: React.FC<Props> = ({
                 <CardForServicePerfWithLocation
                     typeOfService={typeOfService}
                     service={service}
+                    fakeUserServerId={
+                        typeOfPerf === TypeOfServicePerformed.Served
+                            ? userId
+                            : undefined
+                    }
                     key={key}
                 />
             );
@@ -163,6 +172,11 @@ const ListOfServicesPerfByUser: React.FC<Props> = ({
                 <CardForServicePerfWithReason
                     typeOfService={typeOfService}
                     service={service}
+                    fakeUserServerId={
+                        typeOfPerf === TypeOfServicePerformed.Served
+                            ? userId
+                            : undefined
+                    }
                     key={key}
                 />
             );
@@ -183,8 +197,9 @@ const ListOfServicesPerfByUser: React.FC<Props> = ({
                 theareNoResults() && "auto-height max-height-100"
             }`}
         >
-            <h2 className="text | bolder big margin-bottom-25">
-                Servicios {typeOfPerf}
+            <h2 className="text | bold big margin-bottom-25 capitalize">
+                Servicios{" "}
+                <i className="text | bolder big capitalize">{typeOfPerf}</i>
             </h2>
 
             <fieldset className="filter-date-wrapper">

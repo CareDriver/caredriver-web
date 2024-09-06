@@ -36,6 +36,7 @@ import {
     ReviewState,
 } from "@/components/form/models/Reviews";
 import BaseFormWithTwoButtons from "@/components/form/view/forms/BaseFormWithTwoButtons";
+import { getIdSaved } from "@/utils/generators/IdGenerator";
 
 const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user: adminUser } = useContext(AuthContext);
@@ -122,6 +123,7 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                 addUserServerToEnterprise(
                                     enterprise,
                                     serviceReq.userId,
+                                    getIdSaved(requesterUser.fakeId),
                                 ),
                                 {
                                     pending:

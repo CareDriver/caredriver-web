@@ -12,7 +12,9 @@ const RegisterSection = ({ pathname }: { pathname: string }) => {
             <Link
                 href={routeToAllUsersAsAdmin()}
                 className={`sidebar-option ${
-                    pathname.includes("users") && "selected"
+                    (pathname.includes("users") ||
+                        pathname.includes("service")) &&
+                    "selected"
                 }`}
             >
                 <Users />

@@ -207,7 +207,7 @@ const ConsentForm: React.FC<Props> = ({ id, moduleTarget, children }) => {
                                 validator: isValidChangeReason,
                             }}
                             legend={`Justificación ${
-                                isValidID() && "(Opcional)"
+                                isValidID() ? "(Opcional)" : ""
                             }`}
                         />
                         <TextField
@@ -221,7 +221,7 @@ const ConsentForm: React.FC<Props> = ({ id, moduleTarget, children }) => {
                                 validator: isValidChangeReason,
                             }}
                             legend={`ID de queja ${
-                                isValidReason() && "(Opcional)"
+                                isValidReason() ? "(Opcional)" : ""
                             }`}
                         />
                     </BaseFormWithTwoButtons>

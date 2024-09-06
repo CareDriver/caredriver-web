@@ -22,6 +22,32 @@ import { ServiceType } from "@/interfaces/Services";
 
 const enterpriseCollection = collection(firestore, Collections.Enterprises);
 
+export const printEnterprisesWithUsers = async () => {
+    try {
+        const snapshot = await getDocs(enterpriseCollection);
+
+        const enterprisesWithUsers = snapshot.docs
+            .map((doc) => {
+                let en = doc.data() as Enterprise;
+                en.id = doc.id;
+                return en;
+            })
+            .filter(
+                (enterprise) =>
+                    enterprise.addedUsers !== undefined &&
+                    enterprise.addedUsers.length > 0,
+            );
+
+        enterprisesWithUsers.forEach((enterprise) => {
+            console.log(`Name: ${enterprise.name}`);
+            console.log(`Id: ${enterprise.id}`);
+            console.log("-----------------------------");
+        });
+    } catch (error) {
+        console.error("Error fetching enterprises:", error);
+    }
+};
+
 export const sendEnterpriseReq = async (
     id: string,
     enterpriseReq: Enterprise,
@@ -50,12 +76,15 @@ export const countEnterprisesActives = async (
 
         const baseSnapshot = await getDocs(baseQuery);
 
-        const allData = baseSnapshot.docs.map((doc) => doc.data() as Enterprise);
+        const allData = baseSnapshot.docs.map(
+            (doc) => doc.data() as Enterprise,
+        );
 
         const actives = allData.filter(
             (data) =>
                 data.aproved === true ||
-                (data.aproved === false && (!data.aprovedBy || data.aprovedBy === "")),
+                (data.aproved === false &&
+                    (!data.aprovedBy || data.aprovedBy === "")),
         );
 
         return actives.length;
@@ -128,7 +157,9 @@ export const updateEnterprise = async (
     }
 };
 
-export const getEnterpriseById = async (id: string): Promise<Enterprise | undefined> => {
+export const getEnterpriseById = async (
+    id: string,
+): Promise<Enterprise | undefined> => {
     try {
         const enterpriseDoc = await getDoc(doc(enterpriseCollection, id));
         if (enterpriseDoc.exists()) {
@@ -209,7 +240,10 @@ export const getNumPages = async (
     return numPages;
 };
 
-const isSupportInEnteprise = (userId: string, enterprise: Enterprise): boolean => {
+const isSupportInEnteprise = (
+    userId: string,
+    enterprise: Enterprise,
+): boolean => {
     if (enterprise.addedUsers) {
         return enterprise.addedUsers.some(
             (u) => u.userId === userId && u.role === "support",
@@ -218,10 +252,7 @@ const isSupportInEnteprise = (userId: string, enterprise: Enterprise): boolean =
     return false;
 };
 
-export const getUserEnterprises = async (
-    type: ServiceType,
-    userId: string,
-) => {
+export const getUserEnterprises = async (type: ServiceType, userId: string) => {
     let dataQuery = query(
         enterpriseCollection,
         orderBy("name"),

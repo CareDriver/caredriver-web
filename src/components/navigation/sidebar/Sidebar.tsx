@@ -55,7 +55,9 @@ const SideBar = () => {
     const getSideBar = () => {
         if (user) {
             if (
-                !pathname.includes("admin") &&
+                (pathname.includes("/user/userserver") ||
+                    pathname.includes("/user/enterprise") ||
+                    pathname.includes("/user/profile")) &&
                 checkPermission(user.role, ROLES_FOR_SERVER_USER_ACTIONS)
             ) {
                 return (

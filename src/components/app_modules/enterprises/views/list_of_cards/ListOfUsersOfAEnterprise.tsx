@@ -2,7 +2,7 @@
 import { Enterprise, UserRoleInEnterprise } from "@/interfaces/Enterprise";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { getUsersByTheirIds } from "@/components/app_modules/users/api/UserRequester";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "@/styles/modules/popup.css";
@@ -10,6 +10,16 @@ import FormToDeleteUserFromEnterprise from "../request_forms/to_delete/FormToDel
 import DataLoading from "@/components/loaders/DataLoading";
 import Popup from "@/components/modules/Popup";
 import SimpleUserCard from "@/components/app_modules/users/views/cards/SimpleUserCard";
+import Link from "next/link";
+import {
+    routeToServicePerformed,
+    routeToServicesServedByUser,
+} from "@/utils/route_builders/for_services/RouteBuilderForServices";
+import { getIdSaved } from "@/utils/generators/IdGenerator";
+import HelmetSafety from "@/icons/HelmetSafety";
+import { AuthContext } from "@/context/AuthContext";
+import PageLoading from "@/components/loaders/PageLoading";
+import { isTheEnterpriseOwner } from "../../validators/validators_of_user_aggregators_to_enterprise/as_members/UserAggregatorValidatorToEnterpriseHelper";
 
 const ListOfUsersOfAEnterprise = ({
     enterprise,
@@ -17,6 +27,7 @@ const ListOfUsersOfAEnterprise = ({
     enterprise: Enterprise;
 }) => {
     const AMOUNT_OF_USERS_PER_PAGE = 20;
+    const { checkingUserAuth, user: reviewerUser } = useContext(AuthContext);
     const [missingIdUsers, setMissingIdUsers] = useState<string[]>(
         enterprise.addedUsersId || [],
     );
@@ -97,6 +108,10 @@ const ListOfUsersOfAEnterprise = ({
         fillMapOfRoles();
     }, []);
 
+    if (checkingUserAuth || !reviewerUser) {
+        return <PageLoading />;
+    }
+
     return (
         <div className="service-form-wrapper">
             <h1 className="text | big bolder">
@@ -128,13 +143,37 @@ const ListOfUsersOfAEnterprise = ({
                     isOpen={selectedUser !== undefined}
                     close={() => setSelectedUser(undefined)}
                 >
-                    <FormToDeleteUserFromEnterprise
-                        selectedUser={{
-                            data: selectedUser,
-                            role: getUserRole(selectedUser),
-                        }}
-                        enterprise={enterprise}
-                    />
+                    <SimpleUserCard user={selectedUser} />
+
+                    <div className="margin-top-15">
+                        <h3 className="icon-wrapper | text bolder">
+                            <HelmetSafety />
+                            Servicios realizados
+                        </h3>
+                        <Link
+                            className="text underline | "
+                            href={routeToServicesServedByUser(
+                                enterprise.type,
+                                getIdSaved(selectedUser.fakeId),
+                            )}
+                        >
+                            Ir a los servicios del usuario
+                        </Link>
+                    </div>
+                    {isTheEnterpriseOwner(reviewerUser, enterprise) && (
+                        <>
+                            <div className="margin-top-25">
+                                <div className="separator-horizontal"></div>
+                            </div>
+                            <FormToDeleteUserFromEnterprise
+                                selectedUser={{
+                                    data: selectedUser,
+                                    role: getUserRole(selectedUser),
+                                }}
+                                enterprise={enterprise}
+                            />
+                        </>
+                    )}
                 </Popup>
             )}
         </div>

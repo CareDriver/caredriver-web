@@ -4,11 +4,13 @@ import { getEnterpriseById, updateEnterprise } from "./EnterpriseRequester";
 export const addUserServerToEnterpriseById = async (
     enterpriseId: string,
     userId: string,
+    fakeUserId: string,
 ) => {
     let enterprise = await getEnterpriseById(enterpriseId);
     if (enterprise && enterprise.id) {
         let newUser: EnterpriseUser = {
             userId: userId,
+            fakeUserId: fakeUserId,
             role: "user",
         };
         let enterpriseWithNewUser: Partial<Enterprise> = {
@@ -26,10 +28,12 @@ export const addUserServerToEnterpriseById = async (
 export const addUserServerToEnterprise = async (
     enterprise: Enterprise,
     userId: string,
+    fakeUserId: string,
 ) => {
     if (enterprise.id) {
         let newUser: EnterpriseUser = {
             userId: userId,
+            fakeUserId: fakeUserId,
             role: "user",
         };
         let enterpriseWithNewUser: Partial<Enterprise> = {

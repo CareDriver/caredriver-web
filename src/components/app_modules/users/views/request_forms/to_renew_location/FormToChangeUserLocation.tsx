@@ -12,6 +12,7 @@ import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import PageLoading from "@/components/loaders/PageLoading";
 import LocationField from "@/components/form/view/fields/LocationField";
 import BaseForm from "@/components/form/view/forms/BaseForm";
+import { routeToProfileAsUser } from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
 
 const FormToChangeUserLocation = () => {
     const { checkingUserAuth, user } = useContext(AuthContext);
@@ -76,7 +77,7 @@ const FormToChangeUserLocation = () => {
                 );
 
                 sendMessage(location, user.location);
-                window.location.replace("/user/profile");
+                window.location.replace(routeToProfileAsUser());
             } catch (e) {
                 setFormState({
                     loading: false,
@@ -128,7 +129,7 @@ const FormToChangeUserLocation = () => {
                                 isValid: formState.isValid,
                             },
                         },
-                        styleClasses: "max-width-60"
+                        styleClasses: "max-width-60",
                     }}
                     behavior={{
                         loading: formState.loading,
