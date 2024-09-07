@@ -26,7 +26,7 @@ const CardToRequesterToBeServerUser = ({
             <h4 className="text | light margin-bottom-15">{req.location}</h4>
             <h5 className="icon-wrapper text | bottom mb bolder gray-icon gray-dark">
                 <PersonCircleCheck />
-                {numOfApprovals(req)}/{MIN_NUM_OF_APPROVALS}
+                {numOfApprovals(req)}/{MIN_NUM_OF_APPROVALS} Aprobaciones
             </h5>
         </Link>
     );

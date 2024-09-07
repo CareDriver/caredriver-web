@@ -43,6 +43,10 @@
     gap: 0.555555556rem;
 }
 
+.center-wrapper {
+    margin-inline: auto;
+}
+
 .row-wrapper.row-responsive {
     flex-wrap: wrap;
     row-gap: 1rem;

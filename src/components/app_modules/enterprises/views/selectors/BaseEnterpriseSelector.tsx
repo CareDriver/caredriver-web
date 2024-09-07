@@ -120,14 +120,19 @@ const BaseEnterpriseSelector: React.FC<Props> = ({
                         key={i}
                         onClick={() => selectEnterprise(enterprise)}
                     >
-                        <h3 className="enterprise-item-title">
+                        <h3 className="text | medium center bolder capitalize margin-bottom-15">
                             {enterprise.name}
                         </h3>
+
                         <img
                             className="enterprise-item-logo"
                             src={enterprise.logoImgUrl.url}
                             alt=""
                         />
+                        <div className="margin-top-5 full-width center-wrapper">
+                            <div className="separator-horizontal"></div>
+                        </div>
+                        <h4 className="text center">{enterprise.location}</h4>
                     </div>
                 ))}
             </div>
