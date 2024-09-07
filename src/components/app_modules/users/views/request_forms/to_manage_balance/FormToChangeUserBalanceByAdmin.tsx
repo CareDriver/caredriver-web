@@ -57,7 +57,7 @@ const FormToChangeUserBalanceByAdmin = ({
 }: {
     user: UserInterface;
     adminUser: UserInterface;
-}) => {
+}) => {    
     const { loading, setLoadingAll } = useContext(PageStateContext);
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
@@ -66,6 +66,8 @@ const FormToChangeUserBalanceByAdmin = ({
     const perform = async () => {
         if (user.id && adminUser.id) {
             try {
+                const OLD_BALANCE: Price = user.balance;
+
                 const NEW_BALANCE: Price = {
                     amount: parseFloat(form.newBalance.value),
                     currency: "Bs. (BOB)",
@@ -74,7 +76,7 @@ const FormToChangeUserBalanceByAdmin = ({
                 let balanceItem: BalanceHistoryItem = {
                     id: DOC_ID,
                     dateTime: Timestamp.now(),
-                    oldBalance: user.balance,
+                    oldBalance: OLD_BALANCE,
                     previousBalance: NEW_BALANCE,
                     userWhoChanged: adminUser.id,
                 };
@@ -103,7 +105,7 @@ const FormToChangeUserBalanceByAdmin = ({
 
                 // TODO: ask for the correct to register a balance history
                 const newBalanceForHistory: BalanceHistory = {
-                    ...NEW_BALANCE,
+                    ...OLD_BALANCE,
                     date: Timestamp.now(),
                     balanceRechargeId: DOC_ID,
                     newBalance: NEW_BALANCE,

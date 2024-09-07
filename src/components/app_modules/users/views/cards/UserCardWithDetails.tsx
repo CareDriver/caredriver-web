@@ -38,10 +38,19 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                 >
                     <div className="row-wrapper">
                         {IS_DISABLED && (
-                            <h4 className="text | bold yellow">
+                            <h4
+                                className={`text | bold yellow ${
+                                    user.disabledUntil !== undefined &&
+                                    "max-width-60"
+                                }`}
+                            >
                                 Deshabilitado{" "}
                                 {user.disabledUntil
-                                    ? timestampDateInSpanish(user.disabledUntil)
+                                    ? "hasta el ".concat(
+                                          timestampDateInSpanish(
+                                              user.disabledUntil,
+                                          ),
+                                      )
                                     : ""}
                             </h4>
                         )}
