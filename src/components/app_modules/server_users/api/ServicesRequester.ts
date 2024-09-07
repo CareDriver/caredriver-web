@@ -114,9 +114,7 @@ export const numOfApprovals = (req: UserRequest): number => {
     return approvals;
 };
 
-export const getServiceCollection = (
-    type: ServiceType,
-) => {
+export const getServiceCollection = (type: ServiceType) => {
     switch (type) {
         case "driver":
             return driveReqCollection;
@@ -202,6 +200,12 @@ export const setFirstService = async (
             success: `${balanceGift} Bs. de saldo regalado`,
             error: "Error al regalar saldo, inténtalo de nuevo por favor",
         });
+    }
+    if (!user.serverUserAt) {
+        current = {
+            ...current,
+            serverUserAt: Timestamp.now(),
+        };
     }
 
     return current;

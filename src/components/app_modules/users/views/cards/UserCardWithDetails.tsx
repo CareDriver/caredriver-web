@@ -23,7 +23,7 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
     return (
         <div className={`users-item ${IS_DISABLED && "users-disable"}`}>
             <UserPhotoRenderer photo={user.photoUrl} />
-            <div>
+            <div className="full-width">
                 <h2 className="text | bolder medium-big capitalize">
                     {user.fullName}
                 </h2>
@@ -36,13 +36,15 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                     user={reviewerUser}
                     roles={ROLES_TO_VIEW_USER_STATE}
                 >
-                    <div className="row-wrapper">
+                    <div className="column-wrapper column-left gap-0 full-width">
+                        <h4
+                            className={`text | right bold ${USER_ROLE_DETAILS.color}`}
+                        >
+                            {USER_ROLE_DETAILS.text}
+                        </h4>
                         {IS_DISABLED && (
                             <h4
-                                className={`text | bold yellow ${
-                                    user.disabledUntil !== undefined &&
-                                    "max-width-60"
-                                }`}
+                                className={`text | bold yellow`}
                             >
                                 Deshabilitado{" "}
                                 {user.disabledUntil
@@ -54,12 +56,6 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                                     : ""}
                             </h4>
                         )}
-
-                        <h4
-                            className={`users-item-role text | right bold ${USER_ROLE_DETAILS.color}`}
-                        >
-                            {USER_ROLE_DETAILS.text}
-                        </h4>
                     </div>
                 </GuardOfModule>
             </div>

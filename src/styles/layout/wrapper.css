@@ -65,18 +65,15 @@
     justify-content: space-between;
 }
 
-.row-wrapper.gap-20 {
-    gap: 1.111111111rem;
-}
-
-.row-wrapper.gap-40 {
-    gap: 2.222222222rem;
-}
-
 .column-wrapper {
     display: flex;
     flex-direction: column;
     gap: 0.555555556rem;
+    flex-grow: 1;
+}
+
+.column-wrapper.column-left {
+    align-items: end;
 }
 
 .empty-wrapper {
@@ -99,6 +96,22 @@
 
 .empty-wrapper.padding-top-20 {
     padding: 10px 0;
+}
+
+.gap-0 {
+    gap: 0px;
+}
+
+.gap-5 {
+    gap: 5px;
+}
+
+.gap-20 {
+    gap: 1.111111111rem;
+}
+
+.gap-40 {
+    gap: 2.222222222rem;
 }
 
 .min-width-60 {

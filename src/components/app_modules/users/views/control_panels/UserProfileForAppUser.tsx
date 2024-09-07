@@ -31,11 +31,12 @@ import BalanceHistoryRenderer from "../data_renderers/for_activity_in_the_app/Ba
 import FormToChangeTheMinimumUserBalance from "../request_forms/to_manage_balance/FormToChangeTheMinimumUserBalance";
 import FormFoChangeUserRoleToAdmin from "../request_forms/to_change_role/FormFoChangeUserRoleToAdmin";
 import FormToDeleteUserByAdmin from "../request_forms/to_change_state/FormToDeleteUserByAdmin";
-import { getUserRoleDetails } from "../../utils/UserRoleGetter";
+import { getUserRoleDetails, isUserServer } from "../../utils/UserRoleGetter";
 import { routeToAllUsersAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 import "@/styles/components/users.css";
 import { checkPermission } from "@/components/guards/validators/RoleValidator";
 import FormToDisableUserByDateByAdmin from "../request_forms/to_change_state/FormToDisableUserByDateByAdmin";
+import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
 
 const UserProfileForAppUser = ({ userId }: { userId: string }) => {
     const router = useRouter();
@@ -73,26 +74,55 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                 <UserPhotoRenderer photo={user.photoUrl} />
 
                 <div className="user-info-subwrapper">
-                    <h1 className="text | big bolder">{user.fullName}</h1>
-                    <h3 className="text | medium-big gray-dark">
-                        {user.email}
-                    </h3>
+                    <h1 className="text | big bolder capitalize">
+                        {user.fullName}
+                    </h1>
+                    <h3 className="text | medium">{user.email}</h3>
                     <GuardOfModule
                         user={adminUser}
                         roles={ROLES_TO_VIEW_USER_CREDENTIALS}
                     >
                         <>
-                            <h3 className="text | gray-dark medium-big">
-                                {user.location}
-                            </h3>
-                            <h3 className="text | gray-dark medium-big margin-bottom-15">
+                            <h3 className="text | medium">{user.location}</h3>
+                            <h3 className="text | medium">
                                 {user.phoneNumber}
                             </h3>
+                            <div className="separator-horizontal"></div>
+
+                            {user.createdAt && (
+                                <h3 className="text | medium">
+                                    <b className="text | medium bold">
+                                        Cuenta creada el{" "}
+                                    </b>{" "}
+                                    <i>
+                                        {timestampDateInSpanish(user.createdAt)}
+                                    </i>
+                                </h3>
+                            )}
 
                             {role ? (
-                                <h4 className={`text | bolder ${role.color}`}>
-                                    {role.text}
-                                </h4>
+                                <div>
+                                    {isUserServer(user) &&
+                                        user.serverUserAt && (
+                                            <h4
+                                                className={`text | medium ${role.color}`}
+                                            >
+                                                <b className="text | medium bold">
+                                                    Usuario servidor desde el{" "}
+                                                </b>{" "}
+                                                <i>
+                                                    {timestampDateInSpanish(
+                                                        user.serverUserAt,
+                                                    )}
+                                                </i>
+                                            </h4>
+                                        )}
+                                    <h4
+                                        className={`text | medium bolder ${role.color}`}
+                                    >
+                                        {role.text}
+                                    </h4>
+                                </div>
                             ) : (
                                 <span className="loader-gray-medium"></span>
                             )}

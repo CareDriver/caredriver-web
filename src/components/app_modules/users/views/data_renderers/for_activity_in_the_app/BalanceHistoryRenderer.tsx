@@ -7,6 +7,10 @@ const BalanceHistoryRenderer = ({
     balanceHistory: BalanceHistory[] | undefined;
 }) => {
     const getDifference = (oldPrice: number, newPrice: number): number => {
+        if (oldPrice === newPrice && newPrice > 0) {
+            return -1 * newPrice;
+        }
+
         return newPrice - oldPrice;
     };
 
