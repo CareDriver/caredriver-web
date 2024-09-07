@@ -17,6 +17,7 @@ import {
     getUserById,
     saveUser,
 } from "@/components/app_modules/users/api/UserRequester";
+import { Timestamp } from "firebase/firestore";
 
 export const EMPTY_USER_DATA: UserInterface = {
     id: genDocId(),
@@ -25,6 +26,7 @@ export const EMPTY_USER_DATA: UserInterface = {
     fullName: "",
     phoneNumber: "",
     photoUrl: EMPTY_REF_ATTACHMENT,
+    createdAt: Timestamp.now(),
 
     vehicles: [],
     services: [Services.Normal],
