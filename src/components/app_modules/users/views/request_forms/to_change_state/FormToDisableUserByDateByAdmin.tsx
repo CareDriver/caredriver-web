@@ -10,22 +10,40 @@ import { Timestamp } from "firebase/firestore";
 import { updateUser } from "@/components/app_modules/users/api/UserRequester";
 import Popup from "@/components/modules/Popup";
 import BaseForm from "@/components/form/view/forms/BaseForm";
-import { TextField as TextFieldForm } from "@/components/form/models/FormFields";
-import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
+import {
+    DateField as DateFieldForm,
+    TextField as TextFieldForm,
+} from "@/components/form/models/FormFields";
+import {
+    DEFAUL_DATE_FIELD,
+    DEFAUL_TEXT_FIELD,
+} from "@/components/form/models/DefaultFields";
 import { PageStateContext } from "@/context/PageStateContext";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import TextField from "@/components/form/view/fields/TextField";
 import { validateEmialWithComparison } from "../../../validators/for_confirmations/DataConfirmationValidator";
 import { genDocId } from "@/utils/generators/IdGenerator";
-import { isValidTextField } from "@/components/form/validators/FieldValidators";
+import {
+    isValidDateField,
+    isValidTextField,
+} from "@/components/form/validators/FieldValidators";
 import { isValidChangeReason } from "@/validators/JustificationValidator";
+import Clock from "@/icons/Clock";
+import DateField from "@/components/form/view/fields/DateField";
+import { validateDisableDate } from "../../../validators/for_data/DisableDateValidator";
+import {
+    differenceOnDays,
+    getYesterdayInTimestamp,
+} from "@/utils/helpers/DateHelper";
 
 interface Form {
+    deadline: DateFieldForm;
     confirmation: TextFieldForm;
     reason: TextFieldForm;
 }
 
 const DEFAULT_FORM: Form = {
+    deadline: DEFAUL_DATE_FIELD,
     reason: DEFAUL_TEXT_FIELD,
     confirmation: DEFAUL_TEXT_FIELD,
 };
@@ -35,15 +53,20 @@ interface Props {
     adminUser: UserInterface;
 }
 
-const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
-    const isDisable = user.disable ? user.disable : false;
+const FormToDisableUserByDateByAdmin: React.FC<Props> = ({
+    user,
+    adminUser,
+}) => {
+    const isDisable =
+        user.disabledUntil !== undefined &&
+        differenceOnDays(user.disabledUntil.toDate()) > 0;
     const [isOpenPopup, setOpenPopup] = useState(false);
     const { loading, setLoadingAll } = useContext(PageStateContext);
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
 
-    const ENABLE_LABEL = "Habilitar usuario";
-    const DISABLE_LABEL = "Deshabilitar usuario";
+    const ENABLE_LABEL = "Quitar deshabilitación por fecha";
+    const DISABLE_LABEL = "Deshabilitar usuario por fecha";
 
     const toggleDisableUser = async () => {
         if (user.id) {
@@ -51,59 +74,34 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                 try {
                     await toast.promise(
                         updateUser(user.id, {
-                            disable: false,
+                            disabledUntil: getYesterdayInTimestamp(),
                         }),
                         {
-                            pending: "Habilitando al usuario",
-                            success: "Usuario habilitado",
-                            error: "Error al volver a habilitar al usuario, inténtalo de nuevo",
+                            pending: "Removiendo desabilitacion",
+                            success: "Desabilitacion removida",
+                            error: "Error al remover la desabilitacion, inténtalo de nuevo",
                         },
                     );
                 } catch (e) {
                     console.log(e);
                 }
-            } else {
+            } else if (form.deadline.value) {
                 try {
                     await toast.promise(
                         updateUser(user.id, {
-                            disable: true,
+                            disabledUntil: Timestamp.fromDate(
+                                form.deadline.value,
+                            ),
                         }),
                         {
-                            pending: "Deshabilitando al usuario",
-                            success: "Usuario deshabilitado",
-                            error: "Error al deshabilitar al usuario, inténtalo de nuevo",
+                            pending: "Deshabilitando al usuario por fecha",
+                            success: "Usuario deshabilitado por fecha",
+                            error: "Error al deshabilitar al usuario por fecha, inténtalo de nuevo",
                         },
                     );
                 } catch (e) {
                     console.log(e);
                 }
-            }
-
-            try {
-                await toast.promise(
-                    fetch("/api/userstate", {
-                        method: "POST",
-                        body: JSON.stringify({
-                            userId: user.id,
-                            state: !isDisable,
-                        }),
-                        headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
-                        },
-                    }),
-                    {
-                        pending: isDisable
-                            ? "Habilitando la authentication del usuario"
-                            : "Deshabilitando la authentication del usuario",
-                        success: isDisable ? "Habilitado" : "Deshabilitado",
-                        error: isDisable
-                            ? "Error al habilitar la authentication del usuario, inténtalo de nuevo por favor"
-                            : "Error al deshabilitar la authentication del usuario, inténtalo de nuevo por favor",
-                    },
-                );
-            } catch (e) {
-                console.log(e);
             }
         }
     };
@@ -150,12 +148,15 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                 ...prev,
                 isValid:
                     isValidTextField(form.confirmation) &&
+                    (isDisable || isValidDateField(form.deadline)) &&
                     isValidTextField(form.reason),
             }));
         } else {
             setFormState((prev) => ({
                 ...prev,
-                isValid: isValidTextField(form.confirmation),
+                isValid:
+                    (isDisable || isValidDateField(form.deadline)) &&
+                    isValidTextField(form.confirmation),
             }));
         }
     }, [form]);
@@ -163,16 +164,16 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
     return (
         <div className={`form-sub-container | margin-top-50 max-width-40`}>
             <h2
-                className={`text medium-big bolder | icon-wrapper  ${
+                className={`text medium-big bolder | icon-wrapper ${
                     isDisable ? "green-icon green" : "yellow-icon yellow"
                 }`}
             >
-                <TriangleExclamation />
+                <Clock />
                 {isDisable ? ENABLE_LABEL : DISABLE_LABEL}
             </h2>
             <p>
                 El usuario no podra usar la aplicacion mientras este
-                desabilitando.
+                desabilitando hasta una fecha establecida.
             </p>
 
             <BaseForm
@@ -189,7 +190,6 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                             isValid: formState.isValid,
                         },
                     },
-                    styleClasses: "small-form",
                 }}
                 behavior={{
                     loading: formState.loading || loading,
@@ -209,17 +209,32 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                     }}
                     legend={"Correo del usuario"}
                 />
+                {!isDisable && (
+                    <DateField
+                        field={{
+                            values: form.deadline,
+                            setter: (d) =>
+                                setForm((prev) => ({ ...prev, deadline: d })),
+                            validator: validateDisableDate,
+                        }}
+                        legend="Fecha de eliminacion"
+                    />
+                )}
             </BaseForm>
             <Popup isOpen={isOpenPopup} close={() => setOpenPopup(false)}>
                 <div className="margin-bottom-25">
                     <h2 className="text | big-medium bolder">
-                        Razón para {isDisable ? "habilitar" : "deshabilitar"} al
-                        usuario
+                        Razón para{" "}
+                        {isDisable
+                            ? ENABLE_LABEL.toLowerCase()
+                            : DISABLE_LABEL.toLowerCase()}
                     </h2>
                     <p className="text | light">
                         Escribe la razón por la cual estas{" "}
-                        {isDisable ? "habilitando" : "deshabilitando"} al
-                        usuario, recuerda que esta acción sera registrada.
+                        {isDisable
+                            ? ENABLE_LABEL.toLowerCase()
+                            : DISABLE_LABEL.toLowerCase()}{" "}
+                        al usuario, recuerda que esta acción sera registrada.
                     </p>
                 </div>
 
@@ -263,4 +278,4 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
     );
 };
 
-export default FormToDisableUserByAdmin;
+export default FormToDisableUserByDateByAdmin;

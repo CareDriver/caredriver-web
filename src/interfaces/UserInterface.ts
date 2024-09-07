@@ -2,15 +2,18 @@ import { GeoPoint, Timestamp } from "firebase/firestore";
 import { VehicleInterface } from "./VehicleInterface";
 import { ServiceReqState, Services } from "./Services";
 import { ServicesData } from "./ServicesDataInterface";
-import { BalanceHistory, Payment, Price } from "./Payment";
+import { BalanceHistory, Price } from "./Payment";
 import { Locations } from "./Locations";
 import { ServiceStateRequest, Vehicle } from "./UserRequest";
-import { EMPTY_REF_ATTACHMENT, RefAttachment } from "../components/form/models/RefAttachment";
+import {
+    EMPTY_REF_ATTACHMENT,
+    RefAttachment,
+} from "../components/form/models/RefAttachment";
 import { Branding } from "./BrandingInterface";
 
 export interface HistoryLocationInterface {
-    latitude?: number,
-    longitude?: number,
+    latitude?: number;
+    longitude?: number;
     locationName: string;
     // This interface was created for in the future add more attributes or options for users to save their locations, for example custom names as "Home", etc
     coordinates: GeoPoint | null; // Geographical coordinates for a location
@@ -72,6 +75,7 @@ export interface UserInterface {
     balanceHistory?: BalanceHistory[]; // Array of the payments made by the service user to the app.
     location?: Locations; // Location user begins
     disable?: boolean; // true when user did not paid to the app and was disabled.
+    disabledUntil?: Timestamp;
     deleted: boolean; // used for soft delete
     driverEnterpriseId?: string;
     mechanicalWorkShopId?: string; // id of the mechanical user works for if is mechanic user
@@ -82,6 +86,8 @@ export interface UserInterface {
     serviceRequests?: ServiceRequestsInterface; // status of the services that the user made a request
 
     branding?: Branding;
+    createdAt?: Timestamp;
+    serverUserAt?: Timestamp;
 }
 
 export interface IdentityCard {

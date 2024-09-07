@@ -10,7 +10,7 @@ const ButtonForm: React.FC<ButtonFormProps> = ({ content, behavior }) => {
 
     return (
         <button
-            className={`${BUTTON_STYLE} | margin-top-25 touchable ${
+            className={`${BUTTON_STYLE} | margin-top-15 touchable ${
                 behavior.loading && "loading-section"
             }`}
             disabled={!behavior.isValid}

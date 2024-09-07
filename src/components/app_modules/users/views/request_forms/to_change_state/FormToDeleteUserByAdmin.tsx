@@ -1,13 +1,6 @@
 "use client";
 
-import TriangleExclamation from "@/icons/TriangleExclamation";
-import {
-    FormEvent,
-    SyntheticEvent,
-    useContext,
-    useEffect,
-    useState,
-} from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { toast } from "react-toastify";
 import { updateUser } from "@/components/app_modules/users/api/UserRequester";
@@ -77,9 +70,7 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                 );
 
                 await deleteUser();
-                setLoadingAll(false, setFormState);
-
-                window.location.reload();
+                router.push(routeToAllUsersAsAdmin());
             } else {
                 toast.error("No se puede encontrar al usuario");
                 setLoadingAll(false, setFormState);
@@ -100,7 +91,6 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                         error: "Error al eliminar al usuario, inténtalo de nuevo",
                     },
                 );
-                router.push(routeToAllUsersAsAdmin());
             } catch (e) {
                 console.log(e);
             }
@@ -189,7 +179,7 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                                 loading: formState.loading,
                                 isValid: formState.isValid,
                             },
-                        }
+                        },
                     }}
                     behavior={{
                         loading: formState.loading || loading,

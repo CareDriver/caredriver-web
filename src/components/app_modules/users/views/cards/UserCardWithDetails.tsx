@@ -3,6 +3,10 @@ import { ROLES_TO_VIEW_USER_STATE } from "@/components/guards/models/Permissions
 import GuardOfModule from "@/components/guards/views/module_guards/GuardOfModule";
 import { getUserRoleDetails } from "../../utils/UserRoleGetter";
 import UserPhotoRenderer from "../data_renderers/for_user_data/UserPhotoRenderer";
+import {
+    differenceOnDays,
+    timestampDateInSpanish,
+} from "@/utils/helpers/DateHelper";
 
 interface Props {
     user: UserInterface;
@@ -11,9 +15,13 @@ interface Props {
 
 const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
     const USER_ROLE_DETAILS = getUserRoleDetails(user);
+    const IS_DISABLED =
+        user.disable ||
+        (user.disabledUntil &&
+            differenceOnDays(user.disabledUntil.toDate()) > 0);
 
     return (
-        <div className={`users-item ${user.disable && "users-disable"}`}>
+        <div className={`users-item ${IS_DISABLED && "users-disable"}`}>
             <UserPhotoRenderer photo={user.photoUrl} />
             <div>
                 <h2 className="text | bolder medium-big capitalize">
@@ -29,9 +37,12 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                     roles={ROLES_TO_VIEW_USER_STATE}
                 >
                     <div className="row-wrapper">
-                        {user.disable && (
+                        {IS_DISABLED && (
                             <h4 className="text | bold yellow">
-                                Deshabilitado
+                                Deshabilitado{" "}
+                                {user.disabledUntil
+                                    ? timestampDateInSpanish(user.disabledUntil)
+                                    : ""}
                             </h4>
                         )}
 

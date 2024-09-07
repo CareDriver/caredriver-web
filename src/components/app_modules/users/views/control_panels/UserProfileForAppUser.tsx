@@ -35,6 +35,7 @@ import { getUserRoleDetails } from "../../utils/UserRoleGetter";
 import { routeToAllUsersAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 import "@/styles/components/users.css";
 import { checkPermission } from "@/components/guards/validators/RoleValidator";
+import FormToDisableUserByDateByAdmin from "../request_forms/to_change_state/FormToDisableUserByDateByAdmin";
 
 const UserProfileForAppUser = ({ userId }: { userId: string }) => {
     const router = useRouter();
@@ -177,6 +178,10 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                             roles={ROLES_FOR_DISABLE_USERS}
                         >
                             <FormToDisableUserByAdmin
+                                user={user}
+                                adminUser={adminUser}
+                            />
+                            <FormToDisableUserByDateByAdmin
                                 user={user}
                                 adminUser={adminUser}
                             />
