@@ -1,4 +1,4 @@
-import { BalanceHistory, Price } from "@/interfaces/Payment";
+import { BalanceHistory } from "@/interfaces/Payment";
 import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
 
 const BalanceHistoryRenderer = ({
@@ -31,25 +31,45 @@ const BalanceHistoryRenderer = ({
                                     : ""
                             }`}
                         >
-                            <span className="text | bold medium">
-                                {debt.newBalance
-                                    ? getDifference(
-                                          debt.amount,
-                                          debt.newBalance.amount,
-                                      ) > 0
-                                        ? "+".concat(
-                                              getDifference(
+                            <div>
+                                <span
+                                    className={`text | bold medium ${
+                                        debt.newBalance
+                                            ? getDifference(
                                                   debt.amount,
                                                   debt.newBalance.amount,
-                                              ).toString(),
-                                          )
-                                        : getDifference(
+                                              ) < 0
+                                                ? "red"
+                                                : "green"
+                                            : ""
+                                    }`}
+                                >
+                                    {debt.newBalance
+                                        ? getDifference(
                                               debt.amount,
                                               debt.newBalance.amount,
-                                          )
-                                    : debt.amount}
-                                {debt.currency}
-                            </span>
+                                          ) > 0
+                                            ? "+".concat(
+                                                  getDifference(
+                                                      debt.amount,
+                                                      debt.newBalance.amount,
+                                                  ).toString(),
+                                              )
+                                            : getDifference(
+                                                  debt.amount,
+                                                  debt.newBalance.amount,
+                                              )
+                                        : debt.amount}
+                                    {debt.currency}
+                                </span>
+                                {debt.newBalance && (
+                                    <span className={`text | bold medium`}>
+                                        {" "}
+                                        | {debt.newBalance.amount}
+                                        {debt.newBalance.currency}
+                                    </span>
+                                )}
+                            </div>
                             <span className="text | light">
                                 {timestampDateInSpanish(debt.date)}
                             </span>
