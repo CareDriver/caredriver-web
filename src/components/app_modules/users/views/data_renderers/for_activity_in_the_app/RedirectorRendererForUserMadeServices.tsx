@@ -8,6 +8,7 @@ import { routeToServicesServedByUser } from "@/utils/route_builders/for_services
 import { routeToNoFound } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
 import EnterpriseRendererAsPopup from "@/components/app_modules/enterprises/views/data_renderers/EnterpriseRendererAsPopup";
 import UserVehicleRendererAsPopup from "../for_user_data/UserVehicleRendererAsPopup";
+import UserServerRatingRenderer from "./UserServerRatingRenderer";
 
 const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
     const IS_DRIVER: boolean =
@@ -37,6 +38,9 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             {IS_DRIVER && (
                 <div className="service-user-wrapper | with-data">
                     <h3 className="text | medium-big bolder">Chofer</h3>
+                    <UserServerRatingRenderer
+                        serviceData={user.servicesData.Conductor}
+                    />
                     <UserVehicleRendererAsPopup
                         vehicle={{
                             data: user.serviceVehicles?.car,
@@ -68,9 +72,9 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             }}
                         />
                     ) : (
-                        <span className="text | red">
+                        <i className="text | bolder red">
                             Sin asociacion a una empresa de chofer
-                        </span>
+                        </i>
                     )}
                     <Link
                         className="icon-wrapper text  | underline gray-icon gray-dark | margin-top-15"
@@ -91,6 +95,9 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             {IS_MECHANIC && (
                 <div className="service-user-wrapper  | with-data">
                     <h3 className="text | medium-big bolder">Mecánico</h3>
+                    <UserServerRatingRenderer
+                        serviceData={user.servicesData.Mecánico}
+                    />
                     {user.mechanicalWorkShopId ? (
                         <EnterpriseRendererAsPopup
                             enterprise={{
@@ -103,9 +110,9 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             }}
                         />
                     ) : (
-                        <span className="text | red">
+                        <i className="text | bolder red">
                             Sin asociacion a un taller mecánico registrado
-                        </span>
+                        </i>
                     )}
 
                     <Link
@@ -129,6 +136,10 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                     <h3 className="text | medium-big bolder">
                         Operador de Grúa
                     </h3>
+                    <UserServerRatingRenderer
+                        serviceData={user.servicesData.Remolque}
+                    />
+
                     <UserVehicleRendererAsPopup
                         vehicle={{
                             data: user.serviceVehicles?.tow,
@@ -150,9 +161,9 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             }}
                         />
                     ) : (
-                        <span className="text | red">
+                        <i className="text | bolder red">
                             Sin asociacion a una empresa operadora de grua
-                        </span>
+                        </i>
                     )}
                     <Link
                         className="icon-wrapper text  | underline gray-icon gray-dark | margin-top-15"
@@ -172,19 +183,21 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             )}
             {IS_LAUNDERER && (
                 <div className="service-user-wrapper  | with-data">
-                    <>
-                        <h3 className="text | medium-big bolder">Lavadero</h3>
-                        <EnterpriseRendererAsPopup
-                            enterprise={{
-                                id: user.laundryEnterpriseId,
-                                type: "laundry",
-                            }}
-                            button={{
-                                styleClass: "service-user-option",
-                                legend: "Lavadero asociado",
-                            }}
-                        />
-                    </>
+                    <h3 className="text | medium-big bolder">Lavadero</h3>
+                    <UserServerRatingRenderer
+                        serviceData={user.servicesData.Lavadero}
+                    />
+
+                    <EnterpriseRendererAsPopup
+                        enterprise={{
+                            id: user.laundryEnterpriseId,
+                            type: "laundry",
+                        }}
+                        button={{
+                            styleClass: "service-user-option",
+                            legend: "Ver lavadero asociado",
+                        }}
+                    />
                     <Link
                         href={
                             user.fakeId

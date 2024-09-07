@@ -1,6 +1,9 @@
 "use client";
 
-import { VEHICLE_CATEGORY_TO_SPANISH } from "@/components/app_modules/server_users/models/VehicleFields";
+import {
+    VEHICLE_CATEGORY_TO_SPANISH,
+    VEHICLE_CATEGORY_TO_SPANISH_WITH_ARTICLE,
+} from "@/components/app_modules/server_users/models/VehicleFields";
 import VehicleRenderer from "@/components/app_modules/server_users/views/data_renderers/for_vehicles/VehicleRenderer";
 import Popup from "@/components/modules/Popup";
 import { Vehicle } from "@/interfaces/UserRequest";
@@ -24,8 +27,11 @@ const UserVehicleRendererAsPopup: React.FC<Props> = ({ vehicle, content }) => {
                 className="service-user-option"
                 onClick={() => setViewVehicle(true)}
             >
-                Ver licencia de{" "}
-                {VEHICLE_CATEGORY_TO_SPANISH[vehicle.type].toLowerCase()} -{" "}
+                Ver licencia{" "}
+                {VEHICLE_CATEGORY_TO_SPANISH_WITH_ARTICLE[
+                    vehicle.type
+                ].toLowerCase()}{" "}
+                -{" "}
                 {differenceOnDays(
                     vehicle.data.license.expiredDateLicense.toDate(),
                 ) <= 0 && <span className="text | bolder red">Expiro</span>}
@@ -43,7 +49,7 @@ const UserVehicleRendererAsPopup: React.FC<Props> = ({ vehicle, content }) => {
             </Popup>
         </>
     ) : (
-        <i className="text | red">
+        <i className="text | bolder red">
             {VEHICLE_CATEGORY_TO_SPANISH[vehicle.type]} no registrado
         </i>
     );
