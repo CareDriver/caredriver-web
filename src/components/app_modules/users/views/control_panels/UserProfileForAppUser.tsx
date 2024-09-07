@@ -182,7 +182,7 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                                 roles={ROLES_TO_VIEW_USERS_HISTORY}
                             >
                                 <>
-                                    {user && user.services.length > 1 && (
+                                    {user && isUserServer(user) && (
                                         <ServiceServedByUser user={user} />
                                     )}
                                     <RedirectorRendererForServicesRequestedByUser

@@ -8,12 +8,8 @@ import { useContext, useState } from "react";
 import DriverInstrucctions from "./DriverInstrucctions";
 import "@/styles/modules/popup.css";
 import PageLoading from "@/components/loaders/PageLoading";
-import EnterpriseRendererAsPopup from "@/components/app_modules/enterprises/views/data_renderers/EnterpriseRendererAsPopup";
 import { MissingTransmissionAdder } from "@/components/app_modules/server_users/api/MissingTransmissionAdder";
 import RegisteredVehicleRenderer from "../../../data_renderers/for_vehicles/RegisteredVehicleRenderer";
-import Link from "next/link";
-import { routeToRenewEnterpriseAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
-import FieldDeleted from "@/components/form/view/field_renderers/FieldDeleted";
 import UserAssociatedEnterpriseRenderer from "../../../data_renderers/UserAssociatedEnterpriseRenderer";
 
 const DriverPanel = () => {

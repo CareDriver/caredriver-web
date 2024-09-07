@@ -4,7 +4,6 @@ import SackDollar from "@/icons/SackDollar";
 import { useContext } from "react";
 import "@/styles/modules/popup.css";
 import PageLoading from "@/components/loaders/PageLoading";
-import EnterpriseRendererAsPopup from "@/components/app_modules/enterprises/views/data_renderers/EnterpriseRendererAsPopup";
 import UserAssociatedEnterpriseRenderer from "../../../data_renderers/UserAssociatedEnterpriseRenderer";
 
 const MechanicPanel = () => {

@@ -217,7 +217,7 @@ const FormToDisableUserByDateByAdmin: React.FC<Props> = ({
                                 setForm((prev) => ({ ...prev, deadline: d })),
                             validator: validateDisableDate,
                         }}
-                        legend="Fecha de eliminacion"
+                        legend="Fecha de limite"
                     />
                 )}
             </BaseForm>
