@@ -25,6 +25,7 @@ import {
     routeToManageUserAsAdmin,
 } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 import { isNullOrEmptyText } from "@/validators/TextValidator";
+import { validateSearchInput } from "../../validators/for_data/SearcherValidator";
 
 const ListOfAllUsersWithSearcher = () => {
     const PAGE_SIZE = 10;
@@ -32,7 +33,8 @@ const ListOfAllUsersWithSearcher = () => {
 
     const [searchState, setSearchState] = useState({
         isSearching: false,
-        input: "",
+        currentInput: "",
+        searchInput: "",
     });
     const [documents, setDocuments] = useState<UserInterface[]>([]);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(
@@ -58,6 +60,7 @@ const ListOfAllUsersWithSearcher = () => {
 
     const searchUsers = async (
         adminUser: UserInterface,
+        searchCriteria: string,
         startAfterDoc: DocumentSnapshot | undefined,
     ) => {
         if (loading) {
@@ -65,12 +68,11 @@ const ListOfAllUsersWithSearcher = () => {
         }
 
         setLoading(true);
-
         try {
             var res = await getSearchUsersPaginated(
                 adminUser.role,
                 adminUser.email ?? "",
-                searchState.input.toLocaleLowerCase(),
+                searchCriteria,
                 "next",
                 startAfterDoc,
                 PAGE_SIZE,
@@ -129,20 +131,31 @@ const ListOfAllUsersWithSearcher = () => {
         adminUser: UserInterface,
     ) => {
         e.preventDefault();
-        let validToSearch = !isNullOrEmptyText(searchState.input);
+        let validToSearch: boolean =
+            !isNullOrEmptyText(searchState.currentInput) &&
+            validateSearchInput(searchState.currentInput);
         if (validToSearch) {
             setDocuments([]);
             setHasMore(true);
-            setSearchState((prev) => ({ ...prev, isSearching: true }));
-            await searchUsers(adminUser, undefined);
+            setSearchState((prev) => ({
+                ...prev,
+                searchInput: prev.currentInput,
+                isSearching: true,
+            }));
+            await searchUsers(adminUser, searchState.currentInput, undefined);
         } else {
-            await defaultLoading(adminUser);
+            setDocuments([]);
+            setHasMore(false);
+            setSearchState((prev) => ({
+                ...prev,
+                isSearching: true,
+            }));
         }
     };
 
     const next = async (adminUser: UserInterface) => {
         if (searchState.isSearching) {
-            await searchUsers(adminUser, lastDoc);
+            await searchUsers(adminUser, searchState.searchInput, lastDoc);
         } else {
             await findAllUsers(adminUser, lastDoc);
         }
@@ -178,11 +191,11 @@ const ListOfAllUsersWithSearcher = () => {
                         type="text"
                         className="search-input"
                         placeholder="Buscar por nombre, email, telefono"
-                        value={searchState.input}
+                        value={searchState.currentInput}
                         onChange={(e) => {
                             setSearchState((prev) => ({
                                 ...prev,
-                                input: e.target.value,
+                                currentInput: e.target.value,
                             }));
                         }}
                     />
@@ -230,22 +243,20 @@ const ListOfAllUsersWithSearcher = () => {
             </InfiniteScroll>
 
             {nothingWasFound() && (
-                <div className="empty-wrapper | auto-height">
-                    <div>
-                        <h2 className="text | medium">
-                            {searchState.isSearching
-                                ? "Lo sentimos, pero no hay usuarios que coincidan con tu criterio de busqueda."
-                                : "No hay usuarios registrados en la aplicación."}
-                        </h2>
-                        {searchState.isSearching && (
-                            <span
-                                className="text | medium bold underline touchable"
-                                onClick={() => defaultLoading(adminUser)}
-                            >
-                                <i>Click aqui para cargar todos los usuarios</i>
-                            </span>
-                        )}
-                    </div>
+                <div className="text center">
+                    <h2 className="text | medium center">
+                        {searchState.isSearching
+                            ? "Lo sentimos, pero no hay usuarios que coincidan con tu criterio de busqueda."
+                            : "No hay usuarios registrados en la aplicación."}
+                    </h2>
+                    {searchState.isSearching && (
+                        <span
+                            className="text | center medium bold underline touchable"
+                            onClick={() => defaultLoading(adminUser)}
+                        >
+                            <i>Click aqui para cargar todos los usuarios</i>
+                        </span>
+                    )}
                     <span className="circles-right-bottomv2 green"></span>
                 </div>
             )}
