@@ -7,9 +7,13 @@ import {
     toLocationFromCoordRes,
     toLocationsFromCoordRes,
 } from "@/components/form/utils/CoordinateConverter";
-import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
+import {
+    timestampDateInSpanish,
+    timestampDateInSpanishWithHour,
+} from "@/utils/helpers/DateHelper";
 import { GeoPoint, Timestamp } from "firebase/firestore";
 import { geoPointToLatLng } from "../../utils/MapLocationHelper";
+import { isNullOrEmptyText } from "@/validators/TextValidator";
 
 const MapPolylineRenderer = ({
     priorArrivalRoute,
@@ -126,13 +130,23 @@ const MapPolylineRenderer = ({
                     content: pin.element,
                     gmpClickable: true,
                 });
+
                 const contentString =
-                    "<span>" +
-                    `<p class="text">${coordinate.comment}</p>` +
-                    `<p class="text | small light">${timestampDateInSpanish(
+                    '<div id="content">' +
+                    '<div id="siteNotice">' +
+                    "</div>" +
+                    '<h3 id="firstHeading" class="firstHeading">CareDriver - Coordenada</h3>' +
+                    '<div id="bodyContent">' +
+                    `<p>${timestampDateInSpanishWithHour(
                         Timestamp.fromMillis(coordinate.timestamp),
                     )}</p>` +
-                    "</span>";
+                    `${
+                        isNullOrEmptyText(coordinate.comment)
+                            ? "<i>sin comentario</i>"
+                            : `<b>comentario: </b> </i>${coordinate.comment}</i>`
+                    }` +
+                    "</div>" +
+                    "</div>";
 
                 let infoWindow = new google.maps.InfoWindow({
                     content: contentString,

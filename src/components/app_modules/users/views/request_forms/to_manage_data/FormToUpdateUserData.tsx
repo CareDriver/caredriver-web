@@ -13,6 +13,7 @@ import TextField from "@/components/form/view/fields/TextField";
 import EmailField from "@/components/form/view/fields/EmailField";
 import PasswordField from "@/components/form/view/fields/PasswordField";
 import { isValidName } from "../../../validators/for_data/CredentialsValidator";
+import Pen from "@/icons/Pen";
 
 interface Form {
     email: TextFieldForm;
@@ -26,7 +27,10 @@ interface Props {
 
 const FormToUpdateUserData: React.FC<Props> = ({ user }) => {
     const [form, setForm] = useState<Form>(userToForm(user));
-    const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
+    const [formState, setFormState] = useState<FormState>({
+        ...DEFAULT_FORM_STATE,
+        isValid: false,
+    });
 
     const editCredentials = async () => {
         if (!user.id || !user.email) {
@@ -130,10 +134,10 @@ const FormToUpdateUserData: React.FC<Props> = ({ user }) => {
     return (
         <div className="form-container | full-form margin-top-50 max-width-60">
             <div className="margin-bottom-15">
-                <h2 className="text | bold medium-big">
-                    Actualizacion de datos
+                <h2 className="text | bolder medium-big | icon-wrapper">
+                    <Pen /> Actualizacion de datos
                 </h2>
-                <p className="text | light small">
+                <p className="text | light">
                     Solo se actualizara los <b>datos que sean diferentes</b> a
                     los datos actuales y que sean validos.{" "}
                     <b>

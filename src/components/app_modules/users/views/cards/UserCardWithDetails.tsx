@@ -3,6 +3,10 @@ import { ROLES_TO_VIEW_USER_STATE } from "@/components/guards/models/Permissions
 import GuardOfModule from "@/components/guards/views/module_guards/GuardOfModule";
 import { getUserRoleDetails } from "../../utils/UserRoleGetter";
 import UserPhotoRenderer from "../data_renderers/for_user_data/UserPhotoRenderer";
+import {
+    differenceOnDays,
+    timestampDateInSpanish,
+} from "@/utils/helpers/DateHelper";
 
 interface Props {
     user: UserInterface;
@@ -11,11 +15,15 @@ interface Props {
 
 const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
     const USER_ROLE_DETAILS = getUserRoleDetails(user);
+    const IS_DISABLED =
+        user.disable ||
+        (user.disabledUntil &&
+            differenceOnDays(user.disabledUntil.toDate()) > 0);
 
     return (
-        <div className={`users-item ${user.disable && "users-disable"}`}>
+        <div className={`users-item ${IS_DISABLED && "users-disable"}`}>
             <UserPhotoRenderer photo={user.photoUrl} />
-            <div>
+            <div className="full-width">
                 <h2 className="text | bolder medium-big capitalize">
                     {user.fullName}
                 </h2>
@@ -28,18 +36,26 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                     user={reviewerUser}
                     roles={ROLES_TO_VIEW_USER_STATE}
                 >
-                    <div className="row-wrapper">
-                        {user.disable && (
-                            <h4 className="text | bold yellow">
-                                Deshabilitado
-                            </h4>
-                        )}
-
+                    <div className="column-wrapper column-left gap-0 full-width">
                         <h4
-                            className={`users-item-role text | right bold ${USER_ROLE_DETAILS.color}`}
+                            className={`text | right bold ${USER_ROLE_DETAILS.color}`}
                         >
                             {USER_ROLE_DETAILS.text}
                         </h4>
+                        {IS_DISABLED && (
+                            <h4
+                                className={`text | bold yellow`}
+                            >
+                                Deshabilitado{" "}
+                                {user.disabledUntil
+                                    ? "hasta el ".concat(
+                                          timestampDateInSpanish(
+                                              user.disabledUntil,
+                                          ),
+                                      )
+                                    : ""}
+                            </h4>
+                        )}
                     </div>
                 </GuardOfModule>
             </div>

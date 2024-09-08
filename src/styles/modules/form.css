@@ -81,6 +81,10 @@
     -moz-appearance: textfield;
 }
 
+.form-section-input-checkbox {
+    background-color: var(--main-light);
+}
+
 .form-hide-password-button {
     position: absolute;
     top: var(--padding-field);

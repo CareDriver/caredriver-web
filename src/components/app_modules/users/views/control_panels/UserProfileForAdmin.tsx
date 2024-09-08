@@ -3,6 +3,7 @@
 import { AuthContext } from "@/context/AuthContext";
 import { useContext } from "react";
 import "@/styles/components/profile.css";
+import "@/styles/components/users.css";
 import FormToUpdateUserData from "../request_forms/to_manage_data/FormToUpdateUserData";
 import PageLoading from "@/components/loaders/PageLoading";
 import GuardOfModule from "@/components/guards/views/module_guards/GuardOfModule";

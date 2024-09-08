@@ -6,6 +6,14 @@ const BalanceHistoryRenderer = ({
 }: {
     balanceHistory: BalanceHistory[] | undefined;
 }) => {
+    const getDifference = (oldPrice: number, newPrice: number): number => {
+        if (oldPrice === newPrice && newPrice > 0) {
+            return -1 * newPrice;
+        }
+
+        return newPrice - oldPrice;
+    };
+
     return (
         balanceHistory && (
             <div className="margin-top-50">
@@ -16,15 +24,65 @@ const BalanceHistoryRenderer = ({
                     {balanceHistory.map((debt, i) => (
                         <div
                             key={`debt-item-history-${i}`}
-                            className="debt-item"
+                            className={`debt-item max-width-50 ${
+                                debt.newBalance
+                                    ? getDifference(
+                                          debt.amount,
+                                          debt.newBalance.amount,
+                                      ) < 0
+                                        ? "decreased"
+                                        : "increased"
+                                    : ""
+                            }`}
                         >
-                            <span className="text | bold medium">
-                                {debt.amount}
-                                {debt.currency}
-                            </span>
+                            <div>
+                                <span
+                                    className={`text | bold medium ${
+                                        debt.newBalance
+                                            ? getDifference(
+                                                  debt.amount,
+                                                  debt.newBalance.amount,
+                                              ) < 0
+                                                ? "red"
+                                                : "green"
+                                            : ""
+                                    }`}
+                                >
+                                    {debt.newBalance
+                                        ? getDifference(
+                                              debt.amount,
+                                              debt.newBalance.amount,
+                                          ) > 0
+                                            ? "+".concat(
+                                                  getDifference(
+                                                      debt.amount,
+                                                      debt.newBalance.amount,
+                                                  ).toString(),
+                                              )
+                                            : getDifference(
+                                                  debt.amount,
+                                                  debt.newBalance.amount,
+                                              )
+                                        : debt.amount}
+                                    {debt.currency}
+                                </span>
+                                {debt.newBalance && (
+                                    <span className={`text | bold medium`}>
+                                        {" "}
+                                        | {debt.newBalance.amount}
+                                        {debt.newBalance.currency}
+                                    </span>
+                                )}
+                            </div>
                             <span className="text | light">
                                 {timestampDateInSpanish(debt.date)}
                             </span>
+                            {debt.note && (
+                                <div className="margin-top-25">
+                                    <b className="text | bold">Nota: </b>
+                                    <i className="text | light">{debt.note}</i>
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>

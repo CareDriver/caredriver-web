@@ -1,52 +1,49 @@
 "use client";
 
 import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
-import { TextField } from "@/components/form/models/FormFields";
-import ChevronDown from "@/icons/ChevronDown";
+import { TextField as TextFieldForm } from "@/components/form/models/FormFields";
 import { ServiceType } from "@/interfaces/Services";
 import {
     inputToServiceType,
     TYPES_OF_SERVICE,
     userReqTypes,
 } from "@/interfaces/UserRequest";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { validateFakeId } from "../../model/validators/FakeIdValidator";
-import { isNullOrEmptyText } from "@/validators/TextValidator";
+import { FormEvent, useEffect, useState } from "react";
+import { validateId } from "../../../../../validators/IdValidator";
 import { toast } from "react-toastify";
 import { findServicePerfByFakeId } from "../../model/fetchers/ServicePerfFetcher";
 import { routeToServicePerformed } from "@/utils/route_builders/for_services/RouteBuilderForServices";
+import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
+import { isValidTextField } from "@/components/form/validators/FieldValidators";
+import BaseForm from "@/components/form/view/forms/BaseForm";
+import TextField from "@/components/form/view/fields/TextField";
+import SelectionField from "@/components/form/view/fields/SelectionField";
 
 const RedirectorToServiceByFakeId = () => {
     const [typeOfService, setTypeOfService] = useState<ServiceType>("driver");
     const [serviceFakedId, setServiceFakeId] =
-        useState<TextField>(DEFAUL_TEXT_FIELD);
-    const [formState, setFormState] = useState<{
-        loading: boolean;
-        isValid: boolean;
-    }>({
-        loading: false,
-        isValid: true,
-    });
+        useState<TextFieldForm>(DEFAUL_TEXT_FIELD);
+    const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
 
-    const redirect = async (e: FormEvent) => {
+    const tryToRedirect = async (e: FormEvent) => {
         e.preventDefault();
         if (formState.loading) {
             return;
         }
 
-        setFormState({
-            ...formState,
+        setFormState((prev) => ({
+            ...prev,
             loading: true,
-        });
+        }));
 
-        if (!isValidForm()) {
+        if (!isValidTextField(serviceFakedId)) {
             toast.error("Completa los campos", {
                 toastId: "no-filled-fields-error",
             });
-            setFormState({
-                ...formState,
+            setFormState((prev) => ({
+                ...prev,
                 loading: false,
-            });
+            }));
             return;
         }
 
@@ -55,7 +52,6 @@ const RedirectorToServiceByFakeId = () => {
                 findServicePerfByFakeId(serviceFakedId.value, typeOfService),
                 {
                     pending: "Buscando el servicio ...",
-                    success: "Busqueda finalizada",
                     error: "Error al buscar el servicio, intentalo de nuevo",
                 },
             );
@@ -65,10 +61,10 @@ const RedirectorToServiceByFakeId = () => {
                     message:
                         "El ID no pertence a ningun servicio, intenta con otro",
                 });
-                setFormState({
-                    ...formState,
+                setFormState((prev) => ({
+                    ...prev,
                     loading: false,
-                });
+                }));
                 return;
             }
             let link = routeToServicePerformed(
@@ -89,96 +85,72 @@ const RedirectorToServiceByFakeId = () => {
             }
             window.location.replace(link);
         } catch (e) {
-            setFormState({
-                ...formState,
+            setFormState((prev) => ({
+                ...prev,
                 loading: false,
-            });
+            }));
             return;
         }
     };
 
-    const switchFakeId = (e: ChangeEvent<HTMLInputElement>) => {
-        let input = e.target.value;
-        let { isValid, message } = validateFakeId(input);
-        setServiceFakeId({
-            value: input,
+    const switchTypeOfService = (d: string) => {
+        const newService = d as ServiceType;
+        setTypeOfService(newService);
+        const { isValid, message } = validateId(serviceFakedId.value);
+        setServiceFakeId((prev) => ({
+            ...prev,
             message: isValid ? null : message,
-        });
-    };
-
-    const switchTypeOfService = (e: ChangeEvent<HTMLSelectElement>) => {
-        let input = e.target.value;
-        let newType = inputToServiceType(input);
-        setTypeOfService(newType);
-        setServiceFakeId({
-            ...serviceFakedId,
-            message: null,
-        });
-    };
-
-    const isValidForm = (): boolean => {
-        return (
-            !serviceFakedId.message && !isNullOrEmptyText(serviceFakedId.value)
-        );
+        }));
     };
 
     useEffect(() => {
-        setFormState({
-            ...formState,
-            isValid: isValidForm(),
-        });
+        setFormState((prev) => ({
+            ...prev,
+            isValid:
+                isValidTextField(serviceFakedId) ||
+                validateId(serviceFakedId.value).isValid,
+        }));
     }, [serviceFakedId]);
 
     return (
-        <form
-            onSubmit={redirect}
-            className="form-container | full-form"
-            data-state={formState.loading ? "loading" : ""}
+        <BaseForm
+            content={{
+                button: {
+                    content: {
+                        legend: "Ir al servicio",
+                    },
+                    behavior: {
+                        isValid: formState.isValid,
+                        loading: formState.loading,
+                    },
+                },
+            }}
+            behavior={{
+                loading: formState.loading,
+                onSummit: tryToRedirect,
+            }}
         >
-            <fieldset className="form-section | select-item">
-                <ChevronDown />
-                <select
-                    className="form-section-input"
-                    onChange={switchTypeOfService}
-                    value={typeOfService}
-                >
-                    {TYPES_OF_SERVICE.map((type, i) => (
-                        <option key={`type-service-option-${i}`} value={type}>
-                            {userReqTypes[inputToServiceType(type)]}
-                        </option>
-                    ))}
-                </select>
-                <legend className="form-section-legend">
-                    Tipo de servicio
-                </legend>
-            </fieldset>
-            <fieldset className="form-section">
-                <input
-                    type="text"
-                    placeholder=""
-                    value={serviceFakedId.value}
-                    onChange={switchFakeId}
-                    className="form-section-input"
-                />
-                <legend className="form-section-legend">Id del servicio</legend>
-                {serviceFakedId.message && (
-                    <small className="form-section-message">
-                        {serviceFakedId.message}
-                    </small>
-                )}
-            </fieldset>
-
-            <button
-                disabled={!formState.isValid}
-                className="general-button | touchable"
-            >
-                {formState.loading ? (
-                    <i className="loader"></i>
-                ) : (
-                    <span>Ir al servicio</span>
-                )}
-            </button>
-        </form>
+            <SelectionField
+                field={{
+                    value: typeOfService,
+                    setter: switchTypeOfService,
+                }}
+                options={TYPES_OF_SERVICE}
+                legend="Tipo de servicio"
+                optionTranslator={(o) => {
+                    let op = o as ServiceType;
+                    return userReqTypes[inputToServiceType(op)];
+                }}
+            />
+            <TextField
+                field={{
+                    values: serviceFakedId,
+                    setter: setServiceFakeId,
+                    validator: validateId,
+                }}
+                legend="Id del servicio"
+            />
+        </BaseForm>
     );
 };
 

@@ -145,7 +145,7 @@ const ListOfUsersOfAEnterprise = ({
                 >
                     <SimpleUserCard user={selectedUser} />
 
-                    <div className="margin-top-15">
+                    <div className="margin-top-15 margin-bottom-50">
                         <h3 className="icon-wrapper | text bolder">
                             <HelmetSafety />
                             Servicios realizados

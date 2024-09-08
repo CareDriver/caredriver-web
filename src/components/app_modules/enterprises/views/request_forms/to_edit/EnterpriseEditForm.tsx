@@ -33,6 +33,12 @@ import { useRouter } from "next/navigation";
 import { IEditedEnterpriseManager } from "../../../models/enterprise_managers_edited/IEditedEnterpriseManager";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import { validateEnterpriseName } from "../../../validators/EnterpriseValidator";
+import Handshake from "@/icons/Handshake";
+import CheckField from "@/components/form/view/fields/CheckField";
+import GuardOfModule from "@/components/guards/views/module_guards/GuardOfModule";
+import { AuthContext } from "@/context/AuthContext";
+import PageLoading from "@/components/loaders/PageLoading";
+import { ROLES_TO_ADD_AGREEMENT_TO_ENTERPRISES } from "@/components/guards/models/PermissionsByUserRole";
 
 interface Form {
     name: TextFieldForm;
@@ -40,6 +46,7 @@ interface Form {
     logo: AttachmentField;
     location: Locations;
     coordinates: GeoPointField;
+    hasCommition: boolean;
 }
 
 interface Props {
@@ -52,6 +59,7 @@ const EnterpriseEditForm: React.FC<Props> = ({
     editedEnterpriseManager,
 }) => {
     const router = useRouter();
+    const { checkingUserAuth, user: adminUser } = useContext(AuthContext);
     const { loading, setLoadingAll } = useContext(PageStateContext);
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
@@ -117,6 +125,10 @@ const EnterpriseEditForm: React.FC<Props> = ({
         setFormState((prev) => ({ ...prev, isValid: isValidForm(form) }));
     }, [form]);
 
+    if (checkingUserAuth || !adminUser) {
+        return <PageLoading />;
+    }
+
     return (
         <BaseForm
             content={{
@@ -181,6 +193,31 @@ const EnterpriseEditForm: React.FC<Props> = ({
                     Cargando ubicacion geografica
                 </span>
             )}
+            <GuardOfModule
+                user={adminUser}
+                roles={ROLES_TO_ADD_AGREEMENT_TO_ENTERPRISES}
+            >
+                <div>
+                    <h3 className="text | bolder | icon-wrapper lb">
+                        <Handshake />
+                        Convenio con CareDriver (Opcional)
+                    </h3>
+                    <CheckField
+                        content={{
+                            checkDescription:
+                                "Marca la casilla si la empresa tiene convenio con CareDriver",
+                        }}
+                        marker={{
+                            isCheck: form.hasCommition,
+                            setCheck: (c) =>
+                                setForm((prev) => ({
+                                    ...prev,
+                                    hasCommition: c,
+                                })),
+                        }}
+                    />
+                </div>
+            </GuardOfModule>
         </BaseForm>
     );
 };
@@ -193,6 +230,7 @@ const DEFAULT_FORM: Form = {
     logo: DEFAUL_ATTACHMENT_FIELD,
     coordinates: DEFAUL_GEOPOINT_FIELD,
     location: Locations.CochabambaBolivia,
+    hasCommition: false,
 };
 
 function isValidForm(form: Form): boolean {
@@ -237,6 +275,7 @@ async function formToEnterprise(
         location: form.location,
         latitude: form.coordinates.value.latitude,
         longitude: form.coordinates.value.longitude,
+        commition: form.hasCommition,
     };
 }
 
@@ -261,6 +300,7 @@ function enterpriseToForm(enterprise: Enterprise): Form {
             value: enterprise.logoImgUrl.url,
             message: null,
         },
+        hasCommition: enterprise.commition ?? false,
     };
 }
 
@@ -273,6 +313,7 @@ function hasChanges(form: Form, currentEnterprise: Enterprise): boolean {
             form.location !== currentEnterprise.location) ||
         (form.coordinates.value !== undefined &&
             currentEnterprise.coordinates !== undefined &&
-            !form.coordinates.value.isEqual(currentEnterprise.coordinates))
+            !form.coordinates.value.isEqual(currentEnterprise.coordinates)) ||
+        form.hasCommition !== (currentEnterprise.commition ?? false)
     );
 }

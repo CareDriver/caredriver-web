@@ -1,8 +1,17 @@
 import CircleCheck from "@/icons/CircleCheck";
 import TriangleExclamation from "@/icons/TriangleExclamation";
 import { UserInterface } from "@/interfaces/UserInterface";
+import {
+    differenceOnDays,
+    timestampDateInSpanish,
+} from "@/utils/helpers/DateHelper";
 
 const UserStateRenderer = ({ user }: { user: UserInterface }) => {
+    const IS_DISABLED =
+        user.disable ||
+        (user.disabledUntil &&
+            differenceOnDays(user.disabledUntil.toDate()) > 0);
+
     const renderState = () => {
         if (user.deleted) {
             return (
@@ -11,11 +20,14 @@ const UserStateRenderer = ({ user }: { user: UserInterface }) => {
                     El usuario fue eliminado.
                 </span>
             );
-        } else if (user.disable) {
+        } else if (IS_DISABLED) {
             return (
                 <span className="icon-wrapper text | yellow-icon bold yellow margin-bottom-5">
                     <TriangleExclamation />
-                    El usuario esta deshabilitado.
+                    El usuario esta deshabilitado{" "}
+                    {user.disabledUntil
+                        ? timestampDateInSpanish(user.disabledUntil)
+                        : ""}
                 </span>
             );
         } else {

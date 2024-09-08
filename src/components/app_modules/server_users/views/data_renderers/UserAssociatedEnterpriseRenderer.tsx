@@ -16,18 +16,21 @@ const UserAssociatedEnterpriseRenderer: React.FC<Props> = ({
     typeOfEnterprise,
     user,
 }) => {
-    const ASSOCIATED_ENTERPRISE: string | undefined = getAssociatedEnterprise(
+    const ASSOCIATED_ENTERPRISE_ID: string | undefined = getAssociatedEnterprise(
         user,
         typeOfEnterprise,
     );
     const HAS_ASSOCIATED_ENTERPRISE: boolean =
-        ASSOCIATED_ENTERPRISE !== undefined;
+        ASSOCIATED_ENTERPRISE_ID !== undefined;
 
     return (
         <>
             {HAS_ASSOCIATED_ENTERPRISE ? (
                 <EnterpriseRendererAsPopup
-                    enterpriseId={ASSOCIATED_ENTERPRISE}
+                    enterprise={{
+                        id: ASSOCIATED_ENTERPRISE_ID,
+                        type: typeOfEnterprise,
+                    }}
                 />
             ) : (
                 <div className="max-width-40">

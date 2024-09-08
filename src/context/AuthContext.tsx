@@ -16,6 +16,10 @@ import { EMPTY_REF_ATTACHMENT } from "@/components/form/models/RefAttachment";
 import { defaultBalance, defaultMinBalance } from "@/interfaces/Payment";
 import { deleteAllCookies } from "@/utils/storage_handlers/CookieStoragerer";
 import { routeToHomePage } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
+import {
+    differenceOnDays,
+    timestampDateInSpanish,
+} from "@/utils/helpers/DateHelper";
 
 type ContextType = {
     user: UserInterface | undefined;
@@ -75,6 +79,9 @@ const loadUserLoggedData = (
                     : userData.balance,
             balanceHistory: userData?.balanceHistory,
             disable: userData?.disable,
+            disabledUntil: userData.disabledUntil,
+            createdAt: userData.createdAt,
+            serverUserAt: userData.serverUserAt,
             deleted: userData.deleted,
             serviceVehicles: userData?.serviceVehicles,
             role: userData?.role === undefined ? UserRole.User : userData.role,
@@ -131,7 +138,18 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                 );
                             } else if (userData.disable) {
                                 logoutWithReason(
-                                    "Fuiste , comunícate con uno de nuestro administradores",
+                                    "Fuiste desabilitado, comunícate con uno de nuestro administradores",
+                                );
+                            } else if (
+                                userData.disabledUntil &&
+                                differenceOnDays(
+                                    userData.disabledUntil.toDate(),
+                                ) > 0
+                            ) {
+                                logoutWithReason(
+                                    `Fuiste desabilitado hasta el ${timestampDateInSpanish(
+                                        userData.disabledUntil,
+                                    )}, comunícate con uno de nuestro administradores`,
                                 );
                             } else {
                                 let userLoaded: UserInterface | undefined =

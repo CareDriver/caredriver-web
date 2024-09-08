@@ -13,7 +13,7 @@ const DateField: React.FC<Props> = ({ field, legend }) => {
     );
 
     return (
-        <fieldset className="form-section | max-width-60">
+        <fieldset className="form-section">
             <input
                 type="date"
                 name="expirationDate"

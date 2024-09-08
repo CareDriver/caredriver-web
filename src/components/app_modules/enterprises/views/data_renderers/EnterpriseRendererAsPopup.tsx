@@ -3,6 +3,7 @@
 import EnterpriseRendererWithLoader from "@/components/app_modules/enterprises/views/data_renderers/EnterpriseRendererWithLoader";
 import Popup from "@/components/modules/Popup";
 import { Enterprise } from "@/interfaces/Enterprise";
+import { ServiceType } from "@/interfaces/Services";
 import { useState } from "react";
 
 interface EnterpriseState {
@@ -11,33 +12,45 @@ interface EnterpriseState {
 }
 
 interface Props {
-    enterpriseId: string | undefined;
+    button?: {
+        styleClass?: string;
+        legend?: string;
+    };
+    enterprise: {
+        id: string | undefined;
+        type: ServiceType;
+    };
 }
 
-const EnterpriseRendererAsPopup: React.FC<Props> = ({ enterpriseId }) => {
-    const [enteprise, setEnterprise] = useState<EnterpriseState>({
+const EnterpriseRendererAsPopup: React.FC<Props> = ({ enterprise, button }) => {
+    const [entepriseAsPopup, setEnterpriseAsPopup] = useState<EnterpriseState>({
         data: null,
         isBeingReviewed: false,
     });
 
+    const BUTTON_STYLE =
+        button?.styleClass ??
+        "small-general-button text | bold | margin-top-25 margin-bottom-25";
+    const BUTTON_LEGEND = button?.legend ?? "Ver empresa asociada";
+
     return (
         <>
             <button
-                className="small-general-button text | bold | margin-top-25 margin-bottom-25"
+                className={BUTTON_STYLE}
                 type="button"
                 onClick={() =>
-                    setEnterprise((prev) => ({
+                    setEnterpriseAsPopup((prev) => ({
                         ...prev,
                         isBeingReviewed: true,
                     }))
                 }
             >
-                Ver empresa asociada
+                {BUTTON_LEGEND}
             </button>
             <Popup
-                isOpen={enteprise.isBeingReviewed}
+                isOpen={entepriseAsPopup.isBeingReviewed}
                 close={() =>
-                    setEnterprise((prev) => ({
+                    setEnterpriseAsPopup((prev) => ({
                         ...prev,
                         isBeingReviewed: false,
                     }))
@@ -48,15 +61,15 @@ const EnterpriseRendererAsPopup: React.FC<Props> = ({ enterpriseId }) => {
                         Empresa asociada
                     </h2>
                     <EnterpriseRendererWithLoader
-                        enterprise={enteprise.data}
+                        enterprise={entepriseAsPopup.data}
                         setEnterprise={(d) =>
-                            setEnterprise((prev) => ({
+                            setEnterpriseAsPopup((prev) => ({
                                 ...prev,
                                 data: d,
                             }))
                         }
-                        enterpriseId={enterpriseId}
-                        type="driver"
+                        enterpriseId={enterprise.id}
+                        type={enterprise.type}
                     />
                 </div>
             </Popup>

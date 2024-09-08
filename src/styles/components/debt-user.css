@@ -1,4 +1,4 @@
-.debt-wrapper {   
+.debt-wrapper {
     display: flex;
     flex-wrap: wrap;
     gap: 0.555555556rem;
@@ -15,4 +15,12 @@
     border: 0.111111111rem solid var(--gray-medium);
     padding: 1.111111111rem 1.666666667rem;
     border-radius: 0.833333333rem;
+}
+
+.debt-item.increased {
+    border-color: var(--main-light);
+}
+
+.debt-item.decreased {
+    border-color: var(--red);
 }

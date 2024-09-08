@@ -98,3 +98,7 @@ export const ROLES_TO_VIEW_USER_CREDENTIALS: UserRole[] = [
     UserRole.Support,
     UserRole.SupportTwo,
 ];
+
+export const ROLES_TO_ADD_AGREEMENT_TO_ENTERPRISES: UserRole[] = [
+    UserRole.Admin,
+];

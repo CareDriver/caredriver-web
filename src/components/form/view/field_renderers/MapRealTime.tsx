@@ -30,6 +30,8 @@ const MapRealTime = ({
         inProgress: [],
     });
     const database = initializeRealtimeDatabase(databaseURL);
+    console.log(serviceId);
+    
 
     useEffect(() => {
         if (database && serviceId) {

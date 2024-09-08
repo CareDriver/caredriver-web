@@ -8,7 +8,7 @@
     overflow-y: auto;
     z-index: 2000;
 
-    height: 100vh;
+    height: 100dvh;
     min-width: 17.777777778rem;
     width: 22%;
     max-width: 19.444444444rem;
