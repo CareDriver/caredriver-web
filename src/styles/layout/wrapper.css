@@ -34,7 +34,29 @@
     flex-direction: column;
 
     width: 100%;
+    min-height: 100dvh;
     padding: 4rem 2.777777778rem;
+}
+
+.users-search-top-space {
+    /* height top hardcoded */
+    --main-wrapper-padding: calc(4rem + 4rem);
+    --title-font-size: 2.777777778rem;
+    --space-between-title-searcher: 1.388888889rem;
+    --space-between-searcher-results: 2.777777778rem;
+    --searcher-size: calc(0.555555556rem + 1.111111111rem);
+
+    min-height: calc(
+        100vh -
+            (
+                calc(
+                    var(--main-wrapper-padding) + var(--title-font-size) +
+                        var(--space-between-title-searcher) +
+                        var(--space-between-searcher-results) +
+                        var(--searcher-size)
+                )
+            )
+    );
 }
 
 .row-wrapper {
@@ -73,7 +95,6 @@
     display: flex;
     flex-direction: column;
     gap: 0.555555556rem;
-    flex-grow: 1;
 }
 
 .column-wrapper.column-left {
@@ -102,6 +123,9 @@
     padding: 10px 0;
 }
 
+.grow-subwrapper {
+    flex-grow: 1;
+}
 .gap-0 {
     gap: 0px;
 }

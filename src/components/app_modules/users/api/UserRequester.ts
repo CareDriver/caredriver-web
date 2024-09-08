@@ -159,7 +159,6 @@ export const getAllUsersPaginated = async (
     adminEmail: string,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
-    endBeforeDoc?: DocumentSnapshot,
     numPerPage: number = 8,
 ) => {
     let dataQuery;
@@ -254,7 +253,6 @@ export const getSearchUsersPaginated = async (
     searchField: string,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
-    endBeforeDoc?: DocumentSnapshot,
     numPerPage: number = 8,
 ) => {
     let dataQuery;
@@ -303,25 +301,7 @@ export const getSearchUsersPaginated = async (
 
     if (direction === "next" && startAfterDoc) {
         dataQuery = query(dataQuery, startAfter(startAfterDoc));
-    } /*  else if (direction === "prev" && endBeforeDoc) {
-        dataQuery = query(
-            usersCollection,
-            and(
-                where("deleted", "==", false),
-                where("email", "!=", adminEmail),
-                or(
-                    where("fullName", "==", searchField),
-                    where("email", "==", searchField),
-                    where("phoneNumber", "==", "+591" + searchField),
-                    where("phoneNumber", "==", "+" + searchField),
-                    where("phoneNumber", "==", searchField),
-                ),
-            ),
-            orderBy("fullName"),
-            endBefore(endBeforeDoc),
-            limitToLast(numPerPage),
-        );
-    } */
+    }
 
     const productsSnapshot = await getDocs(dataQuery);
     const products: UserInterface[] = productsSnapshot.docs.map((doc) => {

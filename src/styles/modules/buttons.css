@@ -10,6 +10,10 @@
     transition: all ease-in-out 200ms;
 }
 
+.touchable {
+    cursor: pointer;
+}
+
 .touchable:active {
     transition: all ease-in-out 200ms;
     transform: scale(0.9);
