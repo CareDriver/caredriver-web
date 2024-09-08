@@ -3,10 +3,10 @@ import { isNullOrEmptyText } from "@/validators/TextValidator";
 
 const FAKE_ID_REGEX = /^[a-zA-Z0-9_-]+$/;
 
-export function validateFakeId(input: string): InputState {
+export function validateId(input: string): InputState {
     if (isNullOrEmptyText(input)) {
         return {
-            message: "Introduce el ID del servicio",
+            message: "Introduce el ID",
             isValid: false,
         };
     } else if (!FAKE_ID_REGEX.test(input)) {

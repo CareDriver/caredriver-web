@@ -1,11 +1,8 @@
 import "@/styles/components/sidebar.css";
 import "@/styles/base/reset.css";
 import { UserRole } from "@/interfaces/UserInterface";
-import RequestsSection from "../sidebar_sections/RequestsSection";
 import UserRoleSideBar from "../sidebar_sections/UserRoleSideBar";
 import UsersOption from "../sidebar_options/UsersOption";
-import AddNewUserOption from "../sidebar_options/AddNewUserOption";
-import EnterpriseRegistersSection from "../sidebar_sections/EnterpriseRegistersSection";
 import NoServerUserProfileOp from "../sidebar_options/NoServerUserProfileOp";
 import LogoutOption from "../sidebar_options/LogoutOption";
 import UserGear from "@/icons/UserGear";

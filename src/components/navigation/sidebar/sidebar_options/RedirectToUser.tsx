@@ -2,11 +2,11 @@
 
 import Popup from "@/components/modules/Popup";
 import { useState } from "react";
-import RedirectorToServiceByFakeId from "../../../app_modules/services_performed/view/redirectors/RedirectorToServiceByFakeId";
-import MagnifyingGlass from "@/icons/MagnifyingGlass";
 import "@/styles/modules/popup.css";
+import RedirectorToUserByFakeId from "@/components/app_modules/users/views/redirectors/RedirectorToUserByFakeId";
+import UserSecret from "@/icons/UserSecret";
 
-const RedirectToService = () => {
+const RedirectToUser = () => {
     const [isOpen, setOpen] = useState(false);
 
     const open = () => setOpen(true);
@@ -15,26 +15,26 @@ const RedirectToService = () => {
     return (
         <>
             <button onClick={open} className="sidebar-option">
-                <MagnifyingGlass />
-                <span>Servicio por Id</span>
+                <UserSecret />
+                <span>Usuario por Id</span>
             </button>
             <Popup close={close} isOpen={isOpen}>
                 <div>
                     <h2 className="text | bold big-medium">
                         Buscar{" "}
                         <i className="text | bolder big-medium">
-                            servicio por Id
+                            usuario por Id
                         </i>
                     </h2>
                     <p className="text | light margin-bottom-25">
-                        Ingresa el Id del servicio segun al tipo de servicio
-                        para ir a ver su informacion y su estado actual.
+                        Ingresa el Id del usuario para ir a ver su informacion,
+                        estado y actividad en la aplicacion.
                     </p>
-                    <RedirectorToServiceByFakeId />
+                    <RedirectorToUserByFakeId />
                 </div>
             </Popup>
         </>
     );
 };
 
-export default RedirectToService;
+export default RedirectToUser;
