@@ -40,6 +40,10 @@ import { ServiceType } from "@/interfaces/Services";
 import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import { PageStateContext } from "@/context/PageStateContext";
 import { validateEnterpriseName } from "../../../validators/EnterpriseValidator";
+import CheckField from "@/components/form/view/fields/CheckField";
+import Handshake from "@/icons/Handshake";
+import { AuthContext } from "@/context/AuthContext";
+import PageLoading from "@/components/loaders/PageLoading";
 
 interface Form {
     name: TextFieldForm;
@@ -48,6 +52,7 @@ interface Form {
     location: Locations;
     coordinates: GeoPointField;
     userOwner: EntityField;
+    hasCommition: boolean;
 }
 
 interface Props {
@@ -56,6 +61,7 @@ interface Props {
 
 const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
     const router = useRouter();
+    const { checkingUserAuth, user: adminUser } = useContext(AuthContext);
     const { loading, setLoadingAll } = useContext(PageStateContext);
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
@@ -108,6 +114,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                     location: form.location,
                     addedUsers: [],
                     addedUsersId: [],
+                    commition: form.hasCommition,
                 };
 
                 await toast.promise(sendEnterpriseReq(id, enterprise), {
@@ -129,6 +136,10 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
             isValid: isValidForm(form),
         }));
     }, [form]);
+
+    if (checkingUserAuth || !adminUser) {
+        return <PageLoading />;
+    }
 
     return (
         <section className="service-form-wrapper">
@@ -179,6 +190,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                         imageInCircle: true,
                     }}
                 />
+
                 <LocationField
                     location={form.location}
                     setter={(d) =>
@@ -204,6 +216,26 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                         type: enterpriseType,
                     }}
                 />
+                <div>
+                    <h3 className="text | bolder | icon-wrapper lb">
+                        <Handshake />
+                        Convenio con CareDriver (Opcional)
+                    </h3>
+                    <CheckField
+                        content={{
+                            checkDescription:
+                                "Marca la casilla si la empresa tiene convenio con CareDriver",
+                        }}
+                        marker={{
+                            isCheck: form.hasCommition,
+                            setCheck: (c) =>
+                                setForm((prev) => ({
+                                    ...prev,
+                                    hasCommition: c,
+                                })),
+                        }}
+                    />
+                </div>
             </BaseForm>
         </section>
     );
@@ -218,6 +250,7 @@ const DEFAULT_FORM: Form = {
     coordinates: DEFAUL_GEOPOINT_FIELD,
     location: Locations.CochabambaBolivia,
     userOwner: DEFAUL_ENTITY_FIELD,
+    hasCommition: false,
 };
 
 function isValidForm(form: Form): boolean {

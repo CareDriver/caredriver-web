@@ -15,6 +15,7 @@ const CheckField: React.FC<Props> = ({ marker, content }) => {
             className="form-sub-container | row | margin-top-25 max-width-60 pointer-option"
         >
             <input
+                className="form-section-input-checkbox"
                 type="checkbox"
                 checked={marker.isCheck}
                 onChange={() => {}}
