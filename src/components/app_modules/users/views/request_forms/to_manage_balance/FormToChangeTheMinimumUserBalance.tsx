@@ -42,7 +42,7 @@ const FormToChangeTheMinimumUserBalance = ({
                 );
                 window.location.reload();
             } catch (e) {
-                setLoading(false);
+                setLoadingAll(false, setFormState);
             }
         }
     };
@@ -52,7 +52,6 @@ const FormToChangeTheMinimumUserBalance = ({
         if (!loading && !formState.loading) {
             setLoadingAll(true, setFormState);
             await perform();
-            setLoadingAll(false, setFormState);
         }
     };
 

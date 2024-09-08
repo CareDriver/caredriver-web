@@ -130,7 +130,6 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
                     success: "Revision guardada",
                     error: "Error al guardar, inténtalo de nuevo por favor",
                 });
-                setLoading(false);
                 router.push(routeToRequestsToRenewLicenseAsAdmin());
             } catch (e) {
                 setLoading(false);
