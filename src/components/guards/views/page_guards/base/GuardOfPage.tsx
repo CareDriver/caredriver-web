@@ -3,6 +3,7 @@ import { checkPermission } from "@/components/guards/validators/RoleValidator";
 import PageLoading from "@/components/loaders/PageLoading";
 import { AuthContext } from "@/context/AuthContext";
 import { UserRole } from "@/interfaces/UserInterface";
+import { routeToNoFound } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -16,10 +17,7 @@ const GuardOfPage: React.FC<Props> = ({ roles, children }) => {
     const [hasPermition, setPermition] = useState<boolean>(false);
 
     const redirectToHome = () => {
-        /* TODO: redirect to no found page like github
-        https://europe1.discourse-cdn.com/business20/uploads/make/optimized/2X/1/13bde2c3bb2f6b4d6e52197d981011cb068f57f4_2_690x356.jpeg
-        */
-        window.location.replace("/redirector");
+        window.location.replace(routeToNoFound());
         toast.warning("Permiso denegado", {
             toastId: "check-permition-validator-page",
         });

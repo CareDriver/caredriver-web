@@ -179,11 +179,15 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         auth.signOut()
             .then(() => {
                 setUser(undefined);
-                toast.warning(reason);
+                toast.warning(reason, {
+                    toastId: "toast-logout-with-reason",
+                });
                 router.push(routeToHomePage());
             })
             .catch(() => {
-                toast.error("Algo salio mal");
+                toast.error("Algo salio mal", {
+                    toastId: "logout-error",
+                });
                 window.location.replace(routeToHomePage());
             });
     };
@@ -193,11 +197,15 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             .then(() => {
                 deleteAllCookies();
                 setUser(undefined);
-                toast.success("Sesión cerrada existosamente");
+                toast.success("Sesión cerrada existosamente", {
+                    toastId: "logout-toast",
+                });
                 router.push(routeToHomePage());
             })
             .catch(() => {
-                toast.error("Algo salio mal");
+                toast.error("Algo salio mal", {
+                    toastId: "logout-error-2",
+                });
                 window.location.replace(routeToHomePage());
             });
     };
