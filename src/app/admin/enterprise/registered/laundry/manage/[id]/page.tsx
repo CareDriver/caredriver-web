@@ -1,4 +1,4 @@
-import EnterprisePanelForAdmin from "@/components/app_modules/enterprises/views/control_panels/EnterprisePanelForAdmin";
+import EnterprisePanelForAdmin from "@/components/app_modules/enterprises/views/control_panels/concrete/EnterprisePanelForAdmin";
 import GuardOfEnterprises from "@/components/guards/views/page_guards/concrets/GuardOfEnterprises";
 import { PageStateProviderContainer } from "@/context/PageStateContext";
 

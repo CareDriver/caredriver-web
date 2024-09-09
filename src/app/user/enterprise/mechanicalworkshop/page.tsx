@@ -1,4 +1,4 @@
-import EnterprisesPanelForServerUsers from "@/components/app_modules/enterprises/views/control_panels/EnterprisesPanelForServerUsers";
+import EnterprisesPanelForServerUsers from "@/components/app_modules/enterprises/views/control_panels/concrete/EnterprisesPanelForServerUsers";
 import GuardForServerUsers from "@/components/guards/views/page_guards/concrets/GuardForServerUsers";
 
 const Page = () => {

@@ -16,6 +16,7 @@ import {
     ROLES_FOR_SERVER_USER_ACTIONS,
     ROLES_TO_SET_MIN_USER_BALANCE,
     ROLES_TO_SET_USER_BALANCE,
+    ROLES_TO_SET_USER_ROLE,
     ROLES_TO_VIEW_CONTACT_USERS,
     ROLES_TO_VIEW_USER_CREDENTIALS,
     ROLES_TO_VIEW_USERS_HISTORY,
@@ -195,7 +196,7 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
 
                     <GuardOfModule
                         user={adminUser}
-                        roles={ROLES_FOR_SERVER_USER_ACTIONS}
+                        roles={ROLES_TO_SET_USER_ROLE}
                     >
                         <FormFoChangeUserRoleToAdmin
                             user={user}
