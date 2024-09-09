@@ -1,13 +1,12 @@
-import Home from "@/components/home/Home";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "CareDriver | Inicio",
+    title: "No encontrado",
     description: "",
 };
 
 const Page = () => {
-    return <Home />;
+    return <h1>custom not found</h1>;
 };
 
 export default Page;

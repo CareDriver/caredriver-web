@@ -46,6 +46,11 @@
     width: 1.111111111rem;
 }
 
+.icon-wrapper.llb > svg {
+    height: 1rem;
+    width: 1rem;
+}
+
 .icon-wrapper.lb > svg {
     height: 1.388888889rem;
     width: 1.388888889rem;

@@ -4,7 +4,8 @@
     --main-light-opacity: rgba(59, 183, 112, 0.2);
 
     --second-dark: #0e1724;
-    --second-dark-opacity: rgba(14, 23, 36, 0.7);
+    --second-dark-opacity: rgba(42, 69, 107, 0.7);
+    --second-darker-opacity: rgba(5, 18, 36, 0.7);
     --second-light: #456079;
 
     --black-darker: #000000;

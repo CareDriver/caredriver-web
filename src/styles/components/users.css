@@ -11,6 +11,7 @@
     align-items: center;
     gap: 1.111111111rem;
 
+    width: 100%;
     padding: 1.388888889rem;
     border: 0.111111111rem solid var(--gray-medium);
     border-radius: 0.833333333rem;

@@ -7,6 +7,7 @@ import {
     differenceOnDays,
     timestampDateInSpanish,
 } from "@/utils/helpers/DateHelper";
+import TriangleExclamation from "@/icons/TriangleExclamation";
 
 interface Props {
     user: UserInterface;
@@ -43,9 +44,7 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                             {USER_ROLE_DETAILS.text}
                         </h4>
                         {IS_DISABLED && (
-                            <h4
-                                className={`text | bold yellow`}
-                            >
+                            <h4 className={`text | bold yellow`}>
                                 Deshabilitado{" "}
                                 {user.disabledUntil
                                     ? "hasta el ".concat(
@@ -54,6 +53,12 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                                           ),
                                       )
                                     : ""}
+                            </h4>
+                        )}
+                        {user.deleted && (
+                            <h4 className="text | bold red small | icon-wrapper red-icon llb">
+                                <TriangleExclamation />
+                                Cuenta eliminada
                             </h4>
                         )}
                     </div>

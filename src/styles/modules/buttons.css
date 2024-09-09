@@ -1,13 +1,36 @@
 .action-button {
-    padding: 1.25rem 6.25rem;
+    position: relative;
+    overflow: hidden;
+
+    padding: 1.25rem 3.25rem;
 
     border-radius: 2.5rem;
-    font-size: 1.388888889rem;
-    font-weight: bold;
+    width: fit-content;
 
     background-color: var(--white);
     color: var(--second-dark);
-    transition: all ease-in-out 200ms;
+    transition: all ease-in-out 250ms;
+}
+
+.action-button > svg {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 110%;
+
+    transition: all ease-in-out 150ms;
+}
+
+.action-button:hover {
+    padding-left: 6rem;
+}
+
+.action-button:hover > svg{
+    right: 78%;
+}
+
+.action-button:active {
+    transform: scale(0.7);
 }
 
 .touchable {
