@@ -6,6 +6,7 @@ import PageLoading from "@/components/loaders/PageLoading";
 import { AuthenticatorContext } from "../../contexts/AuthenticatorContext";
 import AuthProviders from "../providers/AuthProviders";
 import "@/styles/components/auth_page.css";
+import { routeToRedirector } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
 
 interface Props {
     authTitle: string;
@@ -13,13 +14,12 @@ interface Props {
 }
 
 const AuthenticatorContainer: React.FC<Props> = ({ authTitle, children }) => {
-    const { loading, authWithProvider, setAuthWithProvider } =
-        useContext(AuthenticatorContext);
+    const { loading, authWithProvider } = useContext(AuthenticatorContext);
     const { checkingUserAuth, user } = useContext(AuthContext);
 
     useEffect(() => {
         if (!checkingUserAuth && user) {
-            window.location.replace("/redirector");
+            window.location.replace(routeToRedirector());
             toast.info("Ya estas authenticado");
         }
     }, [checkingUserAuth]);
@@ -35,15 +35,12 @@ const AuthenticatorContainer: React.FC<Props> = ({ authTitle, children }) => {
 
             <section
                 className="form-container"
-                data-state={authWithProvider || (loading && "loading")}
+                data-state={(authWithProvider || loading) && "loading"}
             >
                 <h1 className="text | bigger bold center | margin-bottom-15">
                     {authTitle}
                 </h1>
-                <AuthProviders
-                    setVerifier={setAuthWithProvider}
-                    verifiyingProvider={authWithProvider}
-                />
+                <AuthProviders />
                 {children}
             </section>
         </main>
