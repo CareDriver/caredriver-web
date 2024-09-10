@@ -11,7 +11,7 @@ const MechanicTools = ({
     setTools: (d: TextFieldForForm) => void;
 }) => {
     return (
-        <div className="form-sub-container | margin-top-25 max-width-60">
+        <div className="form-sub-container | margin-top-25">
             <div>
                 <h2 className="text icon-wrapper | medium-big bold">
                     <ScrewdriverWrench />

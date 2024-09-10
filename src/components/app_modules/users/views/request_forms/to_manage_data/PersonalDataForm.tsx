@@ -124,7 +124,7 @@ const PersonalDataForm: React.FC<Props> = ({
 
     return (
         <>
-            <div className="form-sub-container | margin-top-25 max-width-60">
+            <div className="form-sub-container | margin-top-25">
                 <h2 className="text icon-wrapper | medium-big bold">
                     <UserIcon />
                     Datos Personales

@@ -90,7 +90,7 @@ const VehicleForm = ({
     };
 
     return (
-        <div className="form-sub-container | margin-top-25 max-width-60">
+        <div className="form-sub-container | margin-top-25">
             {
                 <div className="form-sub-container">
                     <h2 className="text icon-wrapper | medium-big bold">

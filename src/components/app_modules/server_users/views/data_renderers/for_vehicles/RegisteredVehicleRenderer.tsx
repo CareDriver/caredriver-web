@@ -9,6 +9,7 @@ import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
 import Plus from "@/icons/Plus";
 import { TRANSMITION_TO_SPANISH_V2 } from "../../../models/VehicleFields";
 import Link from "next/link";
+import { routeToRenewLicenseAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
 
 interface Props {
     legend: string;
@@ -68,7 +69,7 @@ const RegisteredVehicleRenderer: React.FC<Props> = ({
                         ${getColorButtonLicense(
                             vehicle.license.expiredDateLicense.toDate(),
                         )}`}
-                    href={`/services/license/update/${vehicleType}`}
+                    href={routeToRenewLicenseAsUser(vehicleType)}
                 >
                     <span className="text | medium bolder">
                         Actualizar Licencia

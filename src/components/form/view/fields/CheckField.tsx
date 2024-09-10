@@ -12,7 +12,7 @@ const CheckField: React.FC<Props> = ({ marker, content }) => {
     return (
         <div
             onClick={() => marker.setCheck(!marker.isCheck)}
-            className="form-sub-container | row | margin-top-25 max-width-60 pointer-option"
+            className="form-sub-container | row | margin-top-25 pointer-option"
         >
             <input
                 className="form-section-input-checkbox"

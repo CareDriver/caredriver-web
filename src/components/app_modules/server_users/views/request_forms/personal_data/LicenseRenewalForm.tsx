@@ -39,6 +39,7 @@ import {
 import { RequestLimitValidatorToUpdateLicence } from "../../../validators/for_request_limit/RequestLimitValidatorToUpdateLicence";
 import { routeToRequestToBeServerUserAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
 import { ServiceType } from "@/interfaces/Services";
+import BaseForm from "@/components/form/view/forms/BaseForm";
 
 type LicensedVehicles = "car" | "motorcycle" | "tow";
 
@@ -329,10 +330,23 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
                         valida para que continues trabajando con nosotros.
                     </p>
                 </div>
-                <form
-                    data-state={formState.loading ? "loading" : "loaded"}
-                    className="form-sub-container | margin-top-25"
-                    onSubmit={handleSubmit}
+                <BaseForm
+                    content={{
+                        button: {
+                            content: {
+                                legend: "Enviar Solicitud",
+                            },
+                            behavior: {
+                                isValid: formState.isValid,
+                                loading: formState.loading,
+                            },
+                        },
+                        styleClasses: "max-width-60"
+                    }}
+                    behavior={{
+                        loading: formState.loading,
+                        onSummit: handleSubmit,
+                    }}
                 >
                     <NumberField
                         field={{
@@ -361,43 +375,38 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
                         }}
                         legend="Fecha de expiración"
                     />
-
-                    <div className="max-width-60">
-                        <ImageUploader
-                            uploader={{
-                                image: form.license.frontPhoto,
-                                setImage: (i) => {
-                                    setForm((prev) => ({
-                                        ...prev,
-                                        frontPhoto: i,
-                                    }));
-                                },
-                            }}
-                            content={{
-                                legend: "Parte frontal de la licencia",
-                                imageInCircle: false,
-                                id: "tow-license-front-photo",
-                            }}
-                        />
-                    </div>
-                    <div className="max-width-60">
-                        <ImageUploader
-                            uploader={{
-                                image: form.license.behindPhoto,
-                                setImage: (i) => {
-                                    setForm((prev) => ({
-                                        ...prev,
-                                        behindPhoto: i,
-                                    }));
-                                },
-                            }}
-                            content={{
-                                legend: "Parte posterior de la licencia",
-                                imageInCircle: false,
-                                id: "tow-license-behind-photo",
-                            }}
-                        />
-                    </div>
+                    <ImageUploader
+                        uploader={{
+                            image: form.license.frontPhoto,
+                            setImage: (i) => {
+                                setForm((prev) => ({
+                                    ...prev,
+                                    frontPhoto: i,
+                                }));
+                            },
+                        }}
+                        content={{
+                            legend: "Parte frontal de la licencia",
+                            imageInCircle: false,
+                            id: "tow-license-front-photo",
+                        }}
+                    />
+                    <ImageUploader
+                        uploader={{
+                            image: form.license.behindPhoto,
+                            setImage: (i) => {
+                                setForm((prev) => ({
+                                    ...prev,
+                                    behindPhoto: i,
+                                }));
+                            },
+                        }}
+                        content={{
+                            legend: "Parte posterior de la licencia",
+                            imageInCircle: false,
+                            id: "tow-license-behind-photo",
+                        }}
+                    />
                     <SelfieSection
                         image={form.selfie}
                         setImage={(e) =>
@@ -407,24 +416,7 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
                             }))
                         }
                     />
-                    <button
-                        className={`general-button | margin-top-25 max-width-60 touchable ${
-                            formState.loading && "loading-section"
-                        }`}
-                        title={
-                            !formState.isValid
-                                ? "Por favor completa los campos con datos validos"
-                                : ""
-                        }
-                        disabled={!formState.isValid}
-                    >
-                        {formState.loading ? (
-                            <span className="loader"></span>
-                        ) : (
-                            "Enviar Solicitud"
-                        )}
-                    </button>
-                </form>
+                </BaseForm>
             </div>
         )
     );

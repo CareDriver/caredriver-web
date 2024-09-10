@@ -36,7 +36,6 @@ const VehiclesForm = ({
     vehicles: Vehicle[];
     setVehicles: (d: Vehicle[]) => void;
 }) => {
-    // VEHICLE-BASED STATE CHANGERS
     const changeCategory = (i: number, type: string) => {
         setVehicles(
             vehicles.map((vehicle, j) => {
@@ -196,7 +195,7 @@ const VehiclesForm = ({
     };
 
     return (
-        <div className="form-sub-container | margin-top-25 max-width-60">
+        <div className="form-sub-container | margin-top-25">
             {vehicles.map((vehicle, i) => (
                 <div className="form-sub-container" key={`vehicle-${i}`}>
                     <h2 className="text icon-wrapper | medium-big bold">

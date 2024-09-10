@@ -11,7 +11,7 @@ interface Props {
 
 const IdentityCardForm: React.FC<Props> = ({ idCardForm, setIdCardForm }) => {
     return (
-        <div className="form-sub-container | max-width-60">
+        <div className="form-sub-container">
             <div>
                 <h2 className="text icon-wrapper | medium-big bold lb">
                     <CardIcon /> Carnet de identidad

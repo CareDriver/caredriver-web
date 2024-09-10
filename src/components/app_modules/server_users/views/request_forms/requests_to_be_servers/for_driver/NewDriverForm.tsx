@@ -16,7 +16,10 @@ import { Vehicle, driveReqBuilder } from "@/interfaces/UserRequest";
 import { Timestamp } from "firebase/firestore";
 import { saveDriveReq } from "@/components/app_modules/server_users/api/DriveRequester";
 import { Locations } from "@/interfaces/Locations";
-import { EMPTY_REF_ATTACHMENT, RefAttachment } from "@/components/form/models/RefAttachment";
+import {
+    EMPTY_REF_ATTACHMENT,
+    RefAttachment,
+} from "@/components/form/models/RefAttachment";
 import { toast } from "react-toastify";
 import { updateUser } from "@/components/app_modules/users/api/UserRequester";
 import { UserInterface } from "@/interfaces/UserInterface";
@@ -300,6 +303,7 @@ const NewDriverForm: React.FC<Props> = ({
                                 loading: formState.loading,
                             },
                         },
+                        styleClasses: "max-width-60",
                     }}
                     behavior={{
                         loading: formState.loading,

@@ -56,6 +56,7 @@ import {
 import { isValidPersonalData } from "@/components/app_modules/server_users/validators/for_data/PersonalDataValidator";
 import { isValidVehicle } from "@/components/app_modules/server_users/validators/for_data/VehicleValidator";
 import EnterpriseSelectorById from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelectorById";
+import BaseForm from "@/components/form/view/forms/BaseForm";
 
 interface Form {
     personalData: PersonalData;
@@ -291,10 +292,23 @@ const NewCraneOperatorForm: React.FC<Props> = ({
                     }
                 />
 
-                <form
-                    className="form-sub-container"
-                    data-state={formState.loading ? "loading" : "loaded"}
-                    onSubmit={(e) => handleSubmit(e)}
+                <BaseForm
+                    content={{
+                        button: {
+                            content: {
+                                legend: "Enviar Solicitud",
+                            },
+                            behavior: {
+                                isValid: formState.isValid,
+                                loading: formState.loading,
+                            },
+                        },
+                        styleClasses: "max-width-60",
+                    }}
+                    behavior={{
+                        loading: formState.loading,
+                        onSummit: handleSubmit,
+                    }}
                 >
                     <PersonalDataForm
                         baseUser={baseUser}
@@ -311,8 +325,8 @@ const NewCraneOperatorForm: React.FC<Props> = ({
                     />
 
                     {!baseEnterprise && (
-                        <div className="form-sub-container | margin-top-25">
-                            <h2 className="text icon-wrapper | medium-big bold">
+                        <div className="margin-top-25">
+                            <h2 className="text icon-wrapper | medium-big bold margin-bottom-15">
                                 <Building />
                                 Empresa de Grúa
                             </h2>
@@ -351,24 +365,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
                             setForm((prev) => ({ ...prev, termsCheck: d }))
                         }
                     />
-                    <button
-                        className={`general-button | margin-top-25 touchable max-width-60 ${
-                            formState.loading && "loading-section"
-                        }`}
-                        title={
-                            !formState.isValid
-                                ? "Por favor completa los campos con datos validos"
-                                : ""
-                        }
-                        disabled={!formState.isValid}
-                    >
-                        {formState.loading ? (
-                            <span className="loader"></span>
-                        ) : (
-                            "Enviar Solicitud"
-                        )}
-                    </button>
-                </form>
+                </BaseForm>
             </div>
         )
     );
