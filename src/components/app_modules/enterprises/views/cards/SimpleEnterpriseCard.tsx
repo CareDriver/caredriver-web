@@ -1,6 +1,10 @@
 import Handshake from "@/icons/Handshake";
 import TriangleExclamation from "@/icons/TriangleExclamation";
 import { Enterprise } from "@/interfaces/Enterprise";
+import {
+    cutTextWithDotsByLength,
+    MAX_LENGTH_FOR_NAMES_DISPLAY,
+} from "@/utils/text_helpers/TextCutter";
 import Link from "next/link";
 
 const SimpleEnterpriseCard = ({
@@ -12,8 +16,11 @@ const SimpleEnterpriseCard = ({
 }) => {
     return (
         <Link href={route} className="enterprise-item | touchable">
-            <h3 className="text | medium center bolder capitalize margin-bottom-15">
-                {enterprise.name}
+            <h3 className="text | medium center bolder capitalize margin-bottom-15 wrap">
+                {cutTextWithDotsByLength(
+                    enterprise.name,
+                    MAX_LENGTH_FOR_NAMES_DISPLAY,
+                )}
             </h3>
 
             <img

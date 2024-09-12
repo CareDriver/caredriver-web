@@ -38,6 +38,10 @@ import "@/styles/components/users.css";
 import { checkPermission } from "@/components/guards/validators/RoleValidator";
 import FormToDisableUserByDateByAdmin from "../request_forms/to_change_state/FormToDisableUserByDateByAdmin";
 import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
+import {
+    cutTextWithDotsByLength,
+    MAX_LENGTH_FOR_NAMES,
+} from "@/utils/text_helpers/TextCutter";
 
 const UserProfileForAppUser = ({ userId }: { userId: string }) => {
     const router = useRouter();
@@ -75,8 +79,11 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                 <UserPhotoRenderer photo={user.photoUrl} />
 
                 <div className="user-info-subwrapper">
-                    <h1 className="text | big bolder capitalize">
-                        {user.fullName}
+                    <h1 className="text | big bolder capitalize wrap">
+                        {cutTextWithDotsByLength(
+                            user.fullName,
+                            MAX_LENGTH_FOR_NAMES,
+                        )}
                     </h1>
                     <h3 className="text | medium">{user.email}</h3>
                     <GuardOfModule

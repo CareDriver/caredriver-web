@@ -12,6 +12,7 @@ import TextField from "@/components/form/view/fields/TextField";
 import { validateEmialWithComparison } from "@/components/app_modules/users/validators/for_confirmations/DataConfirmationValidator";
 import UserPhotoRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserPhotoRenderer";
 import { getIdSaved } from "@/utils/generators/IdGenerator";
+import SimpleUserCard from "@/components/app_modules/users/views/cards/SimpleUserCard";
 
 interface Props {
     userToAdd: UserInterface;
@@ -86,16 +87,7 @@ const NewUserSupportForm: React.FC<Props> = ({ userToAdd, enterprise }) => {
                 </p>
             </div>
 
-            <div className="users-item | margin-top-25">
-                <UserPhotoRenderer photo={userToAdd.photoUrl} />
-                <div>
-                    <h2 className="text | bolder big-medium-v2 capitalize">
-                        {userToAdd.fullName}
-                    </h2>
-                    <h4 className="text | light">{userToAdd.email}</h4>
-                    <h4 className="text | light">{userToAdd.location}</h4>
-                </div>
-            </div>
+            <SimpleUserCard user={userToAdd} />
             <BaseForm
                 content={{
                     button: {

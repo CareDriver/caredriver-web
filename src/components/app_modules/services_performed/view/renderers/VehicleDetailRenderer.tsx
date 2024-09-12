@@ -24,34 +24,34 @@ const VehicleDetailRenderer: React.FC<Props> = ({ vehicle, titleSection }) => {
                 </h2>
                 <div className="column-wrapper margin-bottom-50">
                     {vehicle.type && (
-                        <span className="text">
+                        <span className="text | wrap">
                             <b>Categoria: </b>{" "}
                             {VEHICLE_CATEGORY_TO_SPANISH[vehicle.type]}
                         </span>
                     )}
-                    <span className="text">
+                    <span className="text | wrap">
                         <b>Nombre: </b>
                         {vehicle?.name}
                     </span>
 
                     {!isNullOrEmptyText(vehicle.description) && (
-                        <span className="text">
+                        <span className="text | wrap">
                             <b>Descripcion: </b> {vehicle?.description}
                         </span>
                     )}
                     {vehicle?.transmission && (
-                        <span className="text">
+                        <span className="text | wrap">
                             <b>Transmisión: </b>{" "}
                             {TRANSMITION_TO_SPANISH[vehicle?.transmission]}
                         </span>
                     )}
                     {vehicle?.usedTimes && (
-                        <span className="text">
+                        <span className="text | wrap">
                             <b>Veces usadas: </b> {vehicle?.usedTimes}
                         </span>
                     )}
                     {vehicle?.size && (
-                        <span className="text">
+                        <span className="text | wrap">
                             <b>Tamaño: </b> {getVehicleSizeLabel[vehicle.size]}
                         </span>
                     )}

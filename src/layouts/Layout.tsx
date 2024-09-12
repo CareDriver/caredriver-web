@@ -10,7 +10,7 @@ import Script from "next/script";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
     return (
-        <html lang="en">
+        <html lang="es">
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />      
             </Head>

@@ -1,5 +1,7 @@
 .debt-wrapper {
     display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
     flex-wrap: wrap;
     gap: 0.555555556rem;
 

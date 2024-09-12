@@ -8,6 +8,10 @@ import {
     timestampDateInSpanish,
 } from "@/utils/helpers/DateHelper";
 import TriangleExclamation from "@/icons/TriangleExclamation";
+import {
+    cutTextWithDotsByLength,
+    MAX_LENGTH_FOR_NAMES_DISPLAY,
+} from "@/utils/text_helpers/TextCutter";
 
 interface Props {
     user: UserInterface;
@@ -25,8 +29,11 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
         <div className={`users-item ${IS_DISABLED && "users-disable"}`}>
             <UserPhotoRenderer photo={user.photoUrl} />
             <div className="full-width">
-                <h2 className="text | bolder medium-big capitalize">
-                    {user.fullName}
+                <h2 className="text | bolder medium-big capitalize wrap">
+                    {cutTextWithDotsByLength(
+                        user.fullName,
+                        MAX_LENGTH_FOR_NAMES_DISPLAY,
+                    )}
                 </h2>
                 <h4 className="text | light">{user.email}</h4>
                 <h4 className="text | light">{user.phoneNumber}</h4>

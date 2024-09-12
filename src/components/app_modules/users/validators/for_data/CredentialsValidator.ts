@@ -1,3 +1,4 @@
+import { MAX_LENGTH_FOR_NAMES } from "@/utils/text_helpers/TextCutter";
 import { InputState } from "@/validators/InputValidatorSignature";
 import { PhoneNumberUtil } from "google-libphonenumber";
 
@@ -14,10 +15,10 @@ export const isValidName = (name: string): InputState => {
             isValid: false,
             message: "Por favor, ingresa un nombre valido",
         };
-    } else if (name.length > 100) {
+    } else if (name.length > MAX_LENGTH_FOR_NAMES) {
         return {
             isValid: false,
-            message: "No puedes ingresar mas de 100 caracteres para tu nombre",
+            message: `No puedes ingresar mas de ${MAX_LENGTH_FOR_NAMES} caracteres para tu nombre`,
         };
     } else {
         return {

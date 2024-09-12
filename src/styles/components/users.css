@@ -1,6 +1,8 @@
 .users-wrapper {
+    --width-item: 39.89rem;
+
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(min-content, 1fr));
     grid-auto-rows: auto;
     gap: 1.111111111rem;
 }
@@ -12,10 +14,12 @@
     gap: 1.111111111rem;
 
     width: 100%;
+    min-width: 0;
     padding: 1.388888889rem;
     border: 0.111111111rem solid var(--gray-medium);
     border-radius: 0.833333333rem;
     transition: all ease-in 150ms;
+    box-sizing: border-box;
 }
 
 .users-item.users-disable {
@@ -54,7 +58,7 @@
     }
 }
 
-@media only screen and (max-width: 1282px) {
+@media only screen and (max-width: 1677px) {
     .users-wrapper {
         grid-template-columns: 1fr;
     }
@@ -63,6 +67,7 @@
 @media only screen and (max-width: 427px) {
     .users-item {
         flex-direction: column;
+        padding: 1.388888889rem 1.1rem;
     }
 
     .users-item > * {

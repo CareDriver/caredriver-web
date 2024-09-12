@@ -22,32 +22,6 @@ import { ServiceType } from "@/interfaces/Services";
 
 const enterpriseCollection = collection(firestore, Collections.Enterprises);
 
-export const printEnterprisesWithUsers = async () => {
-    try {
-        const snapshot = await getDocs(enterpriseCollection);
-
-        const enterprisesWithUsers = snapshot.docs
-            .map((doc) => {
-                let en = doc.data() as Enterprise;
-                en.id = doc.id;
-                return en;
-            })
-            .filter(
-                (enterprise) =>
-                    enterprise.addedUsers !== undefined &&
-                    enterprise.addedUsers.length > 0,
-            );
-
-        enterprisesWithUsers.forEach((enterprise) => {
-            console.log(`Name: ${enterprise.name}`);
-            console.log(`Id: ${enterprise.id}`);
-            console.log("-----------------------------");
-        });
-    } catch (error) {
-        console.error("Error fetching enterprises:", error);
-    }
-};
-
 export const sendEnterpriseReq = async (
     id: string,
     enterpriseReq: Enterprise,
