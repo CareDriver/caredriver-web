@@ -20,6 +20,7 @@ import {
     differenceOnDays,
     timestampDateInSpanish,
 } from "@/utils/helpers/DateHelper";
+import { Locations } from "@/interfaces/Locations";
 
 type ContextType = {
     user: UserInterface | undefined;
@@ -44,54 +45,29 @@ const loadUserLoggedData = (
     if (userData) {
         return {
             id: id,
-            fakeId: userData.fakeId,
-            fullName: userData?.fullName === undefined ? "" : userData.fullName,
-            phoneNumber:
-                userData?.phoneNumber === undefined ? "" : userData.phoneNumber,
-            photoUrl:
-                userData?.photoUrl === undefined
-                    ? EMPTY_REF_ATTACHMENT
-                    : userData.photoUrl,
-            // comments: userData?.comments === undefined ? [] : userData.comments,
-            vehicles: userData?.vehicles === undefined ? [] : userData.vehicles,
-            services: userData?.services === undefined ? [] : userData.services,
-            servicesData:
-                userData?.servicesData === undefined
-                    ? servicesData
-                    : userData.servicesData,
-            pickUpLocationsHistory:
-                userData?.pickUpLocationsHistory === undefined
-                    ? []
-                    : userData.pickUpLocationsHistory,
-            deliveryLocationsHistory:
-                userData?.deliveryLocationsHistory === undefined
-                    ? []
-                    : userData.deliveryLocationsHistory,
-            email: userData?.email === undefined ? "" : userData.email,
-            serviceRequests:
-                userData?.serviceRequests === undefined
-                    ? defaultServiceReq
-                    : userData.serviceRequests,
-            location: userData?.location,
-            balance:
-                userData?.balance === undefined
-                    ? defaultBalance
-                    : userData.balance,
-            balanceHistory: userData?.balanceHistory,
-            disable: userData?.disable,
+            fakeId: userData.fakeId ?? "",
+            fullName: userData?.fullName ?? "",
+            phoneNumber: userData?.phoneNumber ?? "",
+            photoUrl: userData?.photoUrl ?? EMPTY_REF_ATTACHMENT,
+            vehicles: userData?.vehicles ?? [],
+            services: userData?.services ?? [],
+            servicesData: userData?.servicesData ?? servicesData,
+            pickUpLocationsHistory: userData?.pickUpLocationsHistory ?? [],
+            deliveryLocationsHistory: userData?.deliveryLocationsHistory ?? [],
+            email: userData?.email ?? "",
+            serviceRequests: userData?.serviceRequests ?? defaultServiceReq,
+            location: userData?.location ?? Locations.CochabambaBolivia,
+            balance: userData?.balance ?? defaultBalance,
+            balanceHistory: userData?.balanceHistory ?? [],
             disabledUntil: userData.disabledUntil,
             createdAt: userData.createdAt,
             serverUserAt: userData.serverUserAt,
+            disable: userData?.disable,
             deleted: userData.deleted,
             serviceVehicles: userData?.serviceVehicles,
-            role: userData?.role === undefined ? UserRole.User : userData.role,
-            identityCard: userData.identityCard
-                ? userData.identityCard
-                : undefined,
-            minimumBalance:
-                userData.minimumBalance === undefined
-                    ? defaultMinBalance
-                    : userData.minimumBalance,
+            role: userData?.role ?? UserRole.User,
+            identityCard: userData.identityCard,
+            minimumBalance: userData.minimumBalance ?? defaultMinBalance,
             branding: userData.branding,
             driverEnterpriseId: userData.driverEnterpriseId,
             laundryEnterpriseId: userData.laundryEnterpriseId,
