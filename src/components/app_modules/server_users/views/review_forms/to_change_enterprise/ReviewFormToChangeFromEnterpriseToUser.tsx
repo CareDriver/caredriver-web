@@ -36,6 +36,7 @@ import Building from "@/icons/Building";
 import { ENTERPRISE_TO_SPANISH } from "@/components/app_modules/enterprises/utils/EnterpriseSpanishTranslator";
 import { ServiceType } from "@/interfaces/Services";
 import { getIdSaved } from "@/utils/generators/IdGenerator";
+import UserStateRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserStateRenderer";
 
 interface Props {
     reqId: string;
@@ -278,6 +279,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
             <div className="row-wrapper | gap-20">
                 <UserStateWithMessageRenderer userData={requesterUser} />
             </div>
+            {requesterUser && <UserStateRenderer user={requesterUser} />}
             <BaseFormWithTwoButtons
                 content={{
                     firstButton: {
@@ -302,9 +304,12 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
                     secondButton: {
                         content: {
                             legend: "Aprobar",
-                            buttonClassStyle: wasReviewed()
-                                ? "hidden"
-                                : undefined,
+                            buttonClassStyle:
+                                wasReviewed() ||
+                                requesterUser?.deleted ||
+                                newEnterprise?.deleted
+                                    ? "hidden"
+                                    : undefined,
                         },
                         behavior: {
                             loading: reviewState.loading,

@@ -217,7 +217,7 @@ const ReviewFormForEditingAnEnterprise: React.FC<Props> = ({
                             buttonClassStyle: wasReviewed()
                                 ? "hidden"
                                 : "general-button gray",
-                            loaderClassStyle: "loader-gray"
+                            loaderClassStyle: "loader-gray",
                         },
                         behavior: {
                             loading: reviewState.loading,
@@ -233,9 +233,10 @@ const ReviewFormForEditingAnEnterprise: React.FC<Props> = ({
                     secondButton: {
                         content: {
                             legend: "Aprobar",
-                            buttonClassStyle: wasReviewed()
-                                ? "hidden"
-                                : undefined,
+                            buttonClassStyle:
+                                wasReviewed() || enteprise.deleted
+                                    ? "hidden"
+                                    : undefined,
                         },
                         behavior: {
                             loading: reviewState.loading,

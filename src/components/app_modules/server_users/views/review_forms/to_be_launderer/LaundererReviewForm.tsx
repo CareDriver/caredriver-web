@@ -214,6 +214,7 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
                 <UserStateWithMessageRenderer userData={requesterUser} />
             </div>
+            {requesterUser && <UserStateRenderer user={requesterUser} />}
 
             <BaseFormWithTwoButtons
                 content={{
@@ -239,9 +240,12 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     secondButton: {
                         content: {
                             legend: "Aprobar",
-                            buttonClassStyle: wasReviewed()
-                                ? "hidden"
-                                : undefined,
+                            buttonClassStyle:
+                                wasReviewed() ||
+                                requesterUser?.deleted ||
+                                enterprise?.deleted
+                                    ? "hidden"
+                                    : undefined,
                         },
                         behavior: {
                             loading: reviewState.loading,

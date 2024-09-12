@@ -144,9 +144,10 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
                     secondButton: {
                         content: {
                             legend: "Aprobar",
-                            buttonClassStyle: !req.active
-                                ? "hidden"
-                                : undefined,
+                            buttonClassStyle:
+                                !req.active || userReq?.deleted
+                                    ? "hidden"
+                                    : undefined,
                         },
                         behavior: {
                             loading: loading || isNull(userReq),

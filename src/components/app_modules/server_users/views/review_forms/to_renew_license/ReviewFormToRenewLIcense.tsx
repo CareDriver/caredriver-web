@@ -193,7 +193,10 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
                     secondButton: {
                         content: {
                             legend: "Aprobar",
-                            buttonClassStyle: req.active ? undefined : "hidden",
+                            buttonClassStyle:
+                                req.active || !userReq?.deleted
+                                    ? undefined
+                                    : "hidden",
                         },
                         behavior: {
                             action: approve,
@@ -208,7 +211,8 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
                     loading: loading || !userData || !userReq,
                 }}
             >
-                <UserStateWithMessageRenderer userData={userData} />
+                <UserStateWithMessageRenderer userData={userReq} />
+                {userReq && <UserStateRenderer user={userReq} />}
 
                 {userReq && userData ? (
                     <PersonalDataRenderer
