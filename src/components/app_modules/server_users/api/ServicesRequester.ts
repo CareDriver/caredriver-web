@@ -9,10 +9,12 @@ import {
     getDocs,
     limit,
     limitToLast,
+    onSnapshot,
     orderBy,
     query,
     startAfter,
     Timestamp,
+    Unsubscribe,
     updateDoc,
     where,
 } from "firebase/firestore";
@@ -98,6 +100,28 @@ export const getServiceReqById = async (
             return data;
         }
         return undefined;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const getServiceReqByIdInRealTime = async (
+    id: string,
+    collection: CollectionReference,
+    docSetter: (d: UserRequest | undefined) => void,
+): Promise<Unsubscribe | undefined> => {
+    try {
+        const q = query(collection, where("id", "==", id));
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            if (!querySnapshot.empty) {
+                const doc = querySnapshot.docs[0];
+                docSetter(doc.data() as UserRequest);
+            } else {
+                docSetter(undefined);
+            }
+        });
+
+        return unsubscribe
     } catch (error) {
         throw error;
     }

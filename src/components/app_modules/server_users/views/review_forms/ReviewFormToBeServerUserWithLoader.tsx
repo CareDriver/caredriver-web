@@ -3,8 +3,9 @@ import { UserRequest } from "@/interfaces/UserRequest";
 import {
     getServiceCollection,
     getServiceReqById,
+    getServiceReqByIdInRealTime,
 } from "@/components/app_modules/server_users/api/ServicesRequester";
-import { CollectionReference } from "firebase/firestore";
+import { CollectionReference, Unsubscribe } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -24,24 +25,25 @@ const ReviewFormToBeServerUserWithLoader = ({
     reqId: string;
     type: ServiceType;
 }) => {
-    const [serviceReq, setServiceReq] = useState<UserRequest | null>(null);
+    const [serviceReq, setServiceReq] = useState<
+        UserRequest | null | undefined
+    >(null);
     const collection: CollectionReference = getServiceCollection(type);
     const router = useRouter();
 
     useEffect(() => {
-        getServiceReqById(reqId, collection)
-            .then((data) => {
-                if (data) {
-                    setServiceReq(data);
-                } else {
-                    router.push(routeToRequestsToBeUserServerAsAdmin(type));
-                    toast.error("Petición no encontrada");
-                }
+        let unsubscribe: Unsubscribe | undefined;
+
+        getServiceReqByIdInRealTime(reqId, collection, setServiceReq)
+            .then((u) => {
+                unsubscribe = u;
             })
             .catch((e) => {
                 router.push(routeToRequestsToBeUserServerAsAdmin(type));
                 toast.error("Petición no encontrada");
             });
+
+        return () => unsubscribe && unsubscribe();
     }, []);
 
     const renderReviewForm = () => {
