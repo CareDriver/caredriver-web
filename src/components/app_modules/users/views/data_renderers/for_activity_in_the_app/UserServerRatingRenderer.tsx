@@ -6,8 +6,7 @@ const UserServerRatingRenderer = ({
 }: {
     serviceData: ServicesDataInterface | undefined;
 }) => {
-    console.log(serviceData);
-
+    
     return (
         serviceData && (
             <div className="margin-top-15">
