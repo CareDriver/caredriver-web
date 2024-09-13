@@ -28,6 +28,10 @@ import { mechanicReqCollection } from "./MechanicRequester";
 import { towReqCollection } from "./TowRequester";
 import { laundryReqCollection } from "./LaundryRequester";
 import { ServiceType } from "@/interfaces/Services";
+import {
+    getDocInRealTime,
+    RealTimeResponse,
+} from "@/utils/requesters/RealTimeFetcher";
 
 export const MIN_NUM_OF_APPROVALS = 1;
 
@@ -88,7 +92,7 @@ export const getNumPages = async (
     return numPages;
 };
 
-export const getServiceReqById = async (
+export const getReqToBeUserServerById = async (
     id: string,
     collection: CollectionReference,
 ): Promise<UserRequest | undefined> => {
@@ -105,26 +109,13 @@ export const getServiceReqById = async (
     }
 };
 
-export const getServiceReqByIdInRealTime = async (
+export const getReqToBeUserServerInRealTime = async (
     id: string,
     collection: CollectionReference,
-    docSetter: (d: UserRequest | undefined) => void,
-): Promise<Unsubscribe | undefined> => {
-    try {
-        const q = query(collection, where("id", "==", id));
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            if (!querySnapshot.empty) {
-                const doc = querySnapshot.docs[0];
-                docSetter(doc.data() as UserRequest);
-            } else {
-                docSetter(undefined);
-            }
-        });
-
-        return unsubscribe
-    } catch (error) {
-        throw error;
-    }
+    behavior: RealTimeResponse<UserRequest>,
+): Promise<Unsubscribe> => {
+    const q = query(collection, where("id", "==", id));
+    return await getDocInRealTime<UserRequest>(q, behavior);
 };
 
 export const numOfApprovals = (req: UserRequest): number => {

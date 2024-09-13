@@ -2,8 +2,8 @@
 import { UserRequest } from "@/interfaces/UserRequest";
 import {
     getServiceCollection,
-    getServiceReqById,
-    getServiceReqByIdInRealTime,
+    getReqToBeUserServerById,
+    getReqToBeUserServerInRealTime,
 } from "@/components/app_modules/server_users/api/ServicesRequester";
 import { CollectionReference, Unsubscribe } from "firebase/firestore";
 import { useRouter } from "next/navigation";
@@ -33,15 +33,19 @@ const ReviewFormToBeServerUserWithLoader = ({
 
     useEffect(() => {
         let unsubscribe: Unsubscribe | undefined;
+        const onNotFound = () => {
+            router.push(routeToRequestsToBeUserServerAsAdmin(type));
+            toast.error("Petición no encontrada");
+        };
 
-        getServiceReqByIdInRealTime(reqId, collection, setServiceReq)
+        getReqToBeUserServerInRealTime(reqId, collection, {
+            onFound: setServiceReq,
+            onNotFound: onNotFound,
+        })
             .then((u) => {
                 unsubscribe = u;
             })
-            .catch((e) => {
-                router.push(routeToRequestsToBeUserServerAsAdmin(type));
-                toast.error("Petición no encontrada");
-            });
+            .catch(() => onNotFound());
 
         return () => unsubscribe && unsubscribe();
     }, []);

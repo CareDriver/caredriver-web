@@ -13,7 +13,7 @@ import { updateUser } from "@/components/app_modules/users/api/UserRequester";
 import { ServiceReqState, Services } from "@/interfaces/Services";
 import { deleteField } from "firebase/firestore";
 import {
-    getServiceReqById,
+    getReqToBeUserServerById,
     saveReview,
 } from "@/components/app_modules/server_users/api/ServicesRequester";
 import { driveReqCollection } from "@/components/app_modules/server_users/api/DriveRequester";
@@ -71,7 +71,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
             ) {
                 let requestId: string =
                     userWithRequests.serviceRequests.driveCar.id;
-                var request = await getServiceReqById(
+                var request = await getReqToBeUserServerById(
                     requestId,
                     driveReqCollection,
                 );
@@ -87,7 +87,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
                 if (!areSameRequest) {
                     let requestId: string =
                         userWithRequests.serviceRequests.driveMotorcycle.id;
-                    var request = await getServiceReqById(
+                    var request = await getReqToBeUserServerById(
                         requestId,
                         driveReqCollection,
                     );
@@ -124,7 +124,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
             let requestToRefuse: UserRequest | undefined = undefined;
             let requestId: string =
                 userWithRequests.serviceRequests?.laundry.id;
-            requestToRefuse = await getServiceReqById(
+            requestToRefuse = await getReqToBeUserServerById(
                 requestId,
                 laundryReqCollection,
             );
@@ -151,7 +151,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
         ) {
             let requestToRefuse: UserRequest | undefined = undefined;
             let requestId: string = userWithRequest.serviceRequests?.tow.id;
-            requestToRefuse = await getServiceReqById(
+            requestToRefuse = await getReqToBeUserServerById(
                 requestId,
                 towReqCollection,
             );
@@ -181,7 +181,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
             let requestToRefuse: UserRequest | undefined = undefined;
             let requestId: string =
                 userWithRequest.serviceRequests?.mechanic.id;
-            requestToRefuse = await getServiceReqById(
+            requestToRefuse = await getReqToBeUserServerById(
                 requestId,
                 mechanicReqCollection,
             );

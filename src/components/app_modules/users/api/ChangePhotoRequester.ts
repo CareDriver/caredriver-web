@@ -15,11 +15,19 @@ import {
     endBefore,
     getDocs,
     getCountFromServer,
+    Unsubscribe,
 } from "firebase/firestore";
 import { Collections } from "@/firebase/CollecionNames";
 import { ChangePhotoReqInterface } from "@/interfaces/ChangePhotoReq";
+import {
+    getDocInRealTime,
+    RealTimeResponse,
+} from "@/utils/requesters/RealTimeFetcher";
 
-const changePhotoReqCollection = collection(firestore, Collections.ChangePhotoRequests);
+const changePhotoReqCollection = collection(
+    firestore,
+    Collections.ChangePhotoRequests,
+);
 
 /**
  * Saves a user to the database.
@@ -44,18 +52,10 @@ export const saveChangePhotoReq = async (
 
 export const getUpPhotoReqById = async (
     reqId: string,
-): Promise<ChangePhotoReqInterface | undefined> => {
-    try {
-        const reqDoc = await getDoc(doc(changePhotoReqCollection, reqId));
-        if (reqDoc.exists()) {
-            var data = reqDoc.data() as ChangePhotoReqInterface;
-            data.id = reqId;
-            return data;
-        }
-        return undefined;
-    } catch (error) {
-        throw error;
-    }
+    behavior: RealTimeResponse<ChangePhotoReqInterface>,
+): Promise<Unsubscribe> => {
+    const q = query(changePhotoReqCollection, where("id", "==", reqId));
+    return await getDocInRealTime<ChangePhotoReqInterface>(q, behavior);
 };
 
 export const updateUpPhotoReq = async (
@@ -115,7 +115,9 @@ export const getChangePhotoReqPaginated = async (
     };
 };
 
-export const getChangePhotoReqNumPages = async (numPerPages: number): Promise<number> => {
+export const getChangePhotoReqNumPages = async (
+    numPerPages: number,
+): Promise<number> => {
     const count = await getCountFromServer(
         query(changePhotoReqCollection, where("active", "==", true)),
     );

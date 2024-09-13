@@ -37,6 +37,7 @@ import { ENTERPRISE_TO_SPANISH } from "@/components/app_modules/enterprises/util
 import { ServiceType } from "@/interfaces/Services";
 import { getIdSaved } from "@/utils/generators/IdGenerator";
 import UserStateRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserStateRenderer";
+import { Unsubscribe } from "firebase/firestore";
 
 interface Props {
     reqId: string;
@@ -230,13 +231,21 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
     };
 
     useEffect(() => {
-        getRequestToChangeAssociatedEnterpriseById(reqId).then((res) => {
-            if (!res) {
-                toast.error("Peticion no encontrada");
-                router.push(routeToUserRequestsToChangeEnterpriseAsAdmin());
-            }
-            setRequest(res);
-        });
+        let unsubscribe: Unsubscribe | undefined;
+
+        const onNotFound = () => {
+            toast.error("Peticion no encontrada");
+            router.push(routeToUserRequestsToChangeEnterpriseAsAdmin());
+        }
+
+        getRequestToChangeAssociatedEnterpriseById(reqId, {
+            onFound: setRequest,
+            onNotFound: onNotFound,
+        })
+            .then((u) => (unsubscribe = u))
+            .catch(() => onNotFound);
+
+        return () => unsubscribe && unsubscribe()
     }, []);
 
     useEffect(() => {

@@ -3,6 +3,10 @@ import { firestore } from "@/firebase/FirebaseConfig";
 import { RequestForChangeOfEnterprise } from "@/interfaces/RequestForChangeOfEnterprise";
 import { ServiceType } from "@/interfaces/Services";
 import {
+    getDocInRealTime,
+    RealTimeResponse,
+} from "@/utils/requesters/RealTimeFetcher";
+import {
     collection,
     doc,
     DocumentSnapshot,
@@ -16,6 +20,7 @@ import {
     query,
     setDoc,
     startAfter,
+    Unsubscribe,
     updateDoc,
     where,
 } from "firebase/firestore";
@@ -36,18 +41,10 @@ export const sendRequestToChangeAssociatedEnterprise = async (
 
 export const getRequestToChangeAssociatedEnterpriseById = async (
     reqId: string,
-): Promise<RequestForChangeOfEnterprise | undefined> => {
-    try {
-        const reqDoc = await getDoc(doc(COLLECTION, reqId));
-        if (reqDoc.exists()) {
-            var data = reqDoc.data() as RequestForChangeOfEnterprise;
-            data.id = reqId;
-            return data;
-        }
-        return undefined;
-    } catch (error) {
-        throw error;
-    }
+    behavior: RealTimeResponse<RequestForChangeOfEnterprise>,
+): Promise<Unsubscribe> => {
+    const q = query(COLLECTION, where("id", "==", reqId));
+    return await getDocInRealTime<RequestForChangeOfEnterprise>(q, behavior);
 };
 
 export const updateRequestToChangeAssociatedEnterprise = async (

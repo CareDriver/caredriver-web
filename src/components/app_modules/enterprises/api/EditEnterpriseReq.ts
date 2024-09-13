@@ -2,6 +2,10 @@ import { Collections } from "@/firebase/CollecionNames";
 import { firestore } from "@/firebase/FirebaseConfig";
 import { ReqEditEnterprise } from "@/interfaces/Enterprise";
 import {
+    getDocInRealTime,
+    RealTimeResponse,
+} from "@/utils/requesters/RealTimeFetcher";
+import {
     collection,
     doc,
     DocumentSnapshot,
@@ -15,11 +19,15 @@ import {
     query,
     setDoc,
     startAfter,
+    Unsubscribe,
     updateDoc,
     where,
 } from "firebase/firestore";
 
-const EditEnterpriseCollection = collection(firestore, Collections.EditEnterprises);
+const EditEnterpriseCollection = collection(
+    firestore,
+    Collections.EditEnterprises,
+);
 
 export const sendEditEnterpriseReq = async (
     id: string,
@@ -33,20 +41,12 @@ export const sendEditEnterpriseReq = async (
     }
 };
 
-export const getEditEnterpriseReqById = async (
+export const getReqToEditEnterpriseInRealTime = async (
     id: string,
-): Promise<ReqEditEnterprise | undefined> => {
-    try {
-        const enterpriseDoc = await getDoc(doc(EditEnterpriseCollection, id));
-        if (enterpriseDoc.exists()) {
-            var data = enterpriseDoc.data() as ReqEditEnterprise;
-            data.id = id;
-            return data;
-        }
-        return undefined;
-    } catch (error) {
-        throw error;
-    }
+    behavior: RealTimeResponse<ReqEditEnterprise>,
+): Promise<Unsubscribe> => {
+    const q = query(EditEnterpriseCollection, where("id", "==", id));
+    return await getDocInRealTime<ReqEditEnterprise>(q, behavior);
 };
 
 export const updateUpdateEnterprise = async (

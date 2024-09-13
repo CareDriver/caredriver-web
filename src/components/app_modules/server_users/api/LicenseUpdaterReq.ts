@@ -2,24 +2,32 @@ import { Collections } from "@/firebase/CollecionNames";
 import { firestore } from "@/firebase/FirebaseConfig";
 import { LicenseUpdateReq } from "@/interfaces/PersonalDocumentsInterface";
 import {
+    getDocInRealTime,
+    RealTimeResponse,
+} from "@/utils/requesters/RealTimeFetcher";
+import {
     collection,
     doc,
     DocumentSnapshot,
     endBefore,
     getCountFromServer,
-    getDoc,
     getDocs,
     limit,
     limitToLast,
+    onSnapshot,
     orderBy,
     query,
     setDoc,
     startAfter,
+    Unsubscribe,
     updateDoc,
     where,
 } from "firebase/firestore";
 
-const licenseUpdateReqCollection = collection(firestore, Collections.LicenseUpdateReq);
+const licenseUpdateReqCollection = collection(
+    firestore,
+    Collections.LicenseUpdateReq,
+);
 
 export const sendLicenseUpdateReq = async (
     id: string,
@@ -33,20 +41,12 @@ export const sendLicenseUpdateReq = async (
     }
 };
 
-export const getLicenceUpdateReqById = async (
-    reqId: string,
-): Promise<LicenseUpdateReq | undefined> => {
-    try {
-        const reqDoc = await getDoc(doc(licenseUpdateReqCollection, reqId));
-        if (reqDoc.exists()) {
-            var data = reqDoc.data() as LicenseUpdateReq;
-            data.id = reqId;
-            return data;
-        }
-        return undefined;
-    } catch (error) {
-        throw error;
-    }
+export const getRenewLicenceReqInRealTime = async (
+    id: string,
+    behavior: RealTimeResponse<LicenseUpdateReq>,
+): Promise<Unsubscribe> => {
+    const q = query(licenseUpdateReqCollection, where("id", "==", id));
+    return await getDocInRealTime<LicenseUpdateReq>(q, behavior);
 };
 
 export const updateLicenseUpReq = async (
