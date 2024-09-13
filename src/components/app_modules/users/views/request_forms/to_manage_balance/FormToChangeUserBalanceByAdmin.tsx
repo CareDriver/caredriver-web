@@ -57,7 +57,7 @@ const FormToChangeUserBalanceByAdmin = ({
 }: {
     user: UserInterface;
     adminUser: UserInterface;
-}) => {    
+}) => {
     const { loading, setLoadingAll } = useContext(PageStateContext);
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
@@ -103,13 +103,19 @@ const FormToChangeUserBalanceByAdmin = ({
                     },
                 );
 
-                // TODO: ask for the correct to register a balance history
+                const note =
+                    form.reasonOfChange.type === "bankTransactionNumber"
+                        ? "Numero de Transaccion Bancaria - ".concat(
+                              form.reasonOfChange.description.value,
+                          )
+                        : form.reasonOfChange.description.value;
+
                 const newBalanceForHistory: BalanceHistory = {
                     ...OLD_BALANCE,
                     date: Timestamp.now(),
                     balanceRechargeId: DOC_ID,
                     newBalance: NEW_BALANCE,
-                    note: form.reasonOfChange.description.value,
+                    note: note,
                 };
                 const newHistory: BalanceHistory[] = user.balanceHistory
                     ? [...user.balanceHistory, newBalanceForHistory]

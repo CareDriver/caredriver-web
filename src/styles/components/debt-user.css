@@ -1,7 +1,5 @@
 .debt-wrapper {
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
     flex-wrap: wrap;
     gap: 0.555555556rem;
 
@@ -17,6 +15,7 @@
     border: 0.111111111rem solid var(--gray-medium);
     padding: 1.111111111rem 1.666666667rem;
     border-radius: 0.833333333rem;
+    transition: all ease-in 200ms;
 }
 
 .debt-item.increased {
@@ -25,4 +24,9 @@
 
 .debt-item.decreased {
     border-color: var(--red);
+}
+
+.debt-item.touchable:hover {
+    border-radius: 1.5rem;
+
 }
