@@ -17,8 +17,7 @@
     flex-direction: column;
 
     width: 100%;
-    height: 100dvh;
-    overflow: hidden;
+    min-height: 100dvh;
     padding: 4.444444444rem 2.777777778rem;
 }
 

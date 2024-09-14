@@ -19,18 +19,17 @@ const UserProfileForAdmin = () => {
 
     return (
         user && (
-            <section className="user-page-wrapper | max-height-100">
+            <section className="user-page-wrapper">
                 <section className="profile-wrapper">
                     <UserPhotoRenderer photo={user.photoUrl} />
-                    <div className="profile-info-wrapper">
-                        <h1 className="profile-fullname">{user.fullName}</h1>
+                    <div className="profile-info-wrapper max-width-80">
+                        <h1 className="text | capitalize bolder big wrap">{user.fullName}</h1>
                         <h2 className="profile-email">{user.email}</h2>
                     </div>
                 </section>
                 <GuardOfModule user={user} roles={ROLES_TO_EDIT_USER_PROFILE}>
                     <FormToUpdateUserData user={user} />
                 </GuardOfModule>
-                <span className="circles-right-bottomv2 green"></span>
             </section>
         )
     );
