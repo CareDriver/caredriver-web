@@ -1,6 +1,5 @@
 "use client";
 
-import TriangleExclamation from "@/icons/TriangleExclamation";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { toast } from "react-toastify";
@@ -110,6 +109,18 @@ const FormToDisableUserByDateByAdmin: React.FC<Props> = ({
         e.preventDefault();
         if (!loading || !formState.loading) {
             setLoadingAll(true, setFormState);
+
+            if (
+                !isValidTextField(form.confirmation) ||
+                !(isDisable || isValidDateField(form.deadline)) ||
+                !isValidTextField(form.reason)
+            ) {
+                setLoadingAll(false, setFormState);
+                toast.warning("Completa los campos con datos validos", {
+                    toastId: "invalid-form-toast",
+                });
+                return;
+            }
 
             if (user.id && adminUser.id) {
                 const DOC_ID = genDocId();

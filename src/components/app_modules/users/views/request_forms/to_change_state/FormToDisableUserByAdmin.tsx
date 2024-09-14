@@ -80,31 +80,45 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
             }
 
             try {
-                await toast.promise(
-                    fetch("/api/userstate", {
-                        method: "POST",
-                        body: JSON.stringify({
-                            userId: user.id,
-                            state: !isDisable,
+                await toast
+                    .promise(
+                        fetch("/api/userstate", {
+                            method: "POST",
+                            body: JSON.stringify({
+                                userId: user.id,
+                                state: !isDisable,
+                            }),
+                            headers: {
+                                Accept: "application/json",
+                                "Content-Type": "application/json",
+                            },
                         }),
-                        headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
+                        {
+                            pending: isDisable
+                                ? "Habilitando la authentication del usuario"
+                                : "Deshabilitando la authentication del usuario",
+                            success: isDisable ? "Habilitado" : "Deshabilitado",
+                            error: isDisable
+                                ? "Error al habilitar la authentication del usuario, inténtalo de nuevo por favor"
+                                : "Error al deshabilitar la authentication del usuario, inténtalo de nuevo por favor",
                         },
-                    }),
-                    {
-                        pending: isDisable
-                            ? "Habilitando la authentication del usuario"
-                            : "Deshabilitando la authentication del usuario",
-                        success: isDisable ? "Habilitado" : "Deshabilitado",
-                        error: isDisable
-                            ? "Error al habilitar la authentication del usuario, inténtalo de nuevo por favor"
-                            : "Error al deshabilitar la authentication del usuario, inténtalo de nuevo por favor",
-                    },
-                );
-            } catch (e) {
-                console.log(e);
-            }
+                    )
+                    .then(() => {})
+                    .catch((e) => {
+                        let errorCode = e.code;
+                        if (errorCode === "auth/user-not-found") {
+                            let feedBackMessage = isDisable
+                                ? "El usuario no fue encontrado para habilitar su authentication"
+                                : "El usuario no fue encontrado para deshabilitar su authentication";
+
+                            toast.error(feedBackMessage);
+                        } else {
+                            toast.error(
+                                "Algo fallo, inténtalo de nuevo por favor",
+                            );
+                        }
+                    });
+            } catch (e) {}
         }
     };
 
@@ -112,6 +126,17 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
         e.preventDefault();
         if (!loading || !formState.loading) {
             setLoadingAll(true, setFormState);
+
+            if (
+                !isValidTextField(form.confirmation) ||
+                !isValidTextField(form.reason)
+            ) {
+                setLoadingAll(false, setFormState);
+                toast.warning("Completa los campos con datos validos", {
+                    toastId: "invalid-form-toast",
+                });
+                return;
+            }
 
             if (user.id && adminUser.id) {
                 const DOC_ID = genDocId();
