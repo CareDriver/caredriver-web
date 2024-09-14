@@ -1,7 +1,7 @@
 "use client";
 
 import { UserInterface } from "@/interfaces/UserInterface";
-import { getUserByFakeId } from "@/components/app_modules/users/api/UserRequester";
+import { getUserByFakeIdInRealTime } from "@/components/app_modules/users/api/UserRequester";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -42,6 +42,7 @@ import {
     cutTextWithDotsByLength,
     MAX_LENGTH_FOR_NAMES,
 } from "@/utils/text_helpers/TextCutter";
+import { Unsubscribe } from "firebase/firestore";
 
 const UserProfileForAppUser = ({ userId }: { userId: string }) => {
     const router = useRouter();
@@ -53,20 +54,26 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
     } | null>(null);
 
     useEffect(() => {
-        getUserByFakeId(userId)
+        let unsubscribe: Unsubscribe | undefined;
+
+        const onNotFound = () => {
+            toast.error("Usuario no encontrado");
+            router.push(routeToAllUsersAsAdmin());
+        };
+
+        getUserByFakeIdInRealTime(userId, {
+            onFound: (u) => {
+                setUser(u);
+                setRole(getUserRoleDetails(u));
+            },
+            onNotFound: onNotFound,
+        })
             .then((res) => {
-                if (res) {
-                    setUser(res);
-                    setRole(getUserRoleDetails(res));
-                } else {
-                    toast.error("Usuario no encontrado");
-                    router.push(routeToAllUsersAsAdmin());
-                }
+                unsubscribe = res;
             })
-            .catch((e) => {
-                toast.error("Usuario no encontrado");
-                router.push(routeToAllUsersAsAdmin());
-            });
+            .catch((e) => onNotFound());
+
+        return () => unsubscribe && unsubscribe();
     }, []);
 
     if (!user || !adminUser) {

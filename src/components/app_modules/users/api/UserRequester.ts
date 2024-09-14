@@ -16,8 +16,13 @@ import {
     getCountFromServer,
     and,
     or,
+    Unsubscribe,
 } from "firebase/firestore";
 import { UserInterface, UserRole } from "../../../../interfaces/UserInterface";
+import {
+    getDocInRealTime,
+    RealTimeResponse,
+} from "@/utils/requesters/RealTimeFetcher";
 
 const usersCollection = collection(firestore, "users");
 
@@ -25,10 +30,7 @@ export const getUserByEmail = async (
     email: string,
 ): Promise<UserInterface | undefined> => {
     try {
-        const q = query(
-            usersCollection,
-            where("email", "==", email),
-        );
+        const q = query(usersCollection, where("email", "==", email));
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
@@ -125,6 +127,14 @@ export const getUserByFakeId = async (
     } catch (error) {
         throw error;
     }
+};
+
+export const getUserByFakeIdInRealTime = async (
+    fakeUserId: string,
+    behavior: RealTimeResponse<UserInterface>,
+): Promise<Unsubscribe> => {
+    const q = query(usersCollection, where("fakeId", "==", fakeUserId));
+    return await getDocInRealTime<UserInterface>(q, behavior);
 };
 
 export const getUsersByTheirIds = async (
