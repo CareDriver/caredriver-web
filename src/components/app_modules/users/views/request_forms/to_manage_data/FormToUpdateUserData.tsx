@@ -1,6 +1,9 @@
 "use client";
 import { UserInterface } from "@/interfaces/UserInterface";
-import { updateUser } from "@/components/app_modules/users/api/UserRequester";
+import {
+    checkEmailExists,
+    updateUser,
+} from "@/components/app_modules/users/api/UserRequester";
 import { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import BaseForm from "@/components/form/view/forms/BaseForm";
@@ -85,14 +88,42 @@ const FormToUpdateUserData: React.FC<Props> = ({ user }) => {
         }
 
         try {
+            let newEmail = user.email;
+            if (user.email !== form.email.value) {
+                let amountOfUsers = await checkEmailExists(
+                    form.email.value.trim().toLocaleLowerCase(),
+                );
+
+                if (amountOfUsers > 0) {
+                    setForm((prev) => ({
+                        ...prev,
+                        email: {
+                            ...prev.email,
+                            message: "El correo ya fue registrado",
+                        },
+                    }));
+                    setFormState((prev) => ({
+                        ...prev,
+                        loading: false,
+                        isValid: false,
+                    }));
+                    return;
+                } else {
+                    await updateUser(user.id, {
+                        email: form.email.value.toLocaleLowerCase(),
+                    });
+                    newEmail = form.email.value.trim().toLocaleLowerCase();
+                }
+            }
+
             if (!isNullOrEmptyText(form.password.value)) {
                 await fetch("/api/credentials", {
                     method: "POST",
                     body: JSON.stringify({
                         userId: user.id,
                         email: user.email,
-                        newEmail: form.email.value,
-                        password: form.password.value,
+                        newEmail: newEmail,
+                        password: form.password.value.trim(),
                     }),
                     headers: {
                         Accept: "application/json",
@@ -100,14 +131,9 @@ const FormToUpdateUserData: React.FC<Props> = ({ user }) => {
                     },
                 });
             }
-            if (user.email !== form.email.value) {
-                await updateUser(user.id, {
-                    email: form.email.value.toLocaleLowerCase(),
-                });
-            }
-        } catch (e) {
-            console.log(e);
-        }
+
+            window.location.reload();
+        } catch (e) {}
     };
 
     const editPersonalData = async () => {
@@ -124,7 +150,10 @@ const FormToUpdateUserData: React.FC<Props> = ({ user }) => {
         if (fullNameChanged) {
             userNewData = {
                 ...userNewData,
-                fullName: form.fullName.value.toLocaleLowerCase(),
+                fullName: form.fullName.value
+                    .toLocaleLowerCase()
+                    .trimEnd()
+                    .trimStart(),
             };
         }
 
@@ -142,6 +171,9 @@ const FormToUpdateUserData: React.FC<Props> = ({ user }) => {
                 success: "Cambios guardados",
                 error: "Error al guardar cambios, inténtalo de nuevo por favor",
             });
+            if (!creditialsWasChanged(form, user)) {
+                window.location.reload();
+            }
         } catch (e) {}
     };
 
@@ -179,7 +211,6 @@ const FormToUpdateUserData: React.FC<Props> = ({ user }) => {
                         error: "Error al cambiar credenciales, inténtalo de nuevo por favor",
                     });
                 }
-                window.location.reload();
             } catch (e) {
                 setFormState((prev) => ({
                     ...prev,

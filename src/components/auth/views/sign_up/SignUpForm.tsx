@@ -144,7 +144,7 @@ const SignUpForm = () => {
 
         try {
             let amountOfUsers = await checkEmailExists(
-                form.email.value.toLocaleLowerCase(),
+                form.email.value.trim().toLocaleLowerCase(),
             );
             if (amountOfUsers > 0) {
                 setForm((prev) => ({
