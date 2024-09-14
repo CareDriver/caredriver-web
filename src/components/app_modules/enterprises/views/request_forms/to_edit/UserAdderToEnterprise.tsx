@@ -251,6 +251,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                     {userLogged.id &&
                         userLogged.id === enterprise.userId &&
                         !userBelongsToEnterprise(userLogged, enterprise) &&
+                        validator.isAbleToBeUserServer(userLogged).isValid &&
                         !validator.hasActiveRequests(userLogged) &&
                         userLogged.role === UserRole.User && (
                             <div className="margin-top-25">

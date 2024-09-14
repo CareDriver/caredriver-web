@@ -43,7 +43,7 @@ const RegisteredVehicleRenderer: React.FC<Props> = ({
                     .replaceAll(",", " | ")}
             </h3>
             <div
-                className="row-wrapper | gap-20"
+                className="row-wrapper | row-responsive gap-20"
                 data-state={transmisionAdder.loading && "loading"}
             >
                 {vehicle.type.mode.length === 1 && (
@@ -71,7 +71,7 @@ const RegisteredVehicleRenderer: React.FC<Props> = ({
                         )}`}
                     href={routeToRenewLicenseAsUser(vehicleType)}
                 >
-                    <span className="text | medium bolder">
+                    <span className="text | white medium bolder">
                         Actualizar Licencia
                     </span>
                 </Link>
