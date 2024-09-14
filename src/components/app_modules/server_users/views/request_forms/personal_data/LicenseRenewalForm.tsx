@@ -40,6 +40,7 @@ import { RequestLimitValidatorToUpdateLicence } from "../../../validators/for_re
 import { routeToRequestToBeServerUserAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
 import { ServiceType } from "@/interfaces/Services";
 import BaseForm from "@/components/form/view/forms/BaseForm";
+import LicenceNumberField from "@/components/form/view/fields/LicenceNumberField";
 
 type LicensedVehicles = "car" | "motorcycle" | "tow";
 
@@ -348,7 +349,7 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
                         onSummit: handleSubmit,
                     }}
                 >
-                    <NumberField
+                    <LicenceNumberField
                         field={{
                             values: form.license.number,
                             setter: (e) =>
@@ -358,7 +359,6 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
                                 })),
                             validator: isValidLicenseNumber,
                         }}
-                        legend="Número de licencia"
                     />
                     <DateField
                         field={{

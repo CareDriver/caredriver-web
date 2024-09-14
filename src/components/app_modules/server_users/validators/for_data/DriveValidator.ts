@@ -1,7 +1,7 @@
 import { InputState } from "../../../../../validators/InputValidatorSignature";
 
 export const isValidLicenseNumber = (licenseNumber: string): InputState => {
-    const regex: RegExp = /^[a-zA-Z0-9]+$/;
+    const regex: RegExp = /^[0-9]*$/;
     if (licenseNumber.trim().length === 0) {
         return {
             isValid: false,
@@ -11,13 +11,13 @@ export const isValidLicenseNumber = (licenseNumber: string): InputState => {
         return {
             isValid: false,
             message:
-                "El número de licencia no puede contener caracteres especiales ni espacios",
+                "El número de licencia no puede contener numeros",
         };
-    } else if (licenseNumber.length > 50) {
+    } else if (licenseNumber.length > 10 || licenseNumber.length < 6) {
         return {
             isValid: false,
             message:
-                "No puedes ingresar más de 50 caracteres para el número de licencia",
+                "Numero invalido",
         };
     } else {
         return {

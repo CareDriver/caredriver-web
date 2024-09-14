@@ -28,6 +28,7 @@ import {
 import DateField from "@/components/form/view/fields/DateField";
 import ImageUploader from "@/components/form/view/attachment_fields/ImageUploader";
 import { DEFAULT_LICENSE } from "@/components/app_modules/server_users/models/LicenseFields";
+import LicenceNumberField from "@/components/form/view/fields/LicenceNumberField";
 
 const VehiclesForm = ({
     vehicles,
@@ -275,13 +276,12 @@ const VehiclesForm = ({
                         <AddressCar /> Licencia
                     </h2>
 
-                    <NumberField
+                    <LicenceNumberField
                         field={{
                             values: vehicle.license.number,
                             setter: (d) => changeNumberLicense(i, d),
                             validator: isValidLicenseNumber,
                         }}
-                        legend="Número de la licencia"
                     />
                     <DateField
                         field={{

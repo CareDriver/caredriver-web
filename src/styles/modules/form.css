@@ -85,6 +85,14 @@
     background-color: var(--main-light);
 }
 
+.form-section.min-content {
+    width: min-content;
+}
+
+.form-section.min-content > .form-section-input {
+    width: min-content;
+}
+
 .form-hide-password-button {
     position: absolute;
     top: var(--padding-field);
@@ -137,6 +145,10 @@ input[type="password"] {
     color: var(--focus-color);
 }
 
+.form-section.select-item {
+    cursor: pointer;
+}
+
 .form-section.select-item > select {
     appearance: none;
 }
@@ -149,6 +161,8 @@ input[type="password"] {
 
     height: 0.833333333rem;
     width: 0.833333333rem;
+
+    pointer-events: none;
 }
 
 .form-section-uploader {
@@ -343,6 +357,56 @@ input[type="password"] {
     background-color: var(--gray-dark);
 }
 
+.form-section-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.custom-select {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.options-menu {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    z-index: 2000;
+    overflow-y: auto;
+
+    width: 100%;
+    max-height: 11vh;
+    border-radius: 0.9375rem;
+
+    background-color: white;
+    border: 1px solid var(--gray-medium);
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
+    padding: 0.444444444rem;
+    cursor: pointer;
+}
+
+.option-item:hover {
+    background-color: #f0f0f0;
+}
+
+.flag-icon {
+    width: 2rem;
+    margin-right: 0.444444444rem;
+    box-shadow: 0 0 5px var(--gray-medium);
+}
+
+.selected-location {
+    display: flex;
+    align-items: center;
+}
+
 @media only screen and (max-width: 1150px) {
     .form-auth {
         width: 60%;
@@ -366,3 +430,10 @@ input[type="password"] {
         width: 95%;
     }
 }
+
+@media only screen and (max-width: 439px) {
+    .form-section-row {
+        grid-template-columns: 1fr;
+    }
+}
+
