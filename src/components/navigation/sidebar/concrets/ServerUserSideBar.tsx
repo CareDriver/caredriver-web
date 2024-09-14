@@ -66,7 +66,7 @@ const ServerUserSideBar = ({
                 </Link>
                 <Link
                     href={routeToRequestToBeServerUserAsUser("tow")}
-                    className={`sidebar-option ${
+                    className={`sidebar-option lb-icon ${
                         (pathname.includes(
                             routeToRequestToBeServerUserAsUser("tow"),
                         ) ||
@@ -77,7 +77,7 @@ const ServerUserSideBar = ({
                     }`}
                 >
                     <Truck />
-                    <span>Grúa</span>
+                    <span>Operador de Grúa</span>
                 </Link>
                 <Link
                     href={routeToRequestToBeServerUserAsUser("laundry")}
@@ -120,7 +120,7 @@ const ServerUserSideBar = ({
                     }`}
                 >
                     <Warehouse />
-                    <span>Talleres</span>
+                    <span>Talleres Mecanicos</span>
                 </Link>
                 <Link
                     href={routeToAllEnterprisesAsUser("tow")}
