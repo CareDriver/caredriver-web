@@ -42,6 +42,7 @@ import { isValidPersonalData } from "@/components/app_modules/server_users/valid
 import {
     isValidAttachmentField,
     isValidEntityField,
+    isValidTextField,
 } from "@/components/form/validators/FieldValidators";
 import EnterpriseSelectorById from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelectorById";
 import BaseForm from "@/components/form/view/forms/BaseForm";
@@ -139,6 +140,17 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                             },
                         },
                     };
+                    if (
+                        isValidTextField(
+                            form.personalData.alternativePhoneNumber,
+                        )
+                    ) {
+                        toUpdate = {
+                            ...toUpdate,
+                            alternativePhoneNumber:
+                                form.personalData.alternativePhoneNumber.value,
+                        };
+                    }
                     try {
                         await updateUser(requesterUser.id, toUpdate);
                     } catch (e) {

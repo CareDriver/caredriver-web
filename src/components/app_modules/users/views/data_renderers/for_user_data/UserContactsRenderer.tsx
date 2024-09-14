@@ -8,9 +8,14 @@ import {
 interface Props {
     email?: string;
     phoneNumber?: string;
+    alternativePhoneNumber?: string;
 }
 
-const UserContactsRenderer: React.FC<Props> = ({ email, phoneNumber }) => {
+const UserContactsRenderer: React.FC<Props> = ({
+    email,
+    phoneNumber,
+    alternativePhoneNumber,
+}) => {
     if (!email && !phoneNumber) {
         return;
     }
@@ -21,6 +26,18 @@ const UserContactsRenderer: React.FC<Props> = ({ email, phoneNumber }) => {
                 <button
                     type="button"
                     onClick={() => contactUserByWhatsapp(phoneNumber)}
+                    className="icon-wrapper text circle-button | green white-icon lb touchable"
+                >
+                    <div className="triangle green"></div>
+                    <Whatsapp />
+                </button>
+            )}
+            {alternativePhoneNumber && (
+                <button
+                    type="button"
+                    onClick={() =>
+                        contactUserByWhatsapp(alternativePhoneNumber)
+                    }
                     className="icon-wrapper text circle-button | green white-icon lb touchable"
                 >
                     <div className="triangle green"></div>

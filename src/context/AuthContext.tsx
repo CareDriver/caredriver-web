@@ -48,6 +48,7 @@ const loadUserLoggedData = (
             fakeId: userData.fakeId ?? "",
             fullName: userData?.fullName ?? "",
             phoneNumber: userData?.phoneNumber ?? "",
+            alternativePhoneNumber: userData.alternativePhoneNumber,
             photoUrl: userData?.photoUrl ?? EMPTY_REF_ATTACHMENT,
             vehicles: userData?.vehicles ?? [],
             services: userData?.services ?? [],

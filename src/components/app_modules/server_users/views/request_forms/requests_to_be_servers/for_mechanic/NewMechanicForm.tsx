@@ -144,6 +144,17 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                             },
                         },
                     };
+                    if (
+                        isValidTextField(
+                            form.personalData.alternativePhoneNumber,
+                        )
+                    ) {
+                        toUpdate = {
+                            ...toUpdate,
+                            alternativePhoneNumber:
+                                form.personalData.alternativePhoneNumber.value,
+                        };
+                    }
                     try {
                         await updateUser(requesterUser.id, toUpdate);
                     } catch (e) {

@@ -104,6 +104,10 @@
     align-items: end;
 }
 
+.column-wrapper.column-right {
+    align-items: start;
+}
+
 .empty-wrapper {
     display: flex;
     align-items: center;

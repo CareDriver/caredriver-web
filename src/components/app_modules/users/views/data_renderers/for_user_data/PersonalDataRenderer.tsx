@@ -2,7 +2,6 @@ import UserIcon from "@/icons/UserIcon";
 import ImageRenderer from "../../../../../form/view/field_renderers/ImageRenderer";
 import { RefAttachment } from "@/components/form/models/RefAttachment";
 import TextFieldRenderer from "@/components/form/view/field_renderers/TextFieldRenderer";
-import { isNullOrEmptyText } from "@/validators/TextValidator";
 import { DEFAULT_PHOTO } from "../../../models/MissingUserData";
 
 interface Props {

@@ -156,6 +156,9 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                             <UserContactsRenderer
                                 email={user.email}
                                 phoneNumber={user.phoneNumber}
+                                alternativePhoneNumber={
+                                    user.alternativePhoneNumber
+                                }
                             />
                         </GuardOfModule>
                     )}

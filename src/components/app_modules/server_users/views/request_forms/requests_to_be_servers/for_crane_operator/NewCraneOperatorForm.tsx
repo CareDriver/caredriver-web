@@ -52,6 +52,7 @@ import PageLoading from "@/components/loaders/PageLoading";
 import {
     isValidAttachmentField,
     isValidEntityDataField,
+    isValidTextField,
 } from "@/components/form/validators/FieldValidators";
 import { isValidPersonalData } from "@/components/app_modules/server_users/validators/for_data/PersonalDataValidator";
 import { isValidVehicle } from "@/components/app_modules/server_users/validators/for_data/VehicleValidator";
@@ -191,6 +192,18 @@ const NewCraneOperatorForm: React.FC<Props> = ({
                             },
                         },
                     };
+                    if (
+                        isValidTextField(
+                            form.personalData.alternativePhoneNumber,
+                        )
+                    ) {
+                        toUpdate = {
+                            ...toUpdate,
+                            alternativePhoneNumber:
+                                form.personalData.alternativePhoneNumber.value,
+                        };
+                    }
+
                     try {
                         await updateUser(requesterUser.id, toUpdate);
                     } catch (e) {

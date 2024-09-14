@@ -40,7 +40,7 @@ import { genDocId } from "@/utils/generators/IdGenerator";
 import PageLoading from "@/components/loaders/PageLoading";
 import { isValidPersonalData } from "@/components/app_modules/server_users/validators/for_data/PersonalDataValidator";
 import { isValidVehicle } from "@/components/app_modules/server_users/validators/for_data/VehicleValidator";
-import { isValidAttachmentField } from "@/components/form/validators/FieldValidators";
+import { isValidAttachmentField, isValidTextField } from "@/components/form/validators/FieldValidators";
 import { routeToRequestToBeServerUserAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
 import BaseForm from "@/components/form/view/forms/BaseForm";
 
@@ -202,6 +202,17 @@ const NewVehicleForm: React.FC<Props> = ({
                     var toUpdate: Partial<UserInterface> = {
                         serviceRequests: newReqState,
                     };
+                    if (
+                        isValidTextField(
+                            form.personalData.alternativePhoneNumber,
+                        )
+                    ) {
+                        toUpdate = {
+                            ...toUpdate,
+                            alternativePhoneNumber:
+                                form.personalData.alternativePhoneNumber.value,
+                        };
+                    }
                     try {
                         await updateUser(requesterUser.id, toUpdate);
                     } catch (e) {

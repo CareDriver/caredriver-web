@@ -10,6 +10,9 @@ import IdentityCardForm from "./IdentityCardForm";
 import { PersonalData } from "../../../../server_users/models/PersonalDataFields";
 import TextField from "@/components/form/view/fields/TextField";
 import { isValidName } from "../../../validators/for_data/CredentialsValidator";
+import PhoneField from "@/components/form/view/fields/PhoneField";
+import "react-international-phone/style.css";
+import Phone from "@/icons/Phone";
 
 interface Props {
     baseUser?: UserInterface;
@@ -56,6 +59,10 @@ const PersonalDataForm: React.FC<Props> = ({
                             ? null
                             : "No se subio una foto de perfil, por favor sube una foto",
                 },
+                alternativePhoneNumber: {
+                    value: requesterUser.alternativePhoneNumber ?? "",
+                    message: null,
+                },
                 idCard: {
                     frontCard: {
                         value: requesterUser.identityCard
@@ -93,6 +100,10 @@ const PersonalDataForm: React.FC<Props> = ({
                 photo: {
                     value: undefined,
                     message: "Sube una foto de perfil",
+                },
+                alternativePhoneNumber: {
+                    value: "",
+                    message: null,
                 },
                 idCard: {
                     frontCard: {
@@ -169,6 +180,25 @@ const PersonalDataForm: React.FC<Props> = ({
                             legend: "Foto de Perfil",
                             imageInCircle: true,
                         }}
+                    />
+                    <div>
+                        <h3 className="text | bolder icon-wrapper">
+                            <Phone /> Numero de telefono alternativo (Opcional)
+                        </h3>
+                        <p className="text | light">
+                            Este campo es opcional, puedes agregar un numero
+                            alternativo para que nuestros administradores puedan
+                            contactarte mas rapido.
+                        </p>
+                    </div>
+                    <PhoneField
+                        values={personalData.alternativePhoneNumber}
+                        setter={(e) =>
+                            setPersonalData({
+                                ...personalData,
+                                alternativePhoneNumber: e,
+                            })
+                        }
                     />
                 </div>
             </div>
