@@ -28,7 +28,7 @@ export async function verifyNumberOfUserEnterprises(
             return {
                 isValid: false,
                 message:
-                    "Error verificando servicios del usuario, intentalo de nuevo",
+                    "Error verificando servicios del usuario, inténtalo de nuevo",
             };
         });
 }
@@ -56,7 +56,7 @@ export const verifyUserAvailabilityToBeEnterpriseOwner = async (
         return {
             isValid: false,
             message:
-                "El usuario no esta en la misma localizacion que la empresa",
+                "El usuario no esta en la misma localización que la empresa",
         };
     }
 

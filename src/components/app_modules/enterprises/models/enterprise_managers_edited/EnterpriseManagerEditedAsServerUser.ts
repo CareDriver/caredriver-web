@@ -36,10 +36,10 @@ export class EnterpriseManagerEditedAsServerUser
 
         if (thereAreActiveReqs) {
             toast.warning(
-                "No puedes enviar una nueva peticion para editar la empresa por ahora",
+                "No puedes enviar una nueva petición para editar la empresa por ahora",
             );
         } else {
-            toast.success("Valido para enviar una nueva petición de edicion");
+            toast.success("Valido para enviar una nueva petición de edición");
         }
 
         return !thereAreActiveReqs;

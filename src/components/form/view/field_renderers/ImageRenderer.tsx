@@ -20,7 +20,7 @@ const ImageRenderer: React.FC<Props> = ({ content, imageInCircle }) => {
     const [isOpen, setOpen] = useState(false);
     const NO_FOUND_DESCR =
         content.noFoundReason === undefined
-            ? "No se encontro la imagen, es probable que haya sido eliminada"
+            ? "No se encontró la imagen, es probable que haya sido eliminada"
             : content.noFoundReason;
     var imageUrl = content.image ? getUrl(content.image) : undefined;
 

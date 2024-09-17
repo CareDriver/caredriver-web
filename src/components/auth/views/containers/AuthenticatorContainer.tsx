@@ -20,7 +20,7 @@ const AuthenticatorContainer: React.FC<Props> = ({ authTitle, children }) => {
     useEffect(() => {
         if (!checkingUserAuth && user) {
             window.location.replace(routeToRedirector());
-            toast.info("Ya estas authenticado");
+            toast.info("Ya estas autenticado");
         }
     }, [checkingUserAuth]);
 

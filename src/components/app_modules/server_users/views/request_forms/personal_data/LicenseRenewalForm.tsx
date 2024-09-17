@@ -284,7 +284,7 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
                                         : undefined,
                                     message: license.backImgUrl
                                         ? null
-                                        : "No tienes foto por atras de tu licencia",
+                                        : "No tienes foto por atrás de tu licencia",
                                 },
                             },
                         }));

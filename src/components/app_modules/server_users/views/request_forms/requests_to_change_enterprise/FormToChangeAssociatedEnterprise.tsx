@@ -101,7 +101,7 @@ const FormToChangeAssociatedEnterprise: React.FC<Props> = ({
                 {
                     pending:
                         "Verificando disponibilidad para enviar peticiones...",
-                    error: "error al verificar disponibilidad intentalo de nuevo",
+                    error: "error al verificar disponibilidad inténtalo de nuevo",
                 },
             );
             if (hasRequestsSent) {
@@ -151,9 +151,9 @@ const FormToChangeAssociatedEnterprise: React.FC<Props> = ({
                     requestData,
                 ),
                 {
-                    pending: "Enviando peticion...",
-                    success: "Peticion enviada, espera a que sea revisada",
-                    error: "Error al enviar la peticion, intentalo de nuevo",
+                    pending: "Enviando petición...",
+                    success: "Petición enviada, espera a que sea revisada",
+                    error: "Error al enviar la petición, inténtalo de nuevo",
                 },
             );
 
@@ -179,34 +179,16 @@ const FormToChangeAssociatedEnterprise: React.FC<Props> = ({
             associatedEnterprise &&
             enterpriseSelected.id === associatedEnterprise
         ) {
-            console.group();
-            console.log(enterpriseSelected);
-            console.log(isSupport);
-            console.log("Ya perteneces a esta empresa");
-            console.groupEnd();
-
             return {
                 isValid: false,
                 message: "Ya perteneces a esta empresa",
             };
         } else if (isSupport) {
-            console.group();
-            console.log(enterpriseSelected);
-            console.log(isSupport);
-            console.log("Eres usuario soporte de esta empresa");
-            console.groupEnd();
-
             return {
                 isValid: false,
                 message: "Eres usuario soporte de esta empresa",
             };
         } else {
-            console.group();
-            console.log(enterpriseSelected);
-            console.log(isSupport);
-            console.log("Empresa valida");
-            console.groupEnd();
-
             return {
                 isValid: true,
                 message: "Empresa valida",
@@ -277,7 +259,7 @@ const FormToChangeAssociatedEnterprise: React.FC<Props> = ({
             >
                 <h3 className="text | bolder | icon-wrapper">
                     <NoteSticky />
-                    Justificacion
+                    Justificación
                 </h3>
                 <TextField
                     field={{

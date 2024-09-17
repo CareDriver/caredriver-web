@@ -147,7 +147,7 @@ const ReviewFormForEditingAnEnterprise: React.FC<Props> = ({
                                 active: false,
                             }),
                             {
-                                pending: `Rechazando la edicion ${
+                                pending: `Rechazando la edición ${
                                     ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE[
                                         enterpriseEditDoc.type
                                     ]

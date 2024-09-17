@@ -22,7 +22,7 @@ const EmailField: React.FC<Props> = ({ values, setter, autoFill }) => {
                 className="form-section-input"
                 autoComplete={autoFill ?? "on"}
             />
-            <legend className="form-section-legend">Correo electronico</legend>
+            <legend className="form-section-legend">Correo electrónico</legend>
             {values.message && <small>* {values.message}</small>}
         </fieldset>
     );

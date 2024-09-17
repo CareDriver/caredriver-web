@@ -98,14 +98,14 @@ const FormToChangeUserBalanceByAdmin = ({
                     saveBalanceHistoryItem(DOC_ID, balanceItem),
                     {
                         pending: "Guardando justificativo",
-                        success: "Justificatio guardado",
-                        error: "Error al guardar tu justificatio, inténtalo de nuevo por favor",
+                        success: "Justificativo guardado",
+                        error: "Error al guardar tu justificativo, inténtalo de nuevo por favor",
                     },
                 );
 
                 const note =
                     form.reasonOfChange.type === "bankTransactionNumber"
-                        ? "Numero de Transaccion Bancaria - ".concat(
+                        ? "Numero de Transacción Bancaria - ".concat(
                               form.reasonOfChange.description.value,
                           )
                         : form.reasonOfChange.description.value;
@@ -199,8 +199,8 @@ const FormToChangeUserBalanceByAdmin = ({
                     : "0"}
             </h2>
             <p className="text | gray-dark">
-                Ingresa el nuevo monto sera el que tendra el usuario, necesitas
-                justiticar la razon del cambio.
+                Ingresa el nuevo monto sera el que tendrá el usuario, necesitas
+                justificar la razón del cambio.
             </p>
 
             <BaseForm
@@ -281,8 +281,8 @@ const FormToChangeUserBalanceByAdmin = ({
                         legend="Tipo de rason de cambio"
                         optionTranslator={(d) =>
                             d === "bankTransactionNumber"
-                                ? "Numero de transaccion bancaria"
-                                : "Justificacion del cambio"
+                                ? "Numero de transacción bancaria"
+                                : "Justificación del cambio"
                         }
                     />
                     <TextField

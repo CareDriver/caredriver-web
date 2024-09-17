@@ -110,7 +110,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                 ...prev,
                 isValid: false,
                 message:
-                    "El usuario no esta en la misma localizacion que el servicio",
+                    "El usuario no esta en la misma localización que el servicio",
             }));
         } else if (userFound.role !== UserRole.User) {
             setFormState((prev) => ({

@@ -69,7 +69,7 @@ const EnterpriseOwnerAdder: React.FC<Props> = ({ owner, enterprise }) => {
                 <p className="text | light">
                     Busca al usuario que quieres que sea dueño de la empresa,
                     <b>
-                        el usuario debe estar en la misma localizacion que la
+                        el usuario debe estar en la misma localización que la
                         empresa.
                     </b>
                 </p>

@@ -36,7 +36,7 @@ export class ValidatorToAddUserToCraneEnterpriseAsMember
             return {
                 isValid: false,
                 message:
-                    "El usuario ya tiene una peticion en progreso, espera a que sea revisada",
+                    "El usuario ya tiene una petición en progreso, espera a que sea revisada",
             };
         }
 
@@ -44,7 +44,7 @@ export class ValidatorToAddUserToCraneEnterpriseAsMember
             return {
                 isValid: false,
                 message:
-                    "El usuario ya fue agregado a otro servicio como operador de grua",
+                    "El usuario ya fue agregado a otro servicio como operador de grúa",
             };
         }
 
@@ -57,7 +57,7 @@ export class ValidatorToAddUserToCraneEnterpriseAsMember
 
         return {
             isValid: true,
-            message: "El usuario es valido para ser operador de grua",
+            message: "El usuario es valido para ser operador de grúa",
         };
     };
 

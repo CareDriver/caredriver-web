@@ -7,10 +7,7 @@ import {
     toLocationFromCoordRes,
     toLocationsFromCoordRes,
 } from "@/components/form/utils/CoordinateConverter";
-import {
-    timestampDateInSpanish,
-    timestampDateInSpanishWithHour,
-} from "@/utils/helpers/DateHelper";
+import { timestampDateInSpanishWithHour } from "@/utils/helpers/DateHelper";
 import { GeoPoint, Timestamp } from "firebase/firestore";
 import { geoPointToLatLng } from "../../utils/MapLocationHelper";
 import { isNullOrEmptyText } from "@/validators/TextValidator";

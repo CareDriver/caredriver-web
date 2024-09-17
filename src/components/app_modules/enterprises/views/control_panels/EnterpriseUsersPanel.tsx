@@ -35,7 +35,7 @@ const EnterpriseUsersPanel: React.FC<Props> = ({ content, behavior }) => {
                 <Users />
                 {!content.enterprise.addedUsers ||
                 content.enterprise.addedUsers.length === 0
-                    ? "Ningun usuario agregado"
+                    ? "ningún usuario agregado"
                     : content.enterprise.addedUsers.length > 1
                     ? `${content.enterprise.addedUsers.length} Usuarios agregados`
                     : "Un usuario agregado"}
@@ -75,7 +75,7 @@ const EnterpriseUsersPanel: React.FC<Props> = ({ content, behavior }) => {
                                 behavior.loading && "loading-section"
                             }`}
                         >
-                            Admnistrar usuarios
+                            Administrar usuarios
                         </button>
                     )}
             </div>

@@ -80,7 +80,7 @@ const EnterprisePanelForUserServer: React.FC<Props> = ({ id }) => {
                         <>
                             <p>
                                 Eres <b>usuario soporte</b> en esta empresa,
-                                ayuda a admnistrar a los usuarios que pueden
+                                ayuda a administrar a los usuarios que pueden
                                 trabajar en esta empresa.
                             </p>
                             <div className="margin-top-50 max-width-60">

@@ -56,7 +56,7 @@ const NewUserSupportForm: React.FC<Props> = ({ userToAdd, enterprise }) => {
                     {
                         pending: "Registrando al usuario como soporte",
                         success: "Nuevo usuario soporte agregado",
-                        error: "Error al registrar al usuario como soporte, intentalo de nuevo por favor",
+                        error: "Error al registrar al usuario como soporte, inténtalo de nuevo por favor",
                     },
                 );
                 window.location.reload();
@@ -112,7 +112,7 @@ const NewUserSupportForm: React.FC<Props> = ({ userToAdd, enterprise }) => {
                         validator: (d) =>
                             validateEmialWithComparison(d, userToAdd.email),
                     }}
-                    legend="Correo electrónico | Confirmacion"
+                    legend="Correo electrónico | Confirmación"
                 />
             </BaseForm>
         </div>

@@ -5,7 +5,7 @@ import SignUpForm from "@/components/auth/views/sign_up/SignUpForm";
 const Page = () => {
     return (
         <AuthenticatorProviderContainer>
-            <AuthenticatorContainer authTitle="Registrate !">
+            <AuthenticatorContainer authTitle="Regístrate !">
                 <SignUpForm />
             </AuthenticatorContainer>
         </AuthenticatorProviderContainer>

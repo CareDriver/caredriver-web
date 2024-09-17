@@ -176,7 +176,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
                 {
                     pending: "Removiendo de la antigua empresa",
                     success: "Removido de la antigua empresa",
-                    error: "Error al remover de la antigua empresa, intentalo de nuevo",
+                    error: "Error al remover de la antigua empresa, inténtalo de nuevo",
                 },
             );
         }
@@ -185,7 +185,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
         await toast.promise(addUserToEnterprise(newEnterprise, requesterUser), {
             pending: "Agregando a la nueva empresa",
             success: "Agregado a la nueva empresa",
-            error: "Error al agregar a la nueva empresa, intentalo de nuevo",
+            error: "Error al agregar a la nueva empresa, inténtalo de nuevo",
         });
 
         // adding enterprise to user
@@ -223,7 +223,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
             {
                 pending: "Rechazando solicitud...",
                 success: "Solicitud rechazada",
-                error: "Error al rechazar la solicitud, intentalo de nuevo por favor",
+                error: "Error al rechazar la solicitud, inténtalo de nuevo por favor",
             },
         );
 
@@ -234,7 +234,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
         let unsubscribe: Unsubscribe | undefined;
 
         const onNotFound = () => {
-            toast.error("Peticion no encontrada");
+            toast.error("Petición no encontrada");
             router.push(routeToUserRequestsToChangeEnterpriseAsAdmin());
         }
 
@@ -355,11 +355,11 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
                 <div className="form-sub-container">
                     <h2 className="text | medium-big bold | icon-wrapper">
                         <NoteSticky />
-                        Justificacion
+                        Justificación
                     </h2>
                     <TextFieldRenderer
                         content={request.reason}
-                        legend="Razon"
+                        legend="Razón"
                     />
                 </div>
                 <div className="form-sub-container">
@@ -389,7 +389,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
                             Cargando empresa
                         </h3>
                     ) : newEnterprise === null ? (
-                        <FieldDeleted description="No se encontro la nueva empresa, probablemente fue eliminada" />
+                        <FieldDeleted description="No se encontró la nueva empresa, probablemente fue eliminada" />
                     ) : (
                         <EnterpriseRenderer enterprise={newEnterprise} />
                     )}

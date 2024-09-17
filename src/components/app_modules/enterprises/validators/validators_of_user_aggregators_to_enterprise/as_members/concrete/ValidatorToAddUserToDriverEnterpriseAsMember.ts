@@ -58,7 +58,7 @@ export class ValidatorToAddUserToDriverEnterpriseAsMember
             return {
                 isValid: false,
                 message:
-                    "El usuario ya tiene una peticion en progreso, espera a que sea revisada",
+                    "El usuario ya tiene una petición en progreso, espera a que sea revisada",
             };
         }
 
@@ -78,7 +78,7 @@ export class ValidatorToAddUserToDriverEnterpriseAsMember
         }
 
         if (belongsToDriverService && isAbleToRegisterASingleVehicule) {
-            toast.info("El usuario solo puede registrar el vehiculo faltante");
+            toast.info("El usuario solo puede registrar el vehículo faltante");
         }
 
         return {

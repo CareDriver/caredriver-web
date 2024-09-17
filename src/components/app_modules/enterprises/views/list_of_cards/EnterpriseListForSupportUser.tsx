@@ -86,7 +86,7 @@ const EnterpriseListForSupportUser: React.FC<Props> = ({
             <div className="auto-height">
                 <h2 className="text">
                     <i>
-                        No se encontro ninguna empresa donde eres <b>usuario soporte </b>.
+                        No se encontró ninguna empresa donde eres <b>usuario soporte </b>.
                     </i>
                 </h2>
             </div>

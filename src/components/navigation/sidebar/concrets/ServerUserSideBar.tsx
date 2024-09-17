@@ -120,7 +120,7 @@ const ServerUserSideBar = ({
                     }`}
                 >
                     <Warehouse />
-                    <span>Talleres Mecanicos</span>
+                    <span>Talleres Mecánicos</span>
                 </Link>
                 <Link
                     href={routeToAllEnterprisesAsUser("tow")}

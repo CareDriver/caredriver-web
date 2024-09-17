@@ -62,7 +62,7 @@ const UserSelector: React.FC<Props> = ({ form, processTheUserFound }) => {
                     getUserNoDeletedByEmail(userEmail.value),
                     {
                         pending: "Buscando al usuario",
-                        error: "Error al buscar al usuario, intentalo de nuevo",
+                        error: "Error al buscar al usuario, inténtalo de nuevo",
                     },
                 );
 

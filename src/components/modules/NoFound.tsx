@@ -22,7 +22,7 @@ const NoFound = () => {
             >
                 ¡Vaya! Parece que te has desviado del camino,{" "}
                 <i className="text | bolder underline">
-                    haz click aqui para volver
+                    haz click aquí para volver
                 </i>
             </span>
         </main>

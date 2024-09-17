@@ -6,13 +6,11 @@ import "@/styles/base/reset.css";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { routeToSingIn } from "@/utils/route_builders/as_not_logged/RouteBuilderForAuth";
-import { DESCRIPTION_BUSINESS } from "@/models/Business";
 import HandPointRight from "@/icons/HandPointRight";
 import CarSide from "@/icons/CarSide";
 import Wrench from "@/icons/Wrench";
 import Truck from "@/icons/Truck";
 import Soap from "@/icons/Soap";
-import HandPointDown from "@/icons/HandPointDown";
 
 const Home = () => {
     const { checkingUserAuth, user } = useContext(AuthContext);
@@ -60,12 +58,12 @@ const Home = () => {
                     |
                     <h3 className="home-service | text | medium gray-dark bold | icon-wrapper gray-icon">
                         <Wrench />
-                        Mecanicos
+                        Mecánicos
                     </h3>
                     |
                     <h3 className="home-service | text | medium gray-dark bold | icon-wrapper gray-icon lb">
                         <Truck />
-                        Operadores de Grua
+                        Operadores de Grúa
                     </h3>
                 </div>
                 <div className="column-wrapper center | max-width-80">

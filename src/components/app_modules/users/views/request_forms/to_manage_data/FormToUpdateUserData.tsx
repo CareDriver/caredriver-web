@@ -62,7 +62,7 @@ const FormToUpdateUserData: React.FC<Props> = ({ user }) => {
             uploadFileBase64(DirectoryPath.Users, form.photo.value),
             {
                 pending: `${
-                    hadPhoto ? "Camibando" : "Subiendo"
+                    hadPhoto ? "Cambiando" : "Subiendo"
                 } foto de perfil`,
                 success: `Foto de perfil ${hadPhoto ? "cambiada" : "subida"}`,
                 error: `Error al ${
@@ -237,13 +237,13 @@ const FormToUpdateUserData: React.FC<Props> = ({ user }) => {
         <div className="form-container | full-form margin-top-50 max-width-60">
             <div className="margin-bottom-15">
                 <h2 className="text | bolder medium-big | icon-wrapper">
-                    <Pen /> Actualizacion de datos
+                    <Pen /> Actualización de datos
                 </h2>
                 <p className="text | light">
                     Solo se actualizara los <b>datos que sean diferentes</b> a
                     los datos actuales y que sean validos.{" "}
                     <b>
-                        Tendras que volver a authenticarte si cambias tus
+                        Tendrás que volver a iniciar sesión si cambias tus
                         credenciales
                     </b>
                 </p>

@@ -23,7 +23,7 @@ const EnterpriseRenderer = ({
             />
             <TextFieldRenderer
                 content={enterprise.phone}
-                legend={`Telefono ${
+                legend={`Teléfono ${
                     ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE[
                         enterprise.type
                     ]
@@ -42,7 +42,7 @@ const EnterpriseRenderer = ({
             />
             <TextFieldRenderer
                 content={enterprise.location}
-                legend={`Ubicacion ${
+                legend={`Ubicación ${
                     ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE[
                         enterprise.type
                     ]
@@ -51,7 +51,7 @@ const EnterpriseRenderer = ({
             {enterprise.coordinates && (
                 <fieldset className="form-section">
                     <span className="text | bolder">
-                        Ubicación geografica {" "}
+                        Ubicación geográfica {" "}
                         {
                             ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE[
                                 enterprise.type

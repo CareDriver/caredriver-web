@@ -190,7 +190,7 @@ const ListOfAllUsersWithSearcher = () => {
                     <input
                         type="text"
                         className="search-input"
-                        placeholder="Buscar por nombre, email, telefono"
+                        placeholder="Buscar por nombre, email, teléfono"
                         value={searchState.currentInput}
                         onChange={(e) => {
                             setSearchState((prev) => ({
@@ -254,7 +254,7 @@ const ListOfAllUsersWithSearcher = () => {
                             className="text | center medium bold underline touchable"
                             onClick={() => defaultLoading(adminUser)}
                         >
-                            <i>Click aqui para cargar todos los usuarios</i>
+                            <i>Click aquí para cargar todos los usuarios</i>
                         </span>
                     )}
                     <span className="circles-right-bottomv2 green"></span>
@@ -271,7 +271,7 @@ const ListOfAllUsersWithSearcher = () => {
                         >
                             {" "}
                             <i className="text small bold underline ">
-                                Click aqui para cargar todos los usuarios
+                                Click aquí para cargar todos los usuarios
                             </i>
                         </span>
                     )}

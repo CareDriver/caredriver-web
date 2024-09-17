@@ -24,7 +24,7 @@ export const isValidAmount = (num: string): InputState => {
     }else if (parseFloat(num) < MIN_BALANCE) {
         return {
             isValid: false,
-            message: `El saldo limite de decuento de saldo es de ${MAX_BALANCE}`,
+            message: `El saldo limite de descuento de saldo es de ${MAX_BALANCE}`,
         };
     } else {
         return {

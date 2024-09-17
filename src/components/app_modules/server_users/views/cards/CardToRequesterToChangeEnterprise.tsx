@@ -41,7 +41,7 @@ const CardToRequesterToChangeEnterprise = ({
             )}
 
             <h5 className="text | bolder green | margin-top-15">
-                {HAD_AN_ASSOCIATION ? "Cambio de empresa" : "Nueva asociacion"}
+                {HAD_AN_ASSOCIATION ? "Cambio de empresa" : "Nueva asociación"}
             </h5>
         </div>
     );

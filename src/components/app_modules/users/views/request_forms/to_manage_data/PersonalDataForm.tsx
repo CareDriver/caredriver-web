@@ -57,7 +57,7 @@ const PersonalDataForm: React.FC<Props> = ({
                     message:
                         requesterUser.photoUrl.url.length > 0
                             ? null
-                            : "No se subio una foto de perfil, por favor sube una foto",
+                            : "No se subió una foto de perfil, por favor sube una foto",
                 },
                 alternativePhoneNumber: {
                     value: requesterUser.alternativePhoneNumber ?? "",
@@ -70,7 +70,7 @@ const PersonalDataForm: React.FC<Props> = ({
                             : undefined,
                         message: hasIdCard
                             ? null
-                            : "No se subio una foto frontal del carnet de identidad",
+                            : "No se subió una foto frontal del carnet de identidad",
                     },
                     backCard: {
                         value: requesterUser.identityCard
@@ -78,7 +78,7 @@ const PersonalDataForm: React.FC<Props> = ({
                             : undefined,
                         message: hasIdCard
                             ? null
-                            : "No se subio una foto posterior del carnet de identidad",
+                            : "No se subió una foto posterior del carnet de identidad",
                     },
                     location: {
                         value: requesterUser.identityCard
@@ -86,7 +86,7 @@ const PersonalDataForm: React.FC<Props> = ({
                             : "",
                         message: hasIdCard
                             ? null
-                            : "No se agrego la localización en base al carnet de indentidad",
+                            : "No se agrego la localización en base al carnet de identidad",
                     },
                 },
             });
@@ -109,17 +109,17 @@ const PersonalDataForm: React.FC<Props> = ({
                     frontCard: {
                         value: undefined,
                         message:
-                            "No se subio una foto frontal del carnet de identidad",
+                            "No se subió una foto frontal del carnet de identidad",
                     },
                     backCard: {
                         value: undefined,
                         message:
-                            "No se subio una foto posterior del carnet de identidad",
+                            "No se subió una foto posterior del carnet de identidad",
                     },
                     location: {
                         value: "",
                         message:
-                            "No se agrego la localización en base al carnet de indentidad",
+                            "No se agrego la localización en base al carnet de identidad",
                     },
                 },
             });
@@ -183,12 +183,12 @@ const PersonalDataForm: React.FC<Props> = ({
                     />
                     <div>
                         <h3 className="text | bolder icon-wrapper">
-                            <Phone /> Numero de telefono alternativo (Opcional)
+                            <Phone /> Numero de teléfono alternativo (Opcional)
                         </h3>
                         <p className="text | light">
                             Este campo es opcional, puedes agregar un numero
                             alternativo para que nuestros administradores puedan
-                            contactarte mas rapido.
+                            contactarte mas rápido.
                         </p>
                     </div>
                     <PhoneField

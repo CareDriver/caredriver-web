@@ -119,7 +119,7 @@ const MapRealTime = ({
     if (data === undefined) {
         return (
             <div className="max-width-60">
-                <FieldDeleted description="No hay registro del la navegacion" />
+                <FieldDeleted description="No hay registro del la navegación" />
             </div>
         );
     }

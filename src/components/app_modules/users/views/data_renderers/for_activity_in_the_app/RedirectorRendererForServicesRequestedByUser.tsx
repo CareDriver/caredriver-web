@@ -47,7 +47,7 @@ const RedirectorRendererForServicesRequestedByUser = ({
                 }
             >
                 <h3 className="text | medium-big bolder">
-                    Solicitudes de Mecanicos
+                    Solicitudes de Mecánicos
                 </h3>
                 <span className="icon-wrapper text | underline gray-dark gray-icon | margin-top-15">
                     <Eye />
@@ -63,7 +63,7 @@ const RedirectorRendererForServicesRequestedByUser = ({
                 }
             >
                 <h3 className="text | medium-big bolder">
-                    Solicitudes de Operadores de Gruas
+                    Solicitudes de Operadores de Grúas
                 </h3>
                 <span className="icon-wrapper text | underline gray-dark gray-icon | margin-top-15">
                     <Eye />

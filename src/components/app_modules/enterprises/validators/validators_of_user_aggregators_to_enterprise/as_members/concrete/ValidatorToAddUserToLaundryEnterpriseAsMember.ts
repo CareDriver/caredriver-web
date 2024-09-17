@@ -39,7 +39,7 @@ export class ValidatorToAddUserToLaundryEnterpriseAsMember
             return {
                 isValid: false,
                 message:
-                    "El usuario ya tiene una peticion en progreso, espera a que sea revisada",
+                    "El usuario ya tiene una petición en progreso, espera a que sea revisada",
             };
         }
 
