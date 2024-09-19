@@ -4,7 +4,6 @@ import Link from "next/link";
 import { getServicePerfStatus } from "../../model/utils/ServiceStatusGetter";
 import { ServiceType } from "@/interfaces/Services";
 import { routeToServicePerformed } from "@/utils/route_builders/for_services/RouteBuilderForServices";
-import { ServiceStatus } from "../../model/models/TypeOfServiceStatus";
 import ServiceStatusRenderer from "../renderers/ServiceStatusRenderer";
 
 interface Props {
@@ -33,7 +32,7 @@ const BaseCardForServicePerf: React.FC<Props> = ({
     const renderBodyCard = () => (
         <>
             {service.createdAt && (
-                <h3 className="text | medium-big bolder">
+                <h3 className="text | wrap medium-big bolder">
                     {timestampDateInSpanish(service.createdAt)}
                 </h3>
             )}
@@ -55,7 +54,7 @@ const BaseCardForServicePerf: React.FC<Props> = ({
             >
                 {renderBodyCard()}
                 <ServiceStatusRenderer service={service} size="small" />
-                <div className="form-section-message">
+                <div className="text | small red wrap">
                     El servicio no fue registrado correctamente - No se pueden
                     ver mas detalles
                 </div>

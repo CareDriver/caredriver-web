@@ -50,7 +50,9 @@ const UserRedirect = () => {
 
     useEffect(() => {
         if (!checkingUserAuth && user) {
-            toast.success("Inicio de sesión exitoso");
+            toast.success("Inicio de sesión exitoso", {
+                toastId: "login-init-toas",
+            });
             switch (user.role) {
                 case UserRole.Support:
                 case UserRole.BalanceRecharge:

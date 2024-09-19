@@ -3,6 +3,10 @@ import { ReqEditEnterprise } from "@/interfaces/Enterprise";
 import { routeToReviewRequestToEditEnterpriseAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import Link from "next/link";
 import "@/styles/components/enterprise.css";
+import {
+    cutTextWithDotsByLength,
+    MAX_LENGTH_FOR_NAMES_DISPLAY,
+} from "@/utils/text_helpers/TextCutter";
 
 const CardToRequestEditEnterprise = ({
     enterprise,
@@ -18,8 +22,11 @@ const CardToRequestEditEnterprise = ({
                 )}
                 className="enterprise-item | touchable"
             >
-                <h3 className="text | medium center bolder capitalize margin-bottom-15">
-                    {enterprise.name}
+                <h3 className="text | medium center bolder capitalize margin-bottom-15 wrap">
+                    {cutTextWithDotsByLength(
+                        enterprise.name,
+                        MAX_LENGTH_FOR_NAMES_DISPLAY,
+                    )}
                 </h3>
 
                 <img

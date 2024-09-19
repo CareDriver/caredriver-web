@@ -38,7 +38,7 @@ export class ValidatorToAddUserToWorkshopEnterpriseAsMember
             return {
                 isValid: false,
                 message:
-                    "El usuario ya tiene una peticion en progreso, espera a que sea revisada",
+                    "El usuario ya tiene una petición en progreso, espera a que sea revisada",
             };
         }
 
@@ -46,7 +46,7 @@ export class ValidatorToAddUserToWorkshopEnterpriseAsMember
             return {
                 isValid: false,
                 message:
-                    "El usuario ya fue agregado a otro servicio como mecanico",
+                    "El usuario ya fue agregado a otro servicio como mecánico",
             };
         }
 
@@ -59,7 +59,7 @@ export class ValidatorToAddUserToWorkshopEnterpriseAsMember
 
         return {
             isValid: true,
-            message: "El usuario es valido para ser mecanico",
+            message: "El usuario es valido para ser mecánico",
         };
     };
 

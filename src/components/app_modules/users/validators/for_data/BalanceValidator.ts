@@ -1,5 +1,8 @@
 import { InputState } from "../../../../../validators/InputValidatorSignature";
 
+export const MAX_BALANCE = 1000;
+export const MIN_BALANCE = -1000;
+
 export const isValidAmount = (num: string): InputState => {
     const regex: RegExp = /^-?\d+(\.\d+)?$/;
 
@@ -13,10 +16,15 @@ export const isValidAmount = (num: string): InputState => {
             isValid: false,
             message: "Saldo invalido",
         };
-    } else if (num.length > 150) {
+    } else if (parseFloat(num) > MAX_BALANCE) {
         return {
             isValid: false,
-            message: "Limite del saldo sobrepasado",
+            message: `El saldo limite de recarga es de ${MAX_BALANCE}`,
+        };
+    }else if (parseFloat(num) < MIN_BALANCE) {
+        return {
+            isValid: false,
+            message: `El saldo limite de descuento de saldo es de ${MAX_BALANCE}`,
         };
     } else {
         return {
@@ -39,10 +47,10 @@ export const isValidIncreaseAmount = (num: string): InputState => {
             isValid: false,
             message: "Saldo invalido",
         };
-    } else if (num.length > 150) {
+    } else if (parseFloat(num) > MAX_BALANCE) {
         return {
             isValid: false,
-            message: "Limite del saldo sobrepasado",
+            message: `El saldo limite de recarga es de ${MAX_BALANCE}`,
         };
     } else {
         return {

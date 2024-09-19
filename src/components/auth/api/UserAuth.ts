@@ -18,6 +18,7 @@ import {
     saveUser,
 } from "@/components/app_modules/users/api/UserRequester";
 import { Timestamp } from "firebase/firestore";
+import { routeToRedirector } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
 
 export const EMPTY_USER_DATA: UserInterface = {
     id: genDocId(),
@@ -60,9 +61,8 @@ export const signUpWithGoogle = async (
             const credential = GoogleAuthProvider.credentialFromResult(result);
             if (credential) {
                 // const token = credential.accessToken;
-                const fakeId = nanoid(30);
                 const user = result.user;
-                await registerUserFromGoogleAuth(user, fakeId, setVerifier);
+                await registerUserFromGoogleAuth(user, setVerifier);
             }
         } catch (error) {
             console.log(error);
@@ -72,7 +72,6 @@ export const signUpWithGoogle = async (
 
 export const registerUserFromGoogleAuth = async (
     user: User,
-    fakeId: string,
     setVerifier: (verifiyingGoogle: boolean) => void,
 ) => {
     setVerifier(true);
@@ -85,15 +84,14 @@ export const registerUserFromGoogleAuth = async (
         let newUser: UserInterface = {
             ...EMPTY_USER_DATA,
             id: user.uid,
-            fakeId: fakeId,
             fullName: user.displayName
                 ? user.displayName.toLocaleLowerCase()
                 : "",
             photoUrl: {
-                url: user.photoURL ? user.photoURL : "",
+                url: user.photoURL ?? "",
                 ref: "",
             },
-            email: user.email ? user.email.toLowerCase().trim() : "",
+            email: user.email ? user.email.toLocaleLowerCase().trim() : "",
         };
 
         try {
@@ -102,14 +100,12 @@ export const registerUserFromGoogleAuth = async (
                 success: "Cuenta creada",
                 error: "Error al crear la cuenta, inténtalo de nuevo por favor",
             });
-            window.location.replace("/redirector");
-            setVerifier(false);
+            window.location.replace(routeToRedirector());
         } catch (e) {
             console.log(e);
             setVerifier(false);
         }
     } else {
-        setVerifier(false);
-        window.location.replace("/redirector");
+        window.location.replace(routeToRedirector());
     }
 };

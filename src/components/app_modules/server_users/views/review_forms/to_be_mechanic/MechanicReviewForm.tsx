@@ -220,6 +220,7 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
                 <UserStateWithMessageRenderer userData={requesterUser} />
             </div>
+            {requesterUser && <UserStateRenderer user={requesterUser} />}
 
             <BaseFormWithTwoButtons
                 content={{
@@ -245,9 +246,12 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     secondButton: {
                         content: {
                             legend: "Aprobar",
-                            buttonClassStyle: wasReviewed()
-                                ? "hidden"
-                                : undefined,
+                            buttonClassStyle:
+                                wasReviewed() ||
+                                requesterUser?.deleted ||
+                                enterprise?.deleted
+                                    ? "hidden"
+                                    : undefined,
                         },
                         behavior: {
                             loading: reviewState.loading,
@@ -293,6 +297,7 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     <UserContactsRendererForForm
                         email={requesterUser.email}
                         phoneNumber={requesterUser.phoneNumber}
+                        alternativePhoneNumber={requesterUser.alternativePhoneNumber}
                     />
                 ) : (
                     <span className="row-wrapper text | bold gray-medium">

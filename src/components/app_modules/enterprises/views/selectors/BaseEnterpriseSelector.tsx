@@ -12,6 +12,10 @@ import { AuthContext } from "@/context/AuthContext";
 import { Locations } from "@/interfaces/Locations";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceType } from "@/interfaces/Services";
+import {
+    cutTextWithDotsByLength,
+    MAX_LENGTH_FOR_NAMES_DISPLAY,
+} from "@/utils/text_helpers/TextCutter";
 
 interface Props {
     typeOfEnterprise: ServiceType;
@@ -120,10 +124,12 @@ const BaseEnterpriseSelector: React.FC<Props> = ({
                         key={i}
                         onClick={() => selectEnterprise(enterprise)}
                     >
-                        <h3 className="text | medium center bolder capitalize margin-bottom-15">
-                            {enterprise.name}
+                        <h3 className="text | medium center bolder capitalize margin-bottom-15 wrap">
+                            {cutTextWithDotsByLength(
+                                enterprise.name,
+                                MAX_LENGTH_FOR_NAMES_DISPLAY,
+                            )}
                         </h3>
-
                         <img
                             className="enterprise-item-logo"
                             src={enterprise.logoImgUrl.url}

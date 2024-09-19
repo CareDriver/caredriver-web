@@ -1,18 +1,29 @@
+"use client";
+
+import Popup from "@/components/modules/Popup";
 import { BalanceHistory } from "@/interfaces/Payment";
-import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
+import { useState } from "react";
+import BalanceHistoryCard from "../../cards/BalanceHistoryCard";
 
 const BalanceHistoryRenderer = ({
     balanceHistory,
 }: {
     balanceHistory: BalanceHistory[] | undefined;
 }) => {
-    const getDifference = (oldPrice: number, newPrice: number): number => {
-        if (oldPrice === newPrice && newPrice > 0) {
-            return -1 * newPrice;
+    const MAX_NOTE_LENGHT_FOR_CARD = 17;
+    const orderHistory = (): BalanceHistory[] => {
+        if (!balanceHistory) {
+            return [];
         }
 
-        return newPrice - oldPrice;
+        return balanceHistory.sort(
+            (a, b) => b.date.toMillis() - a.date.toMillis(),
+        );
     };
+
+    const [itemSelected, setItem] = useState<BalanceHistory | undefined>(
+        undefined,
+    );
 
     return (
         balanceHistory && (
@@ -21,71 +32,34 @@ const BalanceHistoryRenderer = ({
                     Historial de las actualizaciones del saldo del usuario
                 </h2>
                 <div className="debt-wrapper max-width-80">
-                    {balanceHistory.map((debt, i) => (
-                        <div
+                    {orderHistory().map((balance, i) => (
+                        <BalanceHistoryCard
+                            content={{
+                                data: balance,
+                            }}
+                            behaviour={{
+                                onClick: () => setItem(balance),
+                            }}
+                            style={{
+                                extraClassStyle: "touchable",
+                                maxNoteLenght: MAX_NOTE_LENGHT_FOR_CARD,
+                            }}
                             key={`debt-item-history-${i}`}
-                            className={`debt-item max-width-50 ${
-                                debt.newBalance
-                                    ? getDifference(
-                                          debt.amount,
-                                          debt.newBalance.amount,
-                                      ) < 0
-                                        ? "decreased"
-                                        : "increased"
-                                    : ""
-                            }`}
-                        >
-                            <div>
-                                <span
-                                    className={`text | bold medium ${
-                                        debt.newBalance
-                                            ? getDifference(
-                                                  debt.amount,
-                                                  debt.newBalance.amount,
-                                              ) < 0
-                                                ? "red"
-                                                : "green"
-                                            : ""
-                                    }`}
-                                >
-                                    {debt.newBalance
-                                        ? getDifference(
-                                              debt.amount,
-                                              debt.newBalance.amount,
-                                          ) > 0
-                                            ? "+".concat(
-                                                  getDifference(
-                                                      debt.amount,
-                                                      debt.newBalance.amount,
-                                                  ).toString(),
-                                              )
-                                            : getDifference(
-                                                  debt.amount,
-                                                  debt.newBalance.amount,
-                                              )
-                                        : debt.amount}
-                                    {debt.currency}
-                                </span>
-                                {debt.newBalance && (
-                                    <span className={`text | bold medium`}>
-                                        {" "}
-                                        | {debt.newBalance.amount}
-                                        {debt.newBalance.currency}
-                                    </span>
-                                )}
-                            </div>
-                            <span className="text | light">
-                                {timestampDateInSpanish(debt.date)}
-                            </span>
-                            {debt.note && (
-                                <div className="margin-top-25">
-                                    <b className="text | bold">Nota: </b>
-                                    <i className="text | light">{debt.note}</i>
-                                </div>
-                            )}
-                        </div>
+                        />
                     ))}
                 </div>
+                {itemSelected && (
+                    <Popup
+                        isOpen={itemSelected !== undefined}
+                        close={() => setItem(undefined)}
+                    >
+                        <BalanceHistoryCard
+                            content={{
+                                data: itemSelected,
+                            }}
+                        />
+                    </Popup>
+                )}
             </div>
         )
     );

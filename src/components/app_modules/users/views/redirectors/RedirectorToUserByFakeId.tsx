@@ -44,14 +44,14 @@ const RedirectorToUserByFakeId = () => {
                 getUserByFakeId(userFakedId.value),
                 {
                     pending: "Buscando usuario ...",
-                    error: "Error al buscar al usuario, intentalo de nuevo",
+                    error: "Error al buscar al usuario, inténtalo de nuevo",
                 },
             );
             if (serviceFound === undefined) {
                 setUserFakeId((prev) => ({
                     ...prev,
                     message:
-                        "El ID no pertence a ningun usuario, intenta con otro",
+                        "El ID no pertenece a ningún usuario, intenta con otro",
                 }));
                 setFormState((prev) => ({
                     ...prev,

@@ -37,10 +37,10 @@ const SignInForm = () => {
                 let message: string = e.message;
                 if (message.includes("user-disabled")) {
                     toast.warning(
-                        "Tu cuenta fue desabilitada, por favor contactate con uno de nuestros administradores",
+                        "Tu cuenta fue deshabilitada, por favor contacta a uno de nuestros administradores",
                     );
                 } else {
-                    toast.error("Credenciales inválidas, intalo de nuevo");
+                    toast.error("Credenciales inválidas, inténtalo de nuevo");
                 }
 
                 setLoading(false);

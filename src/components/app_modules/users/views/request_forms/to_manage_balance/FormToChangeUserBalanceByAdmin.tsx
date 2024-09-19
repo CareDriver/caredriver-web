@@ -57,7 +57,7 @@ const FormToChangeUserBalanceByAdmin = ({
 }: {
     user: UserInterface;
     adminUser: UserInterface;
-}) => {    
+}) => {
     const { loading, setLoadingAll } = useContext(PageStateContext);
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
@@ -98,18 +98,24 @@ const FormToChangeUserBalanceByAdmin = ({
                     saveBalanceHistoryItem(DOC_ID, balanceItem),
                     {
                         pending: "Guardando justificativo",
-                        success: "Justificatio guardado",
-                        error: "Error al guardar tu justificatio, inténtalo de nuevo por favor",
+                        success: "Justificativo guardado",
+                        error: "Error al guardar tu justificativo, inténtalo de nuevo por favor",
                     },
                 );
 
-                // TODO: ask for the correct to register a balance history
+                const note =
+                    form.reasonOfChange.type === "bankTransactionNumber"
+                        ? "Numero de Transacción Bancaria - ".concat(
+                              form.reasonOfChange.description.value,
+                          )
+                        : form.reasonOfChange.description.value;
+
                 const newBalanceForHistory: BalanceHistory = {
                     ...OLD_BALANCE,
                     date: Timestamp.now(),
                     balanceRechargeId: DOC_ID,
                     newBalance: NEW_BALANCE,
-                    note: form.reasonOfChange.description.value,
+                    note: note,
                 };
                 const newHistory: BalanceHistory[] = user.balanceHistory
                     ? [...user.balanceHistory, newBalanceForHistory]
@@ -193,8 +199,8 @@ const FormToChangeUserBalanceByAdmin = ({
                     : "0"}
             </h2>
             <p className="text | gray-dark">
-                Ingresa el nuevo monto sera el que tendra el usuario, necesitas
-                justiticar la razon del cambio.
+                Ingresa el nuevo monto sera el que tendrá el usuario, necesitas
+                justificar la razón del cambio.
             </p>
 
             <BaseForm
@@ -275,8 +281,8 @@ const FormToChangeUserBalanceByAdmin = ({
                         legend="Tipo de rason de cambio"
                         optionTranslator={(d) =>
                             d === "bankTransactionNumber"
-                                ? "Numero de transaccion bancaria"
-                                : "Justificacion del cambio"
+                                ? "Numero de transacción bancaria"
+                                : "Justificación del cambio"
                         }
                     />
                     <TextField

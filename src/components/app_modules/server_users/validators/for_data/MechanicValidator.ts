@@ -11,7 +11,7 @@ export const isValidMechanicTools = (tools: string): InputState => {
     } else if (!nameRegex.test(tools)) {
         return {
             isValid: false,
-            message: "No puedes ingresar caracteres especiales que no sean ,.-",
+            message: "No puedes ingresar caracteres especiales que no sean , . -",
         };
     } else if (tools.length > 500) {
         return {

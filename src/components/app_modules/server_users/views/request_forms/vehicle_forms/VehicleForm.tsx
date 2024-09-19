@@ -21,6 +21,7 @@ import DateField from "@/components/form/view/fields/DateField";
 import NumberField from "@/components/form/view/fields/NumberField";
 import TransmissionField from "@/components/form/view/fields/TransmissionField";
 import TextFieldRenderer from "@/components/form/view/field_renderers/TextFieldRenderer";
+import LicenceNumberField from "@/components/form/view/fields/LicenceNumberField";
 
 const VehicleForm = ({
     vehicle,
@@ -90,7 +91,7 @@ const VehicleForm = ({
     };
 
     return (
-        <div className="form-sub-container | margin-top-25 max-width-60">
+        <div className="form-sub-container | margin-top-25">
             {
                 <div className="form-sub-container">
                     <h2 className="text icon-wrapper | medium-big bold">
@@ -134,13 +135,12 @@ const VehicleForm = ({
                     <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
                         <AddressCar /> Licencia
                     </h2>
-                    <NumberField
+                    <LicenceNumberField
                         field={{
                             values: vehicle.license.number,
                             setter: changeNumberLicense,
                             validator: isValidLicenseNumber,
                         }}
-                        legend="Número de la licencia"
                     />
                     <DateField
                         field={{

@@ -1,3 +1,4 @@
+import { MAX_LENGTH_FOR_NAMES } from "@/utils/text_helpers/TextCutter";
 import { InputState } from "../../../../validators/InputValidatorSignature";
 
 export const validateEnterpriseName = (name: string): InputState => {
@@ -14,11 +15,11 @@ export const validateEnterpriseName = (name: string): InputState => {
             message:
                 "El nombre solo puede contener letras del alfabeto y números",
         };
-    } else if (name.length > 150) {
+    } else if (name.length > MAX_LENGTH_FOR_NAMES) {
         return {
             isValid: false,
             message:
-                "No puedes ingresar mas de 150 caracteres para el nombre de la Empresa",
+                `No puedes ingresar mas de ${MAX_LENGTH_FOR_NAMES} caracteres para el nombre de la Empresa`,
         };
     } else {
         return {

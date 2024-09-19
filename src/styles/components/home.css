@@ -1,24 +1,40 @@
 .home-container {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2.222222222rem;
     overflow: hidden;
-
-    height: 100vh;
-
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+    height: 100dvh;
+    padding: 3.125rem;
     background-color: var(--second-dark);
 }
 
+.home-sub-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 .home-image {
-    width: 27.777777778rem;
+    width: 24.777777778rem;
+}
+
+
+.home-service {
+    cursor: default;
+    transition: 300ms all ease;
+}
+
+.home-service:hover,
+.home-service:hover > svg {
+    color: var(--white);
+    fill: var(--white);
 }
 
 @media only screen and (max-width: 435px) {
     .home-image {
-        width: 25rem;
+        width: 24rem;
     }
 }
 
@@ -27,4 +43,3 @@
         width: 22rem;
     }
 }
-

@@ -17,7 +17,7 @@ const CraneEnterpriseRenderer = ({
             {crane ? (
                 <EnterpriseRenderer enterprise={crane} />
             ) : (
-                <FieldDeleted description="Empresa operadora de gruas no encontrada" />
+                <FieldDeleted description="Empresa operadora de grúas no encontrada" />
             )}
         </div>
     );

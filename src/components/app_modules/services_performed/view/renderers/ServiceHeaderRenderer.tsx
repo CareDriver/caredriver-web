@@ -27,7 +27,7 @@ const ServiceHeaderRenderer = ({
                 )}
             </div>
             {service.requestReason && (
-                <p className="text | bold medium icon-wrapper">
+                <p className="text | wrap bold medium icon-wrapper">
                     <NoteSticky />
                     {service.requestReason}
                 </p>

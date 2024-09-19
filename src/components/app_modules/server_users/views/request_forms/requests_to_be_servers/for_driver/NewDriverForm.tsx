@@ -16,7 +16,10 @@ import { Vehicle, driveReqBuilder } from "@/interfaces/UserRequest";
 import { Timestamp } from "firebase/firestore";
 import { saveDriveReq } from "@/components/app_modules/server_users/api/DriveRequester";
 import { Locations } from "@/interfaces/Locations";
-import { EMPTY_REF_ATTACHMENT, RefAttachment } from "@/components/form/models/RefAttachment";
+import {
+    EMPTY_REF_ATTACHMENT,
+    RefAttachment,
+} from "@/components/form/models/RefAttachment";
 import { toast } from "react-toastify";
 import { updateUser } from "@/components/app_modules/users/api/UserRequester";
 import { UserInterface } from "@/interfaces/UserInterface";
@@ -36,7 +39,7 @@ import { DriverStatusHandler } from "@/components/app_modules/server_users/api/r
 import PageLoading from "@/components/loaders/PageLoading";
 import { genDocId } from "@/utils/generators/IdGenerator";
 import BaseForm from "@/components/form/view/forms/BaseForm";
-import { isValidAttachmentField } from "@/components/form/validators/FieldValidators";
+import { isValidAttachmentField, isValidTextField } from "@/components/form/validators/FieldValidators";
 import { isValidPersonalData } from "@/components/app_modules/server_users/validators/for_data/PersonalDataValidator";
 import { areValidVehicles } from "@/components/app_modules/server_users/validators/for_data/VehicleValidator";
 
@@ -199,6 +202,17 @@ const NewDriverForm: React.FC<Props> = ({
                     var toUpdate: Partial<UserInterface> = {
                         serviceRequests: newReqState,
                     };
+                    if (
+                        isValidTextField(
+                            form.personalData.alternativePhoneNumber,
+                        )
+                    ) {
+                        toUpdate = {
+                            ...toUpdate,
+                            alternativePhoneNumber:
+                                form.personalData.alternativePhoneNumber.value,
+                        };
+                    }
                     try {
                         await updateUser(requesterUser.id, toUpdate);
                     } catch (e) {
@@ -300,6 +314,7 @@ const NewDriverForm: React.FC<Props> = ({
                                 loading: formState.loading,
                             },
                         },
+                        styleClasses: "max-width-60",
                     }}
                     behavior={{
                         loading: formState.loading,

@@ -5,7 +5,7 @@ import SignInForm from "@/components/auth/views/sign_in/SignInForm";
 const Page = () => {
     return (
         <AuthenticatorProviderContainer>
-            <AuthenticatorContainer authTitle="Inicia sesion">
+            <AuthenticatorContainer authTitle="Inicia sesión">
                 <SignInForm />
             </AuthenticatorContainer>
         </AuthenticatorProviderContainer>

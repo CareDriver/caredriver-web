@@ -102,7 +102,7 @@ const SignUpForm = () => {
                     .catch(() => {
                         setLoading(false);
                         toast.error(
-                            "Error al guardar los datos, intentalo de nuevo por favor",
+                            "Error al guardar los datos, inténtalo de nuevo por favor",
                         );
                     });
             })
@@ -144,7 +144,7 @@ const SignUpForm = () => {
 
         try {
             let amountOfUsers = await checkEmailExists(
-                form.email.value.toLocaleLowerCase(),
+                form.email.value.trim().toLocaleLowerCase(),
             );
             if (amountOfUsers > 0) {
                 setForm((prev) => ({

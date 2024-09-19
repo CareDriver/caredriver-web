@@ -4,9 +4,7 @@ import { DocumentSnapshot } from "firebase/firestore";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import "@/styles/components/pagination.css";
 import {
-    getAllUsersNumPages,
     getAllUsersPaginated,
-    getSearchUsersNumPages,
     getSearchUsersPaginated,
 } from "@/components/app_modules/users/api/UserRequester";
 import { UserInterface } from "@/interfaces/UserInterface";
@@ -26,322 +24,260 @@ import {
     routeToCreateNewUserAsAdmin,
     routeToManageUserAsAdmin,
 } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
+import { isNullOrEmptyText } from "@/validators/TextValidator";
+import { validateSearchInput } from "../../validators/for_data/SearcherValidator";
 
 const ListOfAllUsersWithSearcher = () => {
+    const PAGE_SIZE = 10;
     const { checkingUserAuth, user: adminUser } = useContext(AuthContext);
-    const numPerPage = 10;
-    const [dataState, setDataState] = useState<{
-        data: UserInterface[] | null;
-        page: number;
-        pages: number | null;
-        lastDoc: DocumentSnapshot | undefined;
-        value: string;
-        isSearching: boolean;
-        wereThereResults: boolean;
-    }>({
-        data: null,
-        page: 1,
-        pages: null,
-        lastDoc: undefined,
-        value: "",
+
+    const [searchState, setSearchState] = useState({
         isSearching: false,
-        wereThereResults: true,
+        currentInput: "",
+        searchInput: "",
     });
+    const [documents, setDocuments] = useState<UserInterface[]>([]);
+    const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(
+        undefined,
+    );
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
 
-    const calculateSearchPages = async () => {
-        if (adminUser && adminUser.email && dataState.isSearching) {
-            try {
-                var pages = await getSearchUsersNumPages(
-                    adminUser.role,
-                    adminUser.email,
-                    numPerPage,
-                    dataState.value.toLocaleLowerCase(),
-                );
-                setDataState({
-                    ...dataState,
-                    pages,
-                });
-            } catch (e) {
-                console.log(e);
+    const updateDocuments = (newDocs: UserInterface[]) => {
+        setDocuments((prevDocuments) => {
+            const updatedDocs = prevDocuments.map((doc) => {
+                const newDoc = newDocs.find((d) => d.id === doc.id);
+                return newDoc ? newDoc : doc;
+            });
+
+            const newUniqueDocs = newDocs.filter(
+                (newDoc) => !updatedDocs.some((doc) => doc.id === newDoc.id),
+            );
+
+            return [...updatedDocs, ...newUniqueDocs];
+        });
+    };
+
+    const searchUsers = async (
+        adminUser: UserInterface,
+        searchCriteria: string,
+        startAfterDoc: DocumentSnapshot | undefined,
+    ) => {
+        if (loading) {
+            return;
+        }
+
+        setLoading(true);
+        try {
+            var res = await getSearchUsersPaginated(
+                adminUser.role,
+                adminUser.email ?? "",
+                searchCriteria,
+                "next",
+                startAfterDoc,
+                PAGE_SIZE,
+            );
+            if (res.result.length > 0) {
+                updateDocuments(res.result);
+            } else {
+                setHasMore(false);
             }
+            setLastDoc(res.lastDoc);
+            setLoading(false);
+        } catch (e) {
+            console.log(e);
         }
     };
 
-    const calculateNormalNumPages = async () => {
-        if (adminUser && adminUser.email) {
-            try {
-                var pages = await getAllUsersNumPages(
-                    adminUser.role,
-                    adminUser.email,
-                    numPerPage,
-                );
-                setDataState({
-                    ...dataState,
-                    pages,
-                });
-            } catch (e) {
-                console.log(e);
+    const findAllUsers = async (
+        adminUser: UserInterface,
+        startAfterDoc: DocumentSnapshot | undefined,
+    ) => {
+        if (loading) {
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            var res = await getAllUsersPaginated(
+                adminUser.role,
+                adminUser.email ?? "",
+                "next",
+                startAfterDoc,
+                PAGE_SIZE,
+            );
+            if (res.result.length > 0) {
+                updateDocuments(res.result);
+            } else {
+                setHasMore(false);
             }
+            setLastDoc(res.lastDoc);
+            setLoading(false);
+        } catch (e) {
+            console.log(e);
         }
     };
 
-    const getSearchData = async () => {
-        if (adminUser && adminUser.email) {
-            try {
-                const startAfterDoc = dataState.lastDoc;
-                const endBeforeDoc = undefined;
-                var result = await getSearchUsersPaginated(
-                    adminUser.role,
-                    adminUser.email,
-                    dataState.value.toLocaleLowerCase(),
-                    "next",
-                    startAfterDoc,
-                    endBeforeDoc,
-                    numPerPage,
-                );
-                var newData;
-                if (dataState.data) {
-                    newData = [...dataState.data, ...result.result];
-                } else {
-                    newData = result.result;
-                }
-                setDataState({
-                    ...dataState,
-                    data: newData,
-                    lastDoc: result.lastDoc,
-                });
-            } catch (e) {
-                console.log(e);
-            }
-        }
+    const defaultLoading = async (adminUser: UserInterface) => {
+        setDocuments([]);
+        setHasMore(true);
+        setSearchState((prev) => ({ ...prev, isSearching: false }));
+        await findAllUsers(adminUser, undefined);
     };
 
-    const getAllUsersData = async () => {
-        if (adminUser && adminUser.email) {
-            try {
-                const startAfterDoc = dataState.lastDoc;
-                const endBeforeDoc = undefined;
-                var result = await getAllUsersPaginated(
-                    adminUser.role,
-                    adminUser.email,
-                    "next",
-                    startAfterDoc,
-                    endBeforeDoc,
-                    numPerPage,
-                );
-                var newData;
-                if (dataState.data) {
-                    newData = [...dataState.data, ...result.result];
-                } else {
-                    newData = result.result;
-                }
-                setDataState({
-                    ...dataState,
-                    data: newData,
-                    lastDoc: result.lastDoc,
-                });
-            } catch (e) {
-                console.log(e);
-            }
-        }
-    };
-
-    const search = async (e: FormEvent<HTMLFormElement>) => {
+    const performSearch = async (
+        e: FormEvent<HTMLFormElement>,
+        adminUser: UserInterface,
+    ) => {
         e.preventDefault();
-        if (dataState.value.trim().length == 0) {
-            setDataState({
-                ...dataState,
-                data: null,
-                lastDoc: undefined,
-                pages: null,
-                page: 1,
-                isSearching: false,
-            });
-        } else {
-            setDataState({
-                ...dataState,
-                data: null,
-                lastDoc: undefined,
-                pages: null,
-                page: 1,
+        let validToSearch: boolean =
+            !isNullOrEmptyText(searchState.currentInput) &&
+            validateSearchInput(searchState.currentInput);
+        if (validToSearch) {
+            setDocuments([]);
+            setHasMore(true);
+            setSearchState((prev) => ({
+                ...prev,
+                searchInput: prev.currentInput,
                 isSearching: true,
-            });
+            }));
+            await searchUsers(adminUser, searchState.currentInput, undefined);
+        } else {
+            setDocuments([]);
+            setHasMore(false);
+            setSearchState((prev) => ({
+                ...prev,
+                isSearching: true,
+            }));
         }
     };
 
-    const handleNextClick = async () => {
-        if (dataState.page === dataState.pages) {
-            setDataState({
-                ...dataState,
-                wereThereResults: false,
-            });
+    const next = async (adminUser: UserInterface) => {
+        if (searchState.isSearching) {
+            await searchUsers(adminUser, searchState.searchInput, lastDoc);
         } else {
-            if (adminUser && adminUser.email) {
-                if (dataState.isSearching) {
-                    try {
-                        const startAfterDoc = dataState.lastDoc;
-                        const endBeforeDoc = undefined;
-                        var result = await getSearchUsersPaginated(
-                            adminUser.role,
-                            adminUser.email,
-                            dataState.value.toLocaleLowerCase(),
-                            "next",
-                            startAfterDoc,
-                            endBeforeDoc,
-                            numPerPage,
-                        );
-                        var newData;
-                        if (dataState.data) {
-                            newData = [...dataState.data, ...result.result];
-                        } else {
-                            newData = result.result;
-                        }
-                        setDataState({
-                            ...dataState,
-                            data: newData,
-                            lastDoc: result.lastDoc,
-                            page: dataState.page + 1,
-                        });
-                    } catch (e) {
-                        console.log(e);
-                    }
-                } else {
-                    try {
-                        const startAfterDoc = dataState.lastDoc;
-                        const endBeforeDoc = undefined;
-                        var result = await getAllUsersPaginated(
-                            adminUser.role,
-                            adminUser.email,
-                            "next",
-                            startAfterDoc,
-                            endBeforeDoc,
-                            numPerPage,
-                        );
-                        var newData;
-                        if (dataState.data) {
-                            newData = [...dataState.data, ...result.result];
-                        } else {
-                            newData = result.result;
-                        }
-                        setDataState({
-                            ...dataState,
-                            data: newData,
-                            lastDoc: result.lastDoc,
-                            page: dataState.page + 1,
-                        });
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
-            }
+            await findAllUsers(adminUser, lastDoc);
         }
     };
+
+    const nothingWasFound = (): boolean => documents.length === 0 && !hasMore;
 
     useEffect(() => {
-        if (!checkingUserAuth) {
-            calculateNormalNumPages();
+        if (!checkingUserAuth && adminUser) {
+            next(adminUser);
         }
     }, [checkingUserAuth]);
 
-    useEffect(() => {
-        if (!dataState.pages) {
-            if (dataState.isSearching) {
-                calculateSearchPages();
-            } else {
-                calculateNormalNumPages();
-            }
-        }
-    }, [dataState.pages]);
+    if (checkingUserAuth || !adminUser) {
+        return <PageLoading />;
+    }
 
-    useEffect(() => {
-        if (dataState.data === null) {
-            if (dataState.isSearching) {
-                getSearchData();
-            } else {
-                getAllUsersData();
-            }
-        }
-    }, [dataState.data]);
-
-    return dataState.data ? (
-        <div className="render-data-wrapper">
+    return (
+        <div
+            className={`render-data-wrapper ${
+                nothingWasFound() && "auto-height max-height-100"
+            }`}
+        >
             <h1 className="text | big-medium bolder margin-bottom-25 capitalize">
                 Usuarios
             </h1>
             <div className="row-wrapper | row-responsive space-between | margin-bottom-50">
-                <form className="search-wrapper" onSubmit={(e) => search(e)}>
+                <form
+                    className="search-wrapper"
+                    onSubmit={(e) => performSearch(e, adminUser)}
+                >
                     <input
                         type="text"
                         className="search-input"
-                        placeholder="Buscar por nombre, email, telefono"
-                        value={dataState.value}
+                        placeholder="Buscar por nombre, email, teléfono"
+                        value={searchState.currentInput}
                         onChange={(e) => {
-                            setDataState({
-                                ...dataState,
-                                value: e.target.value,
-                            });
+                            setSearchState((prev) => ({
+                                ...prev,
+                                currentInput: e.target.value,
+                            }));
                         }}
                     />
                     <button className="search-button icon-wrapper | gray-icon">
                         <Search />
                     </button>
                 </form>
-                <div>
-                    {adminUser && (
-                        <GuardOfModule
-                            user={adminUser}
-                            roles={ROLES_TO_ADD_USERS}
-                        >
-                            <Link
-                                href={routeToCreateNewUserAsAdmin()}
-                                className="icon-wrapper small-general-button text | bolder white-icon touchable"
-                            >
-                                <UserPlus />
-                                Nuevo Usuario
-                            </Link>
-                        </GuardOfModule>
+                <GuardOfModule user={adminUser} roles={ROLES_TO_ADD_USERS}>
+                    <Link
+                        href={routeToCreateNewUserAsAdmin()}
+                        className="icon-wrapper small-general-button text | bolder white-icon touchable"
+                    >
+                        <UserPlus />
+                        Nuevo Usuario
+                    </Link>
+                </GuardOfModule>
+            </div>
+            <InfiniteScroll
+                dataLength={documents.length}
+                next={() => next(adminUser)}
+                hasMore={hasMore}
+                loader={<DataLoading />}
+            >
+                <div
+                    className={`users-wrapper ${
+                        !nothingWasFound() && "users-search-top-space"
+                    }`}
+                >
+                    {documents.map(
+                        (user, i) =>
+                            user.fakeId && (
+                                <Link
+                                    className="touchable"
+                                    key={`user-${i}`}
+                                    href={routeToManageUserAsAdmin(user.fakeId)}
+                                >
+                                    <UserCardWithDetails
+                                        user={user}
+                                        reviewerUser={adminUser}
+                                    />
+                                </Link>
+                            ),
                     )}
                 </div>
-            </div>
-            {dataState.data.length > 0 ? (
-                <InfiniteScroll
-                    dataLength={dataState.data.length}
-                    next={handleNextClick}
-                    hasMore={dataState.page !== dataState.pages}
-                    loader={<DataLoading />}
-                >
-                    <div className="users-wrapper">
-                        {dataState.data.map(
-                            (user, i) =>
-                                user.fakeId && (
-                                    <Link
-                                        className="touchable"
-                                        key={`user-${i}`}
-                                        href={routeToManageUserAsAdmin(
-                                            user.fakeId,
-                                        )}
-                                    >
-                                        <UserCardWithDetails
-                                            user={user}
-                                            reviewerUser={adminUser}
-                                        />
-                                    </Link>
-                                ),
-                        )}
-                    </div>
-                </InfiniteScroll>
-            ) : (
-                <div className="empty-wrapper | auto-height">
-                    <h2>
-                        {dataState.isSearching
-                            ? "Ningún usuario fue encontrado"
-                            : "No hay usuarios registrados en la aplicación"}
+            </InfiniteScroll>
+
+            {nothingWasFound() && (
+                <div className="text center">
+                    <h2 className="text | medium center">
+                        {searchState.isSearching
+                            ? "Lo sentimos, pero no hay usuarios que coincidan con tu criterio de busqueda."
+                            : "No hay usuarios registrados en la aplicación."}
                     </h2>
+                    {searchState.isSearching && (
+                        <span
+                            className="text | center medium bold underline touchable"
+                            onClick={() => defaultLoading(adminUser)}
+                        >
+                            <i>Click aquí para cargar todos los usuarios</i>
+                        </span>
+                    )}
+                    <span className="circles-right-bottomv2 green"></span>
                 </div>
             )}
+
+            {documents.length > 0 && !hasMore && (
+                <i className="text | small light | margin-top-25">
+                    Estos son todos los usuarios encontrados.
+                    {searchState.isSearching && (
+                        <span
+                            className="text small"
+                            onClick={() => defaultLoading(adminUser)}
+                        >
+                            {" "}
+                            <i className="text small bold underline ">
+                                Click aquí para cargar todos los usuarios
+                            </i>
+                        </span>
+                    )}
+                </i>
+            )}
         </div>
-    ) : (
-        <PageLoading />
     );
 };
 

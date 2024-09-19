@@ -9,6 +9,7 @@ import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
 import Plus from "@/icons/Plus";
 import { TRANSMITION_TO_SPANISH_V2 } from "../../../models/VehicleFields";
 import Link from "next/link";
+import { routeToRenewLicenseAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
 
 interface Props {
     legend: string;
@@ -42,7 +43,7 @@ const RegisteredVehicleRenderer: React.FC<Props> = ({
                     .replaceAll(",", " | ")}
             </h3>
             <div
-                className="row-wrapper | gap-20"
+                className="row-wrapper | row-responsive gap-20"
                 data-state={transmisionAdder.loading && "loading"}
             >
                 {vehicle.type.mode.length === 1 && (
@@ -68,9 +69,9 @@ const RegisteredVehicleRenderer: React.FC<Props> = ({
                         ${getColorButtonLicense(
                             vehicle.license.expiredDateLicense.toDate(),
                         )}`}
-                    href={`/services/license/update/${vehicleType}`}
+                    href={routeToRenewLicenseAsUser(vehicleType)}
                 >
-                    <span className="text | medium bolder">
+                    <span className="text | white medium bolder">
                         Actualizar Licencia
                     </span>
                 </Link>

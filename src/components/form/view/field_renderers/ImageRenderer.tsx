@@ -11,6 +11,7 @@ interface Props {
         image: string | RefAttachment | undefined;
         legend?: string;
         noFoundReason?: string;
+        defaultImage?: string;
     };
     imageInCircle: boolean;
 }
@@ -19,12 +20,16 @@ const ImageRenderer: React.FC<Props> = ({ content, imageInCircle }) => {
     const [isOpen, setOpen] = useState(false);
     const NO_FOUND_DESCR =
         content.noFoundReason === undefined
-            ? "No se encontro la imagen, es probable que haya sido eliminada"
+            ? "No se encontró la imagen, es probable que haya sido eliminada"
             : content.noFoundReason;
-    const imageUrl = content.image ? getUrl(content.image) : undefined;
+    var imageUrl = content.image ? getUrl(content.image) : undefined;
 
-    if (!imageUrl || isNullOrEmptyText(imageUrl)) {
+    if (!content.defaultImage && (!imageUrl || isNullOrEmptyText(imageUrl))) {
         return <FieldDeleted description={NO_FOUND_DESCR} />;
+    }
+
+    if (content.defaultImage && (!imageUrl || isNullOrEmptyText(imageUrl))) {
+        imageUrl = content.defaultImage;
     }
 
     return (

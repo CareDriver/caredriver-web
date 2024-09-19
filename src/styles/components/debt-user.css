@@ -1,9 +1,13 @@
 .debt-wrapper {
+    overflow-y: auto;
     display: flex;
     flex-wrap: wrap;
     gap: 0.555555556rem;
 
-    padding: 0.555555556rem 0;
+    padding: 0.555555556rem 0 1.5rem 0;
+    max-height: 70vh;
+
+    border-bottom: 1px solid var(--gray-light);
 }
 
 .debt-item {
@@ -15,6 +19,7 @@
     border: 0.111111111rem solid var(--gray-medium);
     padding: 1.111111111rem 1.666666667rem;
     border-radius: 0.833333333rem;
+    transition: all ease-in 200ms;
 }
 
 .debt-item.increased {
@@ -23,4 +28,9 @@
 
 .debt-item.decreased {
     border-color: var(--red);
+}
+
+.debt-item.touchable:hover {
+    border-radius: 1.5rem;
+
 }

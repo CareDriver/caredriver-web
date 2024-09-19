@@ -58,6 +58,7 @@ export interface UserInterface {
     role?: UserRole; // the role that the user has in the application
     fullName: string; // Full name of the user
     phoneNumber: string; // Phone number of the user (includes country code, ej: +591 76543218)
+    alternativePhoneNumber?: string;
     photoUrl: RefAttachment; // URL of the user's photo
     email?: string; // User's email
     identityCard?: IdentityCard; // User's Id card

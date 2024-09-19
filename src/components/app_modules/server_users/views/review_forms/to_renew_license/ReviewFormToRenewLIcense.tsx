@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import SelfieRenderer from "../../../../../form/view/field_renderers/SelfieRenderer";
 import { UserInterface } from "@/interfaces/UserInterface";
 import {
-    getLicenceUpdateReqById,
+    getRenewLicenceReqInRealTime,
     setReviewLicenseReq,
 } from "@/components/app_modules/server_users/api/LicenseUpdaterReq";
 import {
@@ -25,33 +25,30 @@ import TextFieldRenderer from "@/components/form/view/field_renderers/TextFieldR
 import PersonalDataRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/PersonalDataRenderer";
 import { isNull } from "@/validators/NullDataValidator";
 import { routeToRequestsToRenewLicenseAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUserServerAsAdmin";
+import { Unsubscribe } from "firebase/firestore";
+import {
+    DEFAULT_REVIEW_STATE,
+    ReviewState,
+} from "@/components/form/models/Reviews";
 
 const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
     const { user } = useContext(AuthContext);
-    const [loading, setLoading] = useState(false);
-    const [req, setReq] = useState<LicenseUpdateReq | null>(null);
+    const [reviewState, setReviewState] =
+        useState<ReviewState>(DEFAULT_REVIEW_STATE);
+    const [req, setReq] = useState<LicenseUpdateReq | null | undefined>(null);
     const [userReq, setUserReq] = useState<UserInterface | null>(null);
     const router = useRouter();
     const [userData, setUserData] = useState<UserInterface | null | undefined>(
         null,
     );
 
+    const wasReviewed = (): boolean => {
+        return reviewState.reviewed || !req?.active;
+    };
+
     const faildRedirect = (reason: string) => {
         toast.error(reason);
         router.push(routeToRequestsToRenewLicenseAsAdmin());
-    };
-
-    const fetchReq = async () => {
-        try {
-            const reqRes = await getLicenceUpdateReqById(reqId);
-            if (reqRes) {
-                setReq(reqRes);
-            } else {
-                faildRedirect("Petición no encontrada");
-            }
-        } catch (e) {
-            faildRedirect("Petición no encontrada");
-        }
     };
 
     const fetchUserReq = async () => {
@@ -74,7 +71,16 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
     };
 
     useEffect(() => {
-        fetchReq();
+        let unsubscribe: Unsubscribe | undefined;
+
+        getRenewLicenceReqInRealTime(reqId, {
+            onFound: setReq,
+            onNotFound: () => faildRedirect("Petición no encontrada"),
+        })
+            .then((u) => (unsubscribe = u))
+            .catch(() => faildRedirect("Petición no encontrada"));
+
+        return () => unsubscribe && unsubscribe();
     }, []);
 
     useEffect(() => {
@@ -118,10 +124,10 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
 
     const review = async (wasApproved: boolean) => {
         if (user && req && userReq) {
-            setLoading(true);
+            setReviewState((prev) => ({ ...prev, loading: true }));
             try {
                 await toast.promise(deleteImages, {
-                    pending: "Eliminando foto de confirmacion del usario",
+                    pending: "Eliminando foto de confirmación del usario",
                     success: "Foto eliminada",
                     error: "Error al eliminar la foto, inténtalo de nuevo por favor",
                 });
@@ -130,22 +136,21 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
                     success: "Revision guardada",
                     error: "Error al guardar, inténtalo de nuevo por favor",
                 });
-                setLoading(false);
                 router.push(routeToRequestsToRenewLicenseAsAdmin());
             } catch (e) {
-                setLoading(false);
+                setReviewState((prev) => ({ ...prev, loading: false }));
             }
         }
     };
 
     const approve = async () => {
-        if (!loading) {
+        if (!reviewState.loading) {
             await review(true);
         }
     };
 
     const decline = async () => {
-        if (!loading) {
+        if (!reviewState.loading) {
             await review(false);
         }
     };
@@ -178,38 +183,54 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
                     firstButton: {
                         content: {
                             legend: "Rechazar",
-                            buttonClassStyle: req.active
-                                ? "general-button | yellow"
-                                : "hidden",
+                            buttonClassStyle: wasReviewed()
+                                ? "hidden"
+                                : "general-button | yellow",
                             loaderClassStyle: "loader-black",
                         },
                         behavior: {
                             action: decline,
                             loading:
-                                loading || isNull(userData) || isNull(userReq),
-                            setLoading: setLoading,
+                                reviewState.loading ||
+                                isNull(userData) ||
+                                isNull(userReq),
+                            setLoading: (d) =>
+                                setReviewState((prev) => ({
+                                    ...prev,
+                                    loading: d,
+                                })),
                             isValid: req.active && !isNull(userData),
                         },
                     },
                     secondButton: {
                         content: {
                             legend: "Aprobar",
-                            buttonClassStyle: req.active ? undefined : "hidden",
+                            buttonClassStyle:
+                                wasReviewed() || userReq?.deleted
+                                    ? "hidden"
+                                    : undefined,
                         },
                         behavior: {
                             action: approve,
                             loading:
-                                loading || isNull(userData) || isNull(userReq),
-                            setLoading: setLoading,
+                                reviewState.loading ||
+                                isNull(userData) ||
+                                isNull(userReq),
+                            setLoading: (d) =>
+                                setReviewState((prev) => ({
+                                    ...prev,
+                                    loading: d,
+                                })),
                             isValid: req.active && !isNull(userData),
                         },
                     },
                 }}
                 behavior={{
-                    loading: loading || !userData || !userReq,
+                    loading: reviewState.loading || !userData || !userReq,
                 }}
             >
-                <UserStateWithMessageRenderer userData={userData} />
+                <UserStateWithMessageRenderer userData={userReq} />
+                {userReq && <UserStateRenderer user={userReq} />}
 
                 {userReq && userData ? (
                     <PersonalDataRenderer

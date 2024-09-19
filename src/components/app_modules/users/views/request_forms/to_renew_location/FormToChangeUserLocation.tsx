@@ -35,7 +35,7 @@ const FormToChangeUserLocation = () => {
             .concat(
                 `quisiera cambiarme de grupo de Whatsaap, 🔁🌎 porque ahora estoy en ${newLocation}.`,
             )
-            .concat(`\nMi antigua ubicacion era ${oldLocation} 👀`);
+            .concat(`\nMi antigua ubicación era ${oldLocation} 👀`);
 
         sendWhatsapp(PHONE_BUSINESS, message);
     };
@@ -114,15 +114,15 @@ const FormToChangeUserLocation = () => {
             <section className="service-form-wrapper | max-height-100">
                 <h1 className="text | big bolder">Cambia tu Localización</h1>
                 <p className="text | light">
-                    Podras mandar un mensaje de solicitud por Whatsapp para
-                    cambiar el grupo donde pertences.
+                    Podrás mandar un mensaje de solicitud por WhatsApp para
+                    cambiar el grupo donde perteneces.
                 </p>
 
                 <BaseForm
                     content={{
                         button: {
                             content: {
-                                legend: "Cambiar localizacion",
+                                legend: "Cambiar localización",
                             },
                             behavior: {
                                 loading: formState.loading,

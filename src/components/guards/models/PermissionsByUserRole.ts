@@ -62,6 +62,10 @@ export const ROLES_FOR_SERVER_USER_ACTIONS: UserRole[] = [
     UserRole.SupportTwo,
 ];
 
+export const ROLES_TO_SET_USER_ROLE: UserRole[] = [
+    UserRole.Admin,
+];
+
 export const ROLES_FOR_DISABLE_USERS: UserRole[] = [
     UserRole.Admin,
     UserRole.SupportTwo,

@@ -109,7 +109,7 @@ const FormToDisableEnterprise: React.FC<Props> = ({ enterprise }) => {
                                 enterprise.name,
                             ),
                     }}
-                    legend="Nombre de la empresa | Confirmacion"
+                    legend="Nombre de la empresa | Confirmación"
                 />
             </BaseForm>
         </div>

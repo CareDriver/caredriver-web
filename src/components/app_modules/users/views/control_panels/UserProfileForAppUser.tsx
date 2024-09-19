@@ -1,7 +1,7 @@
 "use client";
 
 import { UserInterface } from "@/interfaces/UserInterface";
-import { getUserByFakeId } from "@/components/app_modules/users/api/UserRequester";
+import { getUserByFakeIdInRealTime } from "@/components/app_modules/users/api/UserRequester";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -16,6 +16,7 @@ import {
     ROLES_FOR_SERVER_USER_ACTIONS,
     ROLES_TO_SET_MIN_USER_BALANCE,
     ROLES_TO_SET_USER_BALANCE,
+    ROLES_TO_SET_USER_ROLE,
     ROLES_TO_VIEW_CONTACT_USERS,
     ROLES_TO_VIEW_USER_CREDENTIALS,
     ROLES_TO_VIEW_USERS_HISTORY,
@@ -37,6 +38,11 @@ import "@/styles/components/users.css";
 import { checkPermission } from "@/components/guards/validators/RoleValidator";
 import FormToDisableUserByDateByAdmin from "../request_forms/to_change_state/FormToDisableUserByDateByAdmin";
 import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
+import {
+    cutTextWithDotsByLength,
+    MAX_LENGTH_FOR_NAMES,
+} from "@/utils/text_helpers/TextCutter";
+import { Unsubscribe } from "firebase/firestore";
 
 const UserProfileForAppUser = ({ userId }: { userId: string }) => {
     const router = useRouter();
@@ -48,20 +54,26 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
     } | null>(null);
 
     useEffect(() => {
-        getUserByFakeId(userId)
+        let unsubscribe: Unsubscribe | undefined;
+
+        const onNotFound = () => {
+            toast.error("Usuario no encontrado");
+            router.push(routeToAllUsersAsAdmin());
+        };
+
+        getUserByFakeIdInRealTime(userId, {
+            onFound: (u) => {
+                setUser(u);
+                setRole(getUserRoleDetails(u));
+            },
+            onNotFound: onNotFound,
+        })
             .then((res) => {
-                if (res) {
-                    setUser(res);
-                    setRole(getUserRoleDetails(res));
-                } else {
-                    toast.error("Usuario no encontrado");
-                    router.push(routeToAllUsersAsAdmin());
-                }
+                unsubscribe = res;
             })
-            .catch((e) => {
-                toast.error("Usuario no encontrado");
-                router.push(routeToAllUsersAsAdmin());
-            });
+            .catch((e) => onNotFound());
+
+        return () => unsubscribe && unsubscribe();
     }, []);
 
     if (!user || !adminUser) {
@@ -74,8 +86,11 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                 <UserPhotoRenderer photo={user.photoUrl} />
 
                 <div className="user-info-subwrapper">
-                    <h1 className="text | big bolder capitalize">
-                        {user.fullName}
+                    <h1 className="text | big bolder capitalize wrap">
+                        {cutTextWithDotsByLength(
+                            user.fullName,
+                            MAX_LENGTH_FOR_NAMES,
+                        )}
                     </h1>
                     <h3 className="text | medium">{user.email}</h3>
                     <GuardOfModule
@@ -141,6 +156,9 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                             <UserContactsRenderer
                                 email={user.email}
                                 phoneNumber={user.phoneNumber}
+                                alternativePhoneNumber={
+                                    user.alternativePhoneNumber
+                                }
                             />
                         </GuardOfModule>
                     )}
@@ -195,7 +213,7 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
 
                     <GuardOfModule
                         user={adminUser}
-                        roles={ROLES_FOR_SERVER_USER_ACTIONS}
+                        roles={ROLES_TO_SET_USER_ROLE}
                     >
                         <FormFoChangeUserRoleToAdmin
                             user={user}

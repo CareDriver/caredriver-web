@@ -7,6 +7,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    max-width: 50vw;
 }
 
 .user-info-photo {
@@ -71,7 +73,7 @@
     }
 
     .user-info-subwrapper {
-        align-items: center;
+        max-width: 100%;
     }
 
     .user-info-photo, .user-info-photo-size-v2 {

@@ -186,11 +186,11 @@ const EnterpriseEditForm: React.FC<Props> = ({
                         setter: (d) =>
                             setForm((prev) => ({ ...prev, coordinates: d })),
                     }}
-                    legend="Ubicación geografica de la empresa"
+                    legend="Ubicación geográfica de la empresa"
                 />
             ) : (
                 <span className="loader-gray-medium small-loader | text gray bold">
-                    Cargando ubicacion geografica
+                    Cargando ubicación geográfica
                 </span>
             )}
             <GuardOfModule

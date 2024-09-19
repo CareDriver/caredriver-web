@@ -7,7 +7,7 @@ interface Props {
 
 const PrivacyTermsSection: React.FC<Props> = ({ isCheck, setCheck }) => {
     const PRIVACY_TEMS =
-        "Acepto las políticas de privacidad, términos y condiciones de uso, recibircomunicaciones de CaReDriver y chatear con nosotros por WhatsApp.";
+        "Acepto las políticas de privacidad, términos y condiciones de uso, recibir comunicaciones de CaReDriver y chatear con nosotros por WhatsApp.";
 
     return (
         <CheckField

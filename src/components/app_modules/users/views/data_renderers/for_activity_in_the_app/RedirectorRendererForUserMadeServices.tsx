@@ -73,7 +73,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                         />
                     ) : (
                         <i className="text | bolder red">
-                            Sin asociacion a una empresa de chofer
+                            Sin asociación a una empresa de chofer
                         </i>
                     )}
                     <Link
@@ -111,7 +111,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                         />
                     ) : (
                         <i className="text | bolder red">
-                            Sin asociacion a un taller mecánico registrado
+                            Sin asociación a un taller mecánico registrado
                         </i>
                     )}
 
@@ -157,12 +157,12 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             }}
                             button={{
                                 styleClass: "service-user-option",
-                                legend: "Ver empresa operadora de grua asociada",
+                                legend: "Ver empresa operadora de grúa asociada",
                             }}
                         />
                     ) : (
                         <i className="text | bolder red">
-                            Sin asociacion a una empresa operadora de grua
+                            Sin asociación a una empresa operadora de grúa
                         </i>
                     )}
                     <Link

@@ -4,7 +4,7 @@ import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
 import { TextField } from "@/components/form/models/FormFields";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import { UserInterface } from "@/interfaces/UserInterface";
-import { getUserByEmail } from "@/components/app_modules/users/api/UserRequester";
+import { getUserNoDeletedByEmail } from "@/components/app_modules/users/api/UserRequester";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import SimpleUserCard from "../cards/SimpleUserCard";
@@ -59,10 +59,10 @@ const UserSelector: React.FC<Props> = ({ form, processTheUserFound }) => {
             let userFound;
             try {
                 userFound = await toast.promise(
-                    getUserByEmail(userEmail.value),
+                    getUserNoDeletedByEmail(userEmail.value),
                     {
                         pending: "Buscando al usuario",
-                        error: "Error al buscar al usuario, intentalo de nuevo",
+                        error: "Error al buscar al usuario, inténtalo de nuevo",
                     },
                 );
 

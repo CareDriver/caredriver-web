@@ -3,6 +3,10 @@ import UserIcon from "@/icons/UserIcon";
 import { LicenseUpdateReq } from "@/interfaces/PersonalDocumentsInterface";
 import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
 import { routeToReviewRequestToRenewLicenseAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUserServerAsAdmin";
+import {
+    cutTextWithDotsByLength,
+    MAX_LENGTH_FOR_NAMES_DISPLAY,
+} from "@/utils/text_helpers/TextCutter";
 import Link from "next/link";
 
 const LicenseCard = ({ license }: { license: LicenseUpdateReq }) => {
@@ -11,9 +15,12 @@ const LicenseCard = ({ license }: { license: LicenseUpdateReq }) => {
             href={routeToReviewRequestToRenewLicenseAsAdmin(license.id)}
             className="personal-data-req-item | left touchable"
         >
-            <h3 className="text | medium bolder capitalize | icon-wrapper">
+            <h3 className="text | wrap medium bolder capitalize | icon-wrapper">
                 <UserIcon />
-                {license.userName}
+                {cutTextWithDotsByLength(
+                    license.userName,
+                    MAX_LENGTH_FOR_NAMES_DISPLAY,
+                )}
             </h3>
             <div className="separator-horizontal"></div>
             {(license.vehicleType === "car" ||

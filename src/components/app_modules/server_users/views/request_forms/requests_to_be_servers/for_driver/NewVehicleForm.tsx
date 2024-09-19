@@ -40,8 +40,9 @@ import { genDocId } from "@/utils/generators/IdGenerator";
 import PageLoading from "@/components/loaders/PageLoading";
 import { isValidPersonalData } from "@/components/app_modules/server_users/validators/for_data/PersonalDataValidator";
 import { isValidVehicle } from "@/components/app_modules/server_users/validators/for_data/VehicleValidator";
-import { isValidAttachmentField } from "@/components/form/validators/FieldValidators";
+import { isValidAttachmentField, isValidTextField } from "@/components/form/validators/FieldValidators";
 import { routeToRequestToBeServerUserAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
+import BaseForm from "@/components/form/view/forms/BaseForm";
 
 type VehicleToAddAsDriver = "car" | "motorcycle";
 
@@ -201,6 +202,17 @@ const NewVehicleForm: React.FC<Props> = ({
                     var toUpdate: Partial<UserInterface> = {
                         serviceRequests: newReqState,
                     };
+                    if (
+                        isValidTextField(
+                            form.personalData.alternativePhoneNumber,
+                        )
+                    ) {
+                        toUpdate = {
+                            ...toUpdate,
+                            alternativePhoneNumber:
+                                form.personalData.alternativePhoneNumber.value,
+                        };
+                    }
                     try {
                         await updateUser(requesterUser.id, toUpdate);
                     } catch (e) {
@@ -340,10 +352,23 @@ const NewVehicleForm: React.FC<Props> = ({
                         trabajar con este nuevo vehículo.
                     </p>
                 </div>
-                <form
-                    className="form-sub-container"
-                    data-state={formState.loading ? "loading" : "loaded"}
-                    onSubmit={(e) => handleSubmit(e)}
+                <BaseForm
+                    content={{
+                        button: {
+                            content: {
+                                legend: "Enviar Solicitud",
+                            },
+                            behavior: {
+                                loading: formState.loading,
+                                isValid: formState.isValid,
+                            },
+                        },
+                        styleClasses: "max-width-60",
+                    }}
+                    behavior={{
+                        loading: formState.loading,
+                        onSummit: handleSubmit,
+                    }}
                 >
                     <PersonalDataForm
                         baseUser={baseUser}
@@ -372,24 +397,7 @@ const NewVehicleForm: React.FC<Props> = ({
                             setForm((prev) => ({ ...prev, termsCheck: d }))
                         }
                     />
-                    <button
-                        className={`general-button | margin-top-25 touchable max-width-60 ${
-                            formState.loading && "loading-section"
-                        }`}
-                        title={
-                            !formState.isValid
-                                ? "Por favor completa los campos con datos validos"
-                                : ""
-                        }
-                        disabled={!formState.isValid}
-                    >
-                        {formState.loading ? (
-                            <span className="loader"></span>
-                        ) : (
-                            "Enviar Solicitud"
-                        )}
-                    </button>
-                </form>
+                </BaseForm>
             </div>
         )
     );

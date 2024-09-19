@@ -16,8 +16,13 @@ import {
     getCountFromServer,
     and,
     or,
+    Unsubscribe,
 } from "firebase/firestore";
 import { UserInterface, UserRole } from "../../../../interfaces/UserInterface";
+import {
+    getDocInRealTime,
+    RealTimeResponse,
+} from "@/utils/requesters/RealTimeFetcher";
 
 const usersCollection = collection(firestore, "users");
 
@@ -26,6 +31,29 @@ export const getUserByEmail = async (
 ): Promise<UserInterface | undefined> => {
     try {
         const q = query(usersCollection, where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+            const doc = querySnapshot.docs[0];
+            return { id: doc.id, ...doc.data() } as UserInterface;
+        } else {
+            return undefined;
+        }
+    } catch (error) {
+        console.error("Error fetching user by email: ", error);
+        throw error;
+    }
+};
+
+export const getUserNoDeletedByEmail = async (
+    email: string,
+): Promise<UserInterface | undefined> => {
+    try {
+        const q = query(
+            usersCollection,
+            where("email", "==", email),
+            where("deleted", "==", false),
+        );
         const querySnapshot = await getDocs(q);
 
         if (!querySnapshot.empty) {
@@ -101,6 +129,14 @@ export const getUserByFakeId = async (
     }
 };
 
+export const getUserByFakeIdInRealTime = async (
+    fakeUserId: string,
+    behavior: RealTimeResponse<UserInterface>,
+): Promise<Unsubscribe> => {
+    const q = query(usersCollection, where("fakeId", "==", fakeUserId));
+    return await getDocInRealTime<UserInterface>(q, behavior);
+};
+
 export const getUsersByTheirIds = async (
     usersId: string[],
 ): Promise<UserInterface[]> => {
@@ -159,7 +195,6 @@ export const getAllUsersPaginated = async (
     adminEmail: string,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
-    endBeforeDoc?: DocumentSnapshot,
     numPerPage: number = 8,
 ) => {
     let dataQuery;
@@ -254,7 +289,6 @@ export const getSearchUsersPaginated = async (
     searchField: string,
     direction: "next" | "prev" | undefined,
     startAfterDoc?: DocumentSnapshot,
-    endBeforeDoc?: DocumentSnapshot,
     numPerPage: number = 8,
 ) => {
     let dataQuery;
@@ -303,25 +337,7 @@ export const getSearchUsersPaginated = async (
 
     if (direction === "next" && startAfterDoc) {
         dataQuery = query(dataQuery, startAfter(startAfterDoc));
-    } /*  else if (direction === "prev" && endBeforeDoc) {
-        dataQuery = query(
-            usersCollection,
-            and(
-                where("deleted", "==", false),
-                where("email", "!=", adminEmail),
-                or(
-                    where("fullName", "==", searchField),
-                    where("email", "==", searchField),
-                    where("phoneNumber", "==", "+591" + searchField),
-                    where("phoneNumber", "==", "+" + searchField),
-                    where("phoneNumber", "==", searchField),
-                ),
-            ),
-            orderBy("fullName"),
-            endBefore(endBeforeDoc),
-            limitToLast(numPerPage),
-        );
-    } */
+    }
 
     const productsSnapshot = await getDocs(dataQuery);
     const products: UserInterface[] = productsSnapshot.docs.map((doc) => {

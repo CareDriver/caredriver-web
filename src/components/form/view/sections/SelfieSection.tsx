@@ -10,7 +10,7 @@ interface Props {
 
 const SelfieSection: React.FC<Props> = ({ image, setImage }) => {
     return (
-        <div className="form-sub-container | margin-top-25 max-width-60">
+        <div className="form-sub-container | margin-top-25">
             <div>
                 <h2 className="text icon-wrapper | lb medium-big bold">
                     <PersonQuestion /> Confirmación del usuario

@@ -36,6 +36,8 @@ import Building from "@/icons/Building";
 import { ENTERPRISE_TO_SPANISH } from "@/components/app_modules/enterprises/utils/EnterpriseSpanishTranslator";
 import { ServiceType } from "@/interfaces/Services";
 import { getIdSaved } from "@/utils/generators/IdGenerator";
+import UserStateRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserStateRenderer";
+import { Unsubscribe } from "firebase/firestore";
 
 interface Props {
     reqId: string;
@@ -174,7 +176,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
                 {
                     pending: "Removiendo de la antigua empresa",
                     success: "Removido de la antigua empresa",
-                    error: "Error al remover de la antigua empresa, intentalo de nuevo",
+                    error: "Error al remover de la antigua empresa, inténtalo de nuevo",
                 },
             );
         }
@@ -183,7 +185,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
         await toast.promise(addUserToEnterprise(newEnterprise, requesterUser), {
             pending: "Agregando a la nueva empresa",
             success: "Agregado a la nueva empresa",
-            error: "Error al agregar a la nueva empresa, intentalo de nuevo",
+            error: "Error al agregar a la nueva empresa, inténtalo de nuevo",
         });
 
         // adding enterprise to user
@@ -221,7 +223,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
             {
                 pending: "Rechazando solicitud...",
                 success: "Solicitud rechazada",
-                error: "Error al rechazar la solicitud, intentalo de nuevo por favor",
+                error: "Error al rechazar la solicitud, inténtalo de nuevo por favor",
             },
         );
 
@@ -229,13 +231,21 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
     };
 
     useEffect(() => {
-        getRequestToChangeAssociatedEnterpriseById(reqId).then((res) => {
-            if (!res) {
-                toast.error("Peticion no encontrada");
-                router.push(routeToUserRequestsToChangeEnterpriseAsAdmin());
-            }
-            setRequest(res);
-        });
+        let unsubscribe: Unsubscribe | undefined;
+
+        const onNotFound = () => {
+            toast.error("Petición no encontrada");
+            router.push(routeToUserRequestsToChangeEnterpriseAsAdmin());
+        }
+
+        getRequestToChangeAssociatedEnterpriseById(reqId, {
+            onFound: setRequest,
+            onNotFound: onNotFound,
+        })
+            .then((u) => (unsubscribe = u))
+            .catch(() => onNotFound);
+
+        return () => unsubscribe && unsubscribe()
     }, []);
 
     useEffect(() => {
@@ -278,6 +288,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
             <div className="row-wrapper | gap-20">
                 <UserStateWithMessageRenderer userData={requesterUser} />
             </div>
+            {requesterUser && <UserStateRenderer user={requesterUser} />}
             <BaseFormWithTwoButtons
                 content={{
                     firstButton: {
@@ -302,9 +313,12 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
                     secondButton: {
                         content: {
                             legend: "Aprobar",
-                            buttonClassStyle: wasReviewed()
-                                ? "hidden"
-                                : undefined,
+                            buttonClassStyle:
+                                wasReviewed() ||
+                                requesterUser?.deleted ||
+                                newEnterprise?.deleted
+                                    ? "hidden"
+                                    : undefined,
                         },
                         behavior: {
                             loading: reviewState.loading,
@@ -341,11 +355,11 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
                 <div className="form-sub-container">
                     <h2 className="text | medium-big bold | icon-wrapper">
                         <NoteSticky />
-                        Justificacion
+                        Justificación
                     </h2>
                     <TextFieldRenderer
                         content={request.reason}
-                        legend="Razon"
+                        legend="Razón"
                     />
                 </div>
                 <div className="form-sub-container">
@@ -375,7 +389,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
                             Cargando empresa
                         </h3>
                     ) : newEnterprise === null ? (
-                        <FieldDeleted description="No se encontro la nueva empresa, probablemente fue eliminada" />
+                        <FieldDeleted description="No se encontró la nueva empresa, probablemente fue eliminada" />
                     ) : (
                         <EnterpriseRenderer enterprise={newEnterprise} />
                     )}

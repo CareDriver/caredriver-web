@@ -1,6 +1,6 @@
 export const ENTERPRISE_TO_SPANISH_AS_PLURAL = {
     tow: "Empresas de Operadoras Grúa",
-    mechanical: "Talleres Mecanicos",
+    mechanical: "Talleres Mecánicos",
     driver: "Empresas de Choferes",
     laundry: "Lavaderos Creados",
 };

@@ -24,6 +24,7 @@ import PageLoading from "@/components/loaders/PageLoading";
 import BaseFormWithTwoButtons from "@/components/form/view/forms/BaseFormWithTwoButtons";
 import { isNull } from "@/validators/NullDataValidator";
 import { routeToUserRequestsToRenewPhotoAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
+import { Unsubscribe } from "firebase/firestore";
 
 const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
     const { user } = useContext(AuthContext);
@@ -35,19 +36,6 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
     const faildRedirect = (reason: string) => {
         toast.error(reason);
         router.push(routeToUserRequestsToRenewPhotoAsAdmin());
-    };
-
-    const fetchReq = async () => {
-        try {
-            const reqRes = await getUpPhotoReqById(reqId);
-            if (reqRes) {
-                setReq(reqRes);
-            } else {
-                faildRedirect("Petición no encontrada");
-            }
-        } catch (e) {
-            faildRedirect("Petición no encontrada");
-        }
     };
 
     const fetchUserReq = async () => {
@@ -66,7 +54,20 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
     };
 
     useEffect(() => {
-        fetchReq();
+        let unsubscribe: Unsubscribe | undefined;
+
+        getUpPhotoReqById(reqId, {
+            onFound: setReq,
+            onNotFound: () => {
+                faildRedirect("Petición no encontrada");
+            },
+        })
+            .then((u) => {
+                unsubscribe = u;
+            })
+            .catch(() => faildRedirect("Petición no encontrada"));
+
+        return () => unsubscribe && unsubscribe();
     }, []);
 
     useEffect(() => {
@@ -144,9 +145,10 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
                     secondButton: {
                         content: {
                             legend: "Aprobar",
-                            buttonClassStyle: !req.active
-                                ? "hidden"
-                                : undefined,
+                            buttonClassStyle:
+                                !req.active || userReq?.deleted
+                                    ? "hidden"
+                                    : undefined,
                         },
                         behavior: {
                             loading: loading || isNull(userReq),

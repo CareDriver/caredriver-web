@@ -27,7 +27,7 @@ const EnterpriseRegistersSection = ({ pathname }: { pathname: string }) => {
                 }`}
             >
                 <Warehouse />
-                <span>Talleres</span>
+                <span>Talleres Mecánicos</span>
             </Link>
             <Link
                 href={routeToAllEnterprisesAsAdmin("tow")}

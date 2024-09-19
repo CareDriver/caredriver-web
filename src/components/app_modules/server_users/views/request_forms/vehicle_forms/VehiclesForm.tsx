@@ -28,6 +28,7 @@ import {
 import DateField from "@/components/form/view/fields/DateField";
 import ImageUploader from "@/components/form/view/attachment_fields/ImageUploader";
 import { DEFAULT_LICENSE } from "@/components/app_modules/server_users/models/LicenseFields";
+import LicenceNumberField from "@/components/form/view/fields/LicenceNumberField";
 
 const VehiclesForm = ({
     vehicles,
@@ -36,7 +37,6 @@ const VehiclesForm = ({
     vehicles: Vehicle[];
     setVehicles: (d: Vehicle[]) => void;
 }) => {
-    // VEHICLE-BASED STATE CHANGERS
     const changeCategory = (i: number, type: string) => {
         setVehicles(
             vehicles.map((vehicle, j) => {
@@ -196,7 +196,7 @@ const VehiclesForm = ({
     };
 
     return (
-        <div className="form-sub-container | margin-top-25 max-width-60">
+        <div className="form-sub-container | margin-top-25">
             {vehicles.map((vehicle, i) => (
                 <div className="form-sub-container" key={`vehicle-${i}`}>
                     <h2 className="text icon-wrapper | medium-big bold">
@@ -276,13 +276,12 @@ const VehiclesForm = ({
                         <AddressCar /> Licencia
                     </h2>
 
-                    <NumberField
+                    <LicenceNumberField
                         field={{
                             values: vehicle.license.number,
                             setter: (d) => changeNumberLicense(i, d),
                             validator: isValidLicenseNumber,
                         }}
-                        legend="Número de la licencia"
                     />
                     <DateField
                         field={{

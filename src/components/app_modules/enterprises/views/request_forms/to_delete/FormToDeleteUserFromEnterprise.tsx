@@ -13,7 +13,7 @@ import { updateUser } from "@/components/app_modules/users/api/UserRequester";
 import { ServiceReqState, Services } from "@/interfaces/Services";
 import { deleteField } from "firebase/firestore";
 import {
-    getServiceReqById,
+    getReqToBeUserServerById,
     saveReview,
 } from "@/components/app_modules/server_users/api/ServicesRequester";
 import { driveReqCollection } from "@/components/app_modules/server_users/api/DriveRequester";
@@ -22,7 +22,6 @@ import { laundryReqCollection } from "@/components/app_modules/server_users/api/
 import { towReqCollection } from "@/components/app_modules/server_users/api/TowRequester";
 import { mechanicReqCollection } from "@/components/app_modules/server_users/api/MechanicRequester";
 import { AuthContext } from "@/context/AuthContext";
-import SimpleUserCard from "../../../../users/views/cards/SimpleUserCard";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import { TextField as TextFieldForm } from "@/components/form/models/FormFields";
 import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
@@ -71,7 +70,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
             ) {
                 let requestId: string =
                     userWithRequests.serviceRequests.driveCar.id;
-                var request = await getServiceReqById(
+                var request = await getReqToBeUserServerById(
                     requestId,
                     driveReqCollection,
                 );
@@ -87,7 +86,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
                 if (!areSameRequest) {
                     let requestId: string =
                         userWithRequests.serviceRequests.driveMotorcycle.id;
-                    var request = await getServiceReqById(
+                    var request = await getReqToBeUserServerById(
                         requestId,
                         driveReqCollection,
                     );
@@ -124,7 +123,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
             let requestToRefuse: UserRequest | undefined = undefined;
             let requestId: string =
                 userWithRequests.serviceRequests?.laundry.id;
-            requestToRefuse = await getServiceReqById(
+            requestToRefuse = await getReqToBeUserServerById(
                 requestId,
                 laundryReqCollection,
             );
@@ -151,7 +150,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
         ) {
             let requestToRefuse: UserRequest | undefined = undefined;
             let requestId: string = userWithRequest.serviceRequests?.tow.id;
-            requestToRefuse = await getServiceReqById(
+            requestToRefuse = await getReqToBeUserServerById(
                 requestId,
                 towReqCollection,
             );
@@ -181,7 +180,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
             let requestToRefuse: UserRequest | undefined = undefined;
             let requestId: string =
                 userWithRequest.serviceRequests?.mechanic.id;
-            requestToRefuse = await getServiceReqById(
+            requestToRefuse = await getReqToBeUserServerById(
                 requestId,
                 mechanicReqCollection,
             );
@@ -313,7 +312,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
                             "Eliminando peticiones activas del usuario para este servicio",
                         success:
                             "Peticiones activas del usuario para este servicio eliminadas",
-                        error: "Error al eliminar las peticiones activas, intentalo de nuevo",
+                        error: "Error al eliminar las peticiones activas, inténtalo de nuevo",
                     });
                 }
 
@@ -368,7 +367,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
                             pending:
                                 "Quitando registros del servicio en el usuario",
                             success: "Registros quitados",
-                            error: "Error al quitar registros del servicio al usuario, intentalo de nuevo",
+                            error: "Error al quitar registros del servicio al usuario, inténtalo de nuevo",
                         },
                     );
                 }
@@ -405,7 +404,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
                     </h2>
                     <p>
                         Esta acción no se puede revertir, si quitas al usuario
-                        del servicio tendras que volver a registrarlo.
+                        del servicio tendrás que volver a registrarlo.
                         {selectedUser.role === "user" &&
                             enterprise.type === "driver" && (
                                 <>
@@ -445,7 +444,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
                                         selectedUser.data.email,
                                     ),
                             }}
-                            legend="Correo electrónico | Confirmacion"
+                            legend="Correo electrónico | Confirmación"
                         />
                     </BaseForm>
                 </div>

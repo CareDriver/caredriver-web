@@ -152,7 +152,7 @@ const ReviewFormForAddingBranding = ({ reqId }: { reqId: string }) => {
                 url={req.brandingImage}
                 placeholder="Branding"
                 isCircle={false}
-                noFoundDescr={"No se ha encontrado la foto de confirmacion del branding"}
+                noFoundDescr={"No se ha encontrado la foto de confirmación del branding"}
             />
 
             {userReq && <UserStateRenderer user={userReq} />}

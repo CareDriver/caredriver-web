@@ -42,8 +42,10 @@ import { isValidPersonalData } from "@/components/app_modules/server_users/valid
 import {
     isValidAttachmentField,
     isValidEntityField,
+    isValidTextField,
 } from "@/components/form/validators/FieldValidators";
 import EnterpriseSelectorById from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelectorById";
+import BaseForm from "@/components/form/view/forms/BaseForm";
 
 interface Form {
     personalData: PersonalData;
@@ -138,6 +140,17 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                             },
                         },
                     };
+                    if (
+                        isValidTextField(
+                            form.personalData.alternativePhoneNumber,
+                        )
+                    ) {
+                        toUpdate = {
+                            ...toUpdate,
+                            alternativePhoneNumber:
+                                form.personalData.alternativePhoneNumber.value,
+                        };
+                    }
                     try {
                         await updateUser(requesterUser.id, toUpdate);
                     } catch (e) {
@@ -220,10 +233,24 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                 <ServiceStateRenderer
                     statusHandler={new LaundererStatusHandler(requesterUser)}
                 />
-                <form
-                    className="form-sub-container"
-                    data-state={formState.loading ? "loading" : "loaded"}
-                    onSubmit={(e) => handleSubmit(e)}
+
+                <BaseForm
+                    content={{
+                        button: {
+                            content: {
+                                legend: "Enviar Solicitud",
+                            },
+                            behavior: {
+                                loading: formState.loading,
+                                isValid: formState.isValid,
+                            },
+                        },
+                        styleClasses: "max-width-60",
+                    }}
+                    behavior={{
+                        loading: formState.loading,
+                        onSummit: handleSubmit,
+                    }}
                 >
                     <PersonalDataForm
                         baseUser={baseUser}
@@ -234,7 +261,7 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                     />
 
                     {!baseEnterprise && (
-                        <div className="form-sub-container | margin-top-25 max-width-90">
+                        <div className="form-sub-container | margin-top-25">
                             <h2 className="text icon-wrapper | medium-big bold">
                                 <Soap />
                                 Lavadero
@@ -274,24 +301,7 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                             setForm((prev) => ({ ...prev, termsCheck: d }))
                         }
                     />
-                    <button
-                        className={`general-button | margin-top-25 touchable max-width-60 ${
-                            formState.loading && "loading-section"
-                        }`}
-                        title={
-                            !formState.isValid
-                                ? "Por favor completa los campos con datos validos"
-                                : ""
-                        }
-                        disabled={!formState.isValid}
-                    >
-                        {formState.loading ? (
-                            <span className="loader"></span>
-                        ) : (
-                            "Enviar Solicitud"
-                        )}
-                    </button>
-                </form>
+                </BaseForm>
             </div>
         )
     );

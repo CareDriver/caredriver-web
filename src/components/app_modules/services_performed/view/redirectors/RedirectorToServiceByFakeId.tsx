@@ -52,14 +52,14 @@ const RedirectorToServiceByFakeId = () => {
                 findServicePerfByFakeId(serviceFakedId.value, typeOfService),
                 {
                     pending: "Buscando el servicio ...",
-                    error: "Error al buscar el servicio, intentalo de nuevo",
+                    error: "Error al buscar el servicio, inténtalo de nuevo",
                 },
             );
             if (serviceFound === undefined) {
                 setServiceFakeId({
                     ...serviceFakedId,
                     message:
-                        "El ID no pertence a ningun servicio, intenta con otro",
+                        "El ID no pertenece a ningún servicio, intenta con otro",
                 });
                 setFormState((prev) => ({
                     ...prev,

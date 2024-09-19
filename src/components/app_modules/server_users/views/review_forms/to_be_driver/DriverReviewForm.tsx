@@ -38,6 +38,7 @@ import {
     ReviewState,
 } from "@/components/form/models/Reviews";
 import { getIdSaved } from "@/utils/generators/IdGenerator";
+import UserStateRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserStateRenderer";
 
 const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user: adminUser } = useContext(AuthContext);
@@ -295,6 +296,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 />
                 <UserStateWithMessageRenderer userData={requesterUser} />
             </div>
+            {requesterUser && <UserStateRenderer user={requesterUser} />}
 
             <BaseFormWithTwoButtons
                 content={{
@@ -320,9 +322,12 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     secondButton: {
                         content: {
                             legend: "Aprobar",
-                            buttonClassStyle: wasReviewed()
-                                ? "hidden"
-                                : undefined,
+                            buttonClassStyle:
+                                wasReviewed() ||
+                                requesterUser?.deleted ||
+                                enterprise?.deleted
+                                    ? "hidden"
+                                    : undefined,
                         },
                         behavior: {
                             loading: reviewState.loading,
@@ -372,6 +377,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     <UserContactsRendererForForm
                         email={requesterUser.email}
                         phoneNumber={requesterUser.phoneNumber}
+                        alternativePhoneNumber={requesterUser.alternativePhoneNumber}
                     />
                 ) : (
                     <span className="row-wrapper text | bold gray-medium">

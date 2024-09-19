@@ -1,6 +1,10 @@
 import PersonCircleCheck from "@/icons/PersonCircleCheck";
 import { BrandingRequest } from "@/interfaces/BrandingInterface";
 import { routeToNoFound } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
+import {
+    cutTextWithDotsByLength,
+    MAX_LENGTH_FOR_NAMES_DISPLAY,
+} from "@/utils/text_helpers/TextCutter";
 import Link from "next/link";
 
 const UserCardWithBranding = ({
@@ -13,9 +17,12 @@ const UserCardWithBranding = ({
             href={routeToNoFound()}
             className="personal-data-req-item | fill-image touchable"
         >
-            <h3 className="personal-data-req-item-name">
-                {brandingReq.userName}
-            </h3>
+            <h2 className="text | bolder medium-big capitalize wrap">
+                {cutTextWithDotsByLength(
+                    brandingReq.userName,
+                    MAX_LENGTH_FOR_NAMES_DISPLAY,
+                )}
+            </h2>
             <img src={brandingReq.brandingImage.url} alt="" />
             <span
                 className="icon-wrapper personal-data-req-item-aprove text |

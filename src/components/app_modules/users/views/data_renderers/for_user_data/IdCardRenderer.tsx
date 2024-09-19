@@ -35,7 +35,7 @@ const IdCardRenderer = ({ idCard }: { idCard: IdentityCard | undefined }) => {
                     <ImageRenderer
                         content={{
                             image: idCard.backCard,
-                            legend: "Parte de Atras del carnet de Identidad",
+                            legend: "Parte de Atrás del carnet de Identidad",
                         }}
                         imageInCircle={false}
                     />

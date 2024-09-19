@@ -10,6 +10,9 @@ import IdentityCardForm from "./IdentityCardForm";
 import { PersonalData } from "../../../../server_users/models/PersonalDataFields";
 import TextField from "@/components/form/view/fields/TextField";
 import { isValidName } from "../../../validators/for_data/CredentialsValidator";
+import PhoneField from "@/components/form/view/fields/PhoneField";
+import "react-international-phone/style.css";
+import Phone from "@/icons/Phone";
 
 interface Props {
     baseUser?: UserInterface;
@@ -54,7 +57,11 @@ const PersonalDataForm: React.FC<Props> = ({
                     message:
                         requesterUser.photoUrl.url.length > 0
                             ? null
-                            : "No se subio una foto de perfil, por favor sube una foto",
+                            : "No se subió una foto de perfil, por favor sube una foto",
+                },
+                alternativePhoneNumber: {
+                    value: requesterUser.alternativePhoneNumber ?? "",
+                    message: null,
                 },
                 idCard: {
                     frontCard: {
@@ -63,7 +70,7 @@ const PersonalDataForm: React.FC<Props> = ({
                             : undefined,
                         message: hasIdCard
                             ? null
-                            : "No se subio una foto frontal del carnet de identidad",
+                            : "No se subió una foto frontal del carnet de identidad",
                     },
                     backCard: {
                         value: requesterUser.identityCard
@@ -71,7 +78,7 @@ const PersonalDataForm: React.FC<Props> = ({
                             : undefined,
                         message: hasIdCard
                             ? null
-                            : "No se subio una foto posterior del carnet de identidad",
+                            : "No se subió una foto posterior del carnet de identidad",
                     },
                     location: {
                         value: requesterUser.identityCard
@@ -79,7 +86,7 @@ const PersonalDataForm: React.FC<Props> = ({
                             : "",
                         message: hasIdCard
                             ? null
-                            : "No se agrego la localización en base al carnet de indentidad",
+                            : "No se agrego la localización en base al carnet de identidad",
                     },
                 },
             });
@@ -94,21 +101,25 @@ const PersonalDataForm: React.FC<Props> = ({
                     value: undefined,
                     message: "Sube una foto de perfil",
                 },
+                alternativePhoneNumber: {
+                    value: "",
+                    message: null,
+                },
                 idCard: {
                     frontCard: {
                         value: undefined,
                         message:
-                            "No se subio una foto frontal del carnet de identidad",
+                            "No se subió una foto frontal del carnet de identidad",
                     },
                     backCard: {
                         value: undefined,
                         message:
-                            "No se subio una foto posterior del carnet de identidad",
+                            "No se subió una foto posterior del carnet de identidad",
                     },
                     location: {
                         value: "",
                         message:
-                            "No se agrego la localización en base al carnet de indentidad",
+                            "No se agrego la localización en base al carnet de identidad",
                     },
                 },
             });
@@ -124,7 +135,7 @@ const PersonalDataForm: React.FC<Props> = ({
 
     return (
         <>
-            <div className="form-sub-container | margin-top-25 max-width-60">
+            <div className="form-sub-container | margin-top-25">
                 <h2 className="text icon-wrapper | medium-big bold">
                     <UserIcon />
                     Datos Personales
@@ -169,6 +180,25 @@ const PersonalDataForm: React.FC<Props> = ({
                             legend: "Foto de Perfil",
                             imageInCircle: true,
                         }}
+                    />
+                    <div>
+                        <h3 className="text | bolder icon-wrapper">
+                            <Phone /> Numero de teléfono alternativo (Opcional)
+                        </h3>
+                        <p className="text | light">
+                            Este campo es opcional, puedes agregar un numero
+                            alternativo para que nuestros administradores puedan
+                            contactarte mas rápido.
+                        </p>
+                    </div>
+                    <PhoneField
+                        values={personalData.alternativePhoneNumber}
+                        setter={(e) =>
+                            setPersonalData({
+                                ...personalData,
+                                alternativePhoneNumber: e,
+                            })
+                        }
                     />
                 </div>
             </div>

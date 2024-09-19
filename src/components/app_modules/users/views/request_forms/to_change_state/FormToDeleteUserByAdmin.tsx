@@ -49,6 +49,17 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
         if (!formState.loading) {
             setLoadingAll(true, setFormState);
 
+            if (
+                !isValidTextField(form.confirmation) ||
+                !isValidTextField(form.reason)
+            ) {
+                setLoadingAll(false, setFormState);
+                toast.warning("Completa los campos con datos validos", {
+                    toastId: "invalid-form-toast",
+                });
+                return;
+            }
+
             if (user.id && adminUser.id) {
                 const DOC_ID = genDocId();
 

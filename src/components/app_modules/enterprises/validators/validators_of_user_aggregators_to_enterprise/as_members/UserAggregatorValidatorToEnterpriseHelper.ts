@@ -113,3 +113,17 @@ export function isTheEnterpriseOwner(
 ): boolean {
     return user.id !== undefined && enterprise.userId === user.id;
 }
+
+export function isSupportInEnterprise(
+    user: UserInterface,
+    enterprise: Enterprise,
+): boolean {
+    if (!enterprise.addedUsers || !user.id) {
+        return false;
+    }
+
+    return enterprise.addedUsers.reduce(
+        (acc, u) => acc || (u.userId === user.id && u.role === "support"),
+        false,
+    );
+}

@@ -18,6 +18,7 @@ import {
 } from "../../../utils/EnterpriseSpanishTranslator";
 import BaseFormWithTwoButtons from "@/components/form/view/forms/BaseFormWithTwoButtons";
 import { routeToRequestsToEditEnterpriseAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
+import { routeToNoFound } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
 
 const ReviewFormForCreatingAnEnterprise = ({
     enterprise,
@@ -53,15 +54,8 @@ const ReviewFormForCreatingAnEnterprise = ({
                             }`,
                         },
                     );
-                    setReviewState({
-                        ...reviewState,
-                        loading: false,
-                    });
 
-                    /* the route doesnt exist because was removed */
-                    router.push(
-                        routeToRequestsToEditEnterpriseAsAdmin(enterprise.type),
-                    );
+                    router.push(routeToNoFound());
                 } catch (e) {
                     console.log(e);
                     setReviewState({
@@ -101,10 +95,6 @@ const ReviewFormForCreatingAnEnterprise = ({
                             }`,
                         },
                     );
-                    setReviewState({
-                        ...reviewState,
-                        loading: false,
-                    });
                     router.push(
                         routeToRequestsToEditEnterpriseAsAdmin(enterprise.type),
                     );

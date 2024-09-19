@@ -145,25 +145,30 @@ const ListOfUsersOfAEnterprise = ({
                 >
                     <SimpleUserCard user={selectedUser} />
 
-                    <div className="margin-top-15 margin-bottom-50">
-                        <h3 className="icon-wrapper | text bolder">
-                            <HelmetSafety />
-                            Servicios realizados
-                        </h3>
-                        <Link
-                            className="text underline | "
-                            href={routeToServicesServedByUser(
-                                enterprise.type,
-                                getIdSaved(selectedUser.fakeId),
-                            )}
-                        >
-                            Ir a los servicios del usuario
-                        </Link>
-                    </div>
+                    {!selectedUser.deleted && (
+                        <div className="margin-top-15 margin-bottom-50">
+                            <h3 className="icon-wrapper | text bolder">
+                                <HelmetSafety />
+                                Servicios realizados
+                            </h3>
+                            <Link
+                                className="text underline | "
+                                href={routeToServicesServedByUser(
+                                    enterprise.type,
+                                    getIdSaved(selectedUser.fakeId),
+                                )}
+                            >
+                                Ir a los servicios del usuario
+                            </Link>
+                        </div>
+                    )}
+
                     {isTheEnterpriseOwner(reviewerUser, enterprise) && (
                         <>
                             <div className="margin-top-25">
-                                <div className="separator-horizontal"></div>
+                                {!selectedUser.deleted && (
+                                    <div className="separator-horizontal"></div>
+                                )}
                             </div>
                             <FormToDeleteUserFromEnterprise
                                 selectedUser={{

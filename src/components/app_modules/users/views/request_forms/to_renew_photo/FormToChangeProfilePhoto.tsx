@@ -63,7 +63,7 @@ const FormToChangeProfilePhoto = () => {
             );
             if (thereAreActiveReqs) {
                 toast.warning(
-                    "Ya enviaste una petición para actulizar tu foto, espera a que se revise",
+                    "Ya enviaste una petición para actualizar tu foto, espera a que se revise",
                 );
                 setFormState((prev) => ({
                     ...prev,
@@ -97,7 +97,7 @@ const FormToChangeProfilePhoto = () => {
                 {
                     pending: "Enviando la petición, por favor espera",
                     success:
-                        "Tu petición sera servisada por uno de nuestros administradores",
+                        "Tu petición sera revisada por uno de nuestros administradores",
                     error: "Error al enviar la petición, inténtalo de nuevo por favor",
                 },
             );
@@ -129,7 +129,7 @@ const FormToChangeProfilePhoto = () => {
                     Actualiza tu Foto de Perfil
                 </h1>
                 <p>
-                    Se mandara una solicitud por Whatsapp para que puedas
+                    Se mandara una solicitud por WhatsApp para que puedas
                     actualizar tu foto de perfil.
                 </p>
 

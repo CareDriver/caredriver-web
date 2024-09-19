@@ -6,9 +6,10 @@ import { TextFieldStateHandler } from "../../utils/TextFieldStateHandler";
 interface Props {
     values: TextField;
     setter: TextFieldSetter;
+    autoFill?: "new-email" | "on";
 }
 
-const EmailField: React.FC<Props> = ({ values, setter }) => {
+const EmailField: React.FC<Props> = ({ values, setter, autoFill }) => {
     const stateHandler = new TextFieldStateHandler(setter, isValidEmail);
 
     return (
@@ -19,8 +20,9 @@ const EmailField: React.FC<Props> = ({ values, setter }) => {
                 value={values.value}
                 onChange={stateHandler.changeValue}
                 className="form-section-input"
+                autoComplete={autoFill ?? "on"}
             />
-            <legend className="form-section-legend">Correo electronico</legend>
+            <legend className="form-section-legend">Correo electrónico</legend>
             {values.message && <small>* {values.message}</small>}
         </fieldset>
     );

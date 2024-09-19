@@ -203,7 +203,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                         setter: (d) =>
                             setForm((prev) => ({ ...prev, coordinates: d })),
                     }}
-                    legend="Ubicación geografica de la empresa"
+                    legend="Ubicación geográfica de la empresa"
                 />
                 <EnterpriseOwnerAdder
                     owner={{

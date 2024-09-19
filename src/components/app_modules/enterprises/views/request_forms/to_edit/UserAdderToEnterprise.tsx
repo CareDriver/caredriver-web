@@ -110,7 +110,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                 ...prev,
                 isValid: false,
                 message:
-                    "El usuario no esta en la misma localizacion que el servicio",
+                    "El usuario no esta en la misma localización que el servicio",
             }));
         } else if (userFound.role !== UserRole.User) {
             setFormState((prev) => ({
@@ -251,7 +251,9 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                     {userLogged.id &&
                         userLogged.id === enterprise.userId &&
                         !userBelongsToEnterprise(userLogged, enterprise) &&
-                        !validator.hasActiveRequests(userLogged) && (
+                        validator.isAbleToBeUserServer(userLogged).isValid &&
+                        !validator.hasActiveRequests(userLogged) &&
+                        userLogged.role === UserRole.User && (
                             <div className="margin-top-25">
                                 <div className="separator-horizontal"></div>
                                 <div className="margin-top-25">

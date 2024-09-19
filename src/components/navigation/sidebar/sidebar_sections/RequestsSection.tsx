@@ -1,12 +1,12 @@
 import AddressCar from "@/icons/AddressCar";
+import Building from "@/icons/Building";
 import Camera from "@/icons/Camera";
 import Car from "@/icons/Car";
-import MechanicReq from "@/icons/MechanicReq";
 import Repeat from "@/icons/Repeat";
 import Soap from "@/icons/Soap";
 import Taxi from "@/icons/Taxi";
-import TowReq from "@/icons/TowReq";
 import Truck from "@/icons/Truck";
+import Warehouse from "@/icons/Warehouse";
 import Wrench from "@/icons/Wrench";
 import { routeToRequestsToEditEnterpriseAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import { routeToUserRequestsToRenewPhotoAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
@@ -48,14 +48,14 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                 </Link>
                 <Link
                     href={routeToRequestsToBeUserServerAsAdmin("tow")}
-                    className={`sidebar-option ${
+                    className={`sidebar-option lb-icon ${
                         pathname.includes(
                             routeToRequestsToBeUserServerAsAdmin("tow"),
                         ) && "selected"
                     }`}
                 >
                     <Truck />
-                    <span>Grúa</span>
+                    <span>Operador de Grúa</span>
                 </Link>
                 <Link
                     href={routeToRequestsToBeUserServerAsAdmin("laundry")}
@@ -105,7 +105,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                 </Link> */}
                 <Link
                     href={routeToRequestsToEditEnterpriseAsAdmin("mechanical")}
-                    className={`sidebar-option lb-icon ${
+                    className={`sidebar-option ${
                         pathname.includes(
                             routeToRequestsToEditEnterpriseAsAdmin(
                                 "mechanical",
@@ -113,8 +113,8 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                         ) && "selected"
                     }`}
                 >
-                    <MechanicReq />
-                    <span>Editar Talleres</span>
+                    <Warehouse />
+                    Editar Talleres
                 </Link>
                 {/*  <Link
                     href={""}
@@ -134,7 +134,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                         ) && "selected"
                     }`}
                 >
-                    <TowReq />
+                    <Building />
                     <span>Editar Emp. de Grúa</span>
                 </Link>
                 {/* <Link
