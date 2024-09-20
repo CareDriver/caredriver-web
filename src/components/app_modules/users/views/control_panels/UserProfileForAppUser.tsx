@@ -43,6 +43,7 @@ import {
     MAX_LENGTH_FOR_NAMES,
 } from "@/utils/text_helpers/TextCutter";
 import { Unsubscribe } from "firebase/firestore";
+import FormToIncreaseUserBalanceByAdmin from "../request_forms/to_manage_balance/FormToIncreaseUserBalanceByAdmin";
 
 const UserProfileForAppUser = ({ userId }: { userId: string }) => {
     const router = useRouter();
@@ -175,6 +176,10 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                                     roles={ROLES_TO_SET_USER_BALANCE}
                                 >
                                     <>
+                                        <FormToIncreaseUserBalanceByAdmin
+                                            user={user}
+                                            adminUser={adminUser}
+                                        />
                                         <FormToChangeUserBalanceByAdmin
                                             user={user}
                                             adminUser={adminUser}

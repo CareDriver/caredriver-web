@@ -1,5 +1,6 @@
 "use client";
 
+import MoneyBillWave from "@/icons/MoneyBillWave";
 import {
     BalanceHistory,
     BalanceHistoryItem,
@@ -10,6 +11,7 @@ import { updateUser } from "@/components/app_modules/users/api/UserRequester";
 import {
     isValidAmount,
     isValidBankNumber,
+    isValidIncreaseAmount,
 } from "@/components/app_modules/users/validators/for_data/BalanceValidator";
 import { Timestamp } from "firebase/firestore";
 import { FormEvent, useContext, useEffect, useState } from "react";
@@ -26,7 +28,7 @@ import TextField from "@/components/form/view/fields/TextField";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import SelectionField from "@/components/form/view/fields/SelectionField";
 import { isValidChangeReason } from "@/validators/JustificationValidator";
-import MoneyBillTransfer from "@/icons/MoneyBillTransfer";
+import MoneyBillTrendUp from "@/icons/MoneyBillTrendUp";
 
 type ReasonOfChangeType = "bankTransactionNumber" | "modificationReason";
 
@@ -51,7 +53,7 @@ const DEFAULT_FORM: Form = {
     },
 };
 
-const FormToChangeUserBalanceByAdmin = ({
+const FormToIncreaseUserBalanceByAdmin = ({
     user,
     adminUser,
 }: {
@@ -69,7 +71,8 @@ const FormToChangeUserBalanceByAdmin = ({
                 const OLD_BALANCE: Price = user.balance;
 
                 const NEW_BALANCE: Price = {
-                    amount: parseFloat(form.newBalance.value),
+                    amount:
+                        parseFloat(form.newBalance.value) + OLD_BALANCE.amount,
                     currency: "Bs. (BOB)",
                 };
                 const DOC_ID = genDocId();
@@ -192,22 +195,22 @@ const FormToChangeUserBalanceByAdmin = ({
     return (
         <section className="profile-info-wrapper | margin-top-50 max-width-60">
             <h2 className="text medium-big bolder | icon-wrapper lb">
-                <MoneyBillTransfer />
-                Cambiar Saldo |{" "}
+                <MoneyBillTrendUp />
+                Incrementar Saldo |{" "}
                 {user.balance
                     ? user.balance.amount + " " + user.balance.currency
                     : "0"}
             </h2>
             <p className="text | gray-dark">
-                Ingresa el nuevo monto sera el que tendrá el usuario, necesitas
-                justificar la razón del cambio.
+                Ingresa el monto de saldo para incrementar el saldo del usuario,
+                necesitas justificar la razón del cambio.
             </p>
 
             <BaseForm
                 content={{
                     button: {
                         content: {
-                            legend: "Cambiar saldo",
+                            legend: "Incrementar saldo",
                             buttonClassStyle:
                                 "small-general-button | text bolder",
                         },
@@ -231,28 +234,28 @@ const FormToChangeUserBalanceByAdmin = ({
                         values: form.newBalance,
                         setter: (b) =>
                             setForm((prev) => ({ ...prev, newBalance: b })),
-                        validator: isValidAmount,
+                        validator: isValidIncreaseAmount,
                     }}
-                    legend="Nuevo saldo del usuario"
+                    legend="Monto de saldo para incrementar"
                 />
             </BaseForm>
 
             <Popup isOpen={isOpenPopup} close={() => setOpenPopup(false)}>
                 <div>
                     <h2 className="text | big-medium bolder">
-                        Razón de cambio
+                        Razón para incrementar el Saldo
                     </h2>
                     <p className="text | light">
                         Escribe el número de transacción registrada en cuenta
                         bancaria o la razón por la cual esta haciendo este
-                        cambio.
+                        incremento de saldo.
                     </p>
                 </div>
                 <BaseForm
                     content={{
                         button: {
                             content: {
-                                legend: "Cambiar saldo",
+                                legend: "Incrementar saldo",
                             },
                             behavior: {
                                 loading: formState.loading,
@@ -278,7 +281,7 @@ const FormToChangeUserBalanceByAdmin = ({
                                 })),
                         }}
                         options={REASON_OF_CHANGE_TYPES}
-                        legend="Tipo de rason de cambio"
+                        legend="Tipo de razón de cambio"
                         optionTranslator={(d) =>
                             d === "bankTransactionNumber"
                                 ? "Numero de transacción bancaria"
@@ -314,4 +317,4 @@ const FormToChangeUserBalanceByAdmin = ({
     );
 };
 
-export default FormToChangeUserBalanceByAdmin;
+export default FormToIncreaseUserBalanceByAdmin;
