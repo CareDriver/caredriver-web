@@ -59,8 +59,6 @@ const EnterpriseEditForm: React.FC<Props> = ({
     enterprise,
     editedEnterpriseManager,
 }) => {
-    console.log(enterprise.logoImgUrl);
-
     const router = useRouter();
     const { checkingUserAuth, user: adminUser } = useContext(AuthContext);
     const { loading, setLoadingAll } = useContext(PageStateContext);
@@ -105,7 +103,7 @@ const EnterpriseEditForm: React.FC<Props> = ({
             }
 
             let baseEnterprise = await formToEnterprise(form, enterprise);
-            editedEnterpriseManager.handle(baseEnterprise);
+            editedEnterpriseManager.handle(enterprise, baseEnterprise);
             setLoadingAll(false, setFormState);
 
             let routeToRedirect =

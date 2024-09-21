@@ -8,7 +8,7 @@ export interface IEditedEnterpriseManager {
         enterpriseType: ServiceType,
     ): Promise<boolean>;
 
-    handle(enterprise: Enterprise): Promise<void>;
+    handle(oldEnterprise: Enterprise, newEnterprise: Enterprise): Promise<void>;
 
     getRedirectionAfterHandling(
         enterpriseType: ServiceType,

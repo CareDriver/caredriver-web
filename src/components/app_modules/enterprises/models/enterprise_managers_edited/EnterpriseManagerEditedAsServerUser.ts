@@ -45,7 +45,10 @@ export class EnterpriseManagerEditedAsServerUser
         return !thereAreActiveReqs;
     };
 
-    handle = async (enterprise: Enterprise): Promise<void> => {
+    handle = async (
+        oldEnterprise: Enterprise,
+        enterprise: Enterprise,
+    ): Promise<void> => {
         if (!enterprise.id) {
             return;
         }
