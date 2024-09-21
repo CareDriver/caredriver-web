@@ -1,13 +1,13 @@
 "use client";
 
 import { AuthContext } from "@/context/AuthContext";
-import SackDollar from "@/icons/SackDollar";
 import { useContext, useState } from "react";
 import "@/styles/modules/popup.css";
 import PageLoading from "@/components/loaders/PageLoading";
 import { MissingTransmissionAdder } from "@/components/app_modules/server_users/api/MissingTransmissionAdder";
 import RegisteredVehicleRenderer from "../../../data_renderers/for_vehicles/RegisteredVehicleRenderer";
 import UserAssociatedEnterpriseRenderer from "../../../data_renderers/UserAssociatedEnterpriseRenderer";
+import RedirectorToTheAppAsServerUser from "../RedirectorToTheAppAsServerUser";
 
 const CraneOperatorPanel = () => {
     const { user, checkingUserAuth } = useContext(AuthContext);
@@ -28,11 +28,7 @@ const CraneOperatorPanel = () => {
                 <h1 className="text | big bolder green">
                     Tu solicitud fue aprobada!
                 </h1>
-                <p className="text icon-wrapper | green-icon green bolder lb medium margin-top-15">
-                    <SackDollar />
-                    Ve a nuestra Aplicación Móvil y empieza a Ofrecer tu
-                    servicio!
-                </p>
+                <RedirectorToTheAppAsServerUser serviceType="tow" />
                 <UserAssociatedEnterpriseRenderer
                     typeOfEnterprise="tow"
                     user={user}

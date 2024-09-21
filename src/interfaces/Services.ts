@@ -18,8 +18,8 @@ export enum UserServices {
 export const ServicesRender = {
     normal: "Normal",
     driver: "Chofer",
-    mechanic: "Mecánico",
-    tow: "Remolque", // servicios de grúa
+    mechanical: "Mecánico",
+    tow: "Operador de Grua", // servicios de grúa
     laundry: "Lavadero",
 };
 

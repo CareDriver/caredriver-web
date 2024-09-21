@@ -9,3 +9,14 @@ export const DESCRIPTION_BUSINESS = {
         "Optimiza tu perfil y aumenta tu visibilidad en la búsqueda de oportunidades laborales en la industria del transporte y mantenimiento.",
     ],
 };
+
+export const MOBILE_APP_LINKS = {
+    android: {
+        deepLink: "myapp://ruta-en-tu-app",
+        store: "https://play.google.com/store/apps/details?id=com.tuapp",
+    },
+    mac: {
+        deepLink: "myapp://ruta-en-tu-app",
+        store: "https://apps.apple.com/us/app/tu-app/id123456789",
+    },
+};
