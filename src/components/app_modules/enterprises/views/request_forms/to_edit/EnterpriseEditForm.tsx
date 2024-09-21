@@ -27,7 +27,7 @@ import {
 } from "@/components/form/validators/FieldValidators";
 import { toast } from "react-toastify";
 import { isImageBase64 } from "@/validators/ImageValidator";
-import { uploadFileBase64 } from "@/utils/requesters/FileUploader";
+import { uploadFileBlod } from "@/utils/requesters/FileUploader";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
 import { IEditedEnterpriseManager } from "../../../models/enterprise_managers_edited/IEditedEnterpriseManager";
@@ -39,6 +39,7 @@ import GuardOfModule from "@/components/guards/views/module_guards/GuardOfModule
 import { AuthContext } from "@/context/AuthContext";
 import PageLoading from "@/components/loaders/PageLoading";
 import { ROLES_TO_ADD_AGREEMENT_TO_ENTERPRISES } from "@/components/guards/models/PermissionsByUserRole";
+import { compressFileBase64 } from "@/utils/compressors/FileCompressor";
 
 interface Form {
     name: TextFieldForm;
@@ -58,6 +59,8 @@ const EnterpriseEditForm: React.FC<Props> = ({
     enterprise,
     editedEnterpriseManager,
 }) => {
+    console.log(enterprise.logoImgUrl);
+
     const router = useRouter();
     const { checkingUserAuth, user: adminUser } = useContext(AuthContext);
     const { loading, setLoadingAll } = useContext(PageStateContext);
@@ -80,8 +83,6 @@ const EnterpriseEditForm: React.FC<Props> = ({
 
                 return;
             }
-
-            console.log(hasChanges(form, enterprise));
 
             if (!hasChanges(form, enterprise)) {
                 toast.info("Sin cambios para actualizar...", {
@@ -255,8 +256,16 @@ async function formToEnterprise(
         ref: baseEnterprise.logoImgUrl.ref,
     };
     if (isImageBase64(form.logo.value)) {
+        const imageBlob = await toast.promise(
+            compressFileBase64(form.logo.value),
+            {
+                pending: "Comprimiendo el logo",
+                success: "Logo comprimido",
+                error: "Error al comprimir el logo",
+            },
+        );
         const imgWithRef = await toast.promise(
-            uploadFileBase64(DirectoryPath.Enterprises, form.logo.value),
+            uploadFileBlod(DirectoryPath.Enterprises, imageBlob),
             {
                 pending: "Subiendo el logo, por favor espera",
                 success: "Logo subido",

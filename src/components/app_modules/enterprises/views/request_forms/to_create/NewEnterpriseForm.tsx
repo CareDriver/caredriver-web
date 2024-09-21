@@ -4,7 +4,7 @@ import "react-international-phone/style.css";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { sendEnterpriseReq } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
 import { Enterprise } from "@/interfaces/Enterprise";
-import { uploadFileBase64 } from "@/utils/requesters/FileUploader";
+import { uploadFileBlod } from "@/utils/requesters/FileUploader";
 import { toast } from "react-toastify";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
@@ -44,6 +44,7 @@ import CheckField from "@/components/form/view/fields/CheckField";
 import Handshake from "@/icons/Handshake";
 import { AuthContext } from "@/context/AuthContext";
 import PageLoading from "@/components/loaders/PageLoading";
+import { compressFileBase64 } from "@/utils/compressors/FileCompressor";
 
 interface Form {
     name: TextFieldForm;
@@ -85,11 +86,16 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
             }
 
             try {
+                const imageBlob = await toast.promise(
+                    compressFileBase64(form.logo.value),
+                    {
+                        pending: "Comprimiendo el logo",
+                        success: "Logo comprimido",
+                        error: "Error al comprimir el logo",
+                    },
+                );
                 const imgWithRef = await toast.promise(
-                    uploadFileBase64(
-                        DirectoryPath.Enterprises,
-                        form.logo.value,
-                    ),
+                    uploadFileBlod(DirectoryPath.Enterprises, imageBlob),
                     {
                         pending: "Subiendo el logo, por favor espera",
                         success: "Logo subido",
