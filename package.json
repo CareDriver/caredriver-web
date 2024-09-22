@@ -35,7 +35,6 @@
   "devDependencies": {
     "@types/google-libphonenumber": "^7.4.30",
     "@types/google.maps": "^3.55.7",
-    "@types/mapbox-gl": "^3.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

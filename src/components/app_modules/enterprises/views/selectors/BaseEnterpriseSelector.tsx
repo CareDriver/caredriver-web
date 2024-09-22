@@ -20,6 +20,8 @@ import {
 interface Props {
     typeOfEnterprise: ServiceType;
     behavior: {
+        pageSize?: number;
+        localSelecction?: boolean;
         selectEnterprise: (enterprise: Enterprise | undefined) => void;
     };
 }
@@ -28,7 +30,7 @@ const BaseEnterpriseSelector: React.FC<Props> = ({
     typeOfEnterprise,
     behavior,
 }) => {
-    const PAGE_SIZE = 6;
+    const PAGE_SIZE = behavior.pageSize ?? 6;
     const { checkingUserAuth, user } = useContext(AuthContext);
     const [selectedEnterprise, setSelectedEnterprise] = useState<
         undefined | Enterprise
@@ -42,11 +44,15 @@ const BaseEnterpriseSelector: React.FC<Props> = ({
     const [loading, setLoading] = useState<boolean>(false);
 
     const selectEnterprise = (enterprise: Enterprise) => {
-        if (selectedEnterprise?.id === enterprise.id) {
-            setSelectedEnterprise(undefined);
-            behavior.selectEnterprise(undefined);
+        if (behavior.localSelecction) {
+            if (selectedEnterprise?.id === enterprise.id) {
+                setSelectedEnterprise(undefined);
+                behavior.selectEnterprise(undefined);
+            } else {
+                setSelectedEnterprise(enterprise);
+                behavior.selectEnterprise(enterprise);
+            }
         } else {
-            setSelectedEnterprise(enterprise);
             behavior.selectEnterprise(enterprise);
         }
     };
