@@ -8,6 +8,7 @@ import Taxi from "@/icons/Taxi";
 import Truck from "@/icons/Truck";
 import Warehouse from "@/icons/Warehouse";
 import Wrench from "@/icons/Wrench";
+import { DRIVER, DRIVER_PLURAL } from "@/models/Business";
 import { routeToRequestsToEditEnterpriseAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import { routeToUserRequestsToRenewPhotoAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 import {
@@ -15,6 +16,7 @@ import {
     routeToRequestsToRenewLicenseAsAdmin,
     routeToUserRequestsToChangeEnterpriseAsAdmin,
 } from "@/utils/route_builders/as_admin/RouteBuilderForUserServerAsAdmin";
+import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
 import Link from "next/link";
 
 const RequestsSection = ({ pathname }: { pathname: string }) => {
@@ -33,7 +35,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <Car />
-                    <span>Chofer</span>
+                    <span>{toCapitalize(DRIVER)}</span>
                 </Link>
                 <Link
                     href={routeToRequestsToBeUserServerAsAdmin("mechanical")}
@@ -71,16 +73,6 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                 <div>
                     <i className="separator-horizontal"></i>
                 </div>
-                {/* <Link
-                    href={""}
-                    className={`sidebar-option ${
-                        pathname.includes("/requests/enterprises/driver") &&
-                        "selected"
-                    }`}
-                >
-                    <Taxi />
-                    <span>Nuevas Emp. de Choferes</span>
-                </Link> */}
 
                 <Link
                     href={routeToRequestsToEditEnterpriseAsAdmin("driver")}
@@ -91,18 +83,8 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <Taxi />
-                    <span>Editar Emp. de Choferes</span>
+                    <span>Edicion de Emp. de {toCapitalize(DRIVER_PLURAL)}</span>
                 </Link>
-                {/* <Link
-                    href={""}
-                    className={`sidebar-option lb-icon ${
-                        pathname.includes("/requests/enterprises/workshops") &&
-                        "selected"
-                    }`}
-                >
-                    <MechanicReq />
-                    <span>Nuevos Talleres</span>
-                </Link> */}
                 <Link
                     href={routeToRequestsToEditEnterpriseAsAdmin("mechanical")}
                     className={`sidebar-option ${
@@ -114,18 +96,8 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <Warehouse />
-                    Editar Talleres
+                    Edicion de Talleres
                 </Link>
-                {/*  <Link
-                    href={""}
-                    className={`sidebar-option ${
-                        pathname.includes("/requests/enterprises/cranes") &&
-                        "selected"
-                    }`}
-                >
-                    <TowReq />
-                    <span>Nuevas Emp. de Grúa</span>
-                </Link> */}
                 <Link
                     href={routeToRequestsToEditEnterpriseAsAdmin("tow")}
                     className={`sidebar-option ${
@@ -135,18 +107,8 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <Building />
-                    <span>Editar Emp. de Grúa</span>
+                    <span>Edicion de Emp. de Grúa</span>
                 </Link>
-                {/* <Link
-                    href={""}
-                    className={`sidebar-option ${
-                        pathname.includes("/requests/enterprises/laundry") &&
-                        "selected"
-                    }`}
-                >
-                    <Soap />
-                    <span>Nuevos Lavaderos</span>
-                </Link> */}
                 <Link
                     href={routeToRequestsToEditEnterpriseAsAdmin("laundry")}
                     className={`sidebar-option ${
@@ -156,7 +118,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <Soap />
-                    <span>Editar Lavaderos</span>
+                    <span>Edicion de Lavaderos</span>
                 </Link>
 
                 <div>
@@ -195,15 +157,6 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     <Repeat />
                     <span>Cambiar de empresa</span>
                 </Link>
-                {/*                 <Link
-                    href={""}
-                    className={`sidebar-option ${
-                        pathname.includes("branding") && "selected"
-                    }`}
-                >
-                    <Bullhorn />
-                    <span>Verificación de Branding</span>
-                </Link> */}
             </li>
         </>
     );

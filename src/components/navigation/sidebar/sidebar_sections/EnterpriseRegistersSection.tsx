@@ -2,7 +2,9 @@ import Building from "@/icons/Building";
 import Soap from "@/icons/Soap";
 import Taxi from "@/icons/Taxi";
 import Warehouse from "@/icons/Warehouse";
+import { DRIVER_PLURAL } from "@/models/Business";
 import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
+import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
 import Link from "next/link";
 
 const EnterpriseRegistersSection = ({ pathname }: { pathname: string }) => {
@@ -16,7 +18,7 @@ const EnterpriseRegistersSection = ({ pathname }: { pathname: string }) => {
                 }`}
             >
                 <Taxi />
-                <span>Empresas de Choferes</span>
+                <span>Empresas de {toCapitalize(DRIVER_PLURAL)}</span>
             </Link>
             <Link
                 href={routeToAllEnterprisesAsAdmin("mechanical")}

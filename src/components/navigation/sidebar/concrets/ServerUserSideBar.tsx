@@ -20,6 +20,8 @@ import {
     routeToRenewPhotoAsUser,
 } from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
 import Camera from "@/icons/Camera";
+import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
+import { DRIVER, DRIVER_PLURAL } from "@/models/Business";
 
 const ServerUserSideBar = ({
     pathname,
@@ -47,7 +49,7 @@ const ServerUserSideBar = ({
                     }`}
                 >
                     <Car />
-                    <span>Chofer</span>
+                    <span>{toCapitalize(DRIVER)}</span>
                 </Link>
                 <Link
                     href={routeToRequestToBeServerUserAsUser("mechanical")}
@@ -109,7 +111,7 @@ const ServerUserSideBar = ({
                     }`}
                 >
                     <Taxi />
-                    <span>Empresas de Choferes</span>
+                    <span>Empresas de {toCapitalize(DRIVER_PLURAL)}</span>
                 </Link>
                 <Link
                     href={routeToAllEnterprisesAsUser("mechanical")}

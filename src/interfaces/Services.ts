@@ -1,3 +1,6 @@
+import { DRIVER } from "@/models/Business";
+import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
+
 export type ServiceType = "mechanical" | "tow" | "laundry" | "driver";
 
 export enum Services {
@@ -17,7 +20,7 @@ export enum UserServices {
 
 export const ServicesRender = {
     normal: "Normal",
-    driver: "Chofer",
+    driver: toCapitalize(DRIVER),
     mechanical: "Mecánico",
     tow: "Operador de Grua", // servicios de grúa
     laundry: "Lavadero",

@@ -5,6 +5,7 @@ import BaseEnterpriseSelector from "@/components/app_modules/enterprises/views/s
 import Popup from "@/components/modules/Popup";
 import Car from "@/icons/Car";
 import { Enterprise } from "@/interfaces/Enterprise";
+import { DRIVER } from "@/models/Business";
 import { useState } from "react";
 
 const DriverInstrucctionsAsNew = () => {
@@ -14,7 +15,7 @@ const DriverInstrucctionsAsNew = () => {
 
     const STEPS = [
         "Selecciona una de estas empresas que estan en tu misma localizacion.",
-        "Contactate con una de estas empresas para pedir que te registren como chofer.",
+        `Contactate con una de estas empresas para pedir que te registren como ${DRIVER}.`,
     ];
 
     const selectEnterprise = (enterprise: Enterprise | undefined) => {
@@ -24,12 +25,12 @@ const DriverInstrucctionsAsNew = () => {
     return (
         <div className="service-form-wrapper">
             <h1 className="text | big bolder">
-                Trabaja como chofer con nosotros!
+                Trabaja como {DRIVER} con nosotros!
             </h1>
             <div>
                 <h3 className="text | medium-big bolder icon-wrapper margin-top-25">
                     <Car />
-                    Sigue estos pasos para ser chofer
+                    Sigue estos pasos para ser {DRIVER}
                 </h3>
                 <div className="margin-bottom-25">
                     {STEPS.map((m, i) => (

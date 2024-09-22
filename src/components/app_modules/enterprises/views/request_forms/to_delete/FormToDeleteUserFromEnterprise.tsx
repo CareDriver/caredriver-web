@@ -30,6 +30,7 @@ import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import TextField from "@/components/form/view/fields/TextField";
 import { validateEmialWithComparison } from "@/components/app_modules/users/validators/for_confirmations/DataConfirmationValidator";
 import { ValidatorToAddUserToDriverEnterpriseAsMember } from "../../../validators/validators_of_user_aggregators_to_enterprise/as_members/concrete/ValidatorToAddUserToDriverEnterpriseAsMember";
+import { DRIVER } from "@/models/Business";
 
 interface Props {
     selectedUser: {
@@ -410,7 +411,7 @@ const FormToDeleteUserFromEnterprise: React.FC<Props> = ({
                                 <>
                                     <br />
                                     <b>
-                                        El usuario ya no sera chofer, tendrá que
+                                        El usuario ya no sera {DRIVER}, tendrá que
                                         volver a ser registrado
                                     </b>
                                 </>

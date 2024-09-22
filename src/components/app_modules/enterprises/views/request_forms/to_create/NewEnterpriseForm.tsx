@@ -45,6 +45,8 @@ import Handshake from "@/icons/Handshake";
 import { AuthContext } from "@/context/AuthContext";
 import PageLoading from "@/components/loaders/PageLoading";
 import { compressFileBase64 } from "@/utils/compressors/FileCompressor";
+import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
+import { DRIVER_PLURAL } from "@/models/Business";
 
 interface Form {
     name: TextFieldForm;
@@ -192,7 +194,9 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                     }}
                     content={{
                         id: "driver-enterprise-uploader-image",
-                        legend: "Logo de la Empresa de Choferes",
+                        legend: `Logo de la Empresa de ${toCapitalize(
+                            DRIVER_PLURAL,
+                        )}`,
                         imageInCircle: true,
                     }}
                 />

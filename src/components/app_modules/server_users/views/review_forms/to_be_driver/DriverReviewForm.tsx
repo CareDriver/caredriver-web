@@ -39,6 +39,7 @@ import {
 } from "@/components/form/models/Reviews";
 import { getIdSaved } from "@/utils/generators/IdGenerator";
 import UserStateRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserStateRenderer";
+import { DRIVER } from "@/models/Business";
 
 const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user: adminUser } = useContext(AuthContext);
@@ -288,7 +289,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
     return (
         <div className="service-form-wrapper | max-width-60">
-            <h1 className="text | big bolder">Solicitud para ser Chofer</h1>
+            <h1 className="text | big bolder">Solicitud para ser {DRIVER}</h1>
             <div className="row-wrapper | gap-20">
                 <ApprovalsRenderer
                     serviceReq={serviceReq}
@@ -377,7 +378,9 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     <UserContactsRendererForForm
                         email={requesterUser.email}
                         phoneNumber={requesterUser.phoneNumber}
-                        alternativePhoneNumber={requesterUser.alternativePhoneNumber}
+                        alternativePhoneNumber={
+                            requesterUser.alternativePhoneNumber
+                        }
                     />
                 ) : (
                     <span className="row-wrapper text | bold gray-medium">

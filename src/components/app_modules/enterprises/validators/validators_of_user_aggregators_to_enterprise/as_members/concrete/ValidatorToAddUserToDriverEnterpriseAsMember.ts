@@ -8,6 +8,7 @@ import {
     userBelongsToEnterprise,
 } from "@/components/app_modules/enterprises/validators/validators_of_user_aggregators_to_enterprise/as_members/UserAggregatorValidatorToEnterpriseHelper";
 import { InputState } from "@/validators/InputValidatorSignature";
+import { DRIVER } from "@/models/Business";
 
 export class ValidatorToAddUserToDriverEnterpriseAsMember
     implements IUserAggregatorValidatorToEnterpriseAsMember
@@ -66,7 +67,7 @@ export class ValidatorToAddUserToDriverEnterpriseAsMember
             return {
                 isValid: false,
                 message:
-                    "El usuario ya fue agregado a otro servicio como chofer",
+                    `El usuario ya fue agregado a otro servicio como ${DRIVER}`,
             };
         }
 

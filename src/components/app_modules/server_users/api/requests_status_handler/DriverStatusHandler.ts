@@ -2,6 +2,7 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import { HandleableServiceStatus } from "./HandleableServiceStatus";
 import { ServiceReqState } from "@/interfaces/Services";
 import { updateUser } from "@/components/app_modules/users/api/UserRequester";
+import { DRIVER } from "@/models/Business";
 
 export class DriverStatusHandler implements HandleableServiceStatus {
     user: UserInterface | undefined;
@@ -44,7 +45,7 @@ export class DriverStatusHandler implements HandleableServiceStatus {
         }
 
         return {
-            title: "Solicitud para trabajar como Chofer",
+            title: `Solicitud para trabajar como ${DRIVER}`,
             description:
                 "Necesitamos verificar que todos los datos que se llenen sean validos antes registrar al nuevo usuario servidor.",
         };

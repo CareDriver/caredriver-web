@@ -9,6 +9,7 @@ import { routeToNoFound } from "@/utils/route_builders/as_not_logged/RouteBuilde
 import EnterpriseRendererAsPopup from "@/components/app_modules/enterprises/views/data_renderers/EnterpriseRendererAsPopup";
 import UserVehicleRendererAsPopup from "../for_user_data/UserVehicleRendererAsPopup";
 import UserServerRatingRenderer from "./UserServerRatingRenderer";
+import { DRIVER, DRIVER_PLURAL } from "@/models/Business";
 
 const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
     const IS_DRIVER: boolean =
@@ -37,7 +38,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             </p>
             {IS_DRIVER && (
                 <div className="service-user-wrapper | with-data">
-                    <h3 className="text | medium-big bolder">Chofer</h3>
+                    <h3 className="text | medium-big bolder">{DRIVER}</h3>
                     <UserServerRatingRenderer
                         serviceData={user.servicesData.Conductor}
                     />
@@ -47,7 +48,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             type: "car",
                         }}
                         content={{
-                            legend: "Detalles del usuario como chofer de auto",
+                            legend: `Detalles del usuario como ${DRIVER} de auto`,
                         }}
                     />
                     <UserVehicleRendererAsPopup
@@ -56,7 +57,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             type: "motorcycle",
                         }}
                         content={{
-                            legend: "Detalles del usuario como chofer de motocicleta",
+                            legend: `Detalles del usuario como ${DRIVER} de motocicleta`,
                         }}
                     />
 
@@ -68,12 +69,12 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             }}
                             button={{
                                 styleClass: "service-user-option",
-                                legend: "Ver empresa de chofer asociado",
+                                legend: `Ver empresa de ${DRIVER_PLURAL} asociado`,
                             }}
                         />
                     ) : (
                         <i className="text | bolder red">
-                            Sin asociación a una empresa de chofer
+                            Sin asociación a una empresa de {DRIVER_PLURAL}
                         </i>
                     )}
                     <Link
@@ -88,7 +89,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                         }
                     >
                         <Eye />
-                        <i>Ver los servicios hechos como chofer</i>
+                        <i>Ver los servicios hechos como {DRIVER}</i>
                     </Link>
                 </div>
             )}

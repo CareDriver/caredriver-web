@@ -7,6 +7,8 @@ import {
     EMPTY_REF_ATTACHMENT,
     RefAttachment,
 } from "../components/form/models/RefAttachment";
+import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
+import { DRIVER } from "@/models/Business";
 
 export interface VehicleTypeAndMode {
     type: VehicleType;
@@ -24,7 +26,7 @@ export interface Vehicle {
 }
 
 export const userReqTypes = {
-    driver: "Chofer",
+    driver: toCapitalize(DRIVER),
     mechanical: "Mecánico",
     tow: "Operador de Grúa",
     laundry: "Lavadero",

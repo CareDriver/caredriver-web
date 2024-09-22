@@ -11,6 +11,8 @@ import CarSide from "@/icons/CarSide";
 import Wrench from "@/icons/Wrench";
 import Truck from "@/icons/Truck";
 import Soap from "@/icons/Soap";
+import { DRIVER_PLURAL } from "@/models/Business";
+import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
 
 const Home = () => {
     const { checkingUserAuth, user } = useContext(AuthContext);
@@ -48,7 +50,7 @@ const Home = () => {
                 <div className="row-wrapper row-responsive | center margin-bottom-25">
                     <h3 className="home-service | text | medium gray-dark bold | icon-wrapper gray-icon lb">
                         <CarSide />
-                        Choferes
+                        {toCapitalize(DRIVER_PLURAL)}
                     </h3>
                     |
                     <h3 className="home-service | text | medium gray-dark bold | icon-wrapper gray-icon">

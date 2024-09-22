@@ -1,6 +1,8 @@
+import { DRIVER } from "@/models/Business";
+
 const DriverInstructionsForNewVehicle = () => {
     const STEPS = [
-        "Contactate con la misma empresa con la que estas trabajando como chofer.",
+        `Contactate con la misma empresa con la que estas trabajando como ${DRIVER}.`,
         "Pideles que registren tu nuevo vehiculo de la misma forma que te registraron la primera vez.",
     ];
 

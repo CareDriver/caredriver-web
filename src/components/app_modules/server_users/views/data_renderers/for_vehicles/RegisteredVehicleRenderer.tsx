@@ -71,7 +71,13 @@ const RegisteredVehicleRenderer: React.FC<Props> = ({
                         )}`}
                     href={routeToRenewLicenseAsUser(vehicleType)}
                 >
-                    <span className="text | white medium bolder">
+                    <span
+                        className={`text | medium bolder ${
+                            getColorButtonLicense(
+                                vehicle.license.expiredDateLicense.toDate(),
+                            ) !== "yellow" && "white"
+                        }`}
+                    >
                         Actualizar Licencia
                     </span>
                 </Link>

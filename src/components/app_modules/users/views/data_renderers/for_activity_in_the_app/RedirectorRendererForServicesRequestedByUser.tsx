@@ -4,6 +4,7 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import { routeToServicesRequestedByUser } from "@/utils/route_builders/for_services/RouteBuilderForServices";
 import { routeToNoFound } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
 import Link from "next/link";
+import { DRIVER_PLURAL } from "@/models/Business";
 
 const RedirectorRendererForServicesRequestedByUser = ({
     user,
@@ -28,7 +29,7 @@ const RedirectorRendererForServicesRequestedByUser = ({
                 }
             >
                 <h3 className="text | medium-big bolder">
-                    Solicitudes de Choferes
+                    Solicitudes de {DRIVER_PLURAL}
                 </h3>
                 <span className="icon-wrapper text | underline gray-dark gray-icon | margin-top-15">
                     <Eye />
