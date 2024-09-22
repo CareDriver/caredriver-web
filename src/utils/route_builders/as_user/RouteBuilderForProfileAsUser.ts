@@ -11,3 +11,7 @@ export function routeToRenewLocationAsUser(): string {
 export function routeToRenewPhotoAsUser(): string {
     return BASE_ROUTE.concat("/renew/profilepicture");
 }
+
+export function routeToRenewPhoneAsUser(): string {
+    return BASE_ROUTE.concat("/renew/phone");
+}

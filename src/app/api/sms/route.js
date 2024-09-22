@@ -14,7 +14,7 @@ export async function POST(request) {
             body: JSON.stringify({
                 typing_time: 0,
                 to: phone.replace("+", ""),
-                body: JSON.stringify(`Tu código de verificación es ${code}`),
+                body: `✉️ Tu código de verificación es ${code}`,
             }),
         };
         await fetch(url, options);

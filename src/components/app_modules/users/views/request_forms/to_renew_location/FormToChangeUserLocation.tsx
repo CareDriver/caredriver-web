@@ -15,27 +15,35 @@ import BaseForm from "@/components/form/view/forms/BaseForm";
 import { routeToProfileAsUser } from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
 
 const FormToChangeUserLocation = () => {
-    const { checkingUserAuth, user } = useContext(AuthContext);
-    const [location, setLocation] = useState<Locations | undefined>(
-        user?.location,
+    const { checkingUserAuth, user, userProps } = useContext(AuthContext);
+    const [newLocation, setNewLocation] = useState<Locations>(
+        user?.location ?? Locations.CochabambaBolivia,
     );
     const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
 
     const changeOfLocation = (): boolean => {
         return (
-            location !== undefined &&
-            user !== undefined &&
-            location !== user.location
+            !userProps.hasLocation ||
+            (user !== undefined && newLocation !== user.location)
         );
     };
 
-    const sendMessage = (newLocation: Locations, oldLocation: Locations) => {
-        let message = greeting()
-            .concat(`Soy ${user?.fullName}, `)
-            .concat(
-                `quisiera cambiarme de grupo de Whatsaap, 🔁🌎 porque ahora estoy en ${newLocation}.`,
-            )
-            .concat(`\nMi antigua ubicación era ${oldLocation} 👀`);
+    const sendMessage = (newLocation: Locations, oldLocation?: Locations) => {
+        let message: string;
+        if (!userProps.hasLocation || !oldLocation) {
+            message = greeting()
+                .concat(`Soy ${user?.fullName}, `)
+                .concat(
+                    `, quisiera que me agreguen al grupo de Whatsaap de ${newLocation} 🌎`,
+                );
+        } else {
+            message = greeting()
+                .concat(`Soy ${user?.fullName}, `)
+                .concat(
+                    `quisiera cambiarme de grupo de Whatsaap, 🔁🌎 porque ahora estoy en ${newLocation}.`,
+                )
+                .concat(`\nMi antigua ubicación era ${oldLocation} 👀`);
+        }
 
         sendWhatsapp(PHONE_BUSINESS, message);
     };
@@ -47,13 +55,7 @@ const FormToChangeUserLocation = () => {
                 ...prev,
                 loading: true,
             }));
-            if (
-                !location ||
-                !user ||
-                !user.id ||
-                !user.location ||
-                !changeOfLocation()
-            ) {
+            if (!user || !user.id || !changeOfLocation()) {
                 toast.info("Sin cambios...", {
                     toastId: "without-change-location",
                 });
@@ -67,7 +69,7 @@ const FormToChangeUserLocation = () => {
             try {
                 await toast.promise(
                     updateUser(user.id, {
-                        location: location,
+                        location: newLocation,
                     }),
                     {
                         pending: "Actualizando localización, por favor espera",
@@ -76,7 +78,7 @@ const FormToChangeUserLocation = () => {
                     },
                 );
 
-                sendMessage(location, user.location);
+                sendMessage(newLocation, user.location);
                 window.location.replace(routeToProfileAsUser());
             } catch (e) {
                 setFormState({
@@ -90,22 +92,11 @@ const FormToChangeUserLocation = () => {
     useEffect(() => {
         setFormState((prev) => ({
             ...prev,
-            isValid: location !== undefined,
+            isValid: newLocation !== undefined,
         }));
-    }, [location]);
+    }, [newLocation]);
 
-    const getLocation = (input: string): Locations => {
-        var location = Locations.CochabambaBolivia;
-        locationList.forEach((value) => {
-            if (value === input) {
-                location = value;
-            }
-        });
-
-        return location;
-    };
-
-    if (checkingUserAuth || !location) {
+    if (checkingUserAuth || !newLocation) {
         return <PageLoading />;
     }
 
@@ -122,7 +113,9 @@ const FormToChangeUserLocation = () => {
                     content={{
                         button: {
                             content: {
-                                legend: "Cambiar localización",
+                                legend: userProps.hasLocation
+                                    ? "Cambiar localización"
+                                    : "Agregar localización",
                             },
                             behavior: {
                                 loading: formState.loading,
@@ -136,7 +129,10 @@ const FormToChangeUserLocation = () => {
                         onSummit: submit,
                     }}
                 >
-                    <LocationField location={location} setter={setLocation} />
+                    <LocationField
+                        location={newLocation}
+                        setter={setNewLocation}
+                    />
                 </BaseForm>
 
                 <span className="circles-right-bottomv2 green"></span>

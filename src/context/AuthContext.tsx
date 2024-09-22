@@ -21,21 +21,34 @@ import {
     timestampDateInSpanish,
 } from "@/utils/helpers/DateHelper";
 import { Locations } from "@/interfaces/Locations";
+import { isNullOrEmptyText } from "@/validators/TextValidator";
+
+interface UserProps {
+    hasPhoto: boolean;
+    hasLocation: boolean;
+    hasPhone: boolean;
+}
+
+const DEFAULT_USER_PROPS: UserProps = {
+    hasPhoto: false,
+    hasLocation: false,
+    hasPhone: false,
+};
 
 type ContextType = {
     user: UserInterface | undefined;
     checkingUserAuth: boolean;
+    userProps: UserProps;
 
     logout: () => void;
-    hasPhoto: () => boolean;
 };
 
 const DEFAULT_CONTEXT: ContextType = {
     user: undefined,
     checkingUserAuth: true,
+    userProps: DEFAULT_USER_PROPS,
 
     logout: () => {},
-    hasPhoto: () => false,
 };
 
 const loadUserLoggedData = (
@@ -87,19 +100,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
     const [checkingUserAuth, setCheckUserAuth] = useState(true);
     const [user, setUser] = useState<UserInterface | undefined>(undefined);
+    const [userProps, setUserProps] = useState<UserProps>(DEFAULT_USER_PROPS);
 
     const refirectToHome = () => {
         if (!pathname.includes("auth")) {
             router.push(routeToHomePage());
         }
-    };
-
-    const hasPhoto = (): boolean => {
-        return (
-            user !== undefined &&
-            user.photoUrl.url.length > 0 &&
-            user.photoUrl.url.trim().length > 0
-        );
     };
 
     useEffect(() => {
@@ -130,7 +136,17 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                 );
                             } else {
                                 let userLoaded: UserInterface | undefined =
-                                    loadUserLoggedData(userId, userData);
+                                    loadUserLoggedData(userId, userData);                                    
+                                setUserProps((prev) => ({
+                                    ...prev,
+                                    hasLocation: userData.location !== undefined,
+                                    hasPhone: !isNullOrEmptyText(
+                                        userData.phoneNumber,
+                                    ),
+                                    hasPhoto:
+                                        userData.photoUrl.url.length > 0 &&
+                                        userData.photoUrl.url.trim().length > 0,
+                                }));
                                 setUser(userLoaded);
                                 setCheckUserAuth(false);
                             }
@@ -189,7 +205,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <AuthContext.Provider
-            value={{ checkingUserAuth, user, logout, hasPhoto }}
+            value={{ checkingUserAuth, user, logout, userProps }}
         >
             {children}
         </AuthContext.Provider>

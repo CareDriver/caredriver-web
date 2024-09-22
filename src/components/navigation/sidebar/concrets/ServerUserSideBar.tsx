@@ -1,3 +1,4 @@
+"use client";
 import Building from "@/icons/Building";
 import Car from "@/icons/Car";
 import LocationDot from "@/icons/LocationDot";
@@ -17,11 +18,15 @@ import { routeToAllEnterprisesAsUser } from "@/utils/route_builders/as_user/Rout
 import {
     routeToProfileAsUser,
     routeToRenewLocationAsUser,
+    routeToRenewPhoneAsUser,
     routeToRenewPhotoAsUser,
 } from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
 import Camera from "@/icons/Camera";
 import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
 import { DRIVER, DRIVER_PLURAL } from "@/models/Business";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import Phone from "@/icons/Phone";
 
 const ServerUserSideBar = ({
     pathname,
@@ -30,6 +35,8 @@ const ServerUserSideBar = ({
     pathname: string;
     logout: () => void;
 }) => {
+    const { userProps } = useContext(AuthContext);
+
     return (
         <>
             <span className="text | medium bolder | margin-top-25 margin-bottom-15">
@@ -161,6 +168,17 @@ const ServerUserSideBar = ({
                     <span>Mi Perfil</span>
                 </Link>
 
+                {!userProps.hasPhone && (
+                    <Link
+                        href={routeToRenewPhoneAsUser()}
+                        className={`sidebar-option ${
+                            pathname === routeToRenewPhoneAsUser() && "selected"
+                        }`}
+                    >
+                        <Phone />
+                        <span>Agregar Numero</span>
+                    </Link>
+                )}
                 <Link
                     href={routeToRenewPhotoAsUser()}
                     className={`sidebar-option ${

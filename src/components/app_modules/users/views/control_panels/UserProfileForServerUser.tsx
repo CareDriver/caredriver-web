@@ -13,23 +13,34 @@ import {
     routeToRenewLocationAsUser,
     routeToRenewPhotoAsUser,
 } from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
-import "@/styles/components/users.css"
+import "@/styles/components/users.css";
+import { isNullOrEmptyText } from "@/validators/TextValidator";
+import FieldDeleted from "@/components/form/view/field_renderers/FieldDeleted";
 
 const UserProfileForServerUser = () => {
-    const { user, checkingUserAuth } = useContext(AuthContext);
+    const { user, checkingUserAuth, userProps } = useContext(AuthContext);
 
     if (checkingUserAuth) {
         return <PageLoading />;
     }
 
+    console.log(userProps);
+
     return (
         user && (
-            <section className="user-page-wrapper">
+            <section className="user-page-wrapper | max-height-100">
                 <section className="profile-wrapper">
                     <UserPhotoRenderer photo={user.photoUrl} />
                     <div className="profile-info-wrapper">
                         <h1 className="profile-fullname">{user.fullName}</h1>
-                        <h2 className="profile-email">{user.email}</h2>
+                        {user.email && (
+                            <h2 className="profile-email">{user.email}</h2>
+                        )}
+                        {!isNullOrEmptyText(user.phoneNumber) && (
+                            <h2 className="profile-email">
+                                {user.phoneNumber}
+                            </h2>
+                        )}
                     </div>
                 </section>
 
@@ -48,14 +59,20 @@ const UserProfileForServerUser = () => {
                         <LocationDot />
                         Mi Ubicación
                     </h2>
-                    <span className="location-field">{user.location}</span>
+                    {userProps.hasLocation ? (
+                        <span className="location-field">{user.location}</span>
+                    ) : (
+                        <FieldDeleted description={"Sin Ubicación"} />
+                    )}
                     <div className="margin-top-5">
                         <Link
                             className="icon-wrapper small-general-button text | gray gray-icon bolder touchable"
                             href={routeToRenewLocationAsUser()}
                         >
                             <PenToSquare />
-                            Cambiar mi ubicación
+                            {userProps.hasLocation
+                                ? "Cambiar mi ubicación"
+                                : "Agregar ubicación"}
                         </Link>
                     </div>
                 </section>

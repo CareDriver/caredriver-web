@@ -5,7 +5,6 @@ import { UserInterface, UserRole, userRoles } from "@/interfaces/UserInterface";
 import { updateUser } from "@/components/app_modules/users/api/UserRequester";
 import {
     FormEvent,
-    SyntheticEvent,
     useContext,
     useEffect,
     useState,
