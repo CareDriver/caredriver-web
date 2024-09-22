@@ -10,7 +10,6 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { UserInterface } from "@/interfaces/UserInterface";
-import { generateVerificationCode } from "generate-verification-code";
 import EmailField from "@/components/form/view/fields/EmailField";
 import PasswordField from "@/components/form/view/fields/PasswordField";
 import TextField from "@/components/form/view/fields/TextField";
@@ -19,21 +18,15 @@ import LocationField from "@/components/form/view/fields/LocationField";
 import Link from "next/link";
 import { AuthenticatorContext } from "../../contexts/AuthenticatorContext";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
-import NumberField from "@/components/form/view/fields/NumberField";
-import { validateCodeOfVerification } from "../../validators/CodeValidator";
-import {
-    VerificationCodeField,
-    TextField as TextFieldForm,
-} from "@/components/form/models/FormFields";
+import { TextField as TextFieldForm } from "@/components/form/models/FormFields";
 import { Locations } from "@/interfaces/Locations";
-import {
-    DEFAUL_TEXT_FIELD,
-    DEFAUL_VERIFICATION_CODE_FIELD,
-} from "@/components/form/models/DefaultFields";
+import { DEFAUL_TEXT_FIELD } from "@/components/form/models/DefaultFields";
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import { isValidName } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
 import { EMPTY_USER_DATA } from "../../api/UserAuth";
 import { routeToSingIn } from "@/utils/route_builders/as_not_logged/RouteBuilderForAuth";
+import { sendVerificationCode } from "../../api/VerificationCodeSender";
+import CodeVerifier from "../verifiers/CodeVerifier";
 
 interface Form {
     fullName: TextFieldForm;
@@ -41,7 +34,7 @@ interface Form {
     email: TextFieldForm;
     password: TextFieldForm;
     location: Locations;
-    code: VerificationCodeField;
+    code: string;
 }
 
 enum View {
@@ -56,32 +49,11 @@ const SignUpForm = () => {
 
     const [form, setForm] = useState<Form>(DEFAULT_FORM);
 
-    const signUp = async (e: FormEvent) => {
-        e.preventDefault();
-
-        if (loading) {
-            return;
-        }
-
-        setLoading(true);
-
+    const signUp = async () => {
         if (!isValidForm(form)) {
             setLoading(false);
             setValid(false);
             toast.error("Formulario invalido");
-            return;
-        }
-
-        if (form.code.codeSent !== form.code.currentCode) {
-            setLoading(false);
-            setValid(false);
-            setForm((prev) => ({
-                ...prev,
-                code: {
-                    ...form.code,
-                    message: "Código invalido, vuelve a intentarlo",
-                },
-            }));
             return;
         }
 
@@ -160,37 +132,13 @@ const SignUpForm = () => {
                 return;
             }
 
-            let codeSent: string = String(
-                generateVerificationCode({
-                    length: 6,
-                    type: "string",
-                }),
-            );
             try {
-                await toast.promise(
-                    fetch("/api/sms", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({
-                            phone: form.phone.value,
-                            code: codeSent,
-                        }),
-                    }),
-                    {
-                        pending: "Enviando código de verificación a tu celular",
-                        success: "Código enviado",
-                        error: "Error al enviar el código, inténtalo de nuevo por favor",
-                    },
+                let codeSent: string = await sendVerificationCode(
+                    form.phone.value,
                 );
-
                 setForm((prev) => ({
                     ...prev,
-                    code: {
-                        ...prev.code,
-                        codeSent: codeSent,
-                    },
+                    code: codeSent,
                 }));
 
                 setLoading(false);
@@ -213,43 +161,7 @@ const SignUpForm = () => {
 
     if (view === View.VERIFYING_CODE) {
         return (
-            <BaseForm
-                content={{
-                    button: {
-                        content: {
-                            legend: "Continuar",
-                        },
-                        behavior: {
-                            isValid: isValid,
-                            loading: loading,
-                        },
-                    },
-                }}
-                behavior={{
-                    loading: loading,
-                    onSummit: signUp,
-                }}
-            >
-                <NumberField
-                    legend="Código de verificación"
-                    field={{
-                        values: {
-                            value: form.code.currentCode,
-                            message: form.code.message,
-                        },
-                        setter: (e) =>
-                            setForm({
-                                ...form,
-                                code: {
-                                    ...form.code,
-                                    currentCode: e.value,
-                                    message: e.message,
-                                },
-                            }),
-                        validator: validateCodeOfVerification,
-                    }}
-                />
-            </BaseForm>
+            <CodeVerifier onSummbit={signUp} verificationCode={form.code} />
         );
     }
 
@@ -323,7 +235,7 @@ const DEFAULT_FORM: Form = {
     phone: DEFAUL_TEXT_FIELD,
     email: DEFAUL_TEXT_FIELD,
     password: DEFAUL_TEXT_FIELD,
-    code: DEFAUL_VERIFICATION_CODE_FIELD,
+    code: "",
     location: Locations.CochabambaBolivia,
 };
 
