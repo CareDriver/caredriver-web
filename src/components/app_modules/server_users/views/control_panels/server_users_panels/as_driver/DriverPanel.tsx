@@ -4,13 +4,13 @@ import CarSide from "@/icons/CarSide";
 import Motorcycle from "@/icons/Motorcycle";
 import { ServiceReqState } from "@/interfaces/Services";
 import { useContext, useState } from "react";
-import DriverInstrucctions from "./DriverInstrucctions";
 import "@/styles/modules/popup.css";
 import PageLoading from "@/components/loaders/PageLoading";
 import { MissingTransmissionAdder } from "@/components/app_modules/server_users/api/MissingTransmissionAdder";
 import RegisteredVehicleRenderer from "../../../data_renderers/for_vehicles/RegisteredVehicleRenderer";
 import UserAssociatedEnterpriseRenderer from "../../../data_renderers/UserAssociatedEnterpriseRenderer";
 import RedirectorToTheAppAsServerUser from "../RedirectorToTheAppAsServerUser";
+import DriverInstructionsForNewVehicle from "./DriverInstructionsForNewVehicle";
 
 const DriverPanel = () => {
     const { user, checkingUserAuth } = useContext(AuthContext);
@@ -95,10 +95,7 @@ const DriverPanel = () => {
                         </>
                     ) : (
                         <div data-state={loading && "loading"}>
-                            <h3 className="text | gray gray-dark bold margin-top-5">
-                                Agrega este vehículo a tu perfil
-                            </h3>
-                            <DriverInstrucctions user={user} />
+                            <DriverInstructionsForNewVehicle />
                         </div>
                     )}
                 </div>

@@ -24,7 +24,7 @@ const EnterpriseRendererForContact = ({
 
     return (
         <div className="form-sub-container">
-            <h3 className="text | big-medium bolder">{enterprise.name}</h3>
+            <h3 className="text | big-medium bolder capitalize">{enterprise.name}</h3>
             {enterprise.phone && (
                 <button
                     type="button"
@@ -33,7 +33,7 @@ const EnterpriseRendererForContact = ({
                     }
                     className="icon-wrapper text general-button | white-icon bolder mb"
                 >
-                    <Whatsapp /> Mandar mensaje por WhatsApp
+                    <Whatsapp /> Enviar mensaje
                 </button>
             )}
             <ImageRenderer

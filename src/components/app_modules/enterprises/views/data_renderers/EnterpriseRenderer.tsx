@@ -51,7 +51,7 @@ const EnterpriseRenderer = ({
             {enterprise.coordinates && (
                 <fieldset className="form-section">
                     <span className="text | bolder">
-                        Ubicación geográfica {" "}
+                        Ubicación geográfica{" "}
                         {
                             ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE[
                                 enterprise.type

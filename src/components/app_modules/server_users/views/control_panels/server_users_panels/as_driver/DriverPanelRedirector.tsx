@@ -5,12 +5,14 @@ import { ServiceReqState } from "@/interfaces/Services";
 import { useContext, useEffect, useState } from "react";
 import DriverPanel from "./DriverPanel";
 import RequestInProgress from "../../RequestInProgress";
-import DriverInstructionsPage from "./DriverInstrucctionsPage";
 import PageLoading from "@/components/loaders/PageLoading";
+import DriverInstrucctionsAsNew from "./DriverInstrucctionsAsNew";
 
 const DriverPanelRedirector = () => {
     const { user, checkingUserAuth } = useContext(AuthContext);
-    const [state, setState] = useState<ServiceReqState>(ServiceReqState.NotSent);
+    const [state, setState] = useState<ServiceReqState>(
+        ServiceReqState.NotSent,
+    );
 
     const getView = () => {
         if (user) {
@@ -20,7 +22,7 @@ const DriverPanelRedirector = () => {
                 case ServiceReqState.Reviewing:
                     return <RequestInProgress />;
                 default:
-                    return <DriverInstructionsPage user={user} />;
+                    return <DriverInstrucctionsAsNew />;
             }
         }
     };

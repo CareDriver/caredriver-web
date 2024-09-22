@@ -16,10 +16,8 @@ const UserAssociatedEnterpriseRenderer: React.FC<Props> = ({
     typeOfEnterprise,
     user,
 }) => {
-    const ASSOCIATED_ENTERPRISE_ID: string | undefined = getAssociatedEnterprise(
-        user,
-        typeOfEnterprise,
-    );
+    const ASSOCIATED_ENTERPRISE_ID: string | undefined =
+        getAssociatedEnterprise(user, typeOfEnterprise);
     const HAS_ASSOCIATED_ENTERPRISE: boolean =
         ASSOCIATED_ENTERPRISE_ID !== undefined;
 
@@ -33,7 +31,7 @@ const UserAssociatedEnterpriseRenderer: React.FC<Props> = ({
                     }}
                 />
             ) : (
-                <div className="max-width-40">
+                <div className="max-width-40 margin-top-25">
                     <FieldDeleted description="No estas asociado a ninguna empresa" />
                 </div>
             )}

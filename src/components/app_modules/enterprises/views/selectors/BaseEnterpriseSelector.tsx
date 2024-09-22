@@ -44,7 +44,10 @@ const BaseEnterpriseSelector: React.FC<Props> = ({
     const [loading, setLoading] = useState<boolean>(false);
 
     const selectEnterprise = (enterprise: Enterprise) => {
-        if (behavior.localSelecction) {
+        if (
+            behavior.localSelecction === undefined ||
+            behavior.localSelecction === true
+        ) {
             if (selectedEnterprise?.id === enterprise.id) {
                 setSelectedEnterprise(undefined);
                 behavior.selectEnterprise(undefined);
