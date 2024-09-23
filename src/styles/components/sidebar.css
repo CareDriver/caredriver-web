@@ -37,7 +37,7 @@
 }
 
 .sidebar-wrapper:hover {
-    scrollbar-color: var(--main-light) #f5f5f5;
+    scrollbar-color: var(--main-light) var(--white-medium);
 }
 
 /* Para Chrome */
@@ -54,7 +54,7 @@
 }
 
 .sidebar-wrapper::-webkit-scrollbar-track {
-    background-color: #f5f5f5;
+    background-color: var(--white-medium);
 }
 
 .sidebar-logo {

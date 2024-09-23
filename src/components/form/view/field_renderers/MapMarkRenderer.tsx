@@ -4,6 +4,7 @@ import { Loader } from "@googlemaps/js-api-loader";
 import { GOOGLEMAPS_TOKEN } from "@/components/form/models/MapProperties";
 import { GeoPoint } from "firebase/firestore";
 import { geoPointToLatLng } from "@/components/form/utils/MapLocationHelper";
+import { MAIN_COLOR, WHITE_COLOR } from "@/models/Colors";
 
 const MapMarkRenderer = ({ location }: { location: GeoPoint }) => {
     const mapRef = useRef<HTMLDivElement>(null);
@@ -36,9 +37,9 @@ const MapMarkRenderer = ({ location }: { location: GeoPoint }) => {
                     )) as google.maps.MarkerLibrary;
                 const pin = new PinElement({
                     scale: 1.6,
-                    background: "#3bb770",
-                    glyphColor: "#fff",
-                    borderColor: "#3bb770",
+                    background: MAIN_COLOR,
+                    glyphColor: WHITE_COLOR,
+                    borderColor: MAIN_COLOR,
                 });
                 new AdvancedMarkerElement({
                     map,

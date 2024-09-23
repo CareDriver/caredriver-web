@@ -1,3 +1,4 @@
+import { WHITE_COLOR } from "@/models/Colors";
 import { Timestamp } from "firebase/firestore";
 
 export enum VehicleType {
@@ -14,7 +15,7 @@ export enum VehicleSize {
     BIG = "big",
     MEDIUM = "medium",
     SMALL = "small",
-    MOTORCYCLE = "motorcycle"
+    MOTORCYCLE = "motorcycle",
 }
 
 export interface VehicleInterface {
@@ -32,7 +33,7 @@ export const getVehicleSizeLabel = {
     [VehicleSize.MEDIUM]: "Mediano",
     [VehicleSize.SMALL]: "Pequeño",
     [VehicleSize.MOTORCYCLE]: "Moto",
-}
+};
 
 // Object of an empty new vehicle to add
 export const newVehicle = (): VehicleInterface => {
@@ -67,8 +68,18 @@ type VehicleTransmissionOption = {
 
 // Vehicle types to render
 export const vehicleTypes: VehicleTypeOption[] = [
-    { value: VehicleType.CAR, label: "Auto", icon: "car", checkedColor: "#FFF" },
-    { value: VehicleType.MOTORCYCLE, label: "Moto", icon: "motorbike", checkedColor: "#FFF" },
+    {
+        value: VehicleType.CAR,
+        label: "Auto",
+        icon: "car",
+        checkedColor: WHITE_COLOR,
+    },
+    {
+        value: VehicleType.MOTORCYCLE,
+        label: "Moto",
+        icon: "motorbike",
+        checkedColor: WHITE_COLOR,
+    },
 ];
 
 // Vehicle sizes to render

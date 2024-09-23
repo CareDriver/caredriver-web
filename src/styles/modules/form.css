@@ -55,7 +55,7 @@
     overflow: hidden;
 
     border-radius: 0.9375rem;
-    border: 0.0625rem solid #ddd;
+    border: 0.0625rem solid var(--gray-medium);
 }
 
 .form-section-input {
@@ -63,7 +63,7 @@
     font-size: 1.111111111rem;
     padding: var(--padding-field);
 
-    border: 0.0625rem solid #ddd;
+    border: 0.0625rem solid var(--gray-medium);
     border-radius: 0.9375rem;
     background-color: var(--white);
 }
@@ -118,7 +118,7 @@ input[type="password"] {
 }
 
 .form-section-input:is(:focus) {
-    border: 0.0625rem solid #000;
+    border: 0.0625rem solid var(--black-darker);
 }
 
 .form-section-legend {
@@ -381,7 +381,7 @@ input[type="password"] {
     max-height: 11vh;
     border-radius: 0.9375rem;
 
-    background-color: white;
+    background-color: var(--white);
     border: 1px solid var(--gray-medium);
 }
 
@@ -393,7 +393,7 @@ input[type="password"] {
 }
 
 .option-item:hover {
-    background-color: #f0f0f0;
+    background-color: var(--gray-light);
 }
 
 .flag-icon {

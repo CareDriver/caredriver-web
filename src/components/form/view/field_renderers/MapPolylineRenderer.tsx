@@ -11,6 +11,7 @@ import { timestampDateInSpanishWithHour } from "@/utils/helpers/DateHelper";
 import { GeoPoint, Timestamp } from "firebase/firestore";
 import { geoPointToLatLng } from "../../utils/MapLocationHelper";
 import { isNullOrEmptyText } from "@/validators/TextValidator";
+import { MAIN_COLOR, SECOND_COLOR_LIGHT, WHITE_COLOR } from "@/models/Colors";
 
 const MapPolylineRenderer = ({
     priorArrivalRoute,
@@ -175,13 +176,17 @@ const MapPolylineRenderer = ({
             const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
             mapInstanceRef.current = map;
             if (priorArrivalRoute.length > 0) {
-                renderPath(priorPolylineRef, "#456079", priorArrivalRoute);
+                renderPath(
+                    priorPolylineRef,
+                    SECOND_COLOR_LIGHT,
+                    priorArrivalRoute,
+                );
             }
 
             if (serviceInProgressRoute.length > 0) {
                 renderPath(
                     inProgressPolylineRef,
-                    "#3bb770",
+                    MAIN_COLOR,
                     serviceInProgressRoute,
                 );
             }
@@ -191,9 +196,9 @@ const MapPolylineRenderer = ({
 
         const renderPriorMarks = async () => {
             if (priorArrivalRoute.length > 0) {
-                let background = "#456079";
-                let borderColor = "#fff";
-                let glyphColor = "#fff";
+                let background = SECOND_COLOR_LIGHT;
+                let borderColor = WHITE_COLOR;
+                let glyphColor = WHITE_COLOR;
                 await renderPoints(
                     background,
                     borderColor,
@@ -206,9 +211,9 @@ const MapPolylineRenderer = ({
 
         const renderInProgressMarks = async () => {
             if (serviceInProgressRoute.length > 0) {
-                let background = "#3bb770";
-                let borderColor = "#fff";
-                let glyphColor = "#fff";
+                let background = MAIN_COLOR;
+                let borderColor = WHITE_COLOR;
+                let glyphColor = WHITE_COLOR;
                 await renderPoints(
                     background,
                     borderColor,

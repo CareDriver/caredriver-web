@@ -19,7 +19,7 @@
     border-radius: 50%;
 
     object-fit: cover;
-    background-color: #fcfffe;
+    background-color: var(--white-medium);
     box-shadow: 0 0 40px var(--gray-light);
 }
 
@@ -31,7 +31,7 @@
     border-radius: 50%;
 
     object-fit: cover;
-    background-color: #fcfffe;
+    background-color: var(--white-medium);
     box-shadow: 0 0 2.222222222rem var(--gray-light);
 }
 

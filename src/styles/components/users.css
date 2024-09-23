@@ -37,7 +37,7 @@
     object-fit: cover;
 
     border-radius: 50%;
-    background-color: #ecfaf5;
+    background-color: var(--white-medium);
 }
 
 .users-item-role {

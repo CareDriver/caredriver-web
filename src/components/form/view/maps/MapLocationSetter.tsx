@@ -7,6 +7,7 @@ import {
 } from "@/components/form/models/MapProperties";
 import { GeoPoint } from "firebase/firestore";
 import { geoPointToLatLng } from "../../utils/MapLocationHelper";
+import { MAIN_COLOR, WHITE_COLOR } from "@/models/Colors";
 
 interface Props {
     location: GeoPoint | undefined;
@@ -43,9 +44,9 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
             /* TODO: move colors to TS file */
             const pin = new PinElement({
                 scale: 1.6,
-                background: "#3bb770",
-                glyphColor: "#fff",
-                borderColor: "#3bb770",
+                background: MAIN_COLOR,
+                glyphColor: WHITE_COLOR,
+                borderColor: MAIN_COLOR,
             });
 
             if (location) {

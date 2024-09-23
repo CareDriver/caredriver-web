@@ -22,7 +22,7 @@
 }
 
 .icon-wrapper.white-icon > svg {
-    fill: white;
+    fill: var(--white);
 }
 
 .icon-wrapper.gray-icon > svg {
