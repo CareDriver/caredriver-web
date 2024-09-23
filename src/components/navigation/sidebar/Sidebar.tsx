@@ -15,6 +15,7 @@ import BalanceChargeSideBar from "./concrets/BalanceChargeSideBar";
 import Bars from "@/icons/Bars";
 import { checkPermission } from "@/components/guards/validators/RoleValidator";
 import { ROLES_FOR_SERVER_USER_ACTIONS } from "@/components/guards/models/PermissionsByUserRole";
+import { NAME_BUSINESS } from "@/models/Business";
 
 const SideBar = () => {
     const { checkingUserAuth, user } = useContext(AuthContext);
@@ -113,7 +114,7 @@ const SideBar = () => {
                             className="sidebar-logo"
                             alt=""
                         />
-                        <span className="sidebar-name">CAReDriver</span>
+                        <span className="sidebar-name">{NAME_BUSINESS}</span>
                     </span>
                     <button
                         onClick={toggleNav}

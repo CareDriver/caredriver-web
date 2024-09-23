@@ -5,7 +5,7 @@ export const DRIVER_PLURAL = "conductores";
 
 export const PHONE_BUSINESS = "+59177920245";
 
-export const NAME_BUSINESS = "CAReDriver";
+export const NAME_BUSINESS = "CareDriver";
 
 export const DESCRIPTION_BUSINESS = {
     short: `Servicios de ${toCapitalize(

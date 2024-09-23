@@ -1,6 +1,7 @@
 import Handshake from "@/icons/Handshake";
 import TriangleExclamation from "@/icons/TriangleExclamation";
 import { Enterprise } from "@/interfaces/Enterprise";
+import { NAME_BUSINESS } from "@/models/Business";
 import {
     cutTextWithDotsByLength,
     MAX_LENGTH_FOR_NAMES_DISPLAY,
@@ -35,7 +36,7 @@ const SimpleEnterpriseCard = ({
             <h4 className="text | center">{enterprise.phone}</h4>
             {enterprise.commition && (
                 <h4 className="text | green bolder center icon-wrapper lb green-icon">
-                    <Handshake /> Convenio con CareDriver
+                    <Handshake /> Convenio con {NAME_BUSINESS}
                 </h4>
             )}
 

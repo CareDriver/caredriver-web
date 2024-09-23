@@ -40,6 +40,7 @@ import { AuthContext } from "@/context/AuthContext";
 import PageLoading from "@/components/loaders/PageLoading";
 import { ROLES_TO_ADD_AGREEMENT_TO_ENTERPRISES } from "@/components/guards/models/PermissionsByUserRole";
 import { compressFileBase64 } from "@/utils/compressors/FileCompressor";
+import { NAME_BUSINESS } from "@/models/Business";
 
 interface Form {
     name: TextFieldForm;
@@ -199,12 +200,11 @@ const EnterpriseEditForm: React.FC<Props> = ({
                 <div>
                     <h3 className="text | bolder | icon-wrapper lb">
                         <Handshake />
-                        Convenio con CareDriver (Opcional)
+                        Convenio con {NAME_BUSINESS} (Opcional)
                     </h3>
                     <CheckField
                         content={{
-                            checkDescription:
-                                "Marca la casilla si la empresa tiene convenio con CareDriver",
+                            checkDescription: `Marca la casilla si la empresa tiene convenio con ${NAME_BUSINESS}`,
                         }}
                         marker={{
                             isCheck: form.hasCommition,

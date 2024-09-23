@@ -12,6 +12,7 @@ import { GeoPoint, Timestamp } from "firebase/firestore";
 import { geoPointToLatLng } from "../../utils/MapLocationHelper";
 import { isNullOrEmptyText } from "@/validators/TextValidator";
 import { MAIN_COLOR, SECOND_COLOR_LIGHT, WHITE_COLOR } from "@/models/Colors";
+import { NAME_BUSINESS } from "@/models/Business";
 
 const MapPolylineRenderer = ({
     priorArrivalRoute,
@@ -133,7 +134,7 @@ const MapPolylineRenderer = ({
                     '<div id="content">' +
                     '<div id="siteNotice">' +
                     "</div>" +
-                    '<h3 id="firstHeading" class="firstHeading">CareDriver - Coordenada</h3>' +
+                    `<h3 id="firstHeading" class="firstHeading">${NAME_BUSINESS} - Coordenada</h3>` +
                     '<div id="bodyContent">' +
                     `<p>${timestampDateInSpanishWithHour(
                         Timestamp.fromMillis(coordinate.timestamp),

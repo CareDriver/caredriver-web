@@ -46,7 +46,7 @@ import { AuthContext } from "@/context/AuthContext";
 import PageLoading from "@/components/loaders/PageLoading";
 import { compressFileBase64 } from "@/utils/compressors/FileCompressor";
 import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
-import { DRIVER_PLURAL } from "@/models/Business";
+import { DRIVER_PLURAL, NAME_BUSINESS } from "@/models/Business";
 
 interface Form {
     name: TextFieldForm;
@@ -229,12 +229,11 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                 <div>
                     <h3 className="text | bolder | icon-wrapper lb">
                         <Handshake />
-                        Convenio con CareDriver (Opcional)
+                        Convenio con {NAME_BUSINESS} (Opcional)
                     </h3>
                     <CheckField
                         content={{
-                            checkDescription:
-                                "Marca la casilla si la empresa tiene convenio con CareDriver",
+                            checkDescription: `Marca la casilla si la empresa tiene convenio con ${NAME_BUSINESS}`,
                         }}
                         marker={{
                             isCheck: form.hasCommition,
