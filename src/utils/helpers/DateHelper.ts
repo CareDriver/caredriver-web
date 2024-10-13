@@ -95,3 +95,13 @@ export const getYesterdayInTimestamp = (): Timestamp => {
     today.setDate(today.getDate() - 1);
     return Timestamp.fromDate(today);
 };
+
+export const isLessTime = (time: Timestamp | undefined | boolean): boolean => {
+    if (!time || typeof time !== 'object' || !(time instanceof Timestamp)) {
+        return false;
+    }
+    const timeDate = time.toDate();
+    const now = Timestamp.fromMillis(Date.now()).toDate()
+
+    return timeDate > now;
+};

@@ -17,7 +17,6 @@ const ServiceHeaderRenderer = ({
                         timestampDateInSpanish(service.createdAt)}
                 </i>
             </h1>
-
             <div className="row-wrapper">
                 <ServiceStatusRenderer service={service} />
                 {service.price?.price && service.price?.currency && (

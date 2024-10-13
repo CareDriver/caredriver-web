@@ -1,6 +1,7 @@
 "use client";
 
 import { getUserEnterprises } from "@/components/app_modules/enterprises/api/EnterpriseRequester";
+import { findServicePerfByFakeId } from "@/components/app_modules/services_performed/model/fetchers/ServicePerfFetcher";
 import { ROLES_TO_VIEW_USER_SERVICES } from "@/components/guards/models/PermissionsByUserRole";
 import { checkPermission } from "@/components/guards/validators/RoleValidator";
 import PageLoading from "@/components/loaders/PageLoading";
@@ -13,6 +14,7 @@ import {
     setVisitedToday,
     wasAlreadyVisited,
 } from "@/utils/encryptors/EncryptionGeneratorByDate";
+import { isLessTime } from "@/utils/helpers/DateHelper";
 import { routeToNoFound } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
 import {
     SERVER_USER_QUERY_PARAM,
@@ -25,12 +27,14 @@ import { toast } from "react-toastify";
 interface Props {
     serviceType: ServiceType;
     fakeServerUserId?: string;
+    serviceFakeId?: string;
     children: React.ReactNode;
 }
 
 const GuardForServices: React.FC<Props> = ({
     serviceType,
     fakeServerUserId,
+    serviceFakeId,
     children,
 }) => {
     const pathname = usePathname();
@@ -96,28 +100,56 @@ const GuardForServices: React.FC<Props> = ({
         );
     };
 
-    useEffect(() => {
-        if (!checkingUserAuth) {
-            if (!user) {
-                redirectToHome();
-            } else if (
-                checkPermission(user.role, ROLES_TO_VIEW_USER_SERVICES)
-            ) {
-                setPermission(true);
-            } else if (pathname.includes(SERVICES_REQUESTED_BASE_PATH)) {
-                redirectToHome();
-            } else if (user?.role === UserRole.User) {
-                let fakeUserId = fakeServerUserId
-                    ? fakeServerUserId
-                    : searchParams.get(SERVER_USER_QUERY_PARAM);
-                if (fakeUserId) {
-                    verifyPermissionForNormalUser(user, fakeUserId);
-                } else {
-                    redirectToHome();
-                }
+    const checkPermissionByUserRole = () => {
+        if (!user) {
+            redirectToHome();
+        } else if (checkPermission(user.role, ROLES_TO_VIEW_USER_SERVICES)) {
+            setPermission(true);
+        } else if (pathname.includes(SERVICES_REQUESTED_BASE_PATH)) {
+            redirectToHome();
+        } else if (user?.role === UserRole.User) {
+            let fakeUserId = fakeServerUserId
+                ? fakeServerUserId
+                : searchParams.get(SERVER_USER_QUERY_PARAM);
+            if (fakeUserId) {
+                verifyPermissionForNormalUser(user, fakeUserId);
             } else {
                 redirectToHome();
             }
+        } else {
+            redirectToHome();
+        }
+    };
+
+    const checkPermissionByServiceSharing = async (serviceFakeId: string) => {
+        try {
+            let serviceFound = await findServicePerfByFakeId(
+                serviceFakeId,
+                serviceType,
+            );
+            if (!serviceFound) {
+                checkPermissionByUserRole();
+            } else if (isLessTime(serviceFound.sharing)) {
+                setPermission(true);
+            } else {
+                checkPermissionByUserRole();
+            }
+        } catch (_) {
+            redirectToHome();
+        }
+    };
+
+    const startCheckPermission = () => {
+        if (!serviceFakeId) {
+            checkPermissionByUserRole();
+        } else {
+            checkPermissionByServiceSharing(serviceFakeId);
+        }
+    }
+
+    useEffect(() => {
+        if (!checkingUserAuth) {
+            startCheckPermission()
         }
     }, [checkingUserAuth]);
 

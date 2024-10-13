@@ -13,6 +13,9 @@ import ServiceRouteRenderer from "../../renderers/ServiceRouteRenderer";
 import { UserInterface } from "@/interfaces/UserInterface";
 import GuardOfModule from "@/components/guards/views/module_guards/GuardOfModule";
 import { ROLES_TO_VIEW_USER_SERVICES } from "@/components/guards/models/PermissionsByUserRole";
+import ShareServiceByLink from "../../renderers/ShareServiceByLink";
+import { checkPermission } from "@/components/guards/validators/RoleValidator";
+import { isLessTime } from "@/utils/helpers/DateHelper";
 
 interface Props {
     service: ServiceRequestInterface;
@@ -23,9 +26,23 @@ const ServiceForCraneOperatorPerformed: React.FC<Props> = ({
     service,
     reviewerUser,
 }) => {
+    const renderMap = () => (
+        <MapRealTime
+            databaseURL={buildUrlDB(
+                UserServices.Tow,
+                service.location
+                    ? service.location
+                    : Locations.CochabambaBolivia,
+            )}
+            serviceId={service.id}
+            isCanceled={service.canceled ? service.canceled : false}
+            isFinished={service.finished ? service.finished : false}
+        />
+    );
     return (
         <section className="render-data-wrapper">
             <ServiceHeaderRenderer service={service} />
+            <ShareServiceByLink reviewerUser={reviewerUser} service={service} />
             <RendererOfTheUsersInvolvedInTheService service={service} />
             <ServicePriceDetailsRenderer service={service} />
 
@@ -38,18 +55,12 @@ const ServiceForCraneOperatorPerformed: React.FC<Props> = ({
                     vehicle={service.vehicle}
                 />
                 <ServiceRouteRenderer service={service} />
-                <MapRealTime
-                    databaseURL={buildUrlDB(
-                        UserServices.Tow,
-                        service.location
-                            ? service.location
-                            : Locations.CochabambaBolivia,
-                    )}
-                    serviceId={service.id}
-                    isCanceled={service.canceled ? service.canceled : false}
-                    isFinished={service.finished ? service.finished : false}
-                />
+                {renderMap()}
             </GuardOfModule>
+
+            {!checkPermission(reviewerUser.role, ROLES_TO_VIEW_USER_SERVICES) &&
+                isLessTime(service.sharing) &&
+                renderMap()}
         </section>
     );
 };

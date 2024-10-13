@@ -190,6 +190,20 @@
     border: none;
 }
 
+.small-general-button.hide-content {
+    overflow: hidden;
+}
+
+.small-general-button-content {
+    max-height: 0;
+    display: none;
+}
+
+.small-general-button.hide-content:hover > .small-general-button-content {
+    max-height: 11.111111111rem;
+    display: block;
+}
+
 .circle-button.green {
     background-color: var(--green);
     color: white;

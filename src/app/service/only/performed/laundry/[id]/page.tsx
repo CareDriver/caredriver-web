@@ -4,7 +4,7 @@ import GuardForServices from "@/components/guards/views/page_guards/concrets/Gua
 
 const Page = ({ params }: { params: any }) => {
     return (
-        <GuardForServices serviceType="laundry">
+        <GuardForServices serviceType="laundry" serviceFakeId={params.id}>
             <ConsentForm moduleTarget="laundryserviceonly" id={params.id}>
                 <ServicePerformedWithLoader id={params.id} type="laundry" />
             </ConsentForm>

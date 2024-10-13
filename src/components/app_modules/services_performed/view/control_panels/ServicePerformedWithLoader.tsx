@@ -3,7 +3,13 @@
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import { useContext, useEffect, useState } from "react";
 import { firestore } from "@/firebase/FirebaseConfig";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+    collection,
+    onSnapshot,
+    query,
+    Timestamp,
+    where,
+} from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import DriverServicePerformed from "./concrete/DriverServicePerformed";
@@ -16,6 +22,10 @@ import PageLoading from "@/components/loaders/PageLoading";
 import { routeToAllUsersAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 import { AuthContext } from "@/context/AuthContext";
 import { UserInterface } from "@/interfaces/UserInterface";
+import { isLessTime } from "@/utils/helpers/DateHelper";
+import { routeToRedirector } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
+import { checkPermission } from "@/components/guards/validators/RoleValidator";
+import { ROLES_TO_VIEW_USER_SERVICES } from "@/components/guards/models/PermissionsByUserRole";
 
 const ServicePerformedWithLoader = ({
     id,
@@ -46,6 +56,31 @@ const ServicePerformedWithLoader = ({
 
         return () => unsubscribe();
     }, []);
+
+    useEffect(() => {
+        if (!data?.sharing || !(data.sharing instanceof Timestamp)) {
+            return;
+        }
+
+        if (
+            reviewerUser &&
+            checkPermission(reviewerUser.role, ROLES_TO_VIEW_USER_SERVICES)
+        ) {
+            return;
+        }
+
+        const interval = setInterval(() => {
+            if (!isLessTime(data.sharing)) {
+                toast.info("Tiempo agotado", {
+                    toastId: "service-sharing-time-out-alert",
+                });
+                clearInterval(interval);
+                router.push(routeToRedirector());
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [data?.sharing]);
 
     const getServiceView = (
         service: ServiceRequestInterface,

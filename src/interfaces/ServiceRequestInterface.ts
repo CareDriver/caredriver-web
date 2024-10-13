@@ -28,6 +28,7 @@ export interface ServiceRequestInterface {
     createdAt?: Timestamp;
     acceptedAt?: Timestamp;
     willArrivedAt?: Timestamp; // aprox date that service user will arrive (taking time in account)
+    sharing?: Timestamp | false;
     price?: {
         // price of the service, mandatory just for trips and tows services
         currency: "Bs"; // Currency of the trip price, e.g., "Bs." for Bolivians

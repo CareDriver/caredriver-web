@@ -4,7 +4,7 @@ import GuardForServices from "@/components/guards/views/page_guards/concrets/Gua
 
 const Page = ({ params }: { params: any }) => {
     return (
-        <GuardForServices serviceType="mechanical">
+        <GuardForServices serviceType="mechanical" serviceFakeId={params.id}>
             <ConsentForm moduleTarget="mechanicserviceonly" id={params.id}>
                 <ServicePerformedWithLoader id={params.id} type="mechanical" />
             </ConsentForm>

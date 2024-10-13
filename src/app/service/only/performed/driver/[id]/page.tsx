@@ -4,7 +4,7 @@ import GuardForServices from "@/components/guards/views/page_guards/concrets/Gua
 
 const Page = ({ params }: { params: any }) => {
     return (
-        <GuardForServices serviceType="driver">
+        <GuardForServices serviceType="driver" serviceFakeId={params.id}>
             <ConsentForm moduleTarget="driverserviceonly" id={params.id}>
                 <ServicePerformedWithLoader id={params.id} type="driver" />
             </ConsentForm>
