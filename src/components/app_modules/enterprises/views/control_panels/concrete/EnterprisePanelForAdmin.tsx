@@ -12,7 +12,7 @@ import FormToDeleteEnterprise from "../../request_forms/to_delete/FormToDeleteEn
 import FormToDisableEnterprise from "../../request_forms/to_disable/FormToDisableEnterprise";
 import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import { PageStateContext } from "@/context/PageStateContext";
-import ListOfUsersOfAEnterprise from "../../list_of_cards/ListOfUsersOfAEnterprise";
+import ListOfUsersOfAnEnterpriseByRole from "../../list_of_cards/ListOfUsersOfAnEnterpriseByRole";
 import { EnterpriseManagementView } from "../../../models/EntepriseMangementViews";
 import UserAdderToEnterprise from "../../request_forms/to_edit/UserAdderToEnterprise";
 import { AuthContext } from "@/context/AuthContext";
@@ -101,9 +101,21 @@ const EnterprisePanelForAdmin: React.FC<Props> = ({ id }) => {
                     <FormToDeleteEnterprise enterprise={enterprise} />
                 </section>
             )}
-            {view === EnterpriseManagementView.VIEW_USERS && (
+            {view === EnterpriseManagementView.VIEW_SERVER_USERS && (
                 <div data-state={loading ? "loading" : "loaded"}>
-                    <ListOfUsersOfAEnterprise enterprise={enterprise} />
+                    <ListOfUsersOfAnEnterpriseByRole
+                        enterprise={enterprise}
+                        role="user"
+                    />
+                </div>
+            )}
+
+            {view === EnterpriseManagementView.VIEW_SUPPORT_USERS && (
+                <div data-state={loading ? "loading" : "loaded"}>
+                    <ListOfUsersOfAnEnterpriseByRole
+                        enterprise={enterprise}
+                        role="support"
+                    />
                 </div>
             )}
 

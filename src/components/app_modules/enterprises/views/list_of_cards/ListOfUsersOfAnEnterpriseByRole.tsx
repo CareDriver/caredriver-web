@@ -1,8 +1,8 @@
 "use client";
-import { Enterprise, UserRoleInEnterprise } from "@/interfaces/Enterprise";
+import { Enterprise, UserRoleEnterpriseRender, UserRoleInEnterprise } from "@/interfaces/Enterprise";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { getUsersByTheirIds } from "@/components/app_modules/users/api/UserRequester";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "@/styles/modules/popup.css";
@@ -11,28 +11,27 @@ import DataLoading from "@/components/loaders/DataLoading";
 import Popup from "@/components/modules/Popup";
 import SimpleUserCard from "@/components/app_modules/users/views/cards/SimpleUserCard";
 import Link from "next/link";
-import {
-    routeToServicePerformed,
-    routeToServicesServedByUser,
-} from "@/utils/route_builders/for_services/RouteBuilderForServices";
+import { routeToServicesServedByUser } from "@/utils/route_builders/for_services/RouteBuilderForServices";
 import { getIdSaved } from "@/utils/generators/IdGenerator";
 import HelmetSafety from "@/icons/HelmetSafety";
 import { AuthContext } from "@/context/AuthContext";
 import PageLoading from "@/components/loaders/PageLoading";
 import { isTheEnterpriseOwner } from "../../validators/validators_of_user_aggregators_to_enterprise/as_members/UserAggregatorValidatorToEnterpriseHelper";
 
-const ListOfUsersOfAEnterprise = ({
-    enterprise,
-}: {
+interface Props {
     enterprise: Enterprise;
+    role: UserRoleInEnterprise;
+}
+
+const ListOfUsersOfAnEnterpriseByRole: React.FC<Props> = ({
+    enterprise,
+    role,
 }) => {
+    const USERS = enterprise.addedUsers?.filter((u) => u.role === role) ?? [];
     const AMOUNT_OF_USERS_PER_PAGE = 20;
     const { checkingUserAuth, user: reviewerUser } = useContext(AuthContext);
     const [missingIdUsers, setMissingIdUsers] = useState<string[]>(
-        enterprise.addedUsersId || [],
-    );
-    const [mapRoles, setMapRoles] = useState(
-        new Map<string, UserRoleInEnterprise>(),
+        USERS.map((u) => u.userId),
     );
     const [fetchedUsers, setFetchedUsers] = useState<{
         users: UserInterface[];
@@ -72,9 +71,7 @@ const ListOfUsersOfAEnterprise = ({
             const users = await getUsersByTheirIds(usersIdToFetch);
             setFetchedUsers((prev) => ({
                 users: [...prev.users, ...users],
-                hasMore:
-                    users.length + prev.users.length !==
-                    enterprise.addedUsersId?.length,
+                hasMore: users.length + prev.users.length !== users.length,
             }));
         } catch (e) {
             toast.error(
@@ -85,37 +82,14 @@ const ListOfUsersOfAEnterprise = ({
         }
     };
 
-    const getUserRole = (user: UserInterface): UserRoleInEnterprise => {
-        if (user.id) {
-            let role = mapRoles.get(user.id);
-            return role ? role : "support";
-        }
-
-        return "support";
-    };
-
-    const fillMapOfRoles = () => {
-        if (enterprise.addedUsers) {
-            let map = new Map<string, UserRoleInEnterprise>();
-            enterprise.addedUsers.map((u) => {
-                map.set(u.userId, u.role);
-            });
-            setMapRoles(map);
-        }
-    };
-
-    useEffect(() => {
-        fillMapOfRoles();
-    }, []);
-
     if (checkingUserAuth || !reviewerUser) {
         return <PageLoading />;
     }
 
     return (
         <div className="service-form-wrapper">
-            <h1 className="text | big bolder">
-                Usuarios agregados al servicio
+            <h1 className="text | big bold">
+                Usuarios <i className="text | big bolder">{UserRoleEnterpriseRender[role]}</i>
             </h1>
             {fetchedUsers.users.length === 0 && !fetchedUsers.hasMore ? (
                 <div>Ningún usuario registrado</div>
@@ -173,7 +147,7 @@ const ListOfUsersOfAEnterprise = ({
                             <FormToDeleteUserFromEnterprise
                                 selectedUser={{
                                     data: selectedUser,
-                                    role: getUserRole(selectedUser),
+                                    role: role,
                                 }}
                                 enterprise={enterprise}
                             />
@@ -185,4 +159,4 @@ const ListOfUsersOfAEnterprise = ({
     );
 };
 
-export default ListOfUsersOfAEnterprise;
+export default ListOfUsersOfAnEnterpriseByRole;

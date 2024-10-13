@@ -12,7 +12,7 @@ export interface EnterpriseUser {
 }
 
 export const UserRoleEnterpriseRender = {
-    user: "Usuario Servidor",
+    user: "Servidores",
     support: "Soporte",
 };
 

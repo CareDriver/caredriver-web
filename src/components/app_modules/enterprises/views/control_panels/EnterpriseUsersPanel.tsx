@@ -6,6 +6,10 @@ import {
     getUserRoleForEnterprise,
     UserRoleForEnteprise,
 } from "../../models/UserRolesInAEnterprise";
+import {
+    anyServerUsersInEnterprise,
+    anySupportUsersInEnterprise,
+} from "../../validators/validators_of_user_aggregators_to_enterprise/as_members/UserAggregatorValidatorToEnterpriseHelper";
 
 interface Props {
     content: {
@@ -62,22 +66,36 @@ const EnterpriseUsersPanel: React.FC<Props> = ({ content, behavior }) => {
                         Registrar nuevo usuario
                     </button>
                 )}
-                {content.enterprise.addedUsers !== undefined &&
-                    content.enterprise.addedUsers.length > 0 && (
-                        <button
-                            type="button"
-                            onClick={() =>
-                                behavior.setView(
-                                    EnterpriseManagementView.VIEW_USERS,
-                                )
-                            }
-                            className={`small-general-button text | bold green touchable ${
-                                behavior.loading && "loading-section"
-                            }`}
-                        >
-                            Administrar usuarios
-                        </button>
-                    )}
+                {anyServerUsersInEnterprise(content.enterprise) && (
+                    <button
+                        type="button"
+                        onClick={() =>
+                            behavior.setView(
+                                EnterpriseManagementView.VIEW_SERVER_USERS,
+                            )
+                        }
+                        className={`small-general-button text | bold green touchable ${
+                            behavior.loading && "loading-section"
+                        }`}
+                    >
+                        Administrar usuarios servidores
+                    </button>
+                )}
+                {anySupportUsersInEnterprise(content.enterprise) && (
+                    <button
+                        type="button"
+                        onClick={() =>
+                            behavior.setView(
+                                EnterpriseManagementView.VIEW_SUPPORT_USERS,
+                            )
+                        }
+                        className={`small-general-button text | bold green touchable ${
+                            behavior.loading && "loading-section"
+                        }`}
+                    >
+                        Administrar usuarios soporte
+                    </button>
+                )}
             </div>
         </div>
     );

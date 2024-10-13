@@ -44,7 +44,7 @@ interface Props {
 }
 
 const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
-    const { loading } = useContext(PageStateContext);
+    const { } = useContext(PageStateContext);
     const [formState, setFormState] = useState<{
         isValid: boolean;
         message: string | null;
@@ -97,11 +97,17 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
     };
 
     const checkUserAvailability = (userFound: UserInterface | undefined) => {
-        /**
-         * no processing due to this validation already exits
-         * on the user selector
-         */
+        setUserToAdd((prev) => ({
+            ...prev,
+            data: userFound,
+        }));
+        
         if (!userFound) {
+            setFormState(prev => ({
+                ...prev,
+                message: null,
+                isValid: false
+            }))
             return;
         }
 
@@ -126,11 +132,6 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                 message: null,
             }));
         }
-
-        setUserToAdd((prev) => ({
-            ...prev,
-            data: userFound,
-        }));
     };
 
     const getEnterpriseUserAdder = (

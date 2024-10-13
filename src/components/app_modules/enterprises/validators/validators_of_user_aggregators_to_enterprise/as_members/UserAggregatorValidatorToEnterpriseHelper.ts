@@ -1,6 +1,6 @@
 import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
-import { Enterprise } from "@/interfaces/Enterprise";
+import { Enterprise, UserRoleInEnterprise } from "@/interfaces/Enterprise";
 import { Locations } from "@/interfaces/Locations";
 import { InputState } from "@/validators/InputValidatorSignature";
 
@@ -126,4 +126,23 @@ export function isSupportInEnterprise(
         (acc, u) => acc || (u.userId === user.id && u.role === "support"),
         false,
     );
+}
+
+export function countUsersByRoleInEnterprise(
+    enterprise: Enterprise,
+    role: UserRoleInEnterprise,
+): number {
+    if (!enterprise.addedUsers) {
+        return 0;
+    }
+
+    return enterprise.addedUsers?.filter((u) => u.role === role).length;
+}
+
+export function anySupportUsersInEnterprise(enterprise: Enterprise): boolean {
+    return countUsersByRoleInEnterprise(enterprise, "support") > 0;
+}
+
+export function anyServerUsersInEnterprise(enterprise: Enterprise): boolean {
+    return countUsersByRoleInEnterprise(enterprise, "user") > 0;
 }

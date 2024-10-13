@@ -7,7 +7,7 @@ import { Enterprise } from "@/interfaces/Enterprise";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import UserAdderToEnterprise from "../../request_forms/to_edit/UserAdderToEnterprise";
-import ListOfUsersOfAEnterprise from "../../list_of_cards/ListOfUsersOfAEnterprise";
+import ListOfUsersOfAnEnterpriseByRole from "../../list_of_cards/ListOfUsersOfAnEnterpriseByRole";
 import EnterpriseRenderer from "../../data_renderers/EnterpriseRenderer";
 import { PageStateContext } from "@/context/PageStateContext";
 import { EnterpriseManagerEditedAsServerUser } from "../../../models/enterprise_managers_edited/EnterpriseManagerEditedAsServerUser";
@@ -113,9 +113,21 @@ const EnterprisePanelForUserServer: React.FC<Props> = ({ id }) => {
                 </div>
             )}
 
-            {view === EnterpriseManagementView.VIEW_USERS && (
+            {view === EnterpriseManagementView.VIEW_SERVER_USERS && (
                 <div data-state={loading ? "loading" : "loaded"}>
-                    <ListOfUsersOfAEnterprise enterprise={enterprise} />
+                    <ListOfUsersOfAnEnterpriseByRole
+                        enterprise={enterprise}
+                        role="user"
+                    />
+                </div>
+            )}
+
+            {view === EnterpriseManagementView.VIEW_SUPPORT_USERS && (
+                <div data-state={loading ? "loading" : "loaded"}>
+                    <ListOfUsersOfAnEnterpriseByRole
+                        enterprise={enterprise}
+                        role="support"
+                    />
                 </div>
             )}
         </>
