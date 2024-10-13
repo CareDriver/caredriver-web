@@ -1,6 +1,6 @@
 "use client";
 import Trash from "@/icons/Trash";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import FileImage from "@/icons/FileImage";
 import { AttachmentField } from "../../models/FormFields";
 import { AttachmentFieldSetter } from "../../models/FieldSetters";
@@ -20,6 +20,7 @@ interface Props {
 const ImageUploader: React.FC<Props> = ({ uploader, content }) => {
     const [draggingOver, setDraggingOver] = useState<boolean>(false);
     const [uploading, setUploading] = useState<boolean>(false);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -45,6 +46,9 @@ const ImageUploader: React.FC<Props> = ({ uploader, content }) => {
             value: undefined,
             message: "Necesitas subir una imagen",
         });
+        if (fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
     };
 
     const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,6 +114,7 @@ const ImageUploader: React.FC<Props> = ({ uploader, content }) => {
             className="form-section"
         >
             <input
+                ref={fileInputRef}
                 type="file"
                 id={content.id}
                 style={{ display: "none" }}

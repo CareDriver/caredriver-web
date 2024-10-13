@@ -35,6 +35,7 @@ export interface Enterprise {
     addedUsersId?: string[];
     addedUsers?: EnterpriseUser[];
     commition?: boolean;
+    description?: string;
 }
 
 export interface ReqEditEnterprise extends Enterprise {

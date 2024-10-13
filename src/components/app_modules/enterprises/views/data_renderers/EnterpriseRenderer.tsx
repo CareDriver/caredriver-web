@@ -22,6 +22,14 @@ const EnterpriseRenderer = ({
                 }`}
             />
             <TextFieldRenderer
+                content={enterprise.description}
+                legend={`Descripcion ${
+                    ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE[
+                        enterprise.type
+                    ]
+                }`}
+            />
+            <TextFieldRenderer
                 content={enterprise.phone}
                 legend={`Teléfono ${
                     ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE[

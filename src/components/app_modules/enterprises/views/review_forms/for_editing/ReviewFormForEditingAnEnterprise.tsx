@@ -47,6 +47,7 @@ const ReviewFormForEditingAnEnterprise: React.FC<Props> = ({
     const updating = async () => {
         await updateEnterprise(enterpriseEditDoc.enterpriseId, {
             name: enterpriseEditDoc.name,
+            description: enterpriseEditDoc.description ?? "",
             logoImgUrl: enterpriseEditDoc.logoImgUrl,
             coordinates: enterpriseEditDoc.coordinates,
             phone: enterpriseEditDoc.phone,

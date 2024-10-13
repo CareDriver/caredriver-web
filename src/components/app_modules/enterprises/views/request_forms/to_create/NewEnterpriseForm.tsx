@@ -39,7 +39,7 @@ import EnterpriseOwnerAdder from "./EnterpriseOwnerAdder";
 import { ServiceType } from "@/interfaces/Services";
 import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import { PageStateContext } from "@/context/PageStateContext";
-import { validateEnterpriseName } from "../../../validators/EnterpriseValidator";
+import { validateEnterpriseDescription, validateEnterpriseName } from "../../../validators/EnterpriseValidator";
 import CheckField from "@/components/form/view/fields/CheckField";
 import Handshake from "@/icons/Handshake";
 import { AuthContext } from "@/context/AuthContext";
@@ -47,9 +47,11 @@ import PageLoading from "@/components/loaders/PageLoading";
 import { compressFileBase64 } from "@/utils/compressors/FileCompressor";
 import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
 import { DRIVER_PLURAL, NAME_BUSINESS } from "@/models/Business";
+import { DEFAULT_CIPHERS } from "node:tls";
 
 interface Form {
     name: TextFieldForm;
+    description: TextFieldForm;
     phone: TextFieldForm;
     logo: AttachmentField;
     location: Locations;
@@ -110,6 +112,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                     id,
                     type: enterpriseType,
                     name: form.name.value,
+                    description: form.description.value,
                     logoImgUrl: imgWithRef,
                     coordinates: form.coordinates.value,
                     latitude: form.coordinates.value.latitude,
@@ -178,6 +181,15 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                         validator: validateEnterpriseName,
                     }}
                     legend="Nombre de la empresa"
+                />
+                <TextField
+                    field={{
+                        values: form.description,
+                        setter: (n) =>
+                            setForm((prev) => ({ ...prev, description: n })),
+                        validator: validateEnterpriseDescription,
+                    }}
+                    legend="Descripcion de la empresa"
                 />
                 <PhoneField
                     values={form.phone}
@@ -254,6 +266,7 @@ export default NewEnterpriseForm;
 
 const DEFAULT_FORM: Form = {
     name: DEFAUL_TEXT_FIELD,
+    description: DEFAUL_TEXT_FIELD,
     phone: DEFAUL_TEXT_FIELD,
     logo: DEFAUL_ATTACHMENT_FIELD,
     coordinates: DEFAUL_GEOPOINT_FIELD,
@@ -265,6 +278,7 @@ const DEFAULT_FORM: Form = {
 function isValidForm(form: Form): boolean {
     return (
         isValidTextField(form.name) &&
+        isValidTextField(form.description) &&
         isValidTextField(form.phone) &&
         isValidAttachmentField(form.logo) &&
         isValidGeoPointField(form.coordinates) &&

@@ -59,6 +59,11 @@ const EnterpriseOwnerAdder: React.FC<Props> = ({ owner, enterprise }) => {
                 .finally(() => {
                     setLoading(false);
                 });
+        } else {
+            owner.setter({
+                value: undefined,
+                message: null
+            })
         }
     }, [enterprise.localization, userToBeOwner]);
 
@@ -82,9 +87,11 @@ const EnterpriseOwnerAdder: React.FC<Props> = ({ owner, enterprise }) => {
                             type: isValidEntityField(owner.values)
                                 ? "success"
                                 : "fail",
-                            message: isValidEntityField(owner.values)
-                                ? SUCCESS_USER_FOUND_MESSAGE
-                                : owner.values.message,
+                            message:
+                                isValidEntityField(owner.values) &&
+                                userToBeOwner
+                                    ? SUCCESS_USER_FOUND_MESSAGE
+                                    : owner.values.message,
                         },
                     }}
                     processTheUserFound={processTheUserFound}

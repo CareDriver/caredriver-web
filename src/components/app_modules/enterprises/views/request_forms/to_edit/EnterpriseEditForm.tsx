@@ -32,7 +32,7 @@ import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
 import { IEditedEnterpriseManager } from "../../../models/enterprise_managers_edited/IEditedEnterpriseManager";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
-import { validateEnterpriseName } from "../../../validators/EnterpriseValidator";
+import { validateEnterpriseDescription, validateEnterpriseName } from "../../../validators/EnterpriseValidator";
 import Handshake from "@/icons/Handshake";
 import CheckField from "@/components/form/view/fields/CheckField";
 import GuardOfModule from "@/components/guards/views/module_guards/GuardOfModule";
@@ -41,9 +41,11 @@ import PageLoading from "@/components/loaders/PageLoading";
 import { ROLES_TO_ADD_AGREEMENT_TO_ENTERPRISES } from "@/components/guards/models/PermissionsByUserRole";
 import { compressFileBase64 } from "@/utils/compressors/FileCompressor";
 import { NAME_BUSINESS } from "@/models/Business";
+import { isNullOrEmptyText } from "@/validators/TextValidator";
 
 interface Form {
     name: TextFieldForm;
+    description: TextFieldForm;
     phone: TextFieldForm;
     logo: AttachmentField;
     location: Locations;
@@ -105,8 +107,6 @@ const EnterpriseEditForm: React.FC<Props> = ({
 
             let baseEnterprise = await formToEnterprise(form, enterprise);
             editedEnterpriseManager.handle(enterprise, baseEnterprise);
-            setLoadingAll(false, setFormState);
-
             let routeToRedirect =
                 editedEnterpriseManager.getRedirectionAfterHandling(
                     enterprise.type,
@@ -155,6 +155,14 @@ const EnterpriseEditForm: React.FC<Props> = ({
                     validator: validateEnterpriseName,
                 }}
                 legend="Nombre de la empresa"
+            />
+            <TextField
+                field={{
+                    values: form.description,
+                    setter: (d) => setForm((prev) => ({ ...prev, description: d })),
+                    validator: validateEnterpriseDescription,
+                }}
+                legend="Descripcion de la empresa"
             />
             <PhoneField
                 values={form.phone}
@@ -225,6 +233,7 @@ export default EnterpriseEditForm;
 
 const DEFAULT_FORM: Form = {
     name: DEFAUL_TEXT_FIELD,
+    description: DEFAUL_TEXT_FIELD,
     phone: DEFAUL_TEXT_FIELD,
     logo: DEFAUL_ATTACHMENT_FIELD,
     coordinates: DEFAUL_GEOPOINT_FIELD,
@@ -276,6 +285,7 @@ async function formToEnterprise(
     return {
         ...baseEnterprise,
         name: form.name.value,
+        description: form.description.value,
         logoImgUrl: image,
         coordinates: form.coordinates.value,
         phone: form.phone.value,
@@ -291,6 +301,10 @@ function enterpriseToForm(enterprise: Enterprise): Form {
         name: {
             value: enterprise.name,
             message: null,
+        },
+        description: {
+            value: enterprise.description ?? "",
+            message: isNullOrEmptyText(enterprise.description) ? "Agrega una descripcion a la empresa" : null,
         },
         phone: {
             value: !enterprise.phone ? "" : enterprise.phone,
@@ -314,6 +328,7 @@ function enterpriseToForm(enterprise: Enterprise): Form {
 function hasChanges(form: Form, currentEnterprise: Enterprise): boolean {
     return (
         form.name.value !== currentEnterprise.name ||
+        form.description.value !== currentEnterprise?.description ||
         form.phone.value !== currentEnterprise.phone ||
         form.logo.value !== currentEnterprise.logoImgUrl.url ||
         (currentEnterprise.location !== undefined &&
