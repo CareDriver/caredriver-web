@@ -17,6 +17,10 @@
     flex-direction: column;
 }
 
+.icon-wrapper > svg {
+    fill: var(--second-dark);
+}
+
 .icon-wrapper.red-icon > svg {
     fill: var(--red);
 }
@@ -34,8 +38,13 @@
 }
 
 .icon-wrapper.green-icon > svg {
-    fill: var(--main-light);
+    fill: var(--second-dark);
 }
+
+.icon-wrapper.green-light-icon > svg {
+    fill: var(--second-dark);
+}
+
 
 .icon-wrapper.yellow-icon > svg {
     fill: var(--yellow);
@@ -69,4 +78,9 @@
 .icon-wrapper.bg > svg {
     height: 2.777777778rem;
     width: 2.777777778rem;
+}
+
+.icon-wrapper.mbg > svg {
+    height: 6.777777778rem;
+    width: 6.777777778rem;
 }

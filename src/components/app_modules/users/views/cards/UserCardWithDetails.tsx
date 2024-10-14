@@ -51,7 +51,7 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                             {USER_ROLE_DETAILS.text}
                         </h4>
                         {IS_DISABLED && (
-                            <h4 className={`text | bold yellow`}>
+                            <h4 className={`text | bolder`}>
                                 Deshabilitado{" "}
                                 {user.disabledUntil
                                     ? "hasta el ".concat(

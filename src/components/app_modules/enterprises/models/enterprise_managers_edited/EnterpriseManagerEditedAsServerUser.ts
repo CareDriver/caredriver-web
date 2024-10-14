@@ -1,21 +1,39 @@
 import { Enterprise, ReqEditEnterprise } from "@/interfaces/Enterprise";
 import { IEditedEnterpriseManager } from "./IEditedEnterpriseManager";
-import { RequestLimitValidatorForEnterpriseEdit } from "../../validators/RequestLimitValidatorForEnterpriseEdit";
 import { toast } from "react-toastify";
 import { genDocId } from "@/utils/generators/IdGenerator";
 import { sendEditEnterpriseReq } from "../../api/EditEnterpriseReq";
 import { ServiceType } from "@/interfaces/Services";
 import { routeToAllEnterprisesAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { firestore } from "@/firebase/FirebaseConfig";
+import { Collections } from "@/firebase/CollecionNames";
 
 export class EnterpriseManagerEditedAsServerUser
     implements IEditedEnterpriseManager
 {
-    requestLimitValidator: RequestLimitValidatorForEnterpriseEdit;
+    COLLECTION = collection(firestore, Collections.EditEnterprises);
 
-    constructor() {
-        this.requestLimitValidator =
-            new RequestLimitValidatorForEnterpriseEdit();
-    }
+    validate = async (
+        userId: string,
+        enterpriseId: string,
+        typeOfEnterprise: ServiceType,
+    ): Promise<boolean> => {
+        try {
+            const q = query(
+                this.COLLECTION,
+                where("type", "==", typeOfEnterprise),
+                where("active", "==", true),
+                where("enterpriseId", "==", enterpriseId),
+                where("userId", "==", userId),
+            );
+            const querySnapshot = await getDocs(q);
+            console.log(querySnapshot.docs);
+            return querySnapshot.size > 0;
+        } catch (error) {
+            return false;
+        }
+    };
 
     validateData = async (
         userId: string,
@@ -23,11 +41,7 @@ export class EnterpriseManagerEditedAsServerUser
         enterpriseType: ServiceType,
     ): Promise<boolean> => {
         let thereAreActiveReqs = await toast.promise(
-            this.requestLimitValidator.validate(
-                userId,
-                enterpriseId,
-                enterpriseType,
-            ),
+            this.validate(userId, enterpriseId, enterpriseType),
             {
                 pending: "Buscando peticiones activas",
                 error: "Error al buscar peticiones activas, inténtalo de nuevo por favor",

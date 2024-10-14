@@ -79,7 +79,7 @@ const ListOfRequestsForChangeEnteprise: React.FC<Props> = ({}) => {
         <div className="render-data-wrapper">
             <h1
                 className={
-                    "text | big-medium bolder margin-bottom-25 capitalize"
+                    "text | big bolder margin-bottom-25 capitalize"
                 }
             >
                 Solicitudes para cambiarse de empresa

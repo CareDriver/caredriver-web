@@ -13,6 +13,8 @@ import Truck from "@/icons/Truck";
 import Soap from "@/icons/Soap";
 import { DRIVER_PLURAL } from "@/models/Business";
 import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
+import Logo from "@/icons/company/Logo";
+import CompanyName from "@/icons/company/CompanyName";
 
 const Home = () => {
     const { checkingUserAuth, user } = useContext(AuthContext);
@@ -29,12 +31,14 @@ const Home = () => {
         <main className="home-container">
             <span className="circles"></span>
             <div className="home-sub-container | z-index-1">
-                <img
-                    src="/images/logowithname.png"
-                    alt="logo de la empresa..."
-                    className="home-image"
-                />
-
+                <div className="home-sub-container-logo-name-wrapper">
+                    <span className="home-sub-container-logo">
+                        <Logo />
+                    </span>
+                    <span className="home-sub-container-name">
+                        <CompanyName />
+                    </span>
+                </div>
                 <Link
                     href={routeToSingIn()}
                     className="action-button | icon-wrapper mb margin-top-25"
@@ -48,22 +52,22 @@ const Home = () => {
             </div>
             <div className="home-sub-container | margin-top-15 z-index-1">
                 <div className="row-wrapper row-responsive | center margin-bottom-25">
-                    <h3 className="home-service | text | medium gray-dark bold | icon-wrapper gray-icon lb">
+                    <h3 className="home-service | text | medium gray-medium bold | icon-wrapper gray-medium-icon lb">
                         <CarSide />
                         {toCapitalize(DRIVER_PLURAL)}
                     </h3>
                     |
-                    <h3 className="home-service | text | medium gray-dark bold | icon-wrapper gray-icon">
+                    <h3 className="home-service | text | medium gray-medium bold | icon-wrapper gray-medium-icon">
                         <Soap />
                         Lavaderos
                     </h3>
                     |
-                    <h3 className="home-service | text | medium gray-dark bold | icon-wrapper gray-icon">
+                    <h3 className="home-service | text | medium gray-medium bold | icon-wrapper gray-medium-icon">
                         <Wrench />
                         Mecánicos
                     </h3>
                     |
-                    <h3 className="home-service | text | medium gray-dark bold | icon-wrapper gray-icon lb">
+                    <h3 className="home-service | text | medium gray-medium bold | icon-wrapper gray-medium-icon lb">
                         <Truck />
                         Operadores de Grúa
                     </h3>

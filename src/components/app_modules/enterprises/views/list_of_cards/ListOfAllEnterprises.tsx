@@ -66,11 +66,11 @@ const ListOfAllEnterprises = ({ type }: { type: ServiceType }) => {
                 {ENTERPRISE_TO_SPANISH_AS_PLURAL[type]}
             </h1>
             <Link
-                className="small-general-button icon-wrapper | max-20 less-padding no-full center white-icon touchable"
+                className="small-general-button icon-wrapper | max-20 less-padding no-full center touchable"
                 href={routeToCreateNewEnterpriseForAdmin(type)}
             >
                 <Plus />
-                <span className="text | white bold">Nueva empresa</span>
+                <span className="text | bold">Nueva empresa</span>
             </Link>
             {data.length > 0 ? (
                 <InfiniteScroll

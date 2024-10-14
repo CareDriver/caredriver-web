@@ -1,3 +1,4 @@
+'use client'
 import ChevronDown from "@/icons/ChevronDown";
 import {
     abbreviateLocation,
@@ -27,7 +28,7 @@ const LocationField: React.FC<Props> = ({ location, setter, style }) => {
     };
 
     return (
-        <fieldset className="form-section | select-item">
+        <fieldset className={`form-section | select-item`}>
             <div
                 className="form-section-input | icon-wrapper"
                 onClick={toggleMenu}

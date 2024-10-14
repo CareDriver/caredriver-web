@@ -1,3 +1,19 @@
+.page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+
+    height: 100dvh;
+    width: 100vw;
+
+    background-color: var(--second-dark);
+    pointer-events: none;
+}
+
 .loader {
     width: 2.222222222rem;
     height: 2.222222222rem;
@@ -8,7 +24,6 @@
     box-sizing: border-box;
     animation: rotation 700ms linear infinite;
 }
-
 
 .loader-gray {
     width: 2.222222222rem;
@@ -35,6 +50,17 @@
 .loader-green {
     width: 2.222222222rem;
     height: 2.222222222rem;
+    border: 0.375rem solid var(--second-dark);
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 700ms linear infinite;
+}
+
+.loader-green-light {
+    width: 2.222222222rem;
+    height: 2.222222222rem;
     border: 0.375rem solid var(--main-light);
     border-bottom-color: transparent;
     border-radius: 50%;
@@ -58,7 +84,8 @@
 .loader-black.small-loader,
 .loader-gray-medium.small-loader,
 .loader-gray.small-loader,
-.loader-green.small-loader {
+.loader-green.small-loader 
+.loader-green-light.small-loader {
     width: 1.388888889rem;
     height: 1.388888889rem;
     border-width: 0.25rem;
@@ -68,7 +95,8 @@
 .loader-black.big-loader,
 .loader-gray.big-loader,
 .loader-gray-medium.big-loader,
-.loader-green.big-loader {
+.loader-green.big-loader,
+.loader-green-light.big-loader {
     width: 3.333333333rem;
     height: 3.333333333rem;
     border-width: 0.5rem;

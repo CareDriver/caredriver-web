@@ -51,7 +51,8 @@
     border-radius: 0.625rem;
 
     background-color: var(--main-light);
-    color: var(--white);
+    color: var(--second-dark);
+    border: 0.111111111rem solid var(--second-dark);
     transition: all ease-in-out 200ms;
 }
 
@@ -158,10 +159,11 @@
     width: max-content;
 
     background-color: var(--main-light);
-    color: var(--white);
-    border: none;
+    color: var(--second-dark);
+    border: 0.111111111rem solid var(--second-dark);
     border-radius: 0.833333333rem;
     transition: all ease-in-out 200ms;
+    text-transform: capitalize;
 }
 
 .small-general-button:hover {
@@ -169,13 +171,19 @@
 }
 
 .small-general-button.gray {
-    border: 0.111111111rem solid var(--gray-medium);
-    background-color: var(--white);
-    color: var(--gray-dark);
+    border: 0.111111111rem solid var(--second-dark);
+    background-color: var(--gray-light);
+
+    color: var(--second-dark);
+}
+
+.small-general-button.gray > svg{
+    fill: var(--second-dark) !important;
 }
 
 .small-general-button.gray:hover {
-    background-color: var(--gray-light);
+    background-color: var(--main-lighter);
+
 }
 
 .small-general-button.yellow {
@@ -185,9 +193,13 @@
 
 .circle-button.red,
 .small-general-button.red {
+    border: none;
     background-color: var(--red);
     color: var(--white);
-    border: none;
+}
+
+.small-general-button.red {
+    border: 0.111111111rem solid var(--second-dark);
 }
 
 .small-general-button.hide-content {

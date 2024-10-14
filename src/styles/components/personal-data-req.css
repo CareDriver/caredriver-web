@@ -16,9 +16,9 @@
 
     padding: 2.222222222rem 1.111111111rem;
     max-height: 16.666666667;
-    border: 0.111111111rem solid var(--gray-medium);
+    border: 0.111111111rem solid var(--gray-light);
     border-radius: 0.833333333rem;
-    transition: all ease-in 150ms;
+    transition: all ease-in 100ms;
 }
 
 .personal-data-req-item.fill-image > img {
@@ -35,7 +35,12 @@
 }
 
 .personal-data-req-item:hover {
-    border-color: var(--main-light);
+    border-color: var(--second-dark);
+    background-color: var(--main-lighter);
+}
+
+.personal-data-req-item:hover  .separator-horizontal {
+    background-color: var(--second-dark);
 }
 
 .personal-data-req-item-name {

@@ -29,21 +29,25 @@
     gap: 0.277777778rem;
 
     padding: 1.666666667rem 1.388888889rem;
-    border: 0.111111111rem solid var(--gray-medium);
+    border: 0.211111111rem solid var(--gray-light);
     border-radius: 0.833333333rem;
 
     background-color: var(--white);
     cursor: pointer;
-    transition: all ease-in 150ms;
+    transition: all ease-in-out 80ms;
 }
 
 .enterprise-item[data-state="selected"],
 .enterprise-item:hover {
-    border-color: var(--main-light);
+    border-color: var(--second-dark);
 }
 
 .enterprise-item[data-state="selected"] {
-    box-shadow: 0 0 0.555555556rem rgba(59, 183, 112, 0.5);
+    background-color: var(--main-lighter);
+}
+
+.enterprise-item[data-state="selected"] .separator-horizontal {
+    background-color: var(--second-dark);
 }
 
 .enterprise-item-title {

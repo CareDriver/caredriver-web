@@ -89,13 +89,13 @@ const SelfieUploader: React.FC<Props> = ({ uploader, content }) => {
                             className="form-section-camera-button"
                             onClick={() => setCameraOpen(true)}
                         >
-                            <span className="icon-wrapper | gray-icon bg">
+                            <span className="icon-wrapper | green-icon bg">
                                 <Camera />
                             </span>
-                            <span className="text | gray-dark | margin-top-15">
+                            <span className="text | green | margin-top-15">
                                 Subir foto
                             </span>
-                            <span className="text | bold medium-big gray-dark">
+                            <span className="text | bold medium-big green">
                                 {content.legend}
                             </span>
                         </div>

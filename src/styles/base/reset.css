@@ -15,7 +15,7 @@ body {
     height: 100dvh;
 
     scroll-behavior: smooth;
-    font-family: "Lato", sans-serif;
+    font-family: "HaasGroteskDisplayPro", sans-serif;
 }
 
 html {
@@ -71,6 +71,13 @@ progress {
 textarea {
     resize: none;
     font-family: "Poppins", sans-serif;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--white) inset !important;
 }
 
 @media only screen and (max-width: 1550px) {

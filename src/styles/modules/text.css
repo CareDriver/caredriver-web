@@ -4,15 +4,22 @@
     color: var(--second-dark);
 }
 
+.text.title {
+    font-family: "Beni", sans-serif !important;
+}
+
 .text.bigger {
-    font-size: 3.89rem;
+    font-family: "Beni", sans-serif !important;
+    font-size: 4.89rem;
 }
 
 .text.big {
-    font-size: 3.333333333rem;
+    font-family: "Beni", sans-serif !important;
+    font-size: 4.333333333rem;
 }
 
 .text.big-medium {
+    font-family: "Beni", sans-serif !important;
     font-size: 2.777777778rem;
 }
 
@@ -97,7 +104,7 @@
 }
 
 .green {
-    color: var(--main-light);
+    color: var(--second-dark);
 }
 
 .capitalize {

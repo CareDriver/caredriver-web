@@ -20,7 +20,7 @@
 }
 
 .enterprise-req-item:hover {
-    border-color: var(--main-light);
+    border-color: var(--second-dark);
 }
 
 .enterprise-req-item-title {

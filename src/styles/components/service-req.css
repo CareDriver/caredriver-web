@@ -7,13 +7,14 @@
 .service-req-item {
     display: block;
     padding: 1.666666667rem;
-    border: 0.111111111rem solid var(--gray-medium);
+    border: 0.111111111rem solid var(--gray-light);
     border-radius: 0.833333333rem;
-    transition: all ease-in 150ms;
+    transition: all ease-in-out 100ms;
 }
 
 .service-req-item:hover {
-    border-color: var(--main-light);
+    border-color: var(--second-dark);
+    background-color: var(--main-lighter);
 }
 
 @media only screen and (max-width: 550px) {

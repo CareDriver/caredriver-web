@@ -1,18 +1,19 @@
 .auth-wrapper {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto 1fr;
+    max-width: 60%;
     place-items: center;
+    gap: 1.666666667rem;
 
-    padding: 0px 10vw;
-    width: 100%;
+    margin-inline: auto;
     height: 100dvh;
 }
 
 .auth-image {
     font-size: 16px;
-    width: 35vw;
-    min-width: 31.25em;
+    width: 22vw;
+    min-width: 20rem;
     z-index: 0;
 }
 
@@ -23,6 +24,7 @@
 @media only screen and (max-width: 1350px) {
     .auth-wrapper {
         padding: 0px 7vw;
+        max-width: 90%;
     }
 }
 
@@ -34,6 +36,8 @@
         justify-content: space-between;
         height: auto;
         gap: 6.25rem;
+
+        max-width: 98%;
     }
     .auth-image {
         display: none;

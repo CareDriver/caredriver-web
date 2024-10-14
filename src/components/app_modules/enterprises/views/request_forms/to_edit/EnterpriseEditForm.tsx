@@ -32,7 +32,10 @@ import { DirectoryPath } from "@/firebase/StoragePaths";
 import { useRouter } from "next/navigation";
 import { IEditedEnterpriseManager } from "../../../models/enterprise_managers_edited/IEditedEnterpriseManager";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
-import { validateEnterpriseDescription, validateEnterpriseName } from "../../../validators/EnterpriseValidator";
+import {
+    validateEnterpriseDescription,
+    validateEnterpriseName,
+} from "../../../validators/EnterpriseValidator";
 import Handshake from "@/icons/Handshake";
 import CheckField from "@/components/form/view/fields/CheckField";
 import GuardOfModule from "@/components/guards/views/module_guards/GuardOfModule";
@@ -101,7 +104,6 @@ const EnterpriseEditForm: React.FC<Props> = ({
             );
             if (!isValid) {
                 setLoadingAll(false, setFormState);
-
                 return;
             }
 
@@ -159,7 +161,8 @@ const EnterpriseEditForm: React.FC<Props> = ({
             <TextField
                 field={{
                     values: form.description,
-                    setter: (d) => setForm((prev) => ({ ...prev, description: d })),
+                    setter: (d) =>
+                        setForm((prev) => ({ ...prev, description: d })),
                     validator: validateEnterpriseDescription,
                 }}
                 legend="Descripcion de la empresa"
@@ -244,6 +247,7 @@ const DEFAULT_FORM: Form = {
 function isValidForm(form: Form): boolean {
     return (
         isValidTextField(form.name) &&
+        isValidTextField(form.description) &&
         isValidTextField(form.phone) &&
         isValidAttachmentField(form.logo) &&
         isValidGeoPointField(form.coordinates)
@@ -304,7 +308,9 @@ function enterpriseToForm(enterprise: Enterprise): Form {
         },
         description: {
             value: enterprise.description ?? "",
-            message: isNullOrEmptyText(enterprise.description) ? "Agrega una descripcion a la empresa" : null,
+            message: isNullOrEmptyText(enterprise.description)
+                ? "Agrega una descripcion a la empresa"
+                : null,
         },
         phone: {
             value: !enterprise.phone ? "" : enterprise.phone,
@@ -328,7 +334,7 @@ function enterpriseToForm(enterprise: Enterprise): Form {
 function hasChanges(form: Form, currentEnterprise: Enterprise): boolean {
     return (
         form.name.value !== currentEnterprise.name ||
-        form.description.value !== currentEnterprise?.description ||
+        (form.description.value !== currentEnterprise?.description) ||
         form.phone.value !== currentEnterprise.phone ||
         form.logo.value !== currentEnterprise.logoImgUrl.url ||
         (currentEnterprise.location !== undefined &&

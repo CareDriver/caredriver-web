@@ -72,10 +72,10 @@ const ListOfRequestsForLicenseRenewal = () => {
         <div className="render-data-wrapper">
             <h1
                 className={
-                    "text | big-medium bolder margin-bottom-25 capitalize"
+                    "text | big bolder margin-bottom-25 capitalize"
                 }
             >
-                Solicitudes para actualizar Licencias
+                Solicitudes para renovar Licencias
             </h1>
             <InfiniteScroll
                 dataLength={data.length}

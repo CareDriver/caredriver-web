@@ -118,7 +118,8 @@ input[type="password"] {
 }
 
 .form-section-input:is(:focus) {
-    border: 0.0625rem solid var(--black-darker);
+    border: 0.15rem solid var(--second-dark);
+    background-color: var(--main-lighter);
 }
 
 .form-section-legend {
@@ -128,11 +129,12 @@ input[type="password"] {
     z-index: 1000;
 
     font-size: 1.111111111rem;
+    font-weight: 600;
     padding: 0 0.25rem;
     border-radius: 0.3125rem;
 
-    color: gray;
-    background-color: white;
+    color: var(--gray-darker);
+    background-color: var(--white);
     transition: all ease-in 150ms;
     pointer-events: none;
 }
@@ -142,11 +144,21 @@ input[type="password"] {
     top: calc(-1 * (var(--padding-field) - 0.5125rem));
     font-size: 0.833333333rem;
     font-weight: 700;
-    color: var(--focus-color);
+}
+
+.form-section-input:is(:focus) ~ legend{
+    background-color: var(--main-lighter);
+    border: 0.1em solid var(--second-dark);
+    font-weight: 700;
+    color: var(--second-dark);
 }
 
 .form-section.select-item {
     cursor: pointer;
+}
+
+.form-section.select-item.focus {
+    border: 5px solid red;
 }
 
 .form-section.select-item > select {
@@ -180,14 +192,9 @@ input[type="password"] {
     background-color: var(--background-color);
 }
 
-.form-section-uploader.uploading > * {
-    color: white !important;
-    fill: white !important;
-}
-
 .form-section-uploader.uploading {
-    --border-color: var(--main-light);
-    --background-color: var(--main-light-opacity);
+    --border-color: var(--second-dark);
+    background-color: var(--main-lighter);
 }
 
 .form-section-uploader > svg {
@@ -234,7 +241,7 @@ input[type="password"] {
     transition: all ease-in-out 200ms;
     width: 1.222222222rem;
     height: 1.222222222rem;
-    fill: var(--second-light);
+    fill: var(--second-dark-opacity);
 }
 
 .deleted-field {
@@ -390,10 +397,11 @@ input[type="password"] {
     align-items: center;
     padding: 0.444444444rem;
     cursor: pointer;
+    font-weight: 600;
 }
 
 .option-item:hover {
-    background-color: var(--gray-light);
+    background-color: var(--main-lighter);
 }
 
 .flag-icon {
@@ -405,6 +413,7 @@ input[type="password"] {
 .selected-location {
     display: flex;
     align-items: center;
+    font-weight: 600;
 }
 
 @media only screen and (max-width: 1150px) {

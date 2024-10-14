@@ -38,7 +38,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             </p>
             {IS_DRIVER && (
                 <div className="service-user-wrapper | with-data">
-                    <h3 className="text | medium-big bolder">{DRIVER}</h3>
+                    <h3 className="text | medium-big capitalize bolder">{DRIVER}</h3>
                     <UserServerRatingRenderer
                         serviceData={user.servicesData.Conductor}
                     />
@@ -95,7 +95,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             )}
             {IS_MECHANIC && (
                 <div className="service-user-wrapper  | with-data">
-                    <h3 className="text | medium-big bolder">Mecánico</h3>
+                    <h3 className="text | medium-big capitalize bolder">Mecánico</h3>
                     <UserServerRatingRenderer
                         serviceData={user.servicesData.Mecánico}
                     />
@@ -134,7 +134,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             )}
             {IS_CRANE_OPERATOR && (
                 <div className="service-user-wrapper  | with-data">
-                    <h3 className="text | medium-big bolder">
+                    <h3 className="text | medium-big capitalize bolder">
                         Operador de Grúa
                     </h3>
                     <UserServerRatingRenderer
@@ -184,7 +184,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             )}
             {IS_LAUNDERER && (
                 <div className="service-user-wrapper  | with-data">
-                    <h3 className="text | medium-big bolder">Lavadero</h3>
+                    <h3 className="text | medium-big capitalize bolder">Lavadero</h3>
                     <UserServerRatingRenderer
                         serviceData={user.servicesData.Lavadero}
                     />

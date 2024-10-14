@@ -6,7 +6,7 @@ const ButtonForm: React.FC<ButtonFormProps> = ({ content, behavior }) => {
         : "general-button";
     const LOADER_STYLE = content.loaderClassStyle
         ? content.loaderClassStyle
-        : "loader";
+        : "loader-green";
 
     return (
         <button

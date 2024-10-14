@@ -1,34 +1,141 @@
+/* TITLES */
 @font-face {
-    font-family: "Lato";
-    src: url("/fonts/Lato/Lato-Black.woff") format("woff");
-    font-weight: 900;
-    font-style: normal;
+	font-family: 'Beni';
+	src: url('/fonts/Beni/BeniBlack.ttf') format('truetype');
+	font-weight: 900;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: "Lato";
-    src: url("/fonts/Lato/Lato-Bold.woff") format("woff");
-    font-weight: 700;
-    font-style: normal;
+	font-family: 'Beni';
+	src: url('/fonts/Beni/BeniBold.ttf') format('truetype');
+	font-weight: 700;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: "Lato";
-    src: url("/fonts/Lato/Lato-Regular.woff") format("woff");
-    font-weight: 500;
-    font-style: normal;
+	font-family: 'Beni';
+	src: url('/fonts/Beni/BeniRegular.ttf') format('truetype');
+	font-weight: 500;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: "Lato";
-    src: url("/fonts/Lato/Lato-Light.woff") format("woff");
-    font-weight: 300;
-    font-style: normal;
+	font-family: 'Beni';
+	src: url('/fonts/Beni/BeniLight.ttf') format('truetype');
+	font-weight: 300;
+	font-style: normal;
+}
+
+/* SECONDARY */
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayBlack.ttf') format('truetype');
+	font-weight: 900;
+	font-style: normal;
 }
 
 @font-face {
-    font-family: "Lato";
-    src: url("/fonts/Lato/Lato-Thin.woff") format("woff");
-    font-weight: 100;
-    font-style: normal;
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayBlackItalic.ttf') format('truetype');
+	font-weight: 900;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayBold.ttf') format('truetype');
+	font-weight: 800;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayBoldItalic.ttf') format('truetype');
+	font-weight: 800;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayMediu.ttf') format('truetype');
+	font-weight: 700;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayMediumItalic.ttf') format('truetype');
+	font-weight: 700;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayRoman.ttf') format('truetype');
+	font-weight: 600;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayRomanItalic.ttf') format('truetype');
+	font-weight: 600;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayLight.ttf') format('truetype');
+	font-weight: 500;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayLightItalic.ttf') format('truetype');
+	font-weight: 500;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayThin.ttf') format('truetype');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayThinItalic.ttf') format('truetype');
+	font-weight: 300;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayXThin.ttf') format('truetype');
+	font-weight: 200;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayXThinItalic.ttf') format('truetype');
+	font-weight: 200;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayXXThin.ttf') format('truetype');
+	font-weight: 100;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'HaasGroteskDisplayPro';
+	src: url('/fonts/HaasGroteskDisplayPro/NeueHaasDisplayXXThinItalic.ttf') format('truetype');
+	font-weight: 100;
+	font-style: italic;
 }

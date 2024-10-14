@@ -162,10 +162,10 @@ const ImageUploader: React.FC<Props> = ({ uploader, content }) => {
                         }`}
                     >
                         <FileImage />
-                        <span className="text | normal gray-dark | margin-top-15">
+                        <span className="text | normal green | margin-top-15">
                             Subir Imagen
                         </span>
-                        <p className="text | medium-big bold gray-dark">
+                        <p className="text | medium-big bold green">
                             {content.legend}
                         </p>
                     </div>

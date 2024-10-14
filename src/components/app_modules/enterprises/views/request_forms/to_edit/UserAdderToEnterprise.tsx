@@ -228,7 +228,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                             <div className="margin-top-15 row-wrapper">
                                 <button
                                     type="button"
-                                    className="small-general-button text | bold green touchable | icon-wrapper white-icon"
+                                    className="small-general-button text | bold green touchable | icon-wrapper"
                                     onClick={() =>
                                         registerAsUserServer(userToAdd.data)
                                     }
@@ -238,7 +238,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                                 </button>
                                 <button
                                     type="button"
-                                    className="small-general-button text | bold green touchable | icon-wrapper white-icon lb"
+                                    className="small-general-button text | bold green touchable | icon-wrapper lb"
                                     onClick={() =>
                                         registerAsSupportUser(userToAdd.data)
                                     }

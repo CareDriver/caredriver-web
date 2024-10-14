@@ -16,6 +16,7 @@ import Bars from "@/icons/Bars";
 import { checkPermission } from "@/components/guards/validators/RoleValidator";
 import { ROLES_FOR_SERVER_USER_ACTIONS } from "@/components/guards/models/PermissionsByUserRole";
 import { NAME_BUSINESS } from "@/models/Business";
+import CompanyName from "@/icons/company/CompanyName";
 
 const SideBar = () => {
     const { checkingUserAuth, user } = useContext(AuthContext);
@@ -108,27 +109,20 @@ const SideBar = () => {
         user && (
             <>
                 <nav className="sidebar-wrapper-responsive">
-                    <span className="row-wrapper baseline">
-                        <img
-                            src="/images/logo.png"
-                            className="sidebar-logo"
-                            alt=""
-                        />
-                        <span className="sidebar-name">{NAME_BUSINESS}</span>
+                    <span className="sidebar-name">
+                        <CompanyName />
                     </span>
                     <button
                         onClick={toggleNav}
-                        className="icon-wrapper nav-open-button | white-icon lb touchable"
+                        className="icon-wrapper nav-open-button | green-icon mb touchable"
                     >
                         <Bars />
                     </button>
                 </nav>
                 <nav className="sidebar-wrapper" ref={navref}>
-                    <img
-                        src="/images/logo.png"
-                        className="sidebar-logo"
-                        alt=""
-                    />
+                    <span className="sidebar-name">
+                        <CompanyName />
+                    </span>
                     {getSideBar()}
                 </nav>
             </>

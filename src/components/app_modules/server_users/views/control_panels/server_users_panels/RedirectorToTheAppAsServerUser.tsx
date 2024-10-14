@@ -16,21 +16,21 @@ interface Props {
 const RedirectorToTheAppAsServerUser: React.FC<Props> = ({ serviceType }) => {
     const renderAndroidButton = () => (
         <button
-            className="small-general-button | icon-wrapper lb white-icon"
+            className="small-general-button | icon-wrapper lb"
             onClick={openAppAsAndroid}
         >
             <AndroidIcon />
-            <span className="text | white bolder">Ir a la Aplicación</span>
+            <span className="text | bolder">Ir a la Aplicación</span>
         </button>
     );
 
     const renderMacButton = () => (
         <button
-            className="small-general-button | icon-wrapper lb white-icon"
+            className="small-general-button | icon-wrapper lb"
             onClick={openAppAsMac}
         >
             <AppleIcon />
-            <span className="text | white bolder">Ir a la Aplicación</span>
+            <span className="text | bolder">Ir a la Aplicación</span>
         </button>
     );
 

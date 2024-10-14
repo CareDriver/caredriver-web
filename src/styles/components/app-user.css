@@ -46,7 +46,7 @@
 }
 
 .service-user-wrapper.with-data:hover {
-    border-color: var(--main-light);
+    border-color: var(--second-dark);
     border-radius: 1.111111111rem;
 }
 
@@ -66,6 +66,10 @@
         flex-direction: column;
         align-content: center;
         justify-content: center;
+    }
+
+    .user-info-wrapper .users-item-photo {
+        margin-inline: auto;
     }
 
     .user-info-wrapper > * {

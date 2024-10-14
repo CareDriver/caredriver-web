@@ -16,18 +16,20 @@
     width: 100%;
     min-width: 0;
     padding: 1.388888889rem;
-    border: 0.111111111rem solid var(--gray-medium);
+    border: 0.111111111rem solid var(--gray-light);
     border-radius: 0.833333333rem;
-    transition: all ease-in 150ms;
+    transition: all ease-in 100ms;
     box-sizing: border-box;
 }
 
 .users-item.users-disable {
-    border-color: var(--yellow);
+    background-color: var(--yellow);
+    border-color: var(--second-dark);
 }
 
 .users-item:hover {
-    border-color: var(--main-light);
+    border-color: var(--second-dark);
+    background-color: var(--main-lighter);
 }
 
 .users-item-photo {
@@ -38,6 +40,7 @@
 
     border-radius: 50%;
     background-color: var(--white-medium);
+    box-shadow: 0 0 5px var(--gray-light);
 }
 
 .users-item-role {

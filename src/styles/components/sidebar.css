@@ -10,8 +10,8 @@
 
     height: 100dvh;
     min-width: 17.777777778rem;
-    width: 22%;
-    max-width: 19.444444444rem;
+    width: 25%;
+    max-width: 21.444444444rem;
     padding: 2.777777778rem 2.222222222rem;
 
     border-right: 0.0625rem solid var(--gray-medium);
@@ -37,7 +37,7 @@
 }
 
 .sidebar-wrapper:hover {
-    scrollbar-color: var(--main-light) var(--white-medium);
+    scrollbar-color: var(--gray-medium) var(--white-medium);
 }
 
 /* Para Chrome */
@@ -50,7 +50,7 @@
 }
 
 .sidebar-wrapper:hover::-webkit-scrollbar-thumb {
-    background-color: var(--main-light);
+    background-color: var(--white-medium);
 }
 
 .sidebar-wrapper::-webkit-scrollbar-track {
@@ -61,11 +61,10 @@
     width: 5.555555556rem;
 }
 
-.sidebar-name {
-    color: var(--white);
-    font-size: 1.5rem;
-    font-weight: 900;
-    line-height: 0;
+.sidebar-name > svg{
+    height: auto;
+    width: 13rem;
+    fill: var(--second-dark);
 }
 
 .sidebar-options {
@@ -84,7 +83,8 @@
     padding: 0.722222222rem 1.111111111rem;
 
     border: none;
-    transition: all ease-in 50ms;
+    transition: all ease-in-out 70ms;
+    color: var(--second-dark);
 }
 
 .sidebar-option.lb-icon > svg {
@@ -93,18 +93,32 @@
 }
 
 .sidebar-option > svg {
+    fill: var(--second-dark);
     width: 1.222222222rem;
     height: 1.222222222rem;
 }
 
 .sidebar-option > span {
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .sidebar-option:hover,
 .sidebar-option.selected {
-    background-color: var(--gray-light);
+    background-color: var(--main-lighter);
+}
+
+.sidebar-option.selected {
+    background-color: var(--second-dark-opacity);
+}
+
+.sidebar-option.selected > span {
+    font-weight: 800;
+    color: var(--main-lighter);
+}
+
+.sidebar-option.selected > svg {
+    fill: var(--main-lighter);
 }
 
 .nav-open-button {
@@ -112,7 +126,7 @@
 }
 
 .sidebar-wrapper-responsive {
-    --border-radius: 2.777777778rem;
+    --border-radius: 1.777777778rem;
     
     display: none;
     align-items: center;
@@ -121,16 +135,20 @@
     align-items: center;
 
     width: 100%;
-    padding: 1.25rem 3.75rem 1.875rem 3.75rem;
+    padding: 0.6rem 3.75rem 0.6rem 3.75rem;
     margin-inline: auto;
     border-bottom-left-radius: var(--border-radius);
     border-bottom-right-radius: var(--border-radius);
 
-    background-color: var(--second-dark);
+    background-color: var(--main-lighter);
     box-shadow: 0 5px 10px var(--second-dark-opacity);
 }
 
 @media only screen and (max-width: 1150px) {
+    .sidebar-name > svg{
+        width: 10rem;
+    }
+
     .sidebar-logo {
         width: 3.5rem;
     }

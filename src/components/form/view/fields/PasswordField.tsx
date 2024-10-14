@@ -40,7 +40,7 @@ const PasswordField: React.FC<Props> = ({ values, setter, autoFill }) => {
             <button
                 type="button"
                 onClick={toggleVisibility}
-                className="form-hide-password-button icon-wrapper | gray-icon lb"
+                className="form-hide-password-button icon-wrapper | lb"
             >
                 {isHide ? <EyeSlash /> : <Eye />}
             </button>

@@ -141,7 +141,6 @@ const FormFoChangeUserRoleToAdmin: React.FC<Props> = ({ user, adminUser }) => {
                         UserRole.BalanceRecharge,
                         UserRole.Support,
                         UserRole.SupportTwo,
-                        UserRole.Admin,
                     ]}
                 />
             </BaseForm>

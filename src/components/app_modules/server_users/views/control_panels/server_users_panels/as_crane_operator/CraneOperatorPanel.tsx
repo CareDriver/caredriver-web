@@ -25,7 +25,7 @@ const CraneOperatorPanel = () => {
     return (
         user && (
             <div className="service-form-wrapper | max-height-100">
-                <h1 className="text | big bolder green">
+                <h1 className="text | big bold green">
                     Tu solicitud fue aprobada!
                 </h1>
                 <RedirectorToTheAppAsServerUser serviceType="tow" />

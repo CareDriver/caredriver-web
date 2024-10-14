@@ -12,6 +12,8 @@
 }
 
 .inprogress-image {
+    z-index: 100;
+
     height: 50vw;
     max-height: 27.777777778rem;
 
