@@ -15,17 +15,20 @@ const MechanicPanel = () => {
 
     return (
         user && (
-            <div className="service-form-wrapper | max-height-100">
+            <div className="service-form-wrapper">
                 <h1 className="text | big bolder green">
                     Tu solicitud fue aprobada!
                 </h1>
                 <RedirectorToTheAppAsServerUser serviceType="mechanical" />
-
+                <img
+                    className="request-aproved-image"
+                    src="/images/image4.png"
+                    alt=""
+                />
                 <UserAssociatedEnterpriseRenderer
                     typeOfEnterprise="mechanical"
                     user={user}
                 />
-                <span className="circles-right-bottomv2 green"></span>
             </div>
         )
     );

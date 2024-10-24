@@ -7,7 +7,7 @@
     border-radius: 2.5rem;
     width: fit-content;
 
-    background-color: var(--white);
+    background-color: var(--main-light);
     color: var(--second-dark);
     transition: all ease-in-out 250ms;
 }
@@ -46,9 +46,9 @@
     width: 100%;
     font-size: 1.1rem;
     font-weight: bold;
-    padding: 0.8rem 1.125rem;
+    padding: 1rem 1.125rem;
     border: none;
-    border-radius: 0.625rem;
+    border-radius: 1.5rem;
 
     background-color: var(--main-light);
     color: var(--second-dark);
@@ -104,6 +104,13 @@
     background-color: var(--yellow);
     color: var(--second-dark);
 }
+
+.general-button.second-color {
+    border: none;
+    background-color: var(--second-dark);
+    color: var(--white);
+}
+
 
 .double-button-wrapper {
     overflow: hidden;

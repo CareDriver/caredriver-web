@@ -2,17 +2,17 @@
     position: relative;
     display: grid;
     grid-template-columns: auto 1fr;
-    max-width: 60%;
     place-items: center;
     gap: 1.666666667rem;
 
     margin-inline: auto;
     height: 100dvh;
+    padding: 0 15%;
 }
 
 .auth-image {
     font-size: 16px;
-    width: 22vw;
+    width: 30vw;
     min-width: 20rem;
     z-index: 0;
 }

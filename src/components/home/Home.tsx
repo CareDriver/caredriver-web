@@ -13,8 +13,7 @@ import Truck from "@/icons/Truck";
 import Soap from "@/icons/Soap";
 import { DRIVER_PLURAL } from "@/models/Business";
 import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
-import Logo from "@/icons/company/Logo";
-import CompanyName from "@/icons/company/CompanyName";
+import CompanyNameAndLogo from "@/icons/company/CompanyNameAndLogo";
 
 const Home = () => {
     const { checkingUserAuth, user } = useContext(AuthContext);
@@ -32,11 +31,8 @@ const Home = () => {
             <span className="circles"></span>
             <div className="home-sub-container | z-index-1">
                 <div className="home-sub-container-logo-name-wrapper">
-                    <span className="home-sub-container-logo">
-                        <Logo />
-                    </span>
                     <span className="home-sub-container-name">
-                        <CompanyName />
+                        <CompanyNameAndLogo />
                     </span>
                 </div>
                 <Link

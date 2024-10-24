@@ -99,6 +99,14 @@
     color: var(--white);
 }
 
+.text.purple {
+    color: var(--purple);
+}
+
+.text.purple-light {
+    color: var(--purple-light);
+}
+
 .yellow {
     color: var(--yellow);
 }

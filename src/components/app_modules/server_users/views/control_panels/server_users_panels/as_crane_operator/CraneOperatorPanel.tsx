@@ -24,11 +24,12 @@ const CraneOperatorPanel = () => {
 
     return (
         user && (
-            <div className="service-form-wrapper | max-height-100">
+            <div className="service-form-wrapper">
                 <h1 className="text | big bold green">
                     Tu solicitud fue aprobada!
                 </h1>
                 <RedirectorToTheAppAsServerUser serviceType="tow" />
+                <img className="request-aproved-image" src="/images/image3.png" alt="" />
                 <UserAssociatedEnterpriseRenderer
                     typeOfEnterprise="tow"
                     user={user}
@@ -41,7 +42,6 @@ const CraneOperatorPanel = () => {
                         vehicleType="tow"
                     />
                 )}
-                <span className="circles-right-bottomv2 green"></span>
             </div>
         )
     );

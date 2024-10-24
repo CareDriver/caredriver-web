@@ -361,7 +361,7 @@ input[type="password"] {
 
 .form-provider-option-separator {
     height: 0.125rem;
-    background-color: var(--gray-dark);
+    background-color: var(--second-dark-opacity);
 }
 
 .form-section-row {

@@ -21,6 +21,10 @@
     padding: 4.444444444rem 2.777777778rem;
 }
 
+.request-aproved-image {
+    width: 220px;
+}
+
 @media only screen and (max-width: 1150px) {
     .user-page-wrapper {
         height: auto;
