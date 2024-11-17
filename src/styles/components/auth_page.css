@@ -6,13 +6,13 @@
     gap: 1.666666667rem;
 
     margin-inline: auto;
-    height: 100dvh;
-    padding: 0 15%;
+    min-height: 100dvh;
+    width: 65%;
 }
 
 .auth-image {
     font-size: 16px;
-    width: 30vw;
+    height: 25rem;
     min-width: 20rem;
     z-index: 0;
 }
@@ -21,34 +21,42 @@
     display: none;
 }
 
-@media only screen and (max-width: 1350px) {
+@media only screen and (max-width: 1578px) {
     .auth-wrapper {
-        padding: 0px 7vw;
-        max-width: 90%;
+    width: 75%;
+
     }
 }
 
 @media only screen and (max-width: 1150px) {
     .auth-wrapper {
-        grid-template-columns: 1fr;
-        padding: 0 !important;
-        margin-bottom: 3rem;
-        justify-content: space-between;
-        height: auto;
-        gap: 6.25rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0rem;
 
-        max-width: 98%;
+        padding: 5rem 0 !important;
+        height: auto;
+        max-width: 65%;
     }
-    .auth-image {
+
+    .auth-wrapper-title {
         display: none;
-    }
-    .auth-circle-image {
-        display: inherit;
     }
 }
 
-@media only screen and (max-width: 950px) {
+@media only screen and (max-width: 780px) {
     .auth-wrapper {
-        padding: 0px 4vw;
+        max-width: 75%;
+        width: 75%;
+    }
+}
+
+@media only screen and (max-width: 550px) {
+    .auth-wrapper {
+        width: 95%;
+
+        max-width: 95%;
     }
 }

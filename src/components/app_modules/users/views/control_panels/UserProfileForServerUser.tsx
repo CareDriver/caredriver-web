@@ -16,6 +16,8 @@ import {
 import "@/styles/components/users.css";
 import { isNullOrEmptyText } from "@/validators/TextValidator";
 import FieldDeleted from "@/components/form/view/field_renderers/FieldDeleted";
+import BalanceHistoryRenderer from "../data_renderers/for_activity_in_the_app/BalanceHistoryRenderer";
+import "@/styles/components/debt-user.css";
 
 const UserProfileForServerUser = () => {
     const { user, checkingUserAuth, userProps } = useContext(AuthContext);
@@ -28,7 +30,7 @@ const UserProfileForServerUser = () => {
 
     return (
         user && (
-            <section className="user-page-wrapper | max-height-100">
+            <section className="user-page-wrapper">
                 <section className="profile-wrapper">
                     <UserPhotoRenderer photo={user.photoUrl} />
                     <div className="profile-info-wrapper">
@@ -80,7 +82,7 @@ const UserProfileForServerUser = () => {
                 <i className="separator-horizontal | max-width-60"></i>
 
                 <FormToRequestBalanceRecharge user={user} />
-                <span className="circles-right-bottomv2 green"></span>
+                <BalanceHistoryRenderer balanceHistory={user.balanceHistory}/>
             </section>
         )
     );

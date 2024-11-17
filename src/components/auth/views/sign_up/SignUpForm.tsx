@@ -27,6 +27,7 @@ import { EMPTY_USER_DATA } from "../../api/UserAuth";
 import { routeToSingIn } from "@/utils/route_builders/as_not_logged/RouteBuilderForAuth";
 import { sendVerificationCode } from "../../api/VerificationCodeSender";
 import CodeVerifier from "../verifiers/CodeVerifier";
+import AuthProviders from "../providers/AuthProviders";
 
 interface Form {
     fullName: TextFieldForm;
@@ -217,12 +218,12 @@ const SignUpForm = () => {
                     }
                 />
             </BaseForm>
-
+            <AuthProviders alternativeLegend="O registrate con"/>
             <Link
                 href={routeToSingIn()}
-                className="text | small center underline"
+                className="text | normal center"
             >
-                ¿Ya tienes cuenta? Inicia sesión
+                ¿Ya tienes cuenta? <b>Inicia sesión</b>
             </Link>
         </>
     );

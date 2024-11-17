@@ -239,7 +239,7 @@ const FormToChangeUserBalanceByAdmin = ({
 
             <Popup isOpen={isOpenPopup} close={() => setOpenPopup(false)}>
                 <div>
-                    <h2 className="text | big-medium bold">
+                    <h2 className="text | big bold">
                         Razón de cambio
                     </h2>
                     <p className="text | light">
@@ -278,7 +278,7 @@ const FormToChangeUserBalanceByAdmin = ({
                                 })),
                         }}
                         options={REASON_OF_CHANGE_TYPES}
-                        legend="Tipo de rason de cambio"
+                        legend="Tipo de razon de cambio"
                         optionTranslator={(d) =>
                             d === "bankTransactionNumber"
                                 ? "Numero de transacción bancaria"

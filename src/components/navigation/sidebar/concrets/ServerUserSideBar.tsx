@@ -27,19 +27,30 @@ import { DRIVER, DRIVER_PLURAL } from "@/models/Business";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import Phone from "@/icons/Phone";
+import { UserInterface, UserRole } from "@/interfaces/UserInterface";
+import UserRoleSideBar from "../sidebar_sections/UserRoleSideBar";
+import UserGear from "@/icons/UserGear";
+import { isUserServer } from "@/components/app_modules/users/utils/UserRoleGetter";
 
 const ServerUserSideBar = ({
     pathname,
     logout,
+    user,
 }: {
     pathname: string;
     logout: () => void;
+    user: UserInterface;
 }) => {
     const { userProps } = useContext(AuthContext);
 
     return (
         <>
-            <span className="text | medium bold | margin-top-25 margin-bottom-15">
+            {isUserServer(user) && (
+                <UserRoleSideBar customRole={"Usuario Servidor"}>
+                    <UserGear />
+                </UserRoleSideBar>
+            )}
+            <span className="text | white medium bold | margin-top-25 margin-bottom-15">
                 Servicios
             </span>
             <li className="sidebar-options margin-bottom-25">
@@ -104,7 +115,7 @@ const ServerUserSideBar = ({
                     <span>Lavadero</span>
                 </Link>
             </li>
-            <span className="text | medium bold | margin-bottom-15">
+            <span className="text | white medium bold | margin-bottom-15">
                 Registros
             </span>
 
@@ -153,7 +164,7 @@ const ServerUserSideBar = ({
                     <span>Lavaderos</span>
                 </Link>
             </li>
-            <span className="text | medium bold | margin-bottom-15">
+            <span className="text | white medium bold | margin-bottom-15">
                 Perfil
             </span>
 

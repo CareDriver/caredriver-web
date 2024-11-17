@@ -25,7 +25,7 @@ const AdminSideBar = ({
             </UserRoleSideBar>
             <RequestsSection pathname={pathname} />
 
-            <span className="text | medium bold | margin-bottom-15">
+            <span className="text | white medium bold | margin-bottom-15">
                 Registros
             </span>
             <li className="sidebar-options">
@@ -34,11 +34,11 @@ const AdminSideBar = ({
                 <RedirectToService />
             </li>
             <div>
-                <i className="separator-horizontal"></i>
+                <i className="separator-horizontal green-opacity"></i>
             </div>
             <EnterpriseRegistersSection pathname={pathname} />
 
-            <span className="text | medium bold | margin-bottom-15">
+            <span className="text | white medium bold | margin-bottom-15">
                 Perfil
             </span>
 

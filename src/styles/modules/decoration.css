@@ -63,6 +63,10 @@
     margin: 0.833333333rem 0;
 }
 
+.separator-horizontal.green-opacity {
+    background-color: #565d50;
+}
+
 .disabled {
     opacity: 0.8;
 }

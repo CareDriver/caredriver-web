@@ -26,10 +26,10 @@ const BalanceHistoryRenderer = ({
     );
 
     return (
-        balanceHistory && (
+        balanceHistory && balanceHistory.length > 0 && (
             <div className="margin-top-50">
                 <h2 className="text | bold gray-darker">
-                    Historial de las actualizaciones del saldo del usuario
+                    Historial de saldo
                 </h2>
                 <div className="debt-wrapper max-width-80">
                     {orderHistory().map((balance, i) => (

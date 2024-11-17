@@ -39,9 +39,9 @@ const PhoneField: React.FC<Props> = ({ values, setter }) => {
                     padding: "1.666666667rem 1.111111111rem",
                     fontSize: "1.111111111rem",
                     fontWeight: "600",
-                    borderTopRightRadius: "0.833333333rem",
-                    borderBottomRightRadius: "0.833333333rem",
-                    border: !isFocused ? "0.0625rem solid var(--gray-medium)" : "0.15rem solid var(--second-dark)",
+                    borderTopRightRadius: "var(--rounded-field)",
+                    borderBottomRightRadius: "var(--rounded-field)",
+                    border: !isFocused ? "0.0625rem solid var(--gray-medium)" : "0.1rem solid var(--second-dark)",
                 }}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
@@ -49,9 +49,9 @@ const PhoneField: React.FC<Props> = ({ values, setter }) => {
                     buttonStyle: {
                         height: "100%",
                         padding: "0 0.555555556rem",
-                        borderTopLeftRadius: "0.833333333rem",
-                        borderBottomLeftRadius: "0.833333333rem",
-                        border: !isFocused ? "0.0625rem solid var(--gray-medium)" : "0.15rem solid var(--second-dark)",
+                        borderTopLeftRadius: "var(--rounded-field)",
+                        borderBottomLeftRadius: "var(--rounded-field)",
+                        border: !isFocused ? "0.0625rem solid var(--gray-medium)" : "0.1rem solid var(--second-dark)",
                         borderRight: !isFocused ? "0.0625rem solid var(--gray-medium)" : "0.05rem solid var(--second-dark)"
                     },
                     flagStyle: {

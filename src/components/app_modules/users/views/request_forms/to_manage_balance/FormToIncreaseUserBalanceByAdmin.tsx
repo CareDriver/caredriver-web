@@ -242,7 +242,7 @@ const FormToIncreaseUserBalanceByAdmin = ({
 
             <Popup isOpen={isOpenPopup} close={() => setOpenPopup(false)}>
                 <div>
-                    <h2 className="text | big-medium bold">
+                    <h2 className="text | big bold">
                         Razón para incrementar el Saldo
                     </h2>
                     <p className="text | light">

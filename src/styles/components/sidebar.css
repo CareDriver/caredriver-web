@@ -14,8 +14,8 @@
     max-width: 22.444444444rem;
     padding: 3rem 2.8rem;
 
-    border-right: 0.0625rem solid var(--gray-medium);
-    background-color: var(--white);
+    /* border-right: 0.0625rem solid var(--gray-medium); */
+    background-color: var(--second-dark);
     transition: all ease-in-out 200ms;
 }
 
@@ -37,7 +37,7 @@
 }
 
 .sidebar-wrapper:hover {
-    scrollbar-color: var(--gray-medium) var(--white-medium);
+    scrollbar-color: var(--gray-dark) var(--second-dark);
 }
 
 /* Para Chrome */
@@ -50,11 +50,11 @@
 }
 
 .sidebar-wrapper:hover::-webkit-scrollbar-thumb {
-    background-color: var(--white-medium);
+    background-color: var(--second-dark);
 }
 
 .sidebar-wrapper::-webkit-scrollbar-track {
-    background-color: var(--white-medium);
+    background-color: var(--second-dark);
 }
 
 .sidebar-logo {
@@ -94,7 +94,8 @@
     border: none;
     transition: all ease-in-out 70ms;
 
-    --color-option: var(--second-dark-opacity);
+    --color-option: #c7c7c7;
+    color: var(--color-option);
 }
 
 .sidebar-option.lb-icon > svg {
@@ -116,20 +117,20 @@
 }
 
 .sidebar-option:hover {
-    background-color: var(--gray-light);
+    background-color: var(--second-dark-opacity);
 }
 
 .sidebar-option.selected {
-    background-color: var(--second-dark);
+    background-color: var(--main-light);
 }
 
 .sidebar-option.selected > span {
     font-weight: 800;
-    color: var(--white);
+    color: var(--second-dark);
 }
 
 .sidebar-option.selected > svg {
-    fill: var(--main-light);
+    fill: var(--second-dark);
 }
 
 .nav-open-button {

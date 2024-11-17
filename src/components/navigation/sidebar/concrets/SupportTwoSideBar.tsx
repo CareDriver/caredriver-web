@@ -24,7 +24,7 @@ const SupportTwoSideBar = ({
 
             <RequestsSection pathname={pathname} />
 
-            <span className="text | medium bold | margin-bottom-15">
+            <span className="text | white medium bold | margin-bottom-15">
                 Registros
             </span>
             <li className="sidebar-options">
@@ -32,7 +32,7 @@ const SupportTwoSideBar = ({
                 <RedirectToService />
             </li>
 
-            <span className="text | medium bold | margin-top-25 margin-bottom-15">
+            <span className="text | white medium bold | margin-top-25 margin-bottom-15">
                 Perfil
             </span>
 

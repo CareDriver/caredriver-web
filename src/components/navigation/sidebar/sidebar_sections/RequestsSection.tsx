@@ -22,7 +22,7 @@ import Link from "next/link";
 const RequestsSection = ({ pathname }: { pathname: string }) => {
     return (
         <>
-            <span className="text | medium bold | margin-bottom-15">
+            <span className="text | white medium bold | margin-bottom-15">
                 Solicitudes
             </span>
             <li className="sidebar-options | margin-bottom-25">
@@ -71,7 +71,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     <span>Lavadero</span>
                 </Link>
                 <div>
-                    <i className="separator-horizontal"></i>
+                    <i className="separator-horizontal green-opacity"></i>
                 </div>
 
                 <Link
@@ -85,6 +85,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     <Taxi />
                     <span>Edicion de Emp. de {toCapitalize(DRIVER_PLURAL)}</span>
                 </Link>
+
                 <Link
                     href={routeToRequestsToEditEnterpriseAsAdmin("mechanical")}
                     className={`sidebar-option ${
@@ -96,7 +97,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                     }`}
                 >
                     <Warehouse />
-                    Edicion de Talleres
+                    <span>Edicion de Talleres</span>
                 </Link>
                 <Link
                     href={routeToRequestsToEditEnterpriseAsAdmin("tow")}
@@ -122,7 +123,7 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
                 </Link>
 
                 <div>
-                    <i className="separator-horizontal"></i>
+                    <i className="separator-horizontal green-opacity"></i>
                 </div>
                 <Link
                     href={routeToUserRequestsToRenewPhotoAsAdmin()}

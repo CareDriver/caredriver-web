@@ -4,7 +4,6 @@ import { AuthContext } from "@/context/AuthContext";
 import { toast } from "react-toastify";
 import PageLoading from "@/components/loaders/PageLoading";
 import { AuthenticatorContext } from "../../contexts/AuthenticatorContext";
-import AuthProviders from "../providers/AuthProviders";
 import "@/styles/components/auth_page.css";
 import { routeToRedirector } from "@/utils/route_builders/as_not_logged/RouteBuilderForRedirectors";
 
@@ -28,19 +27,14 @@ const AuthenticatorContainer: React.FC<Props> = ({ authTitle, children }) => {
         <PageLoading />
     ) : (
         <main className="auth-wrapper">
-            <div className="top-middle-cicle auth-circle-image">
-                <img src="/images/car.png" alt="" />
-            </div>
             <img src="/images/image1.png" className="auth-image" alt="" />
-
             <section
                 className="form-container"
                 data-state={(authWithProvider || loading) && "loading"}
             >
-                <h1 className="text | bigger bold center | margin-bottom-15">
+                <h1 className="text auth-wrapper-title | bigger bold center">
                     {authTitle}
                 </h1>
-                <AuthProviders />
                 {children}
             </section>
         </main>

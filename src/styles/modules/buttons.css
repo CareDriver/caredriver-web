@@ -1,36 +1,23 @@
 .action-button {
     position: relative;
-    overflow: hidden;
 
-    padding: 1.25rem 3.25rem;
+    padding: 1rem 2rem;
 
     border-radius: 2.5rem;
     width: fit-content;
 
     background-color: var(--main-light);
     color: var(--second-dark);
-    transition: all ease-in-out 250ms;
-}
-
-.action-button > svg {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 110%;
-
-    transition: all ease-in-out 150ms;
+    transition: all ease-in-out 200ms;
 }
 
 .action-button:hover {
-    padding-left: 6rem;
-}
-
-.action-button:hover > svg {
-    right: 78%;
+    border-radius: 1.5rem;
+    transform: scale(1.04);
 }
 
 .action-button:active {
-    transform: scale(0.7);
+    transform: scale(0.9);
 }
 
 .touchable {
@@ -45,7 +32,7 @@
 .general-button {
     width: 100%;
     font-size: 1.1rem;
-    font-weight: bold;
+    font-weight: 500;
     padding: 1rem 1.125rem;
     border: none;
     border-radius: 1.5rem;
@@ -110,7 +97,6 @@
     background-color: var(--second-dark);
     color: var(--white);
 }
-
 
 .double-button-wrapper {
     overflow: hidden;
@@ -185,13 +171,12 @@
     color: var(--second-dark);
 }
 
-.small-general-button.gray > svg{
+.small-general-button.gray > svg {
     fill: var(--second-dark) !important;
 }
 
 .small-general-button.gray:hover {
     background-color: var(--main-lighter);
-
 }
 
 .small-general-button.yellow {
@@ -233,3 +218,13 @@
 .pointer-option {
     cursor: pointer;
 }
+
+/* @media only screen and (max-width: 492px) {
+    .action-button {
+        padding: 1rem 2rem;
+    }
+    
+    .action-button .text {
+        font-size: 1.5rem !important;
+    }
+} */

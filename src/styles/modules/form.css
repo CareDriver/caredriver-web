@@ -54,7 +54,7 @@
 .form-section-map {
     overflow: hidden;
 
-    border-radius: 0.9375rem;
+    border-radius: var(--rounded-field);
     border: 0.0625rem solid var(--gray-medium);
 }
 
@@ -64,7 +64,7 @@
     padding: var(--padding-field);
 
     border: 0.0625rem solid var(--gray-medium);
-    border-radius: 0.9375rem;
+    border-radius: var(--rounded-field);
     background-color: var(--white);
 }
 
@@ -105,8 +105,8 @@
 .form-section > small,
 .form-section-message {
     color: var(--red);
-    font-size: 0.9rem;
-    font-weight: 700;
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
 .form-section-message.success {
@@ -118,7 +118,7 @@ input[type="password"] {
 }
 
 .form-section-input:is(:focus) {
-    border: 0.15rem solid var(--second-dark);
+    border: 0.1rem solid var(--second-dark);
 }
 
 .form-section-legend {
@@ -130,9 +130,9 @@ input[type="password"] {
     font-size: 1.111111111rem;
     font-weight: 600;
     padding: 0 0.25rem;
-    border-radius: 0.3125rem;
+    border-radius: var(--rounded-field);
 
-    color: var(--gray-darker);
+    color: var(--gray-dark);
     background-color: var(--white);
     transition: all ease-in 150ms;
     pointer-events: none;
@@ -142,13 +142,14 @@ input[type="password"] {
 .form-section-legend.focused {
     top: calc(-1 * (var(--padding-field) - 0.5125rem));
     font-size: 0.833333333rem;
-    font-weight: 700;
+    font-weight: 600;
+    color: var(--second-darker);
 }
 
 .form-section-input:is(:focus) ~ legend{
     background-color: var(--second-dark);
     border: 0.1em solid var(--second-dark);
-    font-weight: 700;
+    font-weight: 600;
     color: var(--white);
 }
 
@@ -184,7 +185,7 @@ input[type="password"] {
     position: relative;
 
     padding: 3.333333333rem 1.111111111rem;
-    border-radius: 0.833333333rem;
+    border-radius: var(--rounded-field);
     border: 0.166666667rem solid var(--border-color);
 
     border-style: dashed;
@@ -206,7 +207,7 @@ input[type="password"] {
     justify-content: center;
     position: relative;
 
-    border-radius: 0.833333333rem;
+    border-radius: var(--rounded-field);
     border: 0.055555556rem solid var(--gray-medium);
     background-color: var(--gray-lighter);
 }
@@ -214,7 +215,7 @@ input[type="password"] {
 .form-section-uploaded-image {
     width: 100%;
     height: 35vh;
-    border-radius: 0.833333333rem;
+    border-radius: var(--rounded-field);
 
     object-fit: cover;
 }
@@ -247,7 +248,7 @@ input[type="password"] {
     padding: 1.111111111rem;
     border: 0.166666667rem solid var(--red);
     border-style: dotted;
-    border-radius: 0.833333333rem;
+    border-radius: var(--rounded-field);
 }
 
 .form-section-camera-uploader {
@@ -258,7 +259,7 @@ input[type="password"] {
     overflow: hidden;
 
     height: 30vh;
-    border-radius: 0.833333333rem;
+    border-radius: var(--rounded-field);
     border: 0.277777778rem double var(--border-color);
 
     background-color: var(--background-color);
@@ -315,7 +316,7 @@ input[type="password"] {
 .form-section-uploaded-file-pdf {
     width: 100%;
     min-height: 40vh;
-    border-radius: 0.833333333rem;
+    border-radius: var(--rounded-field);
 }
 
 .form-section-uploaded-file-pdf.renderer-pdf {
@@ -331,8 +332,11 @@ input[type="password"] {
 }
 
 .form-provider-auth-button {
-    padding-top: 0.625rem;
-    padding-bottom: 0.625rem;
+    padding: 1rem 0;
+    border: none;
+    border-radius: 2.5rem;
+
+    background-color: var(--second-dark);
 }
 
 .form-provider-auth-button-content {
@@ -341,7 +345,8 @@ input[type="password"] {
     justify-content: center;
     gap: 0.625rem;
 
-    font-weight: 500;
+
+    color: var(--white);
 }
 
 .form-provider-option {
@@ -355,11 +360,13 @@ input[type="password"] {
 
 .form-provider-option-o {
     padding: 0 0.625rem;
-    font-weight: 700;
+    font-weight: 600;
+
+    color: var(--second-dark);
 }
 
 .form-provider-option-separator {
-    height: 0.125rem;
+    height: 0.11rem;
     background-color: var(--second-dark-opacity);
 }
 

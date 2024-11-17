@@ -115,6 +115,10 @@
     color: var(--second-dark);
 }
 
+.green-light {
+    color: var(--main-light);
+}
+
 .capitalize {
     text-transform: capitalize;
 }

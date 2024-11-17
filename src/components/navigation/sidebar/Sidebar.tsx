@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 import "@/styles/components/sidebar.css";
 import "@/styles/base/reset.css";
-import { useContext, useRef } from "react";
+import { use, useContext, useRef } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { UserRole } from "@/interfaces/UserInterface";
 import AdminSideBar from "./concrets/AdminSideBar";
@@ -18,7 +18,6 @@ import { ROLES_FOR_SERVER_USER_ACTIONS } from "@/components/guards/models/Permis
 import CompanyName from "@/icons/company/CompanyName";
 import CompanyPeet from "@/icons/company/CompanyPeet";
 import CompanyNameWithPeetWhite from "@/icons/company/CompanyNameWithPeetWhite";
-import CompanyNameWithPeet from "@/icons/company/CompanyNameWithPeet";
 
 const SideBar = () => {
     const { checkingUserAuth, user } = useContext(AuthContext);
@@ -65,7 +64,7 @@ const SideBar = () => {
                 checkPermission(user.role, ROLES_FOR_SERVER_USER_ACTIONS)
             ) {
                 return (
-                    <ServerUserSideBar logout={logout} pathname={pathname} />
+                    <ServerUserSideBar logout={logout} pathname={pathname} user={user} />
                 );
             } else {
                 switch (user.role) {
@@ -99,6 +98,7 @@ const SideBar = () => {
                             <ServerUserSideBar
                                 logout={logout}
                                 pathname={pathname}
+                                user={user}
                             />
                         );
                 }
@@ -124,7 +124,7 @@ const SideBar = () => {
                 </nav>
                 <nav className="sidebar-wrapper" ref={navref}>
                     <span className="sidebar-name">
-                        <CompanyNameWithPeet />
+                        <CompanyNameWithPeetWhite />
                     </span>
                     {getSideBar()}
                 </nav>

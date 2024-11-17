@@ -13,6 +13,7 @@ import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import { TextField as TextFieldForm } from "@/components/form/models/FormFields";
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import { routeToSingUp } from "@/utils/route_builders/as_not_logged/RouteBuilderForAuth";
+import AuthProviders from "../providers/AuthProviders";
 
 interface Form {
     email: TextFieldForm;
@@ -83,7 +84,8 @@ const SignInForm = () => {
                             isValid: isValid,
                             loading: loading,
                         },
-                    },
+                    
+                    }
                 }}
                 behavior={{
                     loading: loading,
@@ -101,11 +103,12 @@ const SignInForm = () => {
                     }
                 />
             </BaseForm>
+            <AuthProviders alternativeLegend="O inicia sesion con"/>
             <Link
                 href={routeToSingUp()}
-                className="text | underline medium normal center | margin-top-15"
+                className="text | normal center"
             >
-                ¿Todavía no tienes cuenta? Regístrate ahora
+                ¿Aun no tienes una cuenta? <b>Crea una cuenta</b>
             </Link>
         </>
     );

@@ -42,7 +42,7 @@
 }
 
 .icon-wrapper.green-light-icon > svg {
-    fill: var(--second-dark);
+    fill: var(--main-light);
 }
 
 
