@@ -147,7 +147,7 @@ const ConsentForm: React.FC<Props> = ({ id, moduleTarget, children }) => {
             <Popup isOpen={true} close={cancelar}>
                 <div className="margin-bottom-25">
                     <div>
-                        <h2 className="text | big-medium bolder">
+                        <h2 className="text | big-medium bold">
                             Justificación para continuar
                         </h2>
                         <p className="text | light">

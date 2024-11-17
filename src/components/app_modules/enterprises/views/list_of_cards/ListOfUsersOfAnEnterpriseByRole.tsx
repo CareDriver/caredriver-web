@@ -89,7 +89,7 @@ const ListOfUsersOfAnEnterpriseByRole: React.FC<Props> = ({
     return (
         <div className="service-form-wrapper">
             <h1 className="text | big bold">
-                Usuarios <i className="text | big bolder">{UserRoleEnterpriseRender[role]}</i>
+                Usuarios <i className="text | big bold">{UserRoleEnterpriseRender[role]}</i>
             </h1>
             {fetchedUsers.users.length === 0 && !fetchedUsers.hasMore ? (
                 <div>Ningún usuario registrado</div>
@@ -121,7 +121,7 @@ const ListOfUsersOfAnEnterpriseByRole: React.FC<Props> = ({
 
                     {!selectedUser.deleted && (
                         <div className="margin-top-15 margin-bottom-50">
-                            <h3 className="icon-wrapper | text bolder">
+                            <h3 className="icon-wrapper | text bold">
                                 <HelmetSafety />
                                 Servicios realizados
                             </h3>

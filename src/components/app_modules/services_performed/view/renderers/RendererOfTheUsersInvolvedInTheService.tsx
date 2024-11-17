@@ -37,7 +37,7 @@ const RendererOfTheUsersInvolvedInTheService = ({
             <div className="user-info-wrapper">
                 <UserPhotoRenderer photo={user.photoUrl} />
                 <div className="user-info-subwrapper">
-                    <h3 className="text | big-medium-v4 bolder">
+                    <h3 className="text | big-medium-v4 bold">
                         {user.fullName}
                     </h3>
                     {user.email && (
@@ -99,7 +99,7 @@ const RendererOfTheUsersInvolvedInTheService = ({
     return (
         <>
             <div className="margin-top-50 | max-width-60">
-                <h2 className="text icon-wrapper | medium-big bolder margin-bottom-15">
+                <h2 className="text icon-wrapper | medium-big bold margin-bottom-15">
                     <HelmetSafety /> Usuario servidor
                 </h2>
 
@@ -114,7 +114,7 @@ const RendererOfTheUsersInvolvedInTheService = ({
                 )}
             </div>
             <div className="margin-top-25 margin-bottom-25 | max-width-60">
-                <h2 className="text icon-wrapper | medium-big bolder margin-bottom-15">
+                <h2 className="text icon-wrapper | medium-big bold margin-bottom-15">
                     <UserIcon /> Usuario solicitador del servicio
                 </h2>
                 {reqUser === null ? (

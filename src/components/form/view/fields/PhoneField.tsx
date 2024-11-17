@@ -41,7 +41,6 @@ const PhoneField: React.FC<Props> = ({ values, setter }) => {
                     fontWeight: "600",
                     borderTopRightRadius: "0.833333333rem",
                     borderBottomRightRadius: "0.833333333rem",
-                    backgroundColor: !isFocused ? "white" : "var(--main-lighter)",
                     border: !isFocused ? "0.0625rem solid var(--gray-medium)" : "0.15rem solid var(--second-dark)",
                 }}
                 onFocus={handleFocus}
@@ -52,7 +51,6 @@ const PhoneField: React.FC<Props> = ({ values, setter }) => {
                         padding: "0 0.555555556rem",
                         borderTopLeftRadius: "0.833333333rem",
                         borderBottomLeftRadius: "0.833333333rem",
-                        backgroundColor: !isFocused ? "white" : "var(--main-lighter)",
                         border: !isFocused ? "0.0625rem solid var(--gray-medium)" : "0.15rem solid var(--second-dark)",
                         borderRight: !isFocused ? "0.0625rem solid var(--gray-medium)" : "0.05rem solid var(--second-dark)"
                     },

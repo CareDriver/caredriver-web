@@ -64,7 +64,7 @@ const FormToChangeTheMinimumUserBalance = ({
 
     return (
         <section className="profile-info-wrapper | margin-top-50 max-width-60">
-            <h2 className="text medium-big bolder | icon-wrapper lb">
+            <h2 className="text medium-big bold | icon-wrapper lb">
                 <MoneyBillWave />
                 Saldo mínimo |{" "}
                 {user.minimumBalance
@@ -84,7 +84,7 @@ const FormToChangeTheMinimumUserBalance = ({
                         content: {
                             legend: "Cambiar saldo mínimo",
                             buttonClassStyle:
-                                "small-general-button | text bolder",
+                                "small-general-button | text bold",
                         },
                         behavior: {
                             loading: formState.loading,

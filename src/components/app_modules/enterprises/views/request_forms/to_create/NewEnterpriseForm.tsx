@@ -154,7 +154,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
 
     return (
         <section className="service-form-wrapper">
-            <h1 className="text | big bolder">Crear nueva empresa</h1>
+            <h1 className="text | big bold">Crear nueva empresa</h1>
             <BaseForm
                 content={{
                     button: {
@@ -239,7 +239,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                     }}
                 />
                 <div>
-                    <h3 className="text | bolder | icon-wrapper lb">
+                    <h3 className="text | bold | icon-wrapper lb">
                         <Handshake />
                         Convenio con {NAME_BUSINESS} (Opcional)
                     </h3>

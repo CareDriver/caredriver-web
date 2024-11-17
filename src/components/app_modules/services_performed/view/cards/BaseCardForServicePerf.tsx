@@ -32,12 +32,12 @@ const BaseCardForServicePerf: React.FC<Props> = ({
     const renderBodyCard = () => (
         <>
             {service.createdAt && (
-                <h3 className="text | wrap medium-big bolder">
+                <h3 className="text | wrap medium-big bold">
                     {timestampDateInSpanish(service.createdAt)}
                 </h3>
             )}
             {service.price && service.price.price && (
-                <h3 className="text | bolder margin-bottom-25">
+                <h3 className="text | bold margin-bottom-25">
                     {service.price.price} {service.price.currency}
                 </h3>
             )}

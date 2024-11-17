@@ -87,7 +87,7 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                 <UserPhotoRenderer photo={user.photoUrl} />
 
                 <div className="user-info-subwrapper">
-                    <h1 className="text | big bolder capitalize wrap">
+                    <h1 className="text | big bold capitalize wrap">
                         {cutTextWithDotsByLength(
                             user.fullName,
                             MAX_LENGTH_FOR_NAMES,
@@ -134,7 +134,7 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                                             </h4>
                                         )}
                                     <h4
-                                        className={`text | medium bolder ${role.color}`}
+                                        className={`text | medium bold ${role.color}`}
                                     >
                                         {role.text}
                                     </h4>

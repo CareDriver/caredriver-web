@@ -103,7 +103,7 @@ const FormToChangeUserLocation = () => {
     return (
         user && (
             <section className="service-form-wrapper | max-height-100">
-                <h1 className="text | big bolder">Cambia tu Localización</h1>
+                <h1 className="text | big bold">Cambia tu Localización</h1>
                 <p className="text | light">
                     Podrás mandar un mensaje de solicitud por WhatsApp para
                     cambiar el grupo donde perteneces.

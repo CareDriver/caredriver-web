@@ -28,7 +28,7 @@ const UserContactsRendererForForm: React.FC<Props> = ({
                     <button
                         type="button"
                         onClick={() => contactUserByEmail(email)}
-                        className="icon-wrapper text general-button | red white-icon bolder mb"
+                        className="icon-wrapper text general-button | red white-icon bold mb"
                     >
                         <Envelope /> Contactar por Correo
                     </button>
@@ -37,7 +37,7 @@ const UserContactsRendererForForm: React.FC<Props> = ({
                     <button
                         type="button"
                         onClick={() => contactUserByWhatsapp(phoneNumber)}
-                        className="icon-wrapper text general-button | white-icon bolder mb"
+                        className="icon-wrapper text general-button | bold mb"
                     >
                         <Whatsapp /> Contactar por WhatsApp
                     </button>
@@ -48,7 +48,7 @@ const UserContactsRendererForForm: React.FC<Props> = ({
                         onClick={() =>
                             contactUserByWhatsapp(alternativePhoneNumber)
                         }
-                        className="icon-wrapper text general-button | white-icon bolder mb"
+                        className="icon-wrapper text general-button | white-icon bold mb"
                     >
                         <Whatsapp />{" "}
                         <div className="column-wrapper | column-right">

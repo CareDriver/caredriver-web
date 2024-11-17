@@ -25,7 +25,7 @@ const AdminSideBar = ({
             </UserRoleSideBar>
             <RequestsSection pathname={pathname} />
 
-            <span className="text | medium bolder | margin-bottom-15">
+            <span className="text | medium bold | margin-bottom-15">
                 Registros
             </span>
             <li className="sidebar-options">
@@ -38,7 +38,7 @@ const AdminSideBar = ({
             </div>
             <EnterpriseRegistersSection pathname={pathname} />
 
-            <span className="text | medium bolder | margin-bottom-15">
+            <span className="text | medium bold | margin-bottom-15">
                 Perfil
             </span>
 

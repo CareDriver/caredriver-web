@@ -323,7 +323,7 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
         form && (
             <div className="service-form-wrapper">
                 <div className="max-width-60">
-                    <h1 className="text | big bolder">
+                    <h1 className="text | big bold">
                         Actualiza tu licencia de conducir
                     </h1>
                     <p className="text | light">

@@ -245,7 +245,7 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                                 isValid: formState.isValid,
                             },
                         },
-                        styleClasses: "max-width-60",
+                        styleClasses: "max-width-80",
                     }}
                     behavior={{
                         loading: formState.loading,

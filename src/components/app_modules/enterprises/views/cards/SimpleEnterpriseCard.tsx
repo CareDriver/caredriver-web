@@ -17,7 +17,7 @@ const SimpleEnterpriseCard = ({
 }) => {
     return (
         <Link href={route} className="enterprise-item | touchable">
-            <h3 className="text | medium center bolder capitalize margin-bottom-15 wrap">
+            <h3 className="text | medium center bold capitalize margin-bottom-15 wrap">
                 {cutTextWithDotsByLength(
                     enterprise.name,
                     MAX_LENGTH_FOR_NAMES_DISPLAY,
@@ -35,7 +35,7 @@ const SimpleEnterpriseCard = ({
             <h4 className="text center">{enterprise.location}</h4>
             <h4 className="text | center">{enterprise.phone}</h4>
             {enterprise.commition && (
-                <h4 className="text | green bolder center icon-wrapper lb green-icon">
+                <h4 className="text | green bold center icon-wrapper lb green-icon">
                     <Handshake /> Convenio con {NAME_BUSINESS}
                 </h4>
             )}

@@ -12,7 +12,7 @@ const SimpleUserCard = ({ user }: { user: UserInterface }) => {
         <div className="users-item | margin-top-25">
             <UserPhotoRenderer photo={user.photoUrl} />
             <div className="full-width">
-                <h2 className="text | bolder medium-big capitalize wrap">
+                <h2 className="text | bold medium-big capitalize wrap">
                     {cutTextWithDotsByLength(
                         user.fullName,
                         MAX_LENGTH_FOR_NAMES_DISPLAY,

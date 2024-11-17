@@ -236,7 +236,7 @@ const FormToChangeAssociatedEnterprise: React.FC<Props> = ({
 
     return (
         <div className="service-form-wrapper">
-            <h1 className={`text | big bolder max-width-90`}>
+            <h1 className={`text | big bold max-width-90`}>
                 Asociarse a nueva empresa
             </h1>
             <BaseForm
@@ -257,7 +257,7 @@ const FormToChangeAssociatedEnterprise: React.FC<Props> = ({
                     onSummit: handleSubmit,
                 }}
             >
-                <h3 className="text | bolder | icon-wrapper">
+                <h3 className="text | bold | icon-wrapper">
                     <NoteSticky />
                     Justificación
                 </h3>
@@ -270,7 +270,7 @@ const FormToChangeAssociatedEnterprise: React.FC<Props> = ({
                     }}
                     legend="Rason de cambio de empresa"
                 />
-                <h3 className="text | bolder | icon-wrapper">
+                <h3 className="text | bold | icon-wrapper">
                     <Building />
                     Nueva empresa
                 </h3>

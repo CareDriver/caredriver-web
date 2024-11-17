@@ -15,7 +15,7 @@ const LicenseCard = ({ license }: { license: LicenseUpdateReq }) => {
             href={routeToReviewRequestToRenewLicenseAsAdmin(license.id)}
             className="personal-data-req-item | left touchable"
         >
-            <h3 className="text | wrap medium bolder capitalize | icon-wrapper">
+            <h3 className="text | wrap medium bold capitalize | icon-wrapper">
                 <UserIcon />
                 {cutTextWithDotsByLength(
                     license.userName,

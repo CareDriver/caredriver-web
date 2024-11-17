@@ -17,7 +17,7 @@ const UserCardWithBranding = ({
             href={routeToNoFound()}
             className="personal-data-req-item | fill-image touchable"
         >
-            <h2 className="text | bolder medium-big capitalize wrap">
+            <h2 className="text | bold medium-big capitalize wrap">
                 {cutTextWithDotsByLength(
                     brandingReq.userName,
                     MAX_LENGTH_FOR_NAMES_DISPLAY,

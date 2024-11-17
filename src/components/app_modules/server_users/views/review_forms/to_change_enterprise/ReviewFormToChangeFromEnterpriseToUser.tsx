@@ -282,7 +282,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
 
     return (
         <div className="service-form-wrapper | max-width-60">
-            <h1 className="text | big bolder">
+            <h1 className="text | big bold">
                 Cambio de {ENTERPRISE_TO_SPANISH[request.serviceType]}
             </h1>
             <div className="row-wrapper | gap-20">

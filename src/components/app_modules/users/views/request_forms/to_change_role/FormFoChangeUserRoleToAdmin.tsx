@@ -105,7 +105,7 @@ const FormFoChangeUserRoleToAdmin: React.FC<Props> = ({ user, adminUser }) => {
 
     return (
         <section className="profile-info-wrapper | margin-top-50 max-width-60">
-            <h2 className="icon-wrapper lb | text medium-big bolder">
+            <h2 className="icon-wrapper lb | text medium-big bold">
                 <UserLock />
                 Rol del Usuario
             </h2>
@@ -116,7 +116,7 @@ const FormFoChangeUserRoleToAdmin: React.FC<Props> = ({ user, adminUser }) => {
                         content: {
                             legend: "Cambiar rol",
                             buttonClassStyle:
-                                "small-general-button | text bolder",
+                                "small-general-button | text bold",
                         },
                         behavior: {
                             loading: formState.loading,
@@ -146,7 +146,7 @@ const FormFoChangeUserRoleToAdmin: React.FC<Props> = ({ user, adminUser }) => {
             </BaseForm>
             <Popup isOpen={isOpenPopup} close={() => setOpenPopup(false)}>
                 <div className="margin-bottom-25">
-                    <h2 className="text | big-medium bolder">
+                    <h2 className="text | big-medium bold">
                         Razón del cambio de rol
                     </h2>
                     <p className="text | light">

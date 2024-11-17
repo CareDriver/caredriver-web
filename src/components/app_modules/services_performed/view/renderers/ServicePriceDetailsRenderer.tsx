@@ -23,7 +23,7 @@ const ServicePriceDetailsRenderer = ({
                     <div className="separator-horizontal"></div>
                 </div>
                 <div className="max-width-80">
-                    <h2 className="text icon-wrapper | medium-big bolder margin-bottom-15">
+                    <h2 className="text icon-wrapper | medium-big bold margin-bottom-15">
                         <MoneyBillWave /> Detalles del pago
                     </h2>
 

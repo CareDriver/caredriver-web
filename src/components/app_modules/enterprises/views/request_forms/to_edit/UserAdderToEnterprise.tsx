@@ -191,9 +191,9 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
         <>
             {!userToAdd.role && (
                 <div className="service-form-wrapper">
-                    <h1 className="text | big bolder">Agregar usuarios</h1>
+                    <h1 className="text | big bold">Agregar usuarios</h1>
                     <div className="margin-top-25">
-                        <h2 className="text | medium-big bolder | icon-wrapper lb">
+                        <h2 className="text | medium-big bold | icon-wrapper lb">
                             <Users />
                             Registrar usuarios servidores | Agregar usuarios
                             soporte
@@ -258,7 +258,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                             <div className="margin-top-25">
                                 <div className="separator-horizontal"></div>
                                 <div className="margin-top-25">
-                                    <h1 className="text | medium-big bolder | icon-wrapper">
+                                    <h1 className="text | medium-big bold | icon-wrapper">
                                         <UserTie />
                                         Registrate como usuario servidor
                                     </h1>

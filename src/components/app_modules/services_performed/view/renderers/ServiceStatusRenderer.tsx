@@ -17,7 +17,7 @@ const ServiceStatusRenderer = ({
     if (service.finished) {
         return (
             <h2
-                className={`icon-wrapper green-icon | text ${SIZE_FONT} bolder capitalize `.concat(
+                className={`icon-wrapper green-icon | text ${SIZE_FONT} bold capitalize `.concat(
                     serviceState.styleFont,
                 )}
             >
@@ -28,7 +28,7 @@ const ServiceStatusRenderer = ({
     } else if (service.canceled) {
         return (
             <h2
-                className={`icon-wrapper red-icon | text | ${SIZE_FONT} bolder capitalize `.concat(
+                className={`icon-wrapper red-icon | text | ${SIZE_FONT} bold capitalize `.concat(
                     serviceState.styleFont,
                 )}
             >
@@ -39,7 +39,7 @@ const ServiceStatusRenderer = ({
     } else {
         return (
             <h2
-                className={`icon-wrapper yellow-icon | text | ${SIZE_FONT} bolder capitalize `.concat(
+                className={`icon-wrapper yellow-icon | text | ${SIZE_FONT} bold capitalize `.concat(
                     serviceState.styleFont,
                 )}
             >

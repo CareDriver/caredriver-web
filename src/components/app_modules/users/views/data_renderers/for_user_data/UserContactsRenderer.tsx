@@ -48,7 +48,7 @@ const UserContactsRenderer: React.FC<Props> = ({
                 <button
                     type="button"
                     onClick={() => contactUserByEmail(email)}
-                    className="icon-wrapper text circle-button | red white-icon bolder lb touchable"
+                    className="icon-wrapper text circle-button | red white-icon bold lb touchable"
                 >
                     <div className="triangle red"></div>
                     <Envelope />

@@ -194,7 +194,7 @@ const FormToIncreaseUserBalanceByAdmin = ({
 
     return (
         <section className="profile-info-wrapper | margin-top-50 max-width-60">
-            <h2 className="text medium-big bolder | icon-wrapper lb">
+            <h2 className="text medium-big bold | icon-wrapper lb">
                 <MoneyBillTrendUp />
                 Incrementar Saldo |{" "}
                 {user.balance
@@ -212,7 +212,7 @@ const FormToIncreaseUserBalanceByAdmin = ({
                         content: {
                             legend: "Incrementar saldo",
                             buttonClassStyle:
-                                "small-general-button | text bolder",
+                                "small-general-button | text bold",
                         },
                         behavior: {
                             loading: formState.loading,
@@ -242,7 +242,7 @@ const FormToIncreaseUserBalanceByAdmin = ({
 
             <Popup isOpen={isOpenPopup} close={() => setOpenPopup(false)}>
                 <div>
-                    <h2 className="text | big-medium bolder">
+                    <h2 className="text | big-medium bold">
                         Razón para incrementar el Saldo
                     </h2>
                     <p className="text | light">

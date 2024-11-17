@@ -119,7 +119,7 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
 
     return (
         <div className="service-form-wrapper | max-width-60">
-            <h1 className="text | big bolder">
+            <h1 className="text | big bold">
                 Solicitud para actualizar foto de perfil
             </h1>
 

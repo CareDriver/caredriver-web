@@ -70,7 +70,7 @@ const FormToDisableEnterprise: React.FC<Props> = ({ enterprise }) => {
             className={"form-sub-container | margin-top-25 max-width-40"}
             data-state={formState.loading || loading ? "loading" : "loaded"}
         >
-            <h2 className="text medium-big bolder yellow | icon-wrapper yellow-icon">
+            <h2 className="text medium-big bold yellow | icon-wrapper yellow-icon">
                 <TriangleExclamation />
                 {`${enterprise.active ? "Deshabilitar" : "Habilitar"} empresa`}
             </h2>

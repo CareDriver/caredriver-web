@@ -126,7 +126,7 @@ const ReviewFormForAddingBranding = ({ reqId }: { reqId: string }) => {
 
     return req ? (
         <div className="service-form-wrapper | max-width-60">
-            <h1 className="text | big bolder">Solicitud para verificar branding</h1>
+            <h1 className="text | big bold">Solicitud para verificar branding</h1>
 
             <UserVerifierPrompter userData={userReq} />
 

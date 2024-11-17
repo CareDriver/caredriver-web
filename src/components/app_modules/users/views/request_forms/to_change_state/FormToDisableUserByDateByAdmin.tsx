@@ -175,7 +175,7 @@ const FormToDisableUserByDateByAdmin: React.FC<Props> = ({
     return (
         <div className={`form-sub-container | margin-top-50 max-width-40`}>
             <h2
-                className={`text medium-big bolder | icon-wrapper ${
+                className={`text medium-big bold | icon-wrapper ${
                     isDisable ? "green-icon green" : "yellow-icon yellow"
                 }`}
             >
@@ -194,7 +194,7 @@ const FormToDisableUserByDateByAdmin: React.FC<Props> = ({
                             legend: isDisable ? ENABLE_LABEL : DISABLE_LABEL,
                             buttonClassStyle: `small-general-button ${
                                 isDisable ? "green" : "yellow"
-                            } | text bolder`,
+                            } | text bold`,
                         },
                         behavior: {
                             loading: formState.loading,
@@ -234,7 +234,7 @@ const FormToDisableUserByDateByAdmin: React.FC<Props> = ({
             </BaseForm>
             <Popup isOpen={isOpenPopup} close={() => setOpenPopup(false)}>
                 <div className="margin-bottom-25">
-                    <h2 className="text | big-medium bolder">
+                    <h2 className="text | big-medium bold">
                         Razón para{" "}
                         {isDisable
                             ? ENABLE_LABEL.toLowerCase()

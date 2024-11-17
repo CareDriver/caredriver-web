@@ -23,7 +23,7 @@ const UserProfileForAdmin = () => {
                 <section className="profile-wrapper">
                     <UserPhotoRenderer photo={user.photoUrl} />
                     <div className="profile-info-wrapper max-width-80">
-                        <h1 className="text | capitalize bolder big wrap">{user.fullName}</h1>
+                        <h1 className="text | capitalize bold big wrap">{user.fullName}</h1>
                         <h2 className="profile-email">{user.email}</h2>
                     </div>
                 </section>

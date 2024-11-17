@@ -1,11 +1,24 @@
 import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
+import { Author } from "next/dist/lib/metadata/types/metadata-types";
 
 export const DRIVER = "conductor";
+
 export const DRIVER_PLURAL = "conductores";
 
 export const PHONE_BUSINESS = "+59177920245";
 
 export const NAME_BUSINESS = "CareDriver";
+
+export const DOMAIN = "https://caredriver-test-turg.vercel.app/";
+
+export const DEFAULT_ARTICLE_IMAGE = DOMAIN.concat(
+    "images/articles/deafultarticle.png",
+);
+
+export const CareDriverAuthor: Author = {
+    name: NAME_BUSINESS,
+    url: "https://caredriver.netlify.app/aboutus/",
+};
 
 export const DESCRIPTION_BUSINESS = {
     short: `Servicios de ${toCapitalize(

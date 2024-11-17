@@ -188,7 +188,7 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
     return (
         <div className={`form-sub-container | margin-top-50 max-width-40`}>
             <h2
-                className={`text medium-big bolder | icon-wrapper  ${
+                className={`text medium-big bold | icon-wrapper  ${
                     isDisable ? "green-icon green" : "yellow-icon yellow"
                 }`}
             >
@@ -207,7 +207,7 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                             legend: isDisable ? ENABLE_LABEL : DISABLE_LABEL,
                             buttonClassStyle: `small-general-button ${
                                 isDisable ? "green" : "yellow"
-                            } | text bolder`,
+                            } | text bold`,
                         },
                         behavior: {
                             loading: formState.loading,
@@ -237,7 +237,7 @@ const FormToDisableUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
             </BaseForm>
             <Popup isOpen={isOpenPopup} close={() => setOpenPopup(false)}>
                 <div className="margin-bottom-25">
-                    <h2 className="text | big-medium bolder">
+                    <h2 className="text | big-medium bold">
                         Razón para {isDisable ? "habilitar" : "deshabilitar"} al
                         usuario
                     </h2>

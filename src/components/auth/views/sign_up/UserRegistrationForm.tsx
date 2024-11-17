@@ -183,7 +183,7 @@ const UserRegistrationForm = () => {
 
     return (
         <div className="render-data-wrapper | max-width-60">
-            <h1 className="text | big bolder">Registrar Nuevo Usuario</h1>
+            <h1 className="text | big bold">Registrar Nuevo Usuario</h1>
             <BaseForm
                 content={{
                     button: {

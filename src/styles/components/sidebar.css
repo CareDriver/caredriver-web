@@ -10,9 +10,9 @@
 
     height: 100dvh;
     min-width: 17.777777778rem;
-    width: 25%;
-    max-width: 21.444444444rem;
-    padding: 2.777777778rem 2.222222222rem;
+    width: 28%;
+    max-width: 22.444444444rem;
+    padding: 3rem 2.8rem;
 
     border-right: 0.0625rem solid var(--gray-medium);
     background-color: var(--white);
@@ -63,8 +63,17 @@
 
 .sidebar-name > svg{
     height: auto;
-    width: 13rem;
-    fill: var(--second-dark);
+    width: 100%;
+}
+
+.sidebar-name-peet > svg{
+    height: auto;
+    width: 5rem;
+}
+
+.sidebar-name-title > svg{
+    height: auto;
+    width: 8rem;
 }
 
 .sidebar-options {
@@ -80,11 +89,12 @@
     gap: 0.722222222rem;
 
     border-radius: 0.833333333rem;
-    padding: 0.722222222rem 1.111111111rem;
+    padding: 0.78rem 1.111111111rem;
 
     border: none;
     transition: all ease-in-out 70ms;
-    color: var(--second-dark);
+
+    --color-option: var(--second-dark-opacity);
 }
 
 .sidebar-option.lb-icon > svg {
@@ -93,7 +103,7 @@
 }
 
 .sidebar-option > svg {
-    fill: var(--second-dark);
+    fill: var(--color-option);
     width: 1.222222222rem;
     height: 1.222222222rem;
 }
@@ -101,24 +111,25 @@
 .sidebar-option > span {
     font-size: 1rem;
     font-weight: 600;
+
+    color: var(--color-option);
 }
 
-.sidebar-option:hover,
-.sidebar-option.selected {
-    background-color: var(--main-lighter);
+.sidebar-option:hover {
+    background-color: var(--gray-light);
 }
 
 .sidebar-option.selected {
-    background-color: var(--second-dark-opacity);
+    background-color: var(--second-dark);
 }
 
 .sidebar-option.selected > span {
     font-weight: 800;
-    color: var(--main-lighter);
+    color: var(--white);
 }
 
 .sidebar-option.selected > svg {
-    fill: var(--main-lighter);
+    fill: var(--main-light);
 }
 
 .nav-open-button {

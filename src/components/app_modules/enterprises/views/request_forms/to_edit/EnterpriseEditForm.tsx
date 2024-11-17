@@ -209,7 +209,7 @@ const EnterpriseEditForm: React.FC<Props> = ({
                 roles={ROLES_TO_ADD_AGREEMENT_TO_ENTERPRISES}
             >
                 <div>
-                    <h3 className="text | bolder | icon-wrapper lb">
+                    <h3 className="text | bold | icon-wrapper lb">
                         <Handshake />
                         Convenio con {NAME_BUSINESS} (Opcional)
                     </h3>

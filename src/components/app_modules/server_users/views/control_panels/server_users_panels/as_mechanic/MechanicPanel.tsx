@@ -16,7 +16,7 @@ const MechanicPanel = () => {
     return (
         user && (
             <div className="service-form-wrapper">
-                <h1 className="text | big bolder green">
+                <h1 className="text | big bold green">
                     Tu solicitud fue aprobada!
                 </h1>
                 <RedirectorToTheAppAsServerUser serviceType="mechanical" />

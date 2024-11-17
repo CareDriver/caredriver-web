@@ -199,7 +199,7 @@ const ListOfServicesPerfByUser: React.FC<Props> = ({
         >
             <h2 className="text | bold big margin-bottom-25 capitalize">
                 Servicios{" "}
-                <i className="text | bolder big capitalize">{typeOfPerf}</i>
+                <i className="text | bold big capitalize">{typeOfPerf}</i>
             </h2>
 
             <fieldset className="filter-date-wrapper">

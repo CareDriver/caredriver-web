@@ -15,8 +15,10 @@ import BalanceChargeSideBar from "./concrets/BalanceChargeSideBar";
 import Bars from "@/icons/Bars";
 import { checkPermission } from "@/components/guards/validators/RoleValidator";
 import { ROLES_FOR_SERVER_USER_ACTIONS } from "@/components/guards/models/PermissionsByUserRole";
-import { NAME_BUSINESS } from "@/models/Business";
 import CompanyName from "@/icons/company/CompanyName";
+import CompanyPeet from "@/icons/company/CompanyPeet";
+import CompanyNameWithPeetWhite from "@/icons/company/CompanyNameWithPeetWhite";
+import CompanyNameWithPeet from "@/icons/company/CompanyNameWithPeet";
 
 const SideBar = () => {
     const { checkingUserAuth, user } = useContext(AuthContext);
@@ -110,6 +112,7 @@ const SideBar = () => {
             <>
                 <nav className="sidebar-wrapper-responsive">
                     <span className="sidebar-name">
+                        <CompanyPeet />
                         <CompanyName />
                     </span>
                     <button
@@ -121,7 +124,7 @@ const SideBar = () => {
                 </nav>
                 <nav className="sidebar-wrapper" ref={navref}>
                     <span className="sidebar-name">
-                        <CompanyName />
+                        <CompanyNameWithPeet />
                     </span>
                     {getSideBar()}
                 </nav>

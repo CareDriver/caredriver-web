@@ -70,7 +70,7 @@ const EnterpriseOwnerAdder: React.FC<Props> = ({ owner, enterprise }) => {
     return (
         <div>
             <div>
-                <h1 className="text | bolder">Dueño de la empresa</h1>
+                <h1 className="text | bold">Dueño de la empresa</h1>
                 <p className="text | light">
                     Busca al usuario que quieres que sea dueño de la empresa,
                     <b>

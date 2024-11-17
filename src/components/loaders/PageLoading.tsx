@@ -1,7 +1,7 @@
 const PageLoading = () => {
     return (
         <div className="page-loader">
-            <span className="loader-green-light | big-loader"></span>
+            <span className="loader-green | big-loader"></span>
         </div>
     );
 };

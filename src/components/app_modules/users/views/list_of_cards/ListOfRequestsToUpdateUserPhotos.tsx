@@ -74,7 +74,7 @@ const ListOfRequestsToUpdateUserPhotos = () => {
         <div className="render-data-wrapper">
             <h1
                 className={
-                    "text | big bolder margin-bottom-25 capitalize"
+                    "text | big bold margin-bottom-25 capitalize"
                 }
             >
                 Solicitudes para editar fotos de Perfil

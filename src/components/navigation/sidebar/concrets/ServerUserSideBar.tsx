@@ -39,7 +39,7 @@ const ServerUserSideBar = ({
 
     return (
         <>
-            <span className="text | medium bolder | margin-top-25 margin-bottom-15">
+            <span className="text | medium bold | margin-top-25 margin-bottom-15">
                 Servicios
             </span>
             <li className="sidebar-options margin-bottom-25">
@@ -104,7 +104,7 @@ const ServerUserSideBar = ({
                     <span>Lavadero</span>
                 </Link>
             </li>
-            <span className="text | medium bolder | margin-bottom-15">
+            <span className="text | medium bold | margin-bottom-15">
                 Registros
             </span>
 
@@ -153,7 +153,7 @@ const ServerUserSideBar = ({
                     <span>Lavaderos</span>
                 </Link>
             </li>
-            <span className="text | medium bolder | margin-bottom-15">
+            <span className="text | medium bold | margin-bottom-15">
                 Perfil
             </span>
 

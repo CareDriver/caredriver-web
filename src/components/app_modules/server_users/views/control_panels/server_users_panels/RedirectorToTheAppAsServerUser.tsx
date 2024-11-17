@@ -20,7 +20,7 @@ const RedirectorToTheAppAsServerUser: React.FC<Props> = ({ serviceType }) => {
             onClick={openAppAsAndroid}
         >
             <AndroidIcon />
-            <span className="text | bolder">Ir a la Aplicación</span>
+            <span className="text | bold">Ir a la Aplicación</span>
         </button>
     );
 
@@ -30,13 +30,13 @@ const RedirectorToTheAppAsServerUser: React.FC<Props> = ({ serviceType }) => {
             onClick={openAppAsMac}
         >
             <AppleIcon />
-            <span className="text | bolder">Ir a la Aplicación</span>
+            <span className="text | bold">Ir a la Aplicación</span>
         </button>
     );
 
     return (
         <div>
-            <p className="text icon-wrapper | green-icon green bolder lb medium margin-top-15 margin-bottom-15">
+            <p className="text icon-wrapper | green-icon green bold lb medium margin-top-15 margin-bottom-15">
                 <SackDollar />
                 Ya eres {ServicesRender[serviceType]}
                 {", "}

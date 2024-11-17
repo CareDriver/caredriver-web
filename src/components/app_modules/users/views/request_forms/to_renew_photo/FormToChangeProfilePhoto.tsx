@@ -125,7 +125,7 @@ const FormToChangeProfilePhoto = () => {
     return (
         user && (
             <section className="service-form-wrapper | max-height-100">
-                <h1 className="text | big bolder">
+                <h1 className="text | big bold">
                     Actualiza tu Foto de Perfil
                 </h1>
                 <p>

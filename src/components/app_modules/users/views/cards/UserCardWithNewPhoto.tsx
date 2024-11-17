@@ -18,7 +18,7 @@ const UserCardWithNewPhoto = ({
             href={routeToReviewUserRequestToRenewPhotoAsAdmin(photo.id)}
             className="personal-data-req-item"
         >
-            <h2 className="text | bolder medium-big capitalize wrap | icon-wrapper">
+            <h2 className="text | bold medium-big capitalize wrap | icon-wrapper">
                 <UserIcon />
                 {cutTextWithDotsByLength(photo.userName, MAX_LENGTH_FOR_NAMES_DISPLAY)}
             </h2>

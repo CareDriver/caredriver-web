@@ -120,7 +120,7 @@ const PhoneRegistrationForm = () => {
     return (
         <div className="service-form-wrapper | max-height-100">
             <h3 className="text | big bold">
-                Agrega tu <i className="text | big bolder">numero de celular</i>
+                Agrega tu <i className="text | big bold">numero de celular</i>
             </h3>
             <p className="text | light">
                 Nuestros administradores podran contactarte de manera mas rapida

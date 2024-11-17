@@ -40,7 +40,7 @@ const UserAssociatedEnterpriseRenderer: React.FC<Props> = ({
                 href={routeToRenewEnterpriseAsUser(typeOfEnterprise)}
                 className={`small-general-button ${
                     HAS_ASSOCIATED_ENTERPRISE ? "gray" : "yellow"
-                } | text bolder | icon-wrapper gray-icon`}
+                } | text bold | icon-wrapper gray-icon`}
             >
                 <Repeat />
                 {HAS_ASSOCIATED_ENTERPRISE

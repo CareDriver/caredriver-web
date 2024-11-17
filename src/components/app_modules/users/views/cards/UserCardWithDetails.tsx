@@ -29,7 +29,7 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
         <div className={`users-item ${IS_DISABLED && "users-disable"}`}>
             <UserPhotoRenderer photo={user.photoUrl} />
             <div className="full-width">
-                <h2 className="text | bolder medium-big capitalize wrap">
+                <h2 className="text | bold medium-big capitalize wrap">
                     {cutTextWithDotsByLength(
                         user.fullName,
                         MAX_LENGTH_FOR_NAMES_DISPLAY,
@@ -51,7 +51,7 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                             {USER_ROLE_DETAILS.text}
                         </h4>
                         {IS_DISABLED && (
-                            <h4 className={`text | bolder`}>
+                            <h4 className={`text | bold`}>
                                 Deshabilitado{" "}
                                 {user.disabledUntil
                                     ? "hasta el ".concat(

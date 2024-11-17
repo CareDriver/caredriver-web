@@ -22,7 +22,7 @@ const CardToRequestEditEnterprise = ({
                 )}
                 className="enterprise-item | touchable"
             >
-                <h3 className="text | medium center bolder capitalize margin-bottom-15 wrap">
+                <h3 className="text | medium center bold capitalize margin-bottom-15 wrap">
                     {cutTextWithDotsByLength(
                         enterprise.name,
                         MAX_LENGTH_FOR_NAMES_DISPLAY,

@@ -179,7 +179,7 @@ const ListOfAllUsersWithSearcher = () => {
                 nothingWasFound() && "auto-height max-height-100"
             }`}
         >
-            <h1 className="text | big bolder margin-bottom-25 capitalize">
+            <h1 className="text | big bold margin-bottom-25 capitalize">
                 Usuarios
             </h1>
             <div className="row-wrapper | row-responsive space-between | margin-bottom-50">
@@ -206,7 +206,7 @@ const ListOfAllUsersWithSearcher = () => {
                 <GuardOfModule user={adminUser} roles={ROLES_TO_ADD_USERS}>
                     <Link
                         href={routeToCreateNewUserAsAdmin()}
-                        className="icon-wrapper small-general-button text | bolder touchable"
+                        className="icon-wrapper small-general-button text | bold touchable"
                     >
                         <UserPlus />
                         Nuevo Usuario

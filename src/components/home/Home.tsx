@@ -42,7 +42,7 @@ const Home = () => {
                     <HandPointRight />
                     <span className="text | big-medium-v3 bold">
                         Comienza{" "}
-                        <i className="text big-medium-v3 bolder">Ahora!</i>
+                        <i className="text big-medium-v3 bold">Ahora!</i>
                     </span>
                 </Link>
             </div>

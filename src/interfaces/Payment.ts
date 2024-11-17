@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import { ServiceType } from "./Services";
 
 export interface Price {
     currency: "Bs. (BOB)"; // currency of the debt, just Bolivians for the moment
@@ -14,6 +15,8 @@ export interface BalanceHistory extends Payment {
     balanceRechargeId?: string;
     note?: string;
     newBalance?: Price;
+    serviceType?: ServiceType;
+    serviceFakeId?: string;
 }
 
 export const defaultBalance: Price = {

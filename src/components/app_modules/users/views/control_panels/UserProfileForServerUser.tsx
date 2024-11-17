@@ -46,7 +46,7 @@ const UserProfileForServerUser = () => {
 
                 <section className="margin-top-50">
                     <Link
-                        className="icon-wrapper small-general-button text | gray gray-icon bolder touchable"
+                        className="icon-wrapper small-general-button text | gray gray-icon bold touchable"
                         href={routeToRenewPhotoAsUser()}
                     >
                         <PenToSquare />
@@ -66,7 +66,7 @@ const UserProfileForServerUser = () => {
                     )}
                     <div className="margin-top-5">
                         <Link
-                            className="icon-wrapper small-general-button text | gray gray-icon bolder touchable"
+                            className="icon-wrapper small-general-button text | gray gray-icon bold touchable"
                             href={routeToRenewLocationAsUser()}
                         >
                             <PenToSquare />

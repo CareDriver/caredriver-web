@@ -52,7 +52,7 @@
 
     background-color: var(--main-light);
     color: var(--second-dark);
-    border: 0.111111111rem solid var(--second-dark);
+    /* border: 0.111111111rem solid var(--second-dark); */
     transition: all ease-in-out 200ms;
 }
 
@@ -167,7 +167,8 @@
 
     background-color: var(--main-light);
     color: var(--second-dark);
-    border: 0.111111111rem solid var(--second-dark);
+    /* border: 0.111111111rem solid var(--second-dark); */
+    border: none;
     border-radius: 0.833333333rem;
     transition: all ease-in-out 200ms;
     text-transform: capitalize;
@@ -205,9 +206,9 @@
     color: var(--white);
 }
 
-.small-general-button.red {
+/* .small-general-button.red {
     border: 0.111111111rem solid var(--second-dark);
-}
+} */
 
 .small-general-button.hide-content {
     overflow: hidden;

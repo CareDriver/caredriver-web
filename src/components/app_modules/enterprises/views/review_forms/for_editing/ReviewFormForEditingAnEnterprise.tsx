@@ -200,7 +200,7 @@ const ReviewFormForEditingAnEnterprise: React.FC<Props> = ({
 
     return (
         <section className="service-form-wrapper | max-width-60">
-            <h1 className="text | big-medium bolder margin-bottom-25 capitalize">
+            <h1 className="text | big-medium bold margin-bottom-25 capitalize">
                 Solicitud para editar{" "}
                 {
                     ENTERPRISE_TO_SPANISH_WITH_UNDEFINITE_ARTICLE[

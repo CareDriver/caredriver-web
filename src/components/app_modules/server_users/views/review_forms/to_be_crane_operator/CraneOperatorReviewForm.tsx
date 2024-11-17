@@ -264,7 +264,7 @@ const CraneOperatorReviewForm = ({
 
     return (
         <div className="service-form-wrapper | max-width-60">
-            <h1 className="text | big bolder">
+            <h1 className="text | big bold">
                 Solicitud para ser Operador de Grúa
             </h1>
             <div className="row-wrapper | gap-20">

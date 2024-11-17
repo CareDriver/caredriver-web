@@ -24,7 +24,7 @@ const CardToRequestCreateEnterprise = ({
                 )}
                 className="enterprise-req-item | touchable"
             >
-                <h3 className="text | medium center bolder capitalize margin-bottom-15 wrap">
+                <h3 className="text | medium center bold capitalize margin-bottom-15 wrap">
                     {cutTextWithDotsByLength(
                         enterprise.name,
                         MAX_LENGTH_FOR_NAMES_DISPLAY,
@@ -38,7 +38,7 @@ const CardToRequestCreateEnterprise = ({
                 />
                 <span
                     className="enterprise-req-item-aprove icon-wrapper text 
-            | gray-icon gray-dark mb bottom bolder"
+            | gray-icon gray-dark mb bottom bold"
                 >
                     <PersonCircleCheck />
                     0/1

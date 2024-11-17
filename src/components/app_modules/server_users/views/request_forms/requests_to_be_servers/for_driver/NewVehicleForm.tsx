@@ -343,7 +343,7 @@ const NewVehicleForm: React.FC<Props> = ({
         requesterUser && (
             <div className="service-form-wrapper">
                 <div>
-                    <h1 className="text | big bolder">
+                    <h1 className="text | big bold">
                         Agregar un nuevo Vehículo
                     </h1>
                     <p className="text | bold">
@@ -363,7 +363,7 @@ const NewVehicleForm: React.FC<Props> = ({
                                 isValid: formState.isValid,
                             },
                         },
-                        styleClasses: "max-width-60",
+                        styleClasses: "max-width-80",
                     }}
                     behavior={{
                         loading: formState.loading,

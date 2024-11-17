@@ -10,7 +10,7 @@
     height: 100dvh;
     width: 100vw;
 
-    background-color: var(--second-dark);
+    background-color: var(--main-light);
     pointer-events: none;
 }
 

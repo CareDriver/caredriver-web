@@ -182,7 +182,7 @@ const PersonalDataForm: React.FC<Props> = ({
                         }}
                     />
                     <div>
-                        <h3 className="text | bolder icon-wrapper">
+                        <h3 className="text | bold icon-wrapper">
                             <Phone /> Numero de teléfono alternativo (Opcional)
                         </h3>
                         <p className="text | light">

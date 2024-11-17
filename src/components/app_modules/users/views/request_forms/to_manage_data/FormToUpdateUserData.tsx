@@ -236,7 +236,7 @@ const FormToUpdateUserData: React.FC<Props> = ({ user }) => {
     return (
         <div className="form-container | full-form margin-top-50 max-width-60">
             <div className="margin-bottom-15">
-                <h2 className="text | bolder medium-big | icon-wrapper">
+                <h2 className="text | bold medium-big | icon-wrapper">
                     <Pen /> Actualización de datos
                 </h2>
                 <p className="text | light">

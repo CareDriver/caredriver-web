@@ -24,14 +24,14 @@ const CardToRequesterToBeServerUser = ({
             href={routeToReviewRequestToBeUserServerAsAdmin(type, req.id)}
             className="service-req-item | touchable"
         >
-            <h3 className="text | bolder medium-big capitalize wrap">
+            <h3 className="text | bold medium-big capitalize wrap">
                 {cutTextWithDotsByLength(
                     req.newFullName,
                     MAX_LENGTH_FOR_NAMES_DISPLAY,
                 )}
             </h3>
             <h4 className="text | light margin-bottom-15">{req.location}</h4>
-            <h5 className="icon-wrapper text | bottom mb bolder gray-icon gray-dark">
+            <h5 className="icon-wrapper text | bottom mb bold gray-icon gray-dark">
                 <PersonCircleCheck />
                 {numOfApprovals(req)}/{MIN_NUM_OF_APPROVALS} Aprobaciones
             </h5>

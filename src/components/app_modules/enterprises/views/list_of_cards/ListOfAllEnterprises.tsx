@@ -62,7 +62,7 @@ const ListOfAllEnterprises = ({ type }: { type: ServiceType }) => {
 
     return data ? (
         <section className="enterprise-main-wrapper">
-            <h1 className="text | big bolder capitalize">
+            <h1 className="text | big bold capitalize">
                 {ENTERPRISE_TO_SPANISH_AS_PLURAL[type]}
             </h1>
             <Link

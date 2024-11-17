@@ -80,7 +80,7 @@ const NewUserSupportForm: React.FC<Props> = ({ userToAdd, enterprise }) => {
     return (
         <div className="service-form-wrapper">
             <div>
-                <h1 className="text | big bolder">Agregar usuario soporte</h1>
+                <h1 className="text | big bold">Agregar usuario soporte</h1>
                 <p className="text | light">
                     El usuario podra ayudarte a administrar los usuarios del
                     servicio.

@@ -48,7 +48,7 @@ const RegisteredVehicleRenderer: React.FC<Props> = ({
             >
                 {vehicle.type.mode.length === 1 && (
                     <button
-                        className="icon-wrapper small-general-button text | gray gray-icon medium bolder lb margin-top-25 touchable"
+                        className="icon-wrapper small-general-button text | gray gray-icon medium bold lb margin-top-25 touchable"
                         onClick={() =>
                             transmisionAdder.addMissingTransmission(vehicleType)
                         }
@@ -72,7 +72,7 @@ const RegisteredVehicleRenderer: React.FC<Props> = ({
                     href={routeToRenewLicenseAsUser(vehicleType)}
                 >
                     <span
-                        className={`text | medium bolder ${
+                        className={`text | medium bold ${
                             getColorButtonLicense(
                                 vehicle.license.expiredDateLicense.toDate(),
                             ) !== "yellow" && "white"

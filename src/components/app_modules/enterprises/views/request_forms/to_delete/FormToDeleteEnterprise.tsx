@@ -58,7 +58,7 @@ const FormToDeleteEnterprise: React.FC<Props> = ({ enterprise }) => {
             }`}
             data-state={loading ? "loading" : "loaded"}
         >
-            <h2 className="text icon-wrapper | red red-icon medium-big bolder">
+            <h2 className="text icon-wrapper | red red-icon medium-big bold">
                 <Trash />
                 Eliminar empresa
             </h2>

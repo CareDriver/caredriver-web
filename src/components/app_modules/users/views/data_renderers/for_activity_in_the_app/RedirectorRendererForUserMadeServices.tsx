@@ -29,7 +29,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
 
     return (
         <div className="form-sub-container | margin-top-25 margin-bottom-25 max-width-60">
-            <h2 className="icon-wrapper lb | text medium-big bolder">
+            <h2 className="icon-wrapper lb | text medium-big bold">
                 <HelmetSafety />
                 Servicios
             </h2>
@@ -38,7 +38,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             </p>
             {IS_DRIVER && (
                 <div className="service-user-wrapper | with-data">
-                    <h3 className="text | medium-big capitalize bolder">{DRIVER}</h3>
+                    <h3 className="text | medium-big capitalize bold">{DRIVER}</h3>
                     <UserServerRatingRenderer
                         serviceData={user.servicesData.Conductor}
                     />
@@ -73,7 +73,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             }}
                         />
                     ) : (
-                        <i className="text | bolder red">
+                        <i className="text | bold red">
                             Sin asociación a una empresa de {DRIVER_PLURAL}
                         </i>
                     )}
@@ -95,7 +95,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             )}
             {IS_MECHANIC && (
                 <div className="service-user-wrapper  | with-data">
-                    <h3 className="text | medium-big capitalize bolder">Mecánico</h3>
+                    <h3 className="text | medium-big capitalize bold">Mecánico</h3>
                     <UserServerRatingRenderer
                         serviceData={user.servicesData.Mecánico}
                     />
@@ -111,7 +111,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             }}
                         />
                     ) : (
-                        <i className="text | bolder red">
+                        <i className="text | bold red">
                             Sin asociación a un taller mecánico registrado
                         </i>
                     )}
@@ -134,7 +134,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             )}
             {IS_CRANE_OPERATOR && (
                 <div className="service-user-wrapper  | with-data">
-                    <h3 className="text | medium-big capitalize bolder">
+                    <h3 className="text | medium-big capitalize bold">
                         Operador de Grúa
                     </h3>
                     <UserServerRatingRenderer
@@ -162,7 +162,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
                             }}
                         />
                     ) : (
-                        <i className="text | bolder red">
+                        <i className="text | bold red">
                             Sin asociación a una empresa operadora de grúa
                         </i>
                     )}
@@ -184,7 +184,7 @@ const ServiceServedByUser = ({ user }: { user: UserInterface }) => {
             )}
             {IS_LAUNDERER && (
                 <div className="service-user-wrapper  | with-data">
-                    <h3 className="text | medium-big capitalize bolder">Lavadero</h3>
+                    <h3 className="text | medium-big capitalize bold">Lavadero</h3>
                     <UserServerRatingRenderer
                         serviceData={user.servicesData.Lavadero}
                     />

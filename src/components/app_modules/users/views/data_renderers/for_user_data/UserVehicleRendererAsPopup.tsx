@@ -34,11 +34,11 @@ const UserVehicleRendererAsPopup: React.FC<Props> = ({ vehicle, content }) => {
                 -{" "}
                 {differenceOnDays(
                     vehicle.data.license.expiredDateLicense.toDate(),
-                ) <= 0 && <span className="text | bolder red">Expiro</span>}
+                ) <= 0 && <span className="text | bold red">Expiro</span>}
             </button>
             <Popup isOpen={isViewVehicle} close={() => setViewVehicle(false)}>
                 <div>
-                    <h2 className="text | bolder big-medium">
+                    <h2 className="text | bold big-medium">
                         {content.legend}
                     </h2>
                     <VehicleRenderer
@@ -49,7 +49,7 @@ const UserVehicleRendererAsPopup: React.FC<Props> = ({ vehicle, content }) => {
             </Popup>
         </>
     ) : (
-        <i className="text | bolder red">
+        <i className="text | bold red">
             {VEHICLE_CATEGORY_TO_SPANISH[vehicle.type]} no registrado
         </i>
     );

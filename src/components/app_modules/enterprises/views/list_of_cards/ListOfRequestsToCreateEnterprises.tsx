@@ -63,7 +63,7 @@ const ListOfRequestsToCreateEnterprises = ({
             <div className="render-data-wrapper">
                 <h1
                     className={
-                        "text | big-medium bolder margin-bottom-25 capitalize"
+                        "text | big-medium bold margin-bottom-25 capitalize"
                     }
                 >
                     Solicitudes para crear{" "}

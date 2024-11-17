@@ -22,7 +22,7 @@ import Link from "next/link";
 const RequestsSection = ({ pathname }: { pathname: string }) => {
     return (
         <>
-            <span className="text | medium bolder | margin-bottom-15">
+            <span className="text | medium bold | margin-bottom-15">
                 Solicitudes
             </span>
             <li className="sidebar-options | margin-bottom-25">

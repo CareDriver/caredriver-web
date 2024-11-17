@@ -24,11 +24,11 @@ const DriverInstrucctionsAsNew = () => {
 
     return (
         <div className="service-form-wrapper">
-            <h1 className="text | big bolder">
+            <h1 className="text | big bold">
                 Trabaja como {DRIVER} con nosotros!
             </h1>
             <div>
-                <h3 className="text | medium-big bolder icon-wrapper margin-top-25">
+                <h3 className="text | medium-big bold icon-wrapper margin-top-25">
                     <Car />
                     Sigue estos pasos para ser {DRIVER}
                 </h3>

@@ -8,7 +8,7 @@
     flex-direction: column;
 
     width: 100%;
-    padding: 2.777777778rem;
+    padding: 2.777777778rem 3.5rem;
 }
 
 .user-page-wrapper {
@@ -18,7 +18,7 @@
 
     width: 100%;
     min-height: 100dvh;
-    padding: 4.444444444rem 2.777777778rem;
+    padding: 4.444444444rem 3.5rem;
 }
 
 .request-aproved-image {
@@ -38,7 +38,7 @@
 
     width: 100%;
     min-height: 100dvh;
-    padding: 4rem 2.777777778rem;
+    padding: 4rem 3.5rem;
 }
 
 .users-search-top-space {

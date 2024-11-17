@@ -13,7 +13,7 @@ interface Props {
 const MapLocationField: React.FC<Props> = ({ field, legend }) => {
     return (
         <fieldset className="form-section">
-            <span className="text | bolder">{legend}</span>
+            <span className="text | bold">{legend}</span>
             <div className="form-section-map">
                 <MapLocationSetter
                     location={field.values.value}

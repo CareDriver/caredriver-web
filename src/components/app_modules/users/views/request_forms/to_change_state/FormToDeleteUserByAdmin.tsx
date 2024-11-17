@@ -126,7 +126,7 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
 
     return (
         <div className={`form-sub-container | margin-top-50 max-width-40`}>
-            <h2 className="text icon-wrapper | red red-icon medium-big bolder">
+            <h2 className="text icon-wrapper | red red-icon medium-big bold">
                 <Trash />
                 Eliminar usuario
             </h2>
@@ -141,7 +141,7 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
                         content: {
                             legend: "Eliminar usuario",
                             buttonClassStyle:
-                                "small-general-button red | text bolder",
+                                "small-general-button red | text bold",
                         },
                         behavior: {
                             loading: formState.loading,
@@ -170,7 +170,7 @@ const FormToDeleteUserByAdmin: React.FC<Props> = ({ user, adminUser }) => {
             </BaseForm>
             <Popup isOpen={isOpenPopup} close={() => setOpenPopup(false)}>
                 <div className="margin-bottom-25">
-                    <h2 className="text | big-medium bolder">
+                    <h2 className="text | big-medium bold">
                         Razón para eliminar al usuario
                     </h2>
                     <p className="text | light">

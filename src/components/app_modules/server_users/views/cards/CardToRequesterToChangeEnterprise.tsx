@@ -16,7 +16,7 @@ const CardToRequesterToChangeEnterprise = ({
 
     return (
         <div className="enterprise-item | touchable">
-            <h3 className="text | bolder wrap medium-big capitalize | icon-wrapper">
+            <h3 className="text | bold wrap medium-big capitalize | icon-wrapper">
                 <UserIcon />
                 {cutTextWithDotsByLength(
                     req.userName,
@@ -24,7 +24,7 @@ const CardToRequesterToChangeEnterprise = ({
                 )}
             </h3>
             <div className="separator-horizontal"></div>
-            <h3 className="text | medium center bolder capitalize margin-bottom-15 wrap | icon-wrapper">
+            <h3 className="text | medium center bold capitalize margin-bottom-15 wrap | icon-wrapper">
                 <Building />
                 {cutTextWithDotsByLength(
                     req.newEnterpriseBaseData.name,
@@ -40,7 +40,7 @@ const CardToRequesterToChangeEnterprise = ({
                 />
             )}
 
-            <h5 className="text | bolder green | margin-top-15">
+            <h5 className="text | bold green | margin-top-15">
                 {HAD_AN_ASSOCIATION ? "Cambio de empresa" : "Nueva asociación"}
             </h5>
         </div>

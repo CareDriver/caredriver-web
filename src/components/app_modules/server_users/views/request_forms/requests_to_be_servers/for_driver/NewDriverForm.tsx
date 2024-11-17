@@ -314,7 +314,7 @@ const NewDriverForm: React.FC<Props> = ({
                                 loading: formState.loading,
                             },
                         },
-                        styleClasses: "max-width-60",
+                        styleClasses: "max-width-80",
                     }}
                     behavior={{
                         loading: formState.loading,

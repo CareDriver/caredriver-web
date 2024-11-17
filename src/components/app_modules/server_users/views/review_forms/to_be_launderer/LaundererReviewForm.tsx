@@ -205,7 +205,7 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
     return (
         <div className="service-form-wrapper | max-width-60">
-            <h1 className="text | big bolder">Solicitud para ser Lavadero</h1>
+            <h1 className="text | big bold">Solicitud para ser Lavadero</h1>
             <div className="row-wrapper | gap-20">
                 <ApprovalsRenderer
                     serviceReq={serviceReq}

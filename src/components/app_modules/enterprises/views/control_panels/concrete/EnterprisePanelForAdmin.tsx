@@ -66,7 +66,7 @@ const EnterprisePanelForAdmin: React.FC<Props> = ({ id }) => {
         <>
             {view === EnterpriseManagementView.HANDLE_ENTERPRISE && (
                 <section className="service-form-wrapper">
-                    <h1 className="text | big bolder">
+                    <h1 className="text | big bold">
                         Administracion{" "}
                         {
                             ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE[

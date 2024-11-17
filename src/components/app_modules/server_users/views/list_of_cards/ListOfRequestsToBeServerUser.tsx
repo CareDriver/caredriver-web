@@ -69,7 +69,7 @@ const ListOfRequestsToBeServerUser = ({ type }: { type: ServiceType }) => {
     return data ? (
         data.length > 0 ? (
             <div className="render-data-wrapper">
-                <h1 className={`text | big bolder margin-bottom-25`}>
+                <h1 className={`text | big bold margin-bottom-25`}>
                     Solicitudes para ser {userReqTypes[type]}
                 </h1>
 

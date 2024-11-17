@@ -26,8 +26,8 @@ const EnterprisesPanelForServerUsers: React.FC<Props> = ({
     return (
         user && (
             <section className="enterprise-main-wrapper">
-                <h1 className="text | big bolder">Empresas Relacionadas</h1>
-                <h2 className="text | medium-big bolder | icon-wrapper">
+                <h1 className="text | big bold">Empresas Relacionadas</h1>
+                <h2 className="text | medium-big bold | icon-wrapper">
                     <UserTie />
                     Empresas donde eres administrador
                 </h2>
@@ -36,7 +36,7 @@ const EnterprisesPanelForServerUsers: React.FC<Props> = ({
                     typeOfEnterprise={typeOfEnterprise}
                 />
                 <div className="separator-horizontal"></div>
-                <h2 className="text | medium-big bolder | icon-wrapper lb">
+                <h2 className="text | medium-big bold | icon-wrapper lb">
                     <UserGear />
                     Empresas donde eres usuario soporte
                 </h2>

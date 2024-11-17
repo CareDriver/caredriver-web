@@ -24,14 +24,14 @@ const EnterpriseRendererForContact = ({
 
     return (
         <div className="form-sub-container">
-            <h3 className="text | big-medium bolder capitalize">{enterprise.name}</h3>
+            <h3 className="text | big-medium bold capitalize">{enterprise.name}</h3>
             {enterprise.phone && (
                 <button
                     type="button"
                     onClick={() =>
                         enterprise.phone && sendMenssage(enterprise.phone)
                     }
-                    className="icon-wrapper text general-button | white-icon bolder mb"
+                    className="icon-wrapper text general-button | white-icon bold mb"
                 >
                     <Whatsapp /> Enviar mensaje
                 </button>
@@ -57,7 +57,7 @@ const EnterpriseRendererForContact = ({
             />
             {enterprise.coordinates && (
                 <fieldset className="form-section">
-                    <span className="text | bolder">
+                    <span className="text | bold">
                         Ubicación geográfica{" "}
                         {
                             ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE[

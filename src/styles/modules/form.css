@@ -105,8 +105,8 @@
 .form-section > small,
 .form-section-message {
     color: var(--red);
-    font-size: 0.944444444rem;
-    font-weight: bold;
+    font-size: 0.9rem;
+    font-weight: 700;
 }
 
 .form-section-message.success {
@@ -119,7 +119,6 @@ input[type="password"] {
 
 .form-section-input:is(:focus) {
     border: 0.15rem solid var(--second-dark);
-    background-color: var(--main-lighter);
 }
 
 .form-section-legend {
@@ -147,10 +146,10 @@ input[type="password"] {
 }
 
 .form-section-input:is(:focus) ~ legend{
-    background-color: var(--main-lighter);
+    background-color: var(--second-dark);
     border: 0.1em solid var(--second-dark);
     font-weight: 700;
-    color: var(--second-dark);
+    color: var(--white);
 }
 
 .form-section.select-item {

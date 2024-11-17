@@ -17,7 +17,7 @@ const ServiceStateRenderer: React.FC<Props> = ({ statusHandler }) => {
     return (
         <div className="margin-bottom-25">
             <h1
-                className={`text | big bolder max-width-90 ${
+                className={`text | big bold max-width-90 ${
                     statusHandler.hasSomeRefusedRequest() && "red"
                 }`}
             >

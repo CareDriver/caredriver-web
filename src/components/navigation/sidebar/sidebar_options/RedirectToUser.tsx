@@ -20,9 +20,9 @@ const RedirectToUser = () => {
             </button>
             <Popup close={close} isOpen={isOpen}>
                 <div>
-                    <h2 className="text | bold big-medium">
+                    <h2 className="text | bold big">
                         Buscar{" "}
-                        <i className="text | bolder big-medium">
+                        <i className="text | bold big">
                             usuario por Id
                         </i>
                     </h2>
