@@ -148,6 +148,7 @@
 
     width: min-content;
     padding: 1rem;
+    border: none;
     border-radius: var(--border-radius);
 
     background-color: var(--second-dark);
