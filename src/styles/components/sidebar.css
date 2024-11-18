@@ -14,7 +14,6 @@
     max-width: 22.444444444rem;
     padding: 3rem 2.8rem;
 
-    /* border-right: 0.0625rem solid var(--gray-medium); */
     background-color: var(--second-dark);
     transition: all ease-in-out 200ms;
 }
@@ -23,11 +22,16 @@
 .sidebar-wrapper.open {
     display: inline-flex;
     position: fixed;
+
     border: none;
+    min-width: 17.777777778rem;
+    width: 80%;
+    max-width: 25rem;
 
     border-top-right-radius: 1.388888889rem;
     border-bottom-right-radius: 1.388888889rem;
-    box-shadow: 0 0 20px var(--second-dark-opacity);
+    border: 1px solid var(--white);
+    background-color: var(--second-darker-opacity);
 }
 
 /* Para Firefox */
@@ -134,42 +138,31 @@
 }
 
 .nav-open-button {
-    border: none;
-}
-
-.sidebar-wrapper-responsive {
     --border-radius: 1.777777778rem;
     
     display: none;
-    align-items: center;
-    justify-content: space-between;
+    position: fixed;
+    top: 2.1875rem;
+    right: 2.1875rem;
+    z-index: 1000;
 
-    align-items: center;
+    width: min-content;
+    padding: 1rem;
+    border-radius: var(--border-radius);
 
-    width: 100%;
-    padding: 0.6rem 3.75rem 0.6rem 3.75rem;
-    margin-inline: auto;
-    border-bottom-left-radius: var(--border-radius);
-    border-bottom-right-radius: var(--border-radius);
-
-    background-color: var(--main-lighter);
-    box-shadow: 0 5px 10px var(--second-dark-opacity);
+    background-color: var(--second-dark);
 }
 
 @media only screen and (max-width: 1150px) {
     .sidebar-name > svg{
-        width: 10rem;
-    }
-
-    .sidebar-logo {
-        width: 3.5rem;
+        width: 15rem;
     }
 
     .sidebar-wrapper {
         display: none;
     }
 
-    .sidebar-wrapper-responsive {
-        display: flex;
+    .nav-open-button {
+        display: inline;
     }
 }

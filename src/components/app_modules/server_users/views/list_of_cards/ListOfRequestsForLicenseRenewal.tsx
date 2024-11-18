@@ -15,7 +15,7 @@ import WholeScreenText from "@/components/modules/WholeScreenText";
 import PageLoading from "@/components/loaders/PageLoading";
 
 const ListOfRequestsForLicenseRenewal = () => {
-    const PAGE_SIZE = 15;
+    const PAGE_SIZE = 20;
     const [data, setData] = useState<LicenseUpdateReq[] | null>(null);
     const [page, setPage] = useState<number>(1);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(

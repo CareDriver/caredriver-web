@@ -15,7 +15,7 @@ const Popup = ({
                 <div className="popup-wrapper">
                     <button
                         onClick={close}
-                        className="popup-close-button icon-wrapper | black-icon lb"
+                        className="popup-close-button"
                     >
                         <Xmark />
                     </button>

@@ -41,6 +41,12 @@
     padding: 4rem 3.5rem;
 }
 
+@media only screen and (max-width: 600px) {
+    .render-data-wrapper {
+        padding: 4rem 2rem;
+    }
+}
+
 .users-search-top-space {
     /* height top hardcoded */
     --main-wrapper-padding: calc(4rem + 4rem);
@@ -284,5 +290,11 @@
 
     .service-form-wrapper {
         padding: 1.5rem;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    .max-width-40 {
+        max-width: 100%;
     }
 }

@@ -50,6 +50,14 @@
     fill: var(--yellow);
 }
 
+.icon-wrapper.yellow-dark-icon > svg {
+    fill: var(--yellow-dark);
+}
+
+.icon-wrapper.purple-icon > svg {
+    fill: var(--purple);
+}
+
 .icon-wrapper > svg {
     height: 1.111111111rem;
     width: 1.111111111rem;

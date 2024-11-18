@@ -1,5 +1,3 @@
-import PersonCircleCheck from "@/icons/PersonCircleCheck";
-import UserIcon from "@/icons/UserIcon";
 import { ChangePhotoReqInterface } from "@/interfaces/ChangePhotoReq";
 import { routeToReviewUserRequestToRenewPhotoAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 import {
@@ -18,23 +16,20 @@ const UserCardWithNewPhoto = ({
             href={routeToReviewUserRequestToRenewPhotoAsAdmin(photo.id)}
             className="personal-data-req-item"
         >
-            <h2 className="text | bold medium-big capitalize wrap | icon-wrapper">
-                <UserIcon />
-                {cutTextWithDotsByLength(photo.userName, MAX_LENGTH_FOR_NAMES_DISPLAY)}
-            </h2>
             <img
                 src={photo.newPhoto.url}
                 alt=""
                 className="personal-data-req-item-photo"
             />
-            <div className="separator-horizontal"></div>
-            <span
-                className="icon-wrapper text |
-            green-icon green bold"
-            >
-                <PersonCircleCheck />
-                0/1 Aprobaciones
-            </span>
+            <div className="personal-data-req-item-body">
+                <h2 className="text | bold capitalize wrap">
+                    {cutTextWithDotsByLength(
+                        photo.userName,
+                        MAX_LENGTH_FOR_NAMES_DISPLAY,
+                    )}
+                </h2>
+                <span className="text | circle purple">0/1 Aprobaciones</span>
+            </div>
         </Link>
     );
 };

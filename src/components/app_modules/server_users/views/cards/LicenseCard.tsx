@@ -13,32 +13,34 @@ const LicenseCard = ({ license }: { license: LicenseUpdateReq }) => {
     return (
         <Link
             href={routeToReviewRequestToRenewLicenseAsAdmin(license.id)}
-            className="personal-data-req-item | left touchable"
+            className="personal-data-req-item | touchable"
         >
-            <h3 className="text | wrap medium bold capitalize | icon-wrapper">
-                <UserIcon />
-                {cutTextWithDotsByLength(
-                    license.userName,
-                    MAX_LENGTH_FOR_NAMES_DISPLAY,
+            <div className="personal-data-req-item-header">
+                <h3 className="text | wrap medium bold capitalize | icon-wrapper">
+                    {cutTextWithDotsByLength(
+                        license.userName,
+                        MAX_LENGTH_FOR_NAMES_DISPLAY,
+                    )}
+                </h3>
+            </div>
+            <div className="personal-data-req-item-body">
+                {(license.vehicleType === "car" ||
+                    license.vehicleType === "motorcycle" ||
+                    license.vehicleType === "tow") && (
+                    <h4 className="text">
+                        <b className="text ">Licencia para </b>
+                        <i className="text bold">
+                            {VEHICLE_CATEGORY_TO_SPANISH[license.vehicleType]}
+                        </i>
+                    </h4>
                 )}
-            </h3>
-            <div className="separator-horizontal"></div>
-            {(license.vehicleType === "car" ||
-                license.vehicleType === "motorcycle" ||
-                license.vehicleType === "tow") && (
                 <h4 className="text">
-                    <b className="text bold">Categoria: </b>
-                    <i className="text light">
-                        {VEHICLE_CATEGORY_TO_SPANISH[license.vehicleType]}
+                    <b className="text ">Vence el </b>
+                    <i className="text bold">
+                        {timestampDateInSpanish(license.expiredDateLicense)}
                     </i>
                 </h4>
-            )}
-            <h4 className="text">
-                <b className="text bold">Nueva fecha de expiración: </b>
-                <i className="text light">
-                    {timestampDateInSpanish(license.expiredDateLicense)}
-                </i>
-            </h4>
+            </div>
         </Link>
     );
 };

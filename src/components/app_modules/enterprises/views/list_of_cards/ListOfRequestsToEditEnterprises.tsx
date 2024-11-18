@@ -18,7 +18,7 @@ import PageLoading from "@/components/loaders/PageLoading";
 import { ServiceType } from "@/interfaces/Services";
 
 const ListOfRequestsToEditEnterprises = ({ type }: { type: ServiceType }) => {
-    const numPerPage = 10;
+    const numPerPage = 12;
     const [data, setData] = useState<ReqEditEnterprise[] | null>(null);
     const [page, setPage] = useState<number>(1);
     const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(

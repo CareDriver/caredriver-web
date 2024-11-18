@@ -1,20 +1,21 @@
 .service-req-wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 1.111111111rem;
 }
 
 .service-req-item {
     display: block;
     padding: 1.666666667rem;
-    border: 0.111111111rem solid var(--gray-light);
-    border-radius: 0.833333333rem;
-    transition: all ease-in-out 100ms;
+    border: 0.1rem solid var(--gray-medium);
+    border-radius: 0.5rem;
+    transition: border-radius ease-in-out 200ms, border-color ease-in 100ms;
 }
 
 .service-req-item:hover {
-    border-color: var(--second-dark);
-    background-color: var(--main-lighter);
+    border-radius: 0.9rem;
+    border-color: var(--purple-light);
+    background-color: var(--white-medium);
 }
 
 @media only screen and (max-width: 550px) {

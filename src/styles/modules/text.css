@@ -130,3 +130,28 @@
     hyphens: auto;
     white-space: normal;
 }
+
+.text.circle {
+    width: max-content;
+    padding: 8px 12px;
+    font-weight: 800;
+
+    border-radius: 10px;
+    background-color: var(--yellow);
+    color: var(--yellow-dark);
+}
+
+.text.circle.purple {
+    background-color: var(--purple-light);
+    color: var(--purple);
+}
+
+.text.circle.red {
+    background-color: var(--red-opacity);
+    color: var(--red);
+}
+
+.text.circle.green-light {
+    background-color: var(--main-lighter);
+    color: var(--main-light);
+}

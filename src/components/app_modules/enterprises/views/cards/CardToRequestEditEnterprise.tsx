@@ -22,30 +22,36 @@ const CardToRequestEditEnterprise = ({
                 )}
                 className="enterprise-item | touchable"
             >
-                <h3 className="text | medium center bold capitalize margin-bottom-15 wrap">
-                    {cutTextWithDotsByLength(
-                        enterprise.name,
-                        MAX_LENGTH_FOR_NAMES_DISPLAY,
-                    )}
-                </h3>
+                <div className="enterprise-item-header">
+                    <img
+                        className="enterprise-item-logo-bg"
+                        src={enterprise.logoImgUrl.url}
+                        alt=""
+                    />
 
-                <img
-                    className="enterprise-item-logo"
-                    src={enterprise.logoImgUrl.url}
-                    alt=""
-                />
-                <div className="margin-top-5 full-width center-wrapper">
-                    <div className="separator-horizontal"></div>
+                    <img
+                        className="enterprise-item-logo"
+                        src={enterprise.logoImgUrl.url}
+                        alt=""
+                    />
                 </div>
-                <h4 className="text center">{enterprise.location}</h4>
-                <h4 className="text | center">{enterprise.phone}</h4>
-
-                {!enterprise.active && (
-                    <h4 className="icon-wrapper text | yellow-icon bold yellow | margin-top-15">
-                        <TriangleExclamation />
-                        Deshabilitado
-                    </h4>
-                )}
+                <div className="enterprise-item-body">
+                    <h3 className="text | bold capitalize wrap">
+                        {cutTextWithDotsByLength(
+                            enterprise.name,
+                            MAX_LENGTH_FOR_NAMES_DISPLAY,
+                        )}
+                    </h3>
+                    <h4 className="text">{enterprise.location}</h4>
+                </div>
+                <div className="enterprise-item-footer">
+                    {!enterprise.active && (
+                        <h4 className="icon-wrapper text | yellow-icon bold yellow | margin-top-15">
+                            <TriangleExclamation />
+                            Deshabilitado
+                        </h4>
+                    )}
+                </div>
             </Link>
         )
     );

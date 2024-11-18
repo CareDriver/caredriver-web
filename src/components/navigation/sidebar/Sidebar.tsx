@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 import "@/styles/components/sidebar.css";
 import "@/styles/base/reset.css";
-import { use, useContext, useRef } from "react";
+import { useContext, useRef } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import { UserRole } from "@/interfaces/UserInterface";
 import AdminSideBar from "./concrets/AdminSideBar";
@@ -15,8 +15,6 @@ import BalanceChargeSideBar from "./concrets/BalanceChargeSideBar";
 import Bars from "@/icons/Bars";
 import { checkPermission } from "@/components/guards/validators/RoleValidator";
 import { ROLES_FOR_SERVER_USER_ACTIONS } from "@/components/guards/models/PermissionsByUserRole";
-import CompanyName from "@/icons/company/CompanyName";
-import CompanyPeet from "@/icons/company/CompanyPeet";
 import CompanyNameWithPeetWhite from "@/icons/company/CompanyNameWithPeetWhite";
 
 const SideBar = () => {
@@ -64,7 +62,11 @@ const SideBar = () => {
                 checkPermission(user.role, ROLES_FOR_SERVER_USER_ACTIONS)
             ) {
                 return (
-                    <ServerUserSideBar logout={logout} pathname={pathname} user={user} />
+                    <ServerUserSideBar
+                        logout={logout}
+                        pathname={pathname}
+                        user={user}
+                    />
                 );
             } else {
                 switch (user.role) {
@@ -110,18 +112,12 @@ const SideBar = () => {
         !checkingUserAuth &&
         user && (
             <>
-                <nav className="sidebar-wrapper-responsive">
-                    <span className="sidebar-name">
-                        <CompanyPeet />
-                        <CompanyName />
-                    </span>
-                    <button
-                        onClick={toggleNav}
-                        className="icon-wrapper nav-open-button | green-icon mb touchable"
-                    >
-                        <Bars />
-                    </button>
-                </nav>
+                <button
+                    onClick={toggleNav}
+                    className="icon-wrapper nav-open-button | green-light-icon lb touchable"
+                >
+                    <Bars />
+                </button>
                 <nav className="sidebar-wrapper" ref={navref}>
                     <span className="sidebar-name">
                         <CompanyNameWithPeetWhite />

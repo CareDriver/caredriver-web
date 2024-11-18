@@ -5,7 +5,7 @@
 
     --second-dark: #043c40;
     --second-dark-opacity: rgba(1, 78, 82, 0.894);
-    --second-darker-opacity: rgba(2, 32, 34, 0.694);
+    --second-darker-opacity: #043c40eb;
 
     --black-darker: #151515;
     --black-medium: #0e1724;
@@ -21,7 +21,10 @@
     --white-medium: #fafdfb;
     --white-opacity: rgba(255, 255, 255, 0.512);
     --yellow: #FFDA6F;
+    --yellow-dark: #d3ae3e;
+    --yellow-opacity: #fff6decf;
     --red: #ed673e;
+    --red-opacity: #e7704cd6;
     --green: #07e580;
     --purple: #9540ff;
     --purple-light: #D2C4FB;

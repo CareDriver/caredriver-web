@@ -29,11 +29,11 @@
 
 .popup-wrapper {
     max-width: 95%;
-    padding: 1.2rem;
+    padding: 1rem;
     max-height: 90vh;
     overflow-y: auto;
 
-    border-radius: 0.833333333rem;
+    border-radius: 0.4rem;
     background-color: var(--white);
     transition: all ease-in 400ms;
     animation: popup-in 200ms linear;
@@ -73,12 +73,25 @@
 }
 
 .popup-close-button {
+    position: fixed;
+    top: 4.375rem;
+    right: 4.375rem;
+    z-index: 5000;
+
     background-color: transparent;
     border: none;
     cursor: pointer;
     transition: all ease-out 200ms;
 }
 
+.popup-close-button > svg {
+    width: 2.5rem;
+    height: auto;
+
+    fill: var(--white);
+    stroke: var(--white);
+}
+
 .popup-close-button:hover {
-    transform: scale(1.1);
+    transform: scale(1.2);
 }

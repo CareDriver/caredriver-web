@@ -22,7 +22,7 @@ export function getUserRoleDetails(user: UserInterface): {
             text: "Usuario ".concat(
                 USER_ROLE_TO_SPANISH[user.role].toLowerCase(),
             ),
-            color: "green",
+            color: "green-light",
         };
     } else if (isUserServer(user)) {
         roleDetails = {

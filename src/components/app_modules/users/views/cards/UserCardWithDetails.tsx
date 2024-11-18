@@ -44,14 +44,14 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                     user={reviewerUser}
                     roles={ROLES_TO_VIEW_USER_STATE}
                 >
-                    <div className="column-wrapper column-left gap-0 full-width">
+                    <div className="column-wrapper column-left gap-10 full-width">
                         <h4
-                            className={`text | right bold ${USER_ROLE_DETAILS.color}`}
+                            className={`text | right circle purple ${USER_ROLE_DETAILS.color}`}
                         >
                             {USER_ROLE_DETAILS.text}
                         </h4>
                         {IS_DISABLED && (
-                            <h4 className={`text | bold`}>
+                            <h4 className={`text | circle yellow`}>
                                 Deshabilitado{" "}
                                 {user.disabledUntil
                                     ? "hasta el ".concat(
@@ -63,7 +63,7 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                             </h4>
                         )}
                         {user.deleted && (
-                            <h4 className="text | bold red small | icon-wrapper red-icon llb">
+                            <h4 className="text | circle red | icon-wrapper red-icon llb">
                                 <TriangleExclamation />
                                 Cuenta eliminada
                             </h4>

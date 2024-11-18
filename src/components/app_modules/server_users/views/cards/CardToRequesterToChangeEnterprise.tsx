@@ -1,5 +1,4 @@
 import Building from "@/icons/Building";
-import UserIcon from "@/icons/UserIcon";
 import { RequestForChangeOfEnterprise } from "@/interfaces/RequestForChangeOfEnterprise";
 import "@/styles/components/enterprise.css";
 import {
@@ -16,33 +15,46 @@ const CardToRequesterToChangeEnterprise = ({
 
     return (
         <div className="enterprise-item | touchable">
-            <h3 className="text | bold wrap medium-big capitalize | icon-wrapper">
-                <UserIcon />
-                {cutTextWithDotsByLength(
-                    req.userName,
-                    MAX_LENGTH_FOR_NAMES_DISPLAY,
-                )}
-            </h3>
-            <div className="separator-horizontal"></div>
-            <h3 className="text | medium center bold capitalize margin-bottom-15 wrap | icon-wrapper">
-                <Building />
-                {cutTextWithDotsByLength(
-                    req.newEnterpriseBaseData.name,
-                    MAX_LENGTH_FOR_NAMES_DISPLAY,
-                )}
-            </h3>
-
-            {req.newEnterpriseBaseData.logoUrl && (
+            <div className="enterprise-item-header">
                 <img
-                    className="enterprise-item-logo | margin-top-25"
+                    className="enterprise-item-logo-bg"
                     src={req.newEnterpriseBaseData.logoUrl}
                     alt=""
                 />
-            )}
 
-            <h5 className="text | bold green | margin-top-15">
-                {HAD_AN_ASSOCIATION ? "Cambio de empresa" : "Nueva asociación"}
-            </h5>
+                <img
+                    className="enterprise-item-logo"
+                    src={req.newEnterpriseBaseData.logoUrl}
+                    alt=""
+                />
+            </div>
+            <div className="enterprise-item-body">
+                <h3 className="text | wrap medium capitalize">
+                    <b>Usuario: </b>
+                    {cutTextWithDotsByLength(
+                        req.userName,
+                        MAX_LENGTH_FOR_NAMES_DISPLAY,
+                    )}
+                </h3>
+                <h3 className="text | capitalize wrap">
+                    <b>Empresa: </b>
+                    {cutTextWithDotsByLength(
+                        req.newEnterpriseBaseData.name,
+                        MAX_LENGTH_FOR_NAMES_DISPLAY,
+                    )}
+                </h3>
+            </div>
+            <div className="enterprise-item-footer">
+                <h5
+                    className={`text | small circle ${
+                        !HAD_AN_ASSOCIATION && "purple"
+                    }`}
+                >
+                    {HAD_AN_ASSOCIATION
+                        ? "Cambio de empresa"
+                        : "Nueva asociación"}
+                </h5>
+            </div>
         </div>
     );
 };

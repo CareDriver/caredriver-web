@@ -77,7 +77,7 @@ const ListOfRequestsToUpdateUserPhotos = () => {
                     "text | big bold margin-bottom-25 capitalize"
                 }
             >
-                Solicitudes para editar fotos de Perfil
+                Solicitudes para cambiar fotos de Perfil
             </h1>
             <InfiniteScroll
                 dataLength={data.length}
