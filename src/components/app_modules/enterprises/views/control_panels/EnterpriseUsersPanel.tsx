@@ -10,6 +10,8 @@ import {
     anyServerUsersInEnterprise,
     anySupportUsersInEnterprise,
 } from "../../validators/validators_of_user_aggregators_to_enterprise/as_members/UserAggregatorValidatorToEnterpriseHelper";
+import Plus from "@/icons/Plus";
+import Eye from "@/icons/Eye";
 
 interface Props {
     content: {
@@ -50,8 +52,7 @@ const EnterpriseUsersPanel: React.FC<Props> = ({ content, behavior }) => {
                     ? "Registra o agrega usuarios a la empresa o agregar usuarios soporte que ayuden a manejar la empresa."
                     : "Puedes ver a los usuarios que trabajan en esta empresa y ver los servicios que realizaron"}
             </p>
-
-            <div className="row-wrapper">
+            <div className="row-wrapper row-responsive">
                 {(ROLE_IN_ENTERPRISE === UserRoleForEnteprise.OWNER ||
                     ROLE_IN_ENTERPRISE === UserRoleForEnteprise.SUPPORT) && (
                     <button
@@ -59,11 +60,11 @@ const EnterpriseUsersPanel: React.FC<Props> = ({ content, behavior }) => {
                         onClick={() =>
                             behavior.setView(EnterpriseManagementView.ADD_USER)
                         }
-                        className={`small-general-button text | bold green touchable ${
+                        className={`small-general-button text | green touchable | icon-wrapper ${
                             behavior.loading && "loading-section"
                         }`}
                     >
-                        Registrar nuevo usuario
+                        <Plus/> Agregar nuevo usuario
                     </button>
                 )}
                 {anyServerUsersInEnterprise(content.enterprise) && (
@@ -74,11 +75,11 @@ const EnterpriseUsersPanel: React.FC<Props> = ({ content, behavior }) => {
                                 EnterpriseManagementView.VIEW_SERVER_USERS,
                             )
                         }
-                        className={`small-general-button text | bold green touchable ${
+                        className={`small-general-button text | green touchable | icon-wrapper ${
                             behavior.loading && "loading-section"
                         }`}
                     >
-                        Administrar usuarios servidores
+                        <Eye/> Ver usuarios servidores
                     </button>
                 )}
                 {anySupportUsersInEnterprise(content.enterprise) && (
@@ -89,11 +90,11 @@ const EnterpriseUsersPanel: React.FC<Props> = ({ content, behavior }) => {
                                 EnterpriseManagementView.VIEW_SUPPORT_USERS,
                             )
                         }
-                        className={`small-general-button text | bold green touchable ${
+                        className={`small-general-button text | green touchable | icon-wrapper ${
                             behavior.loading && "loading-section"
                         }`}
                     >
-                        Administrar usuarios soporte
+                        <Eye/> Ver usuarios soporte
                     </button>
                 )}
             </div>

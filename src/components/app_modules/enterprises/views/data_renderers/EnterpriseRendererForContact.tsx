@@ -24,14 +24,14 @@ const EnterpriseRendererForContact = ({
 
     return (
         <div className="form-sub-container">
-            <h3 className="text | big-medium bold capitalize">{enterprise.name}</h3>
+            <h3 className="text | big bold capitalize">{enterprise.name}</h3>
             {enterprise.phone && (
                 <button
                     type="button"
                     onClick={() =>
                         enterprise.phone && sendMenssage(enterprise.phone)
                     }
-                    className="icon-wrapper text general-button | white-icon bold mb"
+                    className="icon-wrapper text general-button | bold mb"
                 >
                     <Whatsapp /> Enviar mensaje
                 </button>

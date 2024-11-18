@@ -133,21 +133,29 @@ const BaseEnterpriseSelector: React.FC<Props> = ({
                         key={i}
                         onClick={() => selectEnterprise(enterprise)}
                     >
-                        <h3 className="text | medium center bold capitalize margin-bottom-15 wrap">
-                            {cutTextWithDotsByLength(
-                                enterprise.name,
-                                MAX_LENGTH_FOR_NAMES_DISPLAY,
-                            )}
-                        </h3>
-                        <img
-                            className="enterprise-item-logo"
-                            src={enterprise.logoImgUrl.url}
-                            alt=""
-                        />
-                        <div className="margin-top-5 full-width center-wrapper">
-                            <div className="separator-horizontal"></div>
+                        <div className="enterprise-item-header">
+                            <img
+                                className="enterprise-item-logo-bg"
+                                src={enterprise.logoImgUrl.url}
+                                alt=""
+                            />
+
+                            <img
+                                className="enterprise-item-logo"
+                                src={enterprise.logoImgUrl.url}
+                                alt=""
+                            />
                         </div>
-                        <h4 className="text center">{enterprise.location}</h4>
+                        <div className="enterprise-item-body">
+                            <h3 className="text | bold capitalize wrap">
+                                {cutTextWithDotsByLength(
+                                    enterprise.name,
+                                    MAX_LENGTH_FOR_NAMES_DISPLAY,
+                                )}
+                            </h3>
+                            <h4 className="text">{enterprise.location}</h4>
+                            <h4 className="text | circle purple | margin-top-25">{enterprise.phone}</h4>
+                        </div>
                     </div>
                 ))}
             </div>

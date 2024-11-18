@@ -73,23 +73,16 @@
 }
 
 .popup-close-button {
-    position: fixed;
-    top: 4.375rem;
-    right: 4.375rem;
+    display: flex;
+    align-items: center;
+
     z-index: 5000;
+    margin-left: auto;
 
     background-color: transparent;
     border: none;
     cursor: pointer;
     transition: all ease-out 200ms;
-}
-
-.popup-close-button > svg {
-    width: 2.5rem;
-    height: auto;
-
-    fill: var(--white);
-    stroke: var(--white);
 }
 
 .popup-close-button:hover {
