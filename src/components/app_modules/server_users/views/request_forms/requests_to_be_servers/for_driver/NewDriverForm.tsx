@@ -42,6 +42,8 @@ import BaseForm from "@/components/form/view/forms/BaseForm";
 import { isValidAttachmentField, isValidTextField } from "@/components/form/validators/FieldValidators";
 import { isValidPersonalData } from "@/components/app_modules/server_users/validators/for_data/PersonalDataValidator";
 import { areValidVehicles } from "@/components/app_modules/server_users/validators/for_data/VehicleValidator";
+import { isPhoneValid } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
 interface Form {
     personalData: PersonalData;
@@ -205,12 +207,16 @@ const NewDriverForm: React.FC<Props> = ({
                     if (
                         isValidTextField(
                             form.personalData.alternativePhoneNumber,
-                        )
+                        ) &&
+                        isPhoneValid(
+                            form.personalData.alternativePhoneNumber.value,
+                        ).isValid
                     ) {
                         toUpdate = {
                             ...toUpdate,
-                            alternativePhoneNumber:
+                            alternativePhoneNumber: parseBoliviaPhone(
                                 form.personalData.alternativePhoneNumber.value,
+                            ),
                         };
                     }
                     try {

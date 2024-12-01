@@ -1,4 +1,4 @@
-import { UserInterface } from "@/interfaces/UserInterface";
+import { flatPhone, UserInterface } from "@/interfaces/UserInterface";
 import { ROLES_TO_VIEW_USER_STATE } from "@/components/guards/models/PermissionsByUserRole";
 import GuardOfModule from "@/components/guards/views/module_guards/GuardOfModule";
 import { getUserRoleDetails } from "../../utils/UserRoleGetter";
@@ -36,7 +36,7 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                     )}
                 </h2>
                 <h4 className="text | light">{user.email}</h4>
-                <h4 className="text | light">{user.phoneNumber}</h4>
+                <h4 className="text | light">{flatPhone(user.phoneNumber)}</h4>
                 <h4 className="text | light margin-bottom-50">
                     {user.services.toString().replaceAll(",", " | ")}
                 </h4>

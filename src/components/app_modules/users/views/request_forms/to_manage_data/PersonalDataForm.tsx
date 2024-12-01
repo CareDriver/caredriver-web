@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import UserIcon from "@/icons/UserIcon";
 
 import { AuthContext } from "@/context/AuthContext";
-import { UserInterface } from "@/interfaces/UserInterface";
+import { flatPhone, UserInterface } from "@/interfaces/UserInterface";
 import ImageUploader from "../../../../../form/view/attachment_fields/ImageUploader";
 import IdentityCardForm from "./IdentityCardForm";
 import { PersonalData } from "../../../../server_users/models/PersonalDataFields";
@@ -60,7 +60,7 @@ const PersonalDataForm: React.FC<Props> = ({
                             : "No se subió una foto de perfil, por favor sube una foto",
                 },
                 alternativePhoneNumber: {
-                    value: requesterUser.alternativePhoneNumber ?? "",
+                    value: flatPhone(requesterUser.alternativePhoneNumber) ?? "",
                     message: null,
                 },
                 idCard: {

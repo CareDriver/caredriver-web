@@ -4,7 +4,7 @@ import HelmetSafety from "@/icons/HelmetSafety";
 import UserIcon from "@/icons/UserIcon";
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 import { ServicesDataInterface } from "@/interfaces/ServicesDataInterface";
-import { UserInterface } from "@/interfaces/UserInterface";
+import { flatPhone, UserInterface } from "@/interfaces/UserInterface";
 import { getUserById } from "@/components/app_modules/users/api/UserRequester";
 import { useEffect, useState } from "react";
 import "@/styles/components/app-user.css";
@@ -52,7 +52,7 @@ const RendererOfTheUsersInvolvedInTheService = ({
     const toRenderUser = (user: UserInterface): UserServiceInfo => {
         return {
             fullName: user.fullName,
-            phoneNumber: user.phoneNumber,
+            phoneNumber: flatPhone(user.phoneNumber),
             photoUrl: user.photoUrl.url,
             email: user.email,
         };

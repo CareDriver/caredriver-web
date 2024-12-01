@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { routeToProfileAsUser } from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
 import { updateUser } from "@/components/app_modules/users/api/UserRequester";
 import "react-international-phone/style.css";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
 interface Form {
     phone: TextFieldForm;
@@ -55,7 +56,7 @@ const PhoneRegistrationForm = () => {
         try {
             await toast.promise(
                 updateUser(user.id, {
-                    phoneNumber: form.phone.value,
+                    phoneNumber: parseBoliviaPhone(form.phone.value),
                 }),
                 {
                     pending: "Agregando numero de celular",

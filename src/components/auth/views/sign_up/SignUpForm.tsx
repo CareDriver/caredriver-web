@@ -28,6 +28,7 @@ import { routeToSingIn } from "@/utils/route_builders/as_not_logged/RouteBuilder
 import { sendVerificationCode } from "../../api/VerificationCodeSender";
 import CodeVerifier from "../verifiers/CodeVerifier";
 import AuthProviders from "../providers/AuthProviders";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
 interface Form {
     fullName: TextFieldForm;
@@ -253,7 +254,7 @@ function formToNewUser(form: Form): UserInterface {
     return {
         ...EMPTY_USER_DATA,
         fullName: form.fullName.value.toLocaleLowerCase().trimEnd().trimStart(),
-        phoneNumber: form.phone.value,
+        phoneNumber: parseBoliviaPhone(form.phone.value),
         location: form.location,
         email: form.email.value.toLocaleLowerCase().trim(),
     };

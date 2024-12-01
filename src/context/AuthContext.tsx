@@ -3,7 +3,9 @@
 import { auth } from "@/firebase/FirebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import {
+    DEFAULT_PHONE,
     defaultServiceReq,
+    flatPhone,
     UserInterface,
     UserRole,
 } from "@/interfaces/UserInterface";
@@ -22,6 +24,7 @@ import {
 } from "@/utils/helpers/DateHelper";
 import { Locations } from "@/interfaces/Locations";
 import { isNullOrEmptyText } from "@/validators/TextValidator";
+import { Timestamp } from "firebase/firestore";
 
 interface UserProps {
     hasPhoto: boolean;
@@ -60,7 +63,8 @@ const loadUserLoggedData = (
             id: id,
             fakeId: userData.fakeId ?? "",
             fullName: userData?.fullName ?? "",
-            phoneNumber: userData?.phoneNumber ?? "",
+            phoneNumber: userData?.phoneNumber ?? DEFAULT_PHONE,
+            lastPhoneVerification: Timestamp.now(),
             alternativePhoneNumber: userData.alternativePhoneNumber,
             photoUrl: userData?.photoUrl ?? EMPTY_REF_ATTACHMENT,
             vehicles: userData?.vehicles ?? [],
@@ -136,12 +140,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                 );
                             } else {
                                 let userLoaded: UserInterface | undefined =
-                                    loadUserLoggedData(userId, userData);                                    
+                                    loadUserLoggedData(userId, userData);
                                 setUserProps((prev) => ({
                                     ...prev,
-                                    hasLocation: userData.location !== undefined,
-                                    hasPhone: !isNullOrEmptyText(
-                                        userData.phoneNumber,
+                                    hasLocation:
+                                        userData.location !== undefined,
+                                    hasPhone: isNullOrEmptyText(
+                                        flatPhone(userData.phoneNumber),
                                     ),
                                     hasPhoto:
                                         userData.photoUrl.url.length > 0 &&

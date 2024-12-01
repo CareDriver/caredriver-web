@@ -43,6 +43,8 @@ import { isValidVehicle } from "@/components/app_modules/server_users/validators
 import { isValidAttachmentField, isValidTextField } from "@/components/form/validators/FieldValidators";
 import { routeToRequestToBeServerUserAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
 import BaseForm from "@/components/form/view/forms/BaseForm";
+import { isPhoneValid } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
 type VehicleToAddAsDriver = "car" | "motorcycle";
 
@@ -205,12 +207,16 @@ const NewVehicleForm: React.FC<Props> = ({
                     if (
                         isValidTextField(
                             form.personalData.alternativePhoneNumber,
-                        )
+                        ) &&
+                        isPhoneValid(
+                            form.personalData.alternativePhoneNumber.value,
+                        ).isValid
                     ) {
                         toUpdate = {
                             ...toUpdate,
-                            alternativePhoneNumber:
+                            alternativePhoneNumber: parseBoliviaPhone(
                                 form.personalData.alternativePhoneNumber.value,
+                            ),
                         };
                     }
                     try {

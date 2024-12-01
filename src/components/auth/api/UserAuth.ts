@@ -25,7 +25,11 @@ export const EMPTY_USER_DATA: UserInterface = {
     fakeId: genFakeId(),
     role: UserRole.User,
     fullName: "",
-    phoneNumber: "",
+    phoneNumber: {
+        countryCode: "+591",
+        number: ""
+    },
+    lastPhoneVerification: Timestamp.now(),
     photoUrl: EMPTY_REF_ATTACHMENT,
     createdAt: Timestamp.now(),
 

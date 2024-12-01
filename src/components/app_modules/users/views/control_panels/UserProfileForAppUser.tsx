@@ -1,6 +1,6 @@
 "use client";
 
-import { UserInterface } from "@/interfaces/UserInterface";
+import { flatPhone, UserInterface } from "@/interfaces/UserInterface";
 import { getUserByFakeIdInRealTime } from "@/components/app_modules/users/api/UserRequester";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -101,7 +101,7 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                         <>
                             <h3 className="text | medium">{user.location}</h3>
                             <h3 className="text | medium">
-                                {user.phoneNumber}
+                                {flatPhone(user.phoneNumber)}
                             </h3>
                             <div className="separator-horizontal"></div>
 
@@ -156,10 +156,10 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                         >
                             <UserContactsRenderer
                                 email={user.email}
-                                phoneNumber={user.phoneNumber}
-                                alternativePhoneNumber={
-                                    user.alternativePhoneNumber
-                                }
+                                phoneNumber={flatPhone(user.phoneNumber)}
+                                alternativePhoneNumber={flatPhone(
+                                    user.alternativePhoneNumber,
+                                )}
                             />
                         </GuardOfModule>
                     )}

@@ -57,8 +57,9 @@ export interface UserInterface {
     fakeId?: string;
     role?: UserRole; // the role that the user has in the application
     fullName: string; // Full name of the user
-    phoneNumber: string; // Phone number of the user (includes country code, ej: +591 76543218)
-    alternativePhoneNumber?: string;
+    phoneNumber: PhoneNumber; // Phone number of the user (includes country code, ej: +591 76543218)
+    lastPhoneVerification: Timestamp; // Last time the phone number was verified
+    alternativePhoneNumber?: PhoneNumber;
     photoUrl: RefAttachment; // URL of the user's photo
     email?: string; // User's email
     identityCard?: IdentityCard; // User's Id card
@@ -89,6 +90,24 @@ export interface UserInterface {
     branding?: Branding;
     createdAt?: Timestamp;
     serverUserAt?: Timestamp;
+}
+
+export interface PhoneNumber {
+    countryCode: string;
+    number: string;
+}
+
+export const DEFAULT_PHONE:PhoneNumber = {
+    countryCode: "",
+    number: ""
+}
+
+export const flatPhone = (phone: PhoneNumber | undefined | null) => {
+    if (phone === undefined || phone === null) {
+        return "";
+    }
+
+    return phone.countryCode + phone.number;
 }
 
 export interface IdentityCard {

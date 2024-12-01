@@ -15,6 +15,7 @@ import {
     updateUser,
 } from "@/components/app_modules/users/api/UserRequester";
 import {
+    flatPhone,
     ServiceRequestsInterface,
     UserInterface,
 } from "@/interfaces/UserInterface";
@@ -296,8 +297,8 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 {requesterUser ? (
                     <UserContactsRendererForForm
                         email={requesterUser.email}
-                        phoneNumber={requesterUser.phoneNumber}
-                        alternativePhoneNumber={requesterUser.alternativePhoneNumber}
+                        phoneNumber={flatPhone(requesterUser.phoneNumber)}
+                        alternativePhoneNumber={flatPhone(requesterUser.alternativePhoneNumber)}
                     />
                 ) : (
                     <span className="row-wrapper text | bold gray-medium">

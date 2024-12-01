@@ -36,6 +36,7 @@ import { isValidName } from "../../../app_modules/users/validators/for_data/Cred
 import { genFakeId } from "@/utils/generators/IdGenerator";
 import BaseForm from "../../../form/view/forms/BaseForm";
 import { DEFAULT_FORM_STATE, FormState } from "../../../form/models/Forms";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
 interface Form {
     fullName: TextFieldForm;
@@ -281,7 +282,7 @@ function formToNewUser(form: Form): UserInterface {
     let userData: UserInterface = {
         ...EMPTY_USER_DATA,
         fullName: form.fullName.value.toLocaleLowerCase().trimEnd().trimStart(),
-        phoneNumber: form.phone.value,
+        phoneNumber: parseBoliviaPhone(form.phone.value),
         location: form.location,
         email: form.email.value.toLocaleLowerCase().trim(),
         role: form.role,

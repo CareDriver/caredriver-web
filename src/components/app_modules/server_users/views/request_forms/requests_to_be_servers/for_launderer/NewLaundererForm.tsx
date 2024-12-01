@@ -46,6 +46,8 @@ import {
 } from "@/components/form/validators/FieldValidators";
 import EnterpriseSelectorById from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelectorById";
 import BaseForm from "@/components/form/view/forms/BaseForm";
+import { isPhoneValid } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
 interface Form {
     personalData: PersonalData;
@@ -143,12 +145,16 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                     if (
                         isValidTextField(
                             form.personalData.alternativePhoneNumber,
-                        )
+                        ) &&
+                        isPhoneValid(
+                            form.personalData.alternativePhoneNumber.value,
+                        ).isValid
                     ) {
                         toUpdate = {
                             ...toUpdate,
-                            alternativePhoneNumber:
+                            alternativePhoneNumber: parseBoliviaPhone(
                                 form.personalData.alternativePhoneNumber.value,
+                            ),
                         };
                     }
                     try {

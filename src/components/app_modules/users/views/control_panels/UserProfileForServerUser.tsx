@@ -18,6 +18,7 @@ import { isNullOrEmptyText } from "@/validators/TextValidator";
 import FieldDeleted from "@/components/form/view/field_renderers/FieldDeleted";
 import BalanceHistoryRenderer from "../data_renderers/for_activity_in_the_app/BalanceHistoryRenderer";
 import "@/styles/components/debt-user.css";
+import { flatPhone } from "@/interfaces/UserInterface";
 
 const UserProfileForServerUser = () => {
     const { user, checkingUserAuth, userProps } = useContext(AuthContext);
@@ -38,9 +39,9 @@ const UserProfileForServerUser = () => {
                         {user.email && (
                             <h2 className="profile-email">{user.email}</h2>
                         )}
-                        {!isNullOrEmptyText(user.phoneNumber) && (
+                        {!isNullOrEmptyText(flatPhone(user.phoneNumber)) && (
                             <h2 className="profile-email">
-                                {user.phoneNumber}
+                                {flatPhone(user.phoneNumber)}
                             </h2>
                         )}
                     </div>
