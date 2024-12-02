@@ -13,6 +13,9 @@ import { geoPointToLatLng } from "../../utils/MapLocationHelper";
 import { isNullOrEmptyText } from "@/validators/TextValidator";
 import { MAIN_COLOR, SECOND_COLOR_LIGHT, WHITE_COLOR } from "@/models/Colors";
 import { NAME_BUSINESS } from "@/models/Business";
+import { createGoogleMapsUrl } from "@/utils/helpers/MapHelper";
+import GoogleMapsRedirector from "../maps/GoogleMapsRedirector";
+import "@/styles/modules/map.css"
 
 const MapPolylineRenderer = ({
     priorArrivalRoute,
@@ -21,6 +24,8 @@ const MapPolylineRenderer = ({
     priorArrivalRoute: CoordinateRegister[];
     serviceInProgressRoute: CoordinateRegister[];
 }) => {
+    const [googleMapsUrl, setGoogleMapsUrl] = useState<string | null>(null);
+
     const mapRef = useRef<HTMLDivElement>(null);
     const mapInstanceRef = useRef<google.maps.Map | null>(null);
     const [mapLoaded, setMapLoaded] = useState(false);
@@ -69,8 +74,8 @@ const MapPolylineRenderer = ({
                         "marker",
                     )) as google.maps.MarkerLibrary;
 
-                var scale = 0.8;
-                var majorScale = scale + 0.8;
+                var scale = 1;
+                var majorScale = scale + 1;
 
                 var first = coordinates[0];
                 renderPoint(
@@ -78,7 +83,7 @@ const MapPolylineRenderer = ({
                     PinElement,
                     majorScale,
                     background,
-                    background,
+                    borderColor,
                     glyphColor,
                     first,
                     markers,
@@ -156,6 +161,12 @@ const MapPolylineRenderer = ({
                     infoWindow.close();
                     infoWindow.open(mark.map, mark);
                 });
+
+                let mapUrl: string = createGoogleMapsUrl({
+                    lat: coordinate.lat,
+                    lng: coordinate.long,
+                });
+                setGoogleMapsUrl(mapUrl);
                 markers.current.push(mark);
             }
         };
@@ -198,7 +209,7 @@ const MapPolylineRenderer = ({
         const renderPriorMarks = async () => {
             if (priorArrivalRoute.length > 0) {
                 let background = SECOND_COLOR_LIGHT;
-                let borderColor = WHITE_COLOR;
+                let borderColor = SECOND_COLOR_LIGHT;
                 let glyphColor = WHITE_COLOR;
                 await renderPoints(
                     background,
@@ -213,8 +224,8 @@ const MapPolylineRenderer = ({
         const renderInProgressMarks = async () => {
             if (serviceInProgressRoute.length > 0) {
                 let background = MAIN_COLOR;
-                let borderColor = WHITE_COLOR;
-                let glyphColor = WHITE_COLOR;
+                let borderColor = SECOND_COLOR_LIGHT;
+                let glyphColor = SECOND_COLOR_LIGHT;
                 await renderPoints(
                     background,
                     borderColor,
@@ -265,15 +276,11 @@ const MapPolylineRenderer = ({
     }, [priorArrivalRoute, serviceInProgressRoute]);
 
     return (
-        <div
-            style={{
-                height: "80vh",
-                width: "100%",
-                borderRadius: "15px",
-            }}
-            ref={mapRef}
-        ></div>
-    );
+        <div className="map-main-wrapper">
+            <div className="map-content-wrapper" ref={mapRef}></div>
+            <GoogleMapsRedirector googleMapsUrl={googleMapsUrl}/>
+        </div>
+    )
 };
 
 export default MapPolylineRenderer;

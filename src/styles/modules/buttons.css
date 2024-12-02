@@ -191,6 +191,13 @@
     color: var(--white);
 }
 
+.circle-button.purple,
+.small-general-button.purple {
+    border: none;
+    background-color: var(--purple);
+    color: var(--white);
+}
+
 /* .small-general-button.red {
     border: 0.111111111rem solid var(--second-dark);
 } */

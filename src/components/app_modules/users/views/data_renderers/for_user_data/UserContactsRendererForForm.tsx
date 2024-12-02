@@ -37,7 +37,7 @@ const UserContactsRendererForForm: React.FC<Props> = ({
                     <button
                         type="button"
                         onClick={() => contactUserByWhatsapp(phoneNumber)}
-                        className="icon-wrapper text general-button | bold mb"
+                        className="icon-wrapper text general-button | white-icon white bold mb"
                     >
                         <Whatsapp /> Contactar por WhatsApp
                     </button>
@@ -48,7 +48,7 @@ const UserContactsRendererForForm: React.FC<Props> = ({
                         onClick={() =>
                             contactUserByWhatsapp(alternativePhoneNumber)
                         }
-                        className="icon-wrapper text general-button | white-icon bold mb"
+                        className="icon-wrapper text general-button | white-icon white bold mb"
                     >
                         <Whatsapp />{" "}
                         <div className="column-wrapper | column-right">

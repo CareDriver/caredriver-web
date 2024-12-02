@@ -1,13 +1,17 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import { GOOGLEMAPS_TOKEN } from "@/components/form/models/MapProperties";
 import { GeoPoint } from "firebase/firestore";
 import { geoPointToLatLng } from "@/components/form/utils/MapLocationHelper";
-import { MAIN_COLOR, WHITE_COLOR } from "@/models/Colors";
+import { MAIN_COLOR, SECOND_COLOR_LIGHT, WHITE_COLOR } from "@/models/Colors";
+import { createGoogleMapsUrl } from "@/utils/helpers/MapHelper";
+import GoogleMapsRedirector from "../maps/GoogleMapsRedirector";
+import "@/styles/modules/map.css"
 
 const MapMarkRenderer = ({ location }: { location: GeoPoint }) => {
     const mapRef = useRef<HTMLDivElement>(null);
+    const [googleMapsUrl, setGoogleMapsUrl] = useState<string | null>(null);
 
     useEffect(() => {
         if (mapRef && mapRef.current) {
@@ -36,16 +40,19 @@ const MapMarkRenderer = ({ location }: { location: GeoPoint }) => {
                         "marker",
                     )) as google.maps.MarkerLibrary;
                 const pin = new PinElement({
-                    scale: 1.6,
+                    scale: 2,
                     background: MAIN_COLOR,
-                    glyphColor: WHITE_COLOR,
-                    borderColor: MAIN_COLOR,
+                    glyphColor: SECOND_COLOR_LIGHT,
+                    borderColor: SECOND_COLOR_LIGHT,
                 });
                 new AdvancedMarkerElement({
                     map,
                     position: geoPointToLatLng(location),
                     content: pin.element,
                 });
+
+                let mapUrl: string = createGoogleMapsUrl(position);
+                setGoogleMapsUrl(mapUrl);
             };
 
             initMap();
@@ -53,15 +60,11 @@ const MapMarkRenderer = ({ location }: { location: GeoPoint }) => {
     }, []);
 
     return (
-        <div
-            style={{
-                height: "50vh",
-                width: "100%",
-                borderRadius: "0.9375rem"
-            }}
-            ref={mapRef}
-        ></div>
-    );
+        <div className="map-main-wrapper">
+            <div className="map-content-wrapper" ref={mapRef}></div>
+            <GoogleMapsRedirector googleMapsUrl={googleMapsUrl}/>
+        </div>
+    )
 };
 
 export default MapMarkRenderer;

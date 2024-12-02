@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import {
     DEFAULT_LOCATION,
@@ -7,7 +7,10 @@ import {
 } from "@/components/form/models/MapProperties";
 import { GeoPoint } from "firebase/firestore";
 import { geoPointToLatLng } from "../../utils/MapLocationHelper";
-import { MAIN_COLOR, WHITE_COLOR } from "@/models/Colors";
+import { MAIN_COLOR, SECOND_COLOR_LIGHT, WHITE_COLOR } from "@/models/Colors";
+import { createGoogleMapsUrl } from "@/utils/helpers/MapHelper";
+import LocationDot from "@/icons/LocationDot";
+import GoogleMapsRedirector from "./GoogleMapsRedirector";
 
 interface Props {
     location: GeoPoint | undefined;
@@ -16,7 +19,8 @@ interface Props {
 
 const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
     const mapRef = useRef<HTMLDivElement>(null);
-    var lastMarker: google.maps.marker.AdvancedMarkerElement | null = null;    
+    var lastMarker: google.maps.marker.AdvancedMarkerElement | null = null;
+    const [googleMapsUrl, setGoogleMapsUrl] = useState<string | null>(null);
 
     useEffect(() => {
         const initMap = async () => {
@@ -41,12 +45,11 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
                     "marker",
                 )) as google.maps.MarkerLibrary;
 
-            /* TODO: move colors to TS file */
             const pin = new PinElement({
-                scale: 1.6,
+                scale: 2,
                 background: MAIN_COLOR,
-                glyphColor: WHITE_COLOR,
-                borderColor: MAIN_COLOR,
+                glyphColor: SECOND_COLOR_LIGHT,
+                borderColor: SECOND_COLOR_LIGHT,
             });
 
             if (location) {
@@ -55,6 +58,11 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
                     position: geoPointToLatLng(location),
                     content: pin.element,
                 });
+                let mapUrl: string = createGoogleMapsUrl({
+                    lat: location.latitude,
+                    lng: location.longitude,
+                });
+                setGoogleMapsUrl(mapUrl);
             }
 
             map.addListener("click", (mapsMouseEvent: any) => {
@@ -73,6 +81,8 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
                     });
                 }
 
+                let mapUrl: string = createGoogleMapsUrl(newPosition);
+                setGoogleMapsUrl(mapUrl);
                 setLocation(new GeoPoint(newPosition.lat, newPosition.lng));
             });
         };
@@ -81,14 +91,10 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
     }, []);
 
     return (
-        <div
-            /* TODO: move styles to css */
-            style={{
-                height: "50vh",
-                width: "100%",
-            }}
-            ref={mapRef}
-        ></div>
+        <div className="map-main-wrapper">
+            <div className="map-content-wrapper" ref={mapRef}></div>
+            <GoogleMapsRedirector googleMapsUrl={googleMapsUrl} />
+        </div>
     );
 };
 
