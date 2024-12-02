@@ -45,10 +45,10 @@ export const verifyUserAvailabilityToBeEnterpriseOwner = async (
         };
     }
 
-    if (userFound.role !== UserRole.User) {
+    if (userFound.role === UserRole.BalanceRecharge) {
         return {
             isValid: false,
-            message: "El usuario no puede ser dueño de la empresa",
+            message: "El usuario no puede ser dueño de la empresa porque es recargador de saldo",
         };
     }
 
