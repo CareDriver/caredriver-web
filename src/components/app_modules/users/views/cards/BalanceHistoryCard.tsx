@@ -1,5 +1,6 @@
 import { BalanceHistory } from "@/interfaces/Payment";
 import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
+import { routeToServicePerformed } from "@/utils/route_builders/for_services/RouteBuilderForServices";
 import { cutTextWithDotsByLength } from "@/utils/text_helpers/TextCutter";
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
         extraClassStyle?: string;
     };
     behaviour?: {
+        toGoService?: boolean;
         onClick?: () => void;
     };
 }
@@ -22,6 +24,25 @@ const BalanceHistoryCard: React.FC<Props> = ({ content, style, behaviour }) => {
         }
 
         return newPrice - oldPrice;
+    };
+
+    const handleClick = () => {
+        if (
+            behaviour?.toGoService &&
+            content.data.serviceType &&
+            content.data.serviceFakeId
+        ) {
+            window.open(
+                routeToServicePerformed(
+                    content.data.serviceType,
+                    content.data.serviceFakeId,
+                ),
+                "_blank",
+            );
+        } else {
+            const func = behaviour?.onClick ?? (() => {});
+            func();
+        }
     };
 
     return (
@@ -36,7 +57,7 @@ const BalanceHistoryCard: React.FC<Props> = ({ content, style, behaviour }) => {
                         : "increased"
                     : ""
             } ${style?.extraClassStyle ?? ""}`}
-            onClick={behaviour?.onClick ?? (() => {})}
+            onClick={handleClick}
         >
             <div>
                 <span
@@ -93,6 +114,13 @@ const BalanceHistoryCard: React.FC<Props> = ({ content, style, behaviour }) => {
                     </i>
                 </div>
             )}
+            {behaviour?.toGoService &&
+                content.data.serviceType &&
+                content.data.serviceFakeId && (
+                    <span className="text | light underline">
+                        Click para ir al servicio
+                    </span>
+                )}
         </div>
     );
 };

@@ -26,11 +26,10 @@ const BalanceHistoryRenderer = ({
     );
 
     return (
-        balanceHistory && balanceHistory.length > 0 && (
+        balanceHistory &&
+        balanceHistory.length > 0 && (
             <div className="margin-top-50">
-                <h2 className="text | bold gray-darker">
-                    Historial de saldo
-                </h2>
+                <h2 className="text | bold gray-darker">Historial de saldo</h2>
                 <div className="debt-wrapper max-width-80">
                     {orderHistory().map((balance, i) => (
                         <BalanceHistoryCard
@@ -56,6 +55,9 @@ const BalanceHistoryRenderer = ({
                         <BalanceHistoryCard
                             content={{
                                 data: itemSelected,
+                            }}
+                            behaviour={{
+                                toGoService: true,
                             }}
                         />
                     </Popup>
