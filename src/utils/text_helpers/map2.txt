@@ -11,7 +11,6 @@ import { MAIN_COLOR, SECOND_COLOR_LIGHT, WHITE_COLOR } from "@/models/Colors";
 import { createGoogleMapsUrl } from "@/utils/helpers/MapHelper";
 import LocationDot from "@/icons/LocationDot";
 import GoogleMapsRedirector from "./GoogleMapsRedirector";
-import "@/styles/modules/map.css"
 
 interface Props {
     location: GeoPoint | undefined;

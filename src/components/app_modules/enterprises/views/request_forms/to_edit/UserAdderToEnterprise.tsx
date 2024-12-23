@@ -122,7 +122,6 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
             setFormState((prev) => ({
                 ...prev,
                 isValid: false,
-
                 message: "El usuario no puede ser miembro de la empresa",
             }));
         } else {
@@ -232,6 +231,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                                     onClick={() =>
                                         registerAsUserServer(userToAdd.data)
                                     }
+                                    disabled={!formState.isValid}
                                 >
                                     <HelmetSafety />
                                     Usuario Servidor
@@ -242,6 +242,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                                     onClick={() =>
                                         registerAsSupportUser(userToAdd.data)
                                     }
+                                    disabled={!formState.isValid}
                                 >
                                     <UserGear />
                                     Usuario Soporte
@@ -270,7 +271,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                                     </p>
                                     <button
                                         type="button"
-                                        className="small-general-button text | bold green touchable margin-top-25  | icon-wrapper white-icon"
+                                        className="small-general-button text | bold green touchable margin-top-25  | icon-wrapper"
                                         onClick={() =>
                                             registerAsUserServer(userLogged)
                                         }

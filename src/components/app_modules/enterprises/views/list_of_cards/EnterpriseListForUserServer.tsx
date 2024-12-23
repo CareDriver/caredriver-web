@@ -103,10 +103,10 @@ const EnterpriseListForUserServer: React.FC<Props> = ({
                     </h2>
                     <button
                         onClick={sendMessageForNewEnterprise}
-                        className="small-general-button text wrap | icon-wrapper lb white-icon | margin-top-25"
+                        className="small-general-button text wrap | icon-wrapper lb | margin-top-25"
                     >
                         <Whatsapp />
-                        <span className="text white">Enviar mensaje</span>
+                        <span className="text">Enviar mensaje</span>
                     </button>
                 </div>
             )}

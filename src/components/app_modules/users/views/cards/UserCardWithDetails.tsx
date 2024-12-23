@@ -12,6 +12,7 @@ import {
     cutTextWithDotsByLength,
     MAX_LENGTH_FOR_NAMES_DISPLAY,
 } from "@/utils/text_helpers/TextCutter";
+import { isNullOrEmptyText } from "@/validators/TextValidator";
 
 interface Props {
     user: UserInterface;
@@ -36,7 +37,11 @@ const UserCardWithDetails: React.FC<Props> = ({ user, reviewerUser }) => {
                     )}
                 </h2>
                 <h4 className="text | light">{user.email}</h4>
-                <h4 className="text | light">{flatPhone(user.phoneNumber)}</h4>
+                <h4 className="text | light">
+                    {user.phoneNumber?.number &&
+                        !isNullOrEmptyText(user.phoneNumber.number) &&
+                        flatPhone(user.phoneNumber)}
+                </h4>
                 <h4 className="text | light margin-bottom-50">
                     {user.services.toString().replaceAll(",", " | ")}
                 </h4>
