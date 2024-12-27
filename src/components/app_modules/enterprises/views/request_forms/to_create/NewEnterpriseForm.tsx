@@ -48,6 +48,7 @@ import { compressFileBase64 } from "@/utils/compressors/FileCompressor";
 import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
 import { DRIVER_PLURAL, NAME_BUSINESS } from "@/models/Business";
 import { DEFAULT_CIPHERS } from "node:tls";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
 interface Form {
     name: TextFieldForm;
@@ -108,6 +109,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                 );
 
                 var id = genDocId();
+                let enterprisePhone = parseBoliviaPhone(form.phone.value)
                 const enterprise: Enterprise = {
                     id,
                     type: enterpriseType,
@@ -117,7 +119,8 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                     coordinates: form.coordinates.value,
                     latitude: form.coordinates.value.latitude,
                     longitude: form.coordinates.value.longitude,
-                    phone: form.phone.value,
+                    phone: enterprisePhone.number,
+                    phoneCountryCode: enterprisePhone.countryCode,
                     userId: form.userOwner.value,
                     aproved: true,
                     deleted: false,
@@ -126,6 +129,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                     addedUsers: [],
                     addedUsersId: [],
                     commition: form.hasCommition,
+                    comissionsHistory: []
                 };
 
                 await toast.promise(sendEnterpriseReq(id, enterprise), {

@@ -1,8 +1,8 @@
 import TriangleExclamation from "@/icons/TriangleExclamation";
-import { Enterprise } from "@/interfaces/Enterprise";
+import { EnterpriseData } from "@/interfaces/Enterprise";
 import { ENTERPRISE_TO_SPANISH_WITH_DEFINITE_ARTICLE } from "../../utils/EnterpriseSpanishTranslator";
 
-const EnterpriseStatus = ({ enterprise }: { enterprise: Enterprise }) => {
+const EnterpriseStatus = ({ enterprise }: { enterprise: EnterpriseData }) => {
     const DELETED_MESSAGE =
         enterprise.type === "tow" ? "eliminada" : "eliminado";
     const DISABLE_MESSAGE =

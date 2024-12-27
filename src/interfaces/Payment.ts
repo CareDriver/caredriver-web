@@ -39,4 +39,17 @@ export interface BalanceHistoryItem {
     userWhoChanged: string;
 }
 
+export interface DebtHistory extends Payment {
+    paidDebtId?: string;
+    note?: string;
+    newDebt?: Price;
+    transactionNumber: string;
+}
+
+export interface ComissionHistory {
+    serviceId: string;
+    serviceType: ServiceType;
+    amount: Price;
+}
+
 export const currencyList = ["Bs. (BOB)"];

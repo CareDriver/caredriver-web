@@ -45,6 +45,7 @@ import { ROLES_TO_ADD_AGREEMENT_TO_ENTERPRISES } from "@/components/guards/model
 import { compressFileBase64 } from "@/utils/compressors/FileCompressor";
 import { NAME_BUSINESS } from "@/models/Business";
 import { isNullOrEmptyText } from "@/validators/TextValidator";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
 interface Form {
     name: TextFieldForm;
@@ -286,13 +287,16 @@ async function formToEnterprise(
         image = imgWithRef;
     }
 
+    const enterprisePhone = parseBoliviaPhone(form.phone.value);
+
     return {
         ...baseEnterprise,
         name: form.name.value,
         description: form.description.value,
         logoImgUrl: image,
         coordinates: form.coordinates.value,
-        phone: form.phone.value,
+        phone: enterprisePhone.number ?? "",
+        phoneCountryCode: enterprisePhone.countryCode ?? "",
         location: form.location,
         latitude: form.coordinates.value.latitude,
         longitude: form.coordinates.value.longitude,
@@ -334,7 +338,7 @@ function enterpriseToForm(enterprise: Enterprise): Form {
 function hasChanges(form: Form, currentEnterprise: Enterprise): boolean {
     return (
         form.name.value !== currentEnterprise.name ||
-        (form.description.value !== currentEnterprise?.description) ||
+        form.description.value !== currentEnterprise?.description ||
         form.phone.value !== currentEnterprise.phone ||
         form.logo.value !== currentEnterprise.logoImgUrl.url ||
         (currentEnterprise.location !== undefined &&
