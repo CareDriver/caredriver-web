@@ -19,6 +19,9 @@ import { ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE } from "../../../uti
 import EnterpriseUsersPanel from "../EnterpriseUsersPanel";
 import { EnterpriseManagementView } from "../../../models/EntepriseMangementViews";
 import EnterpriseManagementPanel from "../EnterpriseManagementPanel";
+import CurrentEnterpriseDebt from "../../data_renderers/CurrentEnterpriseDebt";
+import EnterprisePaidDebtHistoryRenderer from "../../data_renderers/EnterprisePaidDebtHistoryRenderer";
+import EnterpriseComissionHistoryRenderer from "../../data_renderers/EnterpriseComissionHistoryRenderer";
 
 interface Props {
     id: string;
@@ -99,6 +102,27 @@ const EnterprisePanelForUserServer: React.FC<Props> = ({ id }) => {
                             setView: serView,
                         }}
                     />
+
+                    {enterprise.commition && (
+                        <>
+                            <div className="max-width-80 margin-top-25">
+                                <div className="separator-horizontal"></div>
+                            </div>
+
+                            <CurrentEnterpriseDebt enterprise={enterprise} />
+                            <EnterprisePaidDebtHistoryRenderer
+                                history={enterprise.paidDebtsHistory}
+                            />
+                            <EnterpriseComissionHistoryRenderer
+                                history={enterprise.comissionsHistory}
+                            />
+                        </>
+                    )}
+
+                    <div className="max-width-80 margin-top-25">
+                        <div className="separator-horizontal"></div>
+                    </div>
+
                     {isTheEnterpriseOwner(user, enterprise) && (
                         <FormToDeleteEnterprise enterprise={enterprise} />
                     )}

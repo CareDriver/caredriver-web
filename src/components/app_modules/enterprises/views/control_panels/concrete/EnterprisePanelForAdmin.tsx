@@ -19,6 +19,9 @@ import { AuthContext } from "@/context/AuthContext";
 import { ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE } from "../../../utils/EnterpriseSpanishTranslator";
 import EnterpriseManagementPanel from "../EnterpriseManagementPanel";
 import EnterpriseUsersPanel from "../EnterpriseUsersPanel";
+import CurrentEnterpriseDebt from "../../data_renderers/CurrentEnterpriseDebt";
+import EnterprisePaidDebtHistoryRenderer from "../../data_renderers/EnterprisePaidDebtHistoryRenderer";
+import EnterpriseComissionHistoryRenderer from "../../data_renderers/EnterpriseComissionHistoryRenderer";
 
 interface Props {
     id: string;
@@ -93,7 +96,23 @@ const EnterprisePanelForAdmin: React.FC<Props> = ({ id }) => {
                         }}
                     />
 
-                    <div className="max-width-80 margin-top-50">
+                    {enterprise.commition && (
+                        <>
+                            <div className="max-width-80 margin-top-25">
+                                <div className="separator-horizontal"></div>
+                            </div>
+
+                            <CurrentEnterpriseDebt enterprise={enterprise} />
+                            <EnterprisePaidDebtHistoryRenderer
+                                history={enterprise.paidDebtsHistory}
+                            />
+                            <EnterpriseComissionHistoryRenderer
+                                history={enterprise.comissionsHistory}
+                            />
+                        </>
+                    )}
+
+                    <div className="max-width-80 margin-top-25">
                         <div className="separator-horizontal"></div>
                     </div>
 
