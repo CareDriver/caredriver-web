@@ -146,7 +146,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                         <NewVehicleForm
                             type={type}
                             baseUser={userToAdd}
-                            defaultTowEnterprise={enterprise.id}
+                            defaultEnterprise={enterprise.id}
                         />
                     ) : (
                         <NewDriverForm

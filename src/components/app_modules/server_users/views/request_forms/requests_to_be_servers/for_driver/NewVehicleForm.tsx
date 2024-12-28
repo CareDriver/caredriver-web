@@ -45,8 +45,7 @@ import { routeToRequestToBeServerUserAsUser } from "@/utils/route_builders/as_us
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import { isPhoneValid } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
-
-type VehicleToAddAsDriver = "car" | "motorcycle";
+import { VehicleToAddAsDriver } from "@/components/app_modules/server_users/models/DriverRegistration";
 
 interface Form {
     personalData: PersonalData;
@@ -57,13 +56,13 @@ interface Form {
 
 interface Props {
     baseUser?: UserInterface;
-    defaultTowEnterprise: string;
+    defaultEnterprise?: string;
     type: VehicleToAddAsDriver;
 }
 
 const NewVehicleForm: React.FC<Props> = ({
     baseUser,
-    defaultTowEnterprise: defaultEnterprise,
+    defaultEnterprise,
     type,
 }) => {
     const { user, checkingUserAuth } = useContext(AuthContext);

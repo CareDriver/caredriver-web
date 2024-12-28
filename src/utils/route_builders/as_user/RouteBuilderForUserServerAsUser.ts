@@ -1,5 +1,5 @@
+import { VehicleToAddAsDriver } from "@/components/app_modules/server_users/models/DriverRegistration";
 import { ServiceType } from "@/interfaces/Services";
-
 const BASE_ROUTER = "/user/userserver";
 
 export function routeToRenewLicenseAsUser(
@@ -35,7 +35,9 @@ export function routeToRenewEnterpriseAsUser(
         }
     };
 
-    return BASE_ROUTER.concat("/renew/enterprise/").concat(serviceRoute(typeOfVehicle));
+    return BASE_ROUTER.concat("/renew/enterprise/").concat(
+        serviceRoute(typeOfVehicle),
+    );
 }
 
 export function routeToRequestToBeServerUserAsUser(type: ServiceType): string {
@@ -53,4 +55,10 @@ export function routeToRequestToBeServerUserAsUser(type: ServiceType): string {
     };
 
     return BASE_ROUTER.concat("/service/").concat(serviceRoute(type));
+}
+
+export function routeToRequestToRegisterNewVehicleAsIndependent(
+    type: VehicleToAddAsDriver,
+): string {
+    return BASE_ROUTER.concat("/service/driver/vehicle/").concat(type);
 }
