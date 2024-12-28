@@ -149,16 +149,21 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                         var userToUpdate: Partial<UserInterface> = {};
                         if (
                             wasApproved &&
-                            serviceReq.driverEnterprise &&
                             !requesterUser.services.includes(Services.Driver)
                         ) {
                             userToUpdate = {
                                 ...userToUpdate,
-                                driverEnterpriseId: serviceReq.driverEnterprise,
                                 services: [
                                     ...requesterUser.services,
                                     Services.Driver,
                                 ],
+                            };
+                        }
+
+                        if (serviceReq.driverEnterprise) {
+                            userToUpdate = {
+                                ...userToUpdate,
+                                driverEnterpriseId: serviceReq.driverEnterprise,
                             };
                         }
 
