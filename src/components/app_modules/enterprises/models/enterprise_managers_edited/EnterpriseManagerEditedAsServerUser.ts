@@ -28,7 +28,6 @@ export class EnterpriseManagerEditedAsServerUser
                 where("userId", "==", userId),
             );
             const querySnapshot = await getDocs(q);
-            console.log(querySnapshot.docs);
             return querySnapshot.size > 0;
         } catch (error) {
             return false;

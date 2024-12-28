@@ -27,8 +27,6 @@ const UserProfileForServerUser = () => {
         return <PageLoading />;
     }
 
-    console.log(userProps);
-
     return (
         user && (
             <section className="user-page-wrapper">

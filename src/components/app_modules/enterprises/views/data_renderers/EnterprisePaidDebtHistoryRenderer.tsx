@@ -6,6 +6,8 @@ import "@/styles/components/debt-user.css";
 import { useState } from "react";
 import Popup from "@/components/modules/Popup";
 import Clock from "@/icons/Clock";
+import { useListPagination } from "@/hooks/useListPagination";
+import TogglePaginationHandler from "@/components/navigation/pagination/TogglePaginationHandler";
 
 interface Props {
     history: DebtHistory[] | undefined;
@@ -13,13 +15,20 @@ interface Props {
 
 const EnterprisePaidDebtHistoryRenderer: React.FC<Props> = ({ history }) => {
     const MAX_NOTE_LENGHT_FOR_CARD = 15;
-    const orderHistory = (): DebtHistory[] => {
-        if (!history) {
-            return [];
-        }
+    const { next, back, currentPage, itemsPaginated, totalPages } =
+        useListPagination<DebtHistory>({
+            items: history ?? [],
+            orderItems: (): DebtHistory[] => {
+                if (!history) {
+                    return [];
+                }
 
-        return history.sort((a, b) => b.date.toMillis() - a.date.toMillis());
-    };
+                return history.sort(
+                    (a, b) => b.date.toMillis() - a.date.toMillis(),
+                );
+            },
+            pageSize: 9,
+        });
     const [itemSelected, setItem] = useState<undefined | DebtHistory>(
         undefined,
     );
@@ -34,7 +43,7 @@ const EnterprisePaidDebtHistoryRenderer: React.FC<Props> = ({ history }) => {
                 <Clock /> Historial de deudas pagadas
             </h2>
             <div className="debt-wrapper | no-border">
-                {orderHistory().map((item, i) => (
+                {itemsPaginated.map((item, i) => (
                     <EnterprisePaidDebtCard
                         content={{
                             data: item,
@@ -50,7 +59,12 @@ const EnterprisePaidDebtHistoryRenderer: React.FC<Props> = ({ history }) => {
                     />
                 ))}
             </div>
-
+            <TogglePaginationHandler
+                next={next}
+                back={back}
+                currentPage={currentPage}
+                totalPages={totalPages}
+            />
             {itemSelected && (
                 <Popup
                     isOpen={itemSelected !== undefined}

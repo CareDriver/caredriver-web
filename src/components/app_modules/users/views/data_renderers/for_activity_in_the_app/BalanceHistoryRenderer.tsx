@@ -5,8 +5,8 @@ import { BalanceHistory } from "@/interfaces/Payment";
 import { useState } from "react";
 import BalanceHistoryCard from "../../cards/BalanceHistoryCard";
 import Clock from "@/icons/Clock";
-import AnglesRight from "@/icons/AnglesRight";
-import AnglesLeft from "@/icons/AnglesLeft";
+import { useListPagination } from "@/hooks/useListPagination";
+import TogglePaginationHandler from "@/components/navigation/pagination/TogglePaginationHandler";
 
 const BalanceHistoryRenderer = ({
     balanceHistory,
@@ -14,31 +14,22 @@ const BalanceHistoryRenderer = ({
     balanceHistory: BalanceHistory[] | undefined;
 }) => {
     const MAX_NOTE_LENGTH_FOR_CARD = 17;
-    const ITEMS_PER_PAGE = 8;
-
-    const [currentPage, setCurrentPage] = useState(1);
     const [itemSelected, setItem] = useState<BalanceHistory | undefined>(
         undefined,
     );
-
-    const orderHistory = (): BalanceHistory[] => {
-        if (!balanceHistory) {
-            return [];
-        }
-        return balanceHistory.sort(
-            (a, b) => b.date.toMillis() - a.date.toMillis(),
-        );
-    };
-
-    const paginatedHistory = (): BalanceHistory[] => {
-        const ordered = orderHistory();
-        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-        return ordered.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-    };
-
-    const totalPages = Math.ceil(
-        (balanceHistory?.length || 0) / ITEMS_PER_PAGE,
-    );
+    const { next, back, totalPages, itemsPaginated, currentPage } =
+        useListPagination<BalanceHistory>({
+            items: balanceHistory ?? [],
+            orderItems: (): BalanceHistory[] => {
+                if (!balanceHistory) {
+                    return [];
+                }
+                return balanceHistory.sort(
+                    (a, b) => b.date.toMillis() - a.date.toMillis(),
+                );
+            },
+            pageSize: 8,
+        });
 
     return (
         balanceHistory &&
@@ -48,7 +39,7 @@ const BalanceHistoryRenderer = ({
                     <Clock /> Historial de saldo
                 </h2>
                 <div className="debt-wrapper max-width-80">
-                    {paginatedHistory().map((balance, i) => (
+                    {itemsPaginated.map((balance, i) => (
                         <BalanceHistoryCard
                             content={{
                                 data: balance,
@@ -64,34 +55,12 @@ const BalanceHistoryRenderer = ({
                         />
                     ))}
                 </div>
-                <div className="row-wrapper">
-                    <button
-                        className={"circle-button gray icon-wrapper lb"}
-                        onClick={() =>
-                            setCurrentPage((prev) => Math.max(prev - 1, 1))
-                        }
-                        disabled={currentPage === 1}
-                    >
-                        <AnglesLeft />
-                    </button>
-                    <span className="text">
-                        Página{" "}
-                        <b className="text | bold">
-                            {currentPage} de {totalPages}
-                        </b>
-                    </span>
-                    <button
-                        className="circle-button gray icon-wrapper lb"
-                        onClick={() =>
-                            setCurrentPage((prev) =>
-                                Math.min(prev + 1, totalPages),
-                            )
-                        }
-                        disabled={currentPage === totalPages}
-                    >
-                        <AnglesRight />
-                    </button>
-                </div>
+                <TogglePaginationHandler
+                    next={next}
+                    back={back}
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                />
                 {itemSelected && (
                     <Popup
                         isOpen={itemSelected !== undefined}
