@@ -40,7 +40,7 @@ export interface EnterpriseData {
 export interface Enterprise extends EnterpriseData {
     addedUsersId?: string[];
     addedUsers?: EnterpriseUser[];
-    comissionsHistory: ComissionHistory[];
+    comissionsHistory?: ComissionHistory[];
     currentDebt?: Price;
     paidDebtsHistory?: DebtHistory[];
 }

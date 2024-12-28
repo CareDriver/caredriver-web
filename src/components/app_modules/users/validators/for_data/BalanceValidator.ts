@@ -21,7 +21,7 @@ export const isValidAmount = (num: string): InputState => {
             isValid: false,
             message: `El saldo limite de recarga es de ${MAX_BALANCE}`,
         };
-    }else if (parseFloat(num) < MIN_BALANCE) {
+    } else if (parseFloat(num) < MIN_BALANCE) {
         return {
             isValid: false,
             message: `El saldo limite de descuento de saldo es de ${MAX_BALANCE}`,

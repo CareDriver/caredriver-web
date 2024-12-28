@@ -13,11 +13,11 @@ const EnterpriseComissionHistoryRenderer: React.FC<Props> = ({ history }) => {
     }
 
     return (
-        <section className="margin-top-50">
+        <section className="margin-top-25">
             <h2 className="text | bold gray-darker | icon-wrapper">
                 <Clock /> Historial de servicios de los trabajadores
             </h2>
-            <div className="debt-wrapper">
+            <div className="debt-wrapper | no-border">
                 {history.map((item, i) => (
                     <EntepriseComissionHistoryCard
                         comission={item}

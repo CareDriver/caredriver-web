@@ -14,8 +14,8 @@ const EntepriseComissionHistoryCard = ({
     };
 
     return (
-        <button onClick={goToService} className="debt-item | touchable">
-            <h2 className="text | medium">
+        <button onClick={goToService} className="debt-item | left touchable">
+            <h2 className="text | medium-big bold">
                 {comission.amount.amount} {comission.amount.currency}
             </h2>
             <small className="text | small | light">

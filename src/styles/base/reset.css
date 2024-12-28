@@ -16,6 +16,7 @@ body {
 
     scroll-behavior: smooth;
     font-family: "HaasGroteskDisplayPro", sans-serif;
+    background-color: var(--white);
 }
 
 html {

@@ -10,6 +10,10 @@
     border-bottom: 1px solid var(--gray-light);
 }
 
+.debt-wrapper.no-border {
+    border: none;
+}
+
 .debt-item {
     display: flex;
     flex-direction: column;
@@ -20,6 +24,10 @@
     padding: 1.111111111rem 1.666666667rem;
     border-radius: 0.833333333rem;
     transition: all ease-in 200ms;
+}
+
+.debt-item.left {
+    align-items: start;
 }
 
 .debt-item.increased {

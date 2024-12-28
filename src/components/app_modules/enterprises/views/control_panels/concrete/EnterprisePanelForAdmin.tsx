@@ -22,6 +22,7 @@ import EnterpriseUsersPanel from "../EnterpriseUsersPanel";
 import CurrentEnterpriseDebt from "../../data_renderers/CurrentEnterpriseDebt";
 import EnterprisePaidDebtHistoryRenderer from "../../data_renderers/EnterprisePaidDebtHistoryRenderer";
 import EnterpriseComissionHistoryRenderer from "../../data_renderers/EnterpriseComissionHistoryRenderer";
+import FormToPaidEnterpriseDebt from "../../request_forms/to_manage_debt/FormToPaidEnterpriseDebt";
 
 interface Props {
     id: string;
@@ -103,6 +104,7 @@ const EnterprisePanelForAdmin: React.FC<Props> = ({ id }) => {
                             </div>
 
                             <CurrentEnterpriseDebt enterprise={enterprise} />
+                            <FormToPaidEnterpriseDebt enterprise={enterprise} />
                             <EnterprisePaidDebtHistoryRenderer
                                 history={enterprise.paidDebtsHistory}
                             />
