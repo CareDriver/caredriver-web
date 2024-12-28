@@ -10,16 +10,16 @@ interface Props {
 }
 
 const EnterpriseComissionHistoryRenderer: React.FC<Props> = ({ history }) => {
-    if (!history || history.length == 0) {
-        return;
-    }
-
     const { next, back, currentPage, itemsPaginated, totalPages } =
         useListPagination<ComissionHistory>({
             items: history ?? [],
-            orderItems: (): ComissionHistory[] => history,
+            orderItems: (): ComissionHistory[] => history ?? [],
             pageSize: 8,
         });
+
+    if (!history || history.length == 0) {
+        return;
+    }
 
     return (
         <section className="margin-top-25">
