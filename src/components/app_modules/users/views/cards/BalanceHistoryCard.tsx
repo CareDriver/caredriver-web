@@ -1,7 +1,6 @@
 import { BalanceHistory } from "@/interfaces/Payment";
 import { timestampDateInSpanish } from "@/utils/helpers/DateHelper";
 import { routeToServicePerformed } from "@/utils/route_builders/for_services/RouteBuilderForServices";
-import { cutTextWithDotsByLength } from "@/utils/text_helpers/TextCutter";
 
 interface Props {
     content: {
@@ -47,7 +46,7 @@ const BalanceHistoryCard: React.FC<Props> = ({ content, style, behaviour }) => {
 
     return (
         <div
-            className={`debt-item ${
+            className={`debt-item left ${
                 content.data.newBalance
                     ? getDifference(
                           content.data.amount,
@@ -61,14 +60,14 @@ const BalanceHistoryCard: React.FC<Props> = ({ content, style, behaviour }) => {
         >
             <div>
                 <span
-                    className={`text | bold medium ${
+                    className={`text | big-medium-v3 bold ${
                         content.data.newBalance
                             ? getDifference(
                                   content.data.amount,
                                   content.data.newBalance.amount,
                               ) < 0
                                 ? "red"
-                                : "green"
+                                : "green-light"
                             : ""
                     }`}
                 >
@@ -91,27 +90,20 @@ const BalanceHistoryCard: React.FC<Props> = ({ content, style, behaviour }) => {
                     {content.data.currency}
                 </span>
                 {content.data.newBalance && (
-                    <span className={`text | bold medium`}>
-                        {" "}
-                        | {content.data.newBalance.amount}
+                    <div className={`text | bold`}>
+                        {content.data.newBalance.amount}
                         {content.data.newBalance.currency}
-                    </span>
+                    </div>
                 )}
             </div>
+            <div className="separator-horizontal"></div>
             <span className="text | light">
                 {timestampDateInSpanish(content.data.date)}
             </span>
-            {content.data.note && (
+            {!style?.maxNoteLenght && content.data.note && (
                 <div className="margin-top-25 wrap">
                     <b className="text | bold">Nota: </b>
-                    <i className="text | light">
-                        {style?.maxNoteLenght
-                            ? cutTextWithDotsByLength(
-                                  content.data.note,
-                                  style?.maxNoteLenght,
-                              )
-                            : content.data.note}
-                    </i>
+                    <i className="text | light">{content.data.note}</i>
                 </div>
             )}
             {behaviour?.toGoService &&
