@@ -31,7 +31,7 @@ const UserAssociatedEnterpriseRenderer: React.FC<Props> = ({
                     }}
                 />
             ) : (
-                <div className="max-width-40 margin-top-25">
+                <div className="max-width-40 margin-top-25 margin-bottom-25">
                     <FieldDeleted description="No estas asociado a ninguna empresa" />
                 </div>
             )}
@@ -40,7 +40,7 @@ const UserAssociatedEnterpriseRenderer: React.FC<Props> = ({
                 href={routeToRenewEnterpriseAsUser(typeOfEnterprise)}
                 className={`small-general-button ${
                     HAS_ASSOCIATED_ENTERPRISE ? "gray" : "yellow"
-                } | text bold | icon-wrapper gray-icon`}
+                } | text bold | icon-wrapper`}
             >
                 <Repeat />
                 {HAS_ASSOCIATED_ENTERPRISE

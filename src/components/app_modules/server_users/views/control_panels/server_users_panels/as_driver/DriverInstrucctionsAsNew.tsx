@@ -1,66 +1,36 @@
 "use client";
 
-import EnterpriseRendererForContact from "@/components/app_modules/enterprises/views/data_renderers/EnterpriseRendererForContact";
-import BaseEnterpriseSelector from "@/components/app_modules/enterprises/views/selectors/BaseEnterpriseSelector";
-import Popup from "@/components/modules/Popup";
-import Car from "@/icons/Car";
-import { Enterprise } from "@/interfaces/Enterprise";
 import { DRIVER } from "@/models/Business";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import DriverInstrucctionsAsNewWithEnterprise from "./DriverInstrucctionsAsNewWithEnterprise";
+import DriverRegistrationWaySelector from "./DriverRegistrationWaySelector";
+import { DriverRegistration } from "@/components/app_modules/server_users/models/DriverRegistration";
+import NewDriverForm from "../../../request_forms/requests_to_be_servers/for_driver/NewDriverForm";
+import { AuthContext } from "@/context/AuthContext";
 
 const DriverInstrucctionsAsNew = () => {
-    const [enterpriseSelected, setEnterpriseSelected] = useState<
-        Enterprise | undefined
-    >(undefined);
+    const { user: userToAdd } = useContext(AuthContext);
+    const [registrationWay, setRegistrationWay] = useState<DriverRegistration>(
+        DriverRegistration.CallingEnterprise,
+    );
 
-    const STEPS = [
-        "Selecciona una de estas empresas que estan en tu misma localizacion.",
-        `Contactate con una de estas empresas para pedir que te registren como ${DRIVER}.`,
-    ];
-
-    const selectEnterprise = (enterprise: Enterprise | undefined) => {
-        setEnterpriseSelected(enterprise);
-    };
+    if (registrationWay === DriverRegistration.Independent) {
+        return <NewDriverForm baseUser={userToAdd} />;
+    }
 
     return (
         <div className="service-form-wrapper">
             <h1 className="text | big bold">
                 Trabaja como {DRIVER} con nosotros!
             </h1>
-            <div>
-                <h3 className="text | medium-big bold icon-wrapper margin-top-25">
-                    <Car />
-                    Sigue estos pasos para ser {DRIVER}
-                </h3>
-                <div className="margin-bottom-25">
-                    {STEPS.map((m, i) => (
-                        <p className="text | margin-top-15" key={`step-${i}`}>
-                            <b>{i + 1}.</b> {m}
-                        </p>
-                    ))}
-                </div>
 
-                <BaseEnterpriseSelector
-                    typeOfEnterprise="driver"
-                    behavior={{
-                        pageSize: 8,
-                        localSelecction: false,
-                        selectEnterprise: selectEnterprise,
-                    }}
-                />
-                {enterpriseSelected && (
-                    <Popup
-                        isOpen={enterpriseSelected !== undefined}
-                        close={() => setEnterpriseSelected(undefined)}
-                    >
-                        <div className="min-width-60">
-                            <EnterpriseRendererForContact
-                                enterprise={enterpriseSelected}
-                            />
-                        </div>
-                    </Popup>
-                )}
-            </div>
+            <DriverRegistrationWaySelector
+                registrationWay={registrationWay}
+                setRegistrationWay={setRegistrationWay}
+            />
+            {registrationWay === DriverRegistration.CallingEnterprise && (
+                <DriverInstrucctionsAsNewWithEnterprise />
+            )}
         </div>
     );
 };

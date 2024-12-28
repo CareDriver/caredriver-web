@@ -33,7 +33,7 @@ export const isValidEmail = (email: string): InputState => {
     if (email.trim() === "") {
         return {
             isValid: false,
-            message: "Por favor, ingresa tu correo electrónico",
+            message: "Por favor, ingresa un correo electrónico",
         };
     } else if (!emailRegex.test(email)) {
         return {

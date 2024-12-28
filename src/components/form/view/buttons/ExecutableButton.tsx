@@ -46,7 +46,7 @@ const ExecutableButton: React.FC<ExecutableButtonProps> = ({
             className={`icon-wrapper | center touchable lb | ${BUTTON_STYLE}`}
             type="button"
             onClick={execute}
-            disabled={!behavior.isValid}
+            disabled={behavior.isValid === false}
         >
             {content.legend}
         </button>

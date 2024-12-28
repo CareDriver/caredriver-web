@@ -6,7 +6,7 @@ export interface ExecutableButtonProps {
     };
     behavior: {
         loading: boolean;
-        isValid?: boolean;
+        isValid: boolean;
         action: () => Promise<void>;
         setLoading: (b: boolean) => void;
     };

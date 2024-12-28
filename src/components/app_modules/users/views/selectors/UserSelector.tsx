@@ -84,6 +84,10 @@ const UserSelector: React.FC<Props> = ({ form, processTheUserFound }) => {
         processTheUserFound(userFound);
     }, [userFound]);
 
+    useEffect(() => {
+        form.setValid(isValidTextField(userEmail));
+    }, [userEmail]);
+
     return (
         <div>
             {userFound && <SimpleUserCard user={userFound} />}

@@ -54,7 +54,7 @@ interface Form {
 
 interface Props {
     baseUser?: UserInterface;
-    defaultTowEnterprise: string;
+    defaultTowEnterprise?: string;
 }
 
 const NewDriverForm: React.FC<Props> = ({

@@ -76,14 +76,13 @@
 }
 
 .general-button.gray {
-    border: 0.125rem solid var(--gray-medium);
-    background-color: var(--gray-lighter);
-    color: var(--gray-dark);
+    background-color: var(--gray-medium);
+    color: var(--second-dark);
 }
 
 .general-button.gray > * {
-    color: var(--gray-dark);
-    fill: var(--gray-dark);
+    color: var(--second-dark);
+    fill: var(--second-dark);
 }
 
 .general-button.yellow {
@@ -165,18 +164,13 @@
 }
 
 .small-general-button.gray {
-    border: 0.111111111rem solid var(--second-dark);
-    background-color: var(--gray-light);
+    background-color: var(--gray-medium);
 
     color: var(--second-dark);
 }
 
 .small-general-button.gray > svg {
     fill: var(--second-dark) !important;
-}
-
-.small-general-button.gray:hover {
-    background-color: var(--main-lighter);
 }
 
 .small-general-button.yellow {

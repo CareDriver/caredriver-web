@@ -109,9 +109,9 @@ export const driveReqBuilder = (
     realTimePhotoImgUrl: RefAttachment,
     services: Services[],
     location: Locations,
-    driverEnterprise: string,
+    driverEnterprise: string | undefined,
 ): UserRequest => {
-    return {
+    let userRequest: UserRequest = {
         id,
         userId,
         newFullName,
@@ -123,8 +123,15 @@ export const driveReqBuilder = (
         services: services,
         location,
         vehicles,
-        driverEnterprise,
     };
+
+    if (driverEnterprise) {
+        userRequest = {
+            ...userRequest,
+            driverEnterprise,
+        };
+    }
+    return userRequest;
 };
 
 export const emptyDriveReq = (): UserRequest => {

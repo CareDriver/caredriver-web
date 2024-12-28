@@ -173,6 +173,7 @@ const ConsentForm: React.FC<Props> = ({ id, moduleTarget, children }) => {
                                 behavior: {
                                     action: cancelar,
                                     loading: formState.loading,
+                                    isValid: true,
                                     setLoading: (l) =>
                                         setFormState((prev) => ({
                                             ...prev,
@@ -186,6 +187,7 @@ const ConsentForm: React.FC<Props> = ({ id, moduleTarget, children }) => {
                                 },
                                 behavior: {
                                     action: sendConsent,
+                                    isValid: true,
                                     loading: formState.loading,
                                     setLoading: (l) =>
                                         setFormState((prev) => ({
