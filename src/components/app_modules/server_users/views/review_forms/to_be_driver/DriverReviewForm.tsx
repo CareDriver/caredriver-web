@@ -18,6 +18,7 @@ import {
 } from "@/components/app_modules/users/api/UserRequester";
 import {
     flatPhone,
+    PhoneNumber,
     ServiceRequestsInterface,
     ServiceVehicles,
     UserInterface,
@@ -41,6 +42,10 @@ import {
 import { getIdSaved } from "@/utils/generators/IdGenerator";
 import UserStateRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserStateRenderer";
 import { DRIVER } from "@/models/Business";
+import {
+    notifyByPhoneApprovalServerUser,
+    notifyRequestApprovalUser,
+} from "../../../api/UserServerNotifier";
 
 const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user: adminUser } = useContext(AuthContext);
@@ -202,6 +207,13 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                     success: "Usuario agregado al servicio",
                                     error: "Error al agregar al usuario al servicio",
                                 },
+                            );
+                        }
+
+                        if (wasApproved) {
+                            await notifyRequestApprovalUser(
+                                requesterUser,
+                                "driver",
                             );
                         }
                     } else {

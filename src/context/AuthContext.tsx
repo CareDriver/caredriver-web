@@ -145,7 +145,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                                     ...prev,
                                     hasLocation:
                                         userData.location !== undefined,
-                                    hasPhone: isNullOrEmptyText(
+                                    hasPhone: !isNullOrEmptyText(
                                         flatPhone(userData.phoneNumber),
                                     ),
                                     hasPhoto:

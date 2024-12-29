@@ -1,3 +1,4 @@
+import { ServiceType } from "@/interfaces/Services";
 import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
 import { Author } from "next/dist/lib/metadata/types/metadata-types";
 
@@ -10,6 +11,8 @@ export const PHONE_BUSINESS = "+59177920245";
 export const NAME_BUSINESS = "CareDriver";
 
 export const DOMAIN = "https://caredriver-test-turg.vercel.app/";
+
+export const DOMAIN_LANDING_PAGE = "https://caredriver.netlify.app/";
 
 export const DEFAULT_ARTICLE_IMAGE = DOMAIN.concat(
     "images/articles/deafultarticle.png",
@@ -40,3 +43,26 @@ export const MOBILE_APP_LINKS = {
         store: "https://apps.apple.com/us/app/tu-app/id123456789",
     },
 };
+
+export function routeToLandingPageServiceDetails(
+    serviceType: ServiceType,
+): string {
+    const type = () => {
+        switch (serviceType) {
+            case "driver":
+                return "driver";
+            case "mechanical":
+                return "mechanical";
+            case "laundry":
+                return "laundry";
+            case "tow":
+                return "craneoperator";
+            default:
+                return "driver";
+        }
+    };
+
+    return DOMAIN_LANDING_PAGE.concat("services/")
+        .concat(type())
+        .concat("#information");
+}

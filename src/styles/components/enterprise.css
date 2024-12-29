@@ -64,7 +64,7 @@
 }
 
 .enterprise-item[data-state="selected"] {
-    background-color: var(--gray-medium);
+    background-color: var(--purple-light);
 }
 
 .enterprise-item-title {

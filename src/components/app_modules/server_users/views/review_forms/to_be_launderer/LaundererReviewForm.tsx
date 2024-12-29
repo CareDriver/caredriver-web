@@ -37,6 +37,7 @@ import {
 } from "@/components/form/models/Reviews";
 import BaseFormWithTwoButtons from "@/components/form/view/forms/BaseFormWithTwoButtons";
 import { getIdSaved } from "@/utils/generators/IdGenerator";
+import { notifyRequestApprovalUser } from "../../../api/UserServerNotifier";
 
 const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
     const { user: adminUser } = useContext(AuthContext);
@@ -126,6 +127,13 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                                     success: "Usuario agregado al servicio",
                                     error: "Error al agregar al usuario al servicio",
                                 },
+                            );
+                        }
+
+                        if (wasApproved) {
+                            await notifyRequestApprovalUser(
+                                requesterUser,
+                                "laundry",
                             );
                         }
                     } else {
@@ -290,7 +298,9 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                     <UserContactsRendererForForm
                         email={requesterUser.email}
                         phoneNumber={flatPhone(requesterUser.phoneNumber)}
-                        alternativePhoneNumber={flatPhone(requesterUser.alternativePhoneNumber)}
+                        alternativePhoneNumber={flatPhone(
+                            requesterUser.alternativePhoneNumber,
+                        )}
                     />
                 ) : (
                     <span className="row-wrapper text | bold gray-medium">

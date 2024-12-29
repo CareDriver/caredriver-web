@@ -9,6 +9,8 @@ export async function sendVerificationCode (phone: string) {
         }),
     );
 
+    const message: string = `✉️ Tu código de verificación es ${codeSent}`
+
     await toast.promise(
         fetch("/api/sms", {
             method: "POST",
@@ -17,7 +19,7 @@ export async function sendVerificationCode (phone: string) {
             },
             body: JSON.stringify({
                 phone: phone,
-                code: codeSent,
+                message: message,
             }),
         }),
         {

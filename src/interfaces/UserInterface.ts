@@ -102,8 +102,8 @@ export const DEFAULT_PHONE:PhoneNumber = {
     number: ""
 }
 
-export const flatPhone = (phone: PhoneNumber | undefined | null) => {
-    if (phone === undefined || phone === null) {
+export const flatPhone = (phone: PhoneNumber | undefined | null): string => {
+    if (phone === undefined || phone === null || phone.number === "") {
         return "";
     }
 

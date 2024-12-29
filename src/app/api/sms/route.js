@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(request) {
     try {
-        const { code, phone } = await request.json();
+        const { phone, message } = await request.json();
         const url = "https://gate.whapi.cloud/messages/text";
         const options = {
             method: "POST",
@@ -14,7 +14,7 @@ export async function POST(request) {
             body: JSON.stringify({
                 typing_time: 0,
                 to: phone.replace("+", ""),
-                body: `✉️ Tu código de verificación es ${code}`,
+                body: message,
             }),
         };
         await fetch(url, options);

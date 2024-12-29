@@ -41,6 +41,7 @@ import {
 } from "@/components/form/models/Reviews";
 import { getIdSaved } from "@/utils/generators/IdGenerator";
 import UserStateRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserStateRenderer";
+import { notifyRequestApprovalUser } from "../../../api/UserServerNotifier";
 
 const CraneOperatorReviewForm = ({
     serviceReq,
@@ -174,6 +175,13 @@ const CraneOperatorReviewForm = ({
                                     success: "Usuario agregado al servicio",
                                     error: "Error al agregar al usuario al servicio",
                                 },
+                            );
+                        }
+
+                        if (wasApproved) {
+                            await notifyRequestApprovalUser(
+                                requesterUser,
+                                "tow",
                             );
                         }
                     } else {
@@ -357,7 +365,9 @@ const CraneOperatorReviewForm = ({
                     <UserContactsRendererForForm
                         email={requesterUser.email}
                         phoneNumber={flatPhone(requesterUser.phoneNumber)}
-                        alternativePhoneNumber={flatPhone(requesterUser.alternativePhoneNumber)}
+                        alternativePhoneNumber={flatPhone(
+                            requesterUser.alternativePhoneNumber,
+                        )}
                     />
                 ) : (
                     <span className="row-wrapper text | bold gray-medium">
