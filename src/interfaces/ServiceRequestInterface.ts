@@ -1,7 +1,7 @@
 import { Timestamp } from "firebase/firestore";
 import { ServicesDataInterface } from "./ServicesDataInterface";
 import { VehicleInterface } from "./VehicleInterface";
-import { HistoryLocationInterface } from "./UserInterface";
+import { HistoryLocationInterface, PhoneNumber } from "./UserInterface";
 import { Locations } from "./Locations";
 
 // This will manage services requests the user
@@ -42,7 +42,7 @@ export interface ServiceRequestInterface {
     requestUserData?: {
         // Data of the normal user
         fullName: string; // Full name of the user
-        phoneNumber: string; // Phone number of the user (includes country code, ej: +591 76543218)
+        phoneNumber: string | PhoneNumber; // Phone number of the user (includes country code, ej: +591 76543218)
         photoUrl: string; // URL of the user's photo
         email: string; // User's email
         normalServiceData?: ServicesDataInterface; // The data of the normal service for the request user (rating, comments, etc)
@@ -50,7 +50,7 @@ export interface ServiceRequestInterface {
     serviceUserData?: {
         // Data of the normal user
         fullName: string; // Full name of the user
-        phoneNumber: string; // Phone number of the user (includes country code, ej: +591 76543218)
+        phoneNumber: string | PhoneNumber; // Phone number of the user (includes country code, ej: +591 76543218)
         photoUrl: string; // URL of the user's photo
         email: string; // User's email
         serviceData?: ServicesDataInterface; // The data of the normal service for the request user (rating, comments, etc)

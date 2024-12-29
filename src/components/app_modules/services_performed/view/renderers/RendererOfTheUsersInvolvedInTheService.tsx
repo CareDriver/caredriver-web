@@ -11,10 +11,11 @@ import "@/styles/components/app-user.css";
 import "@/styles/components/users.css";
 import FieldDeleted from "@/components/form/view/field_renderers/FieldDeleted";
 import UserPhotoRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserPhotoRenderer";
+import { getPhoneNumber } from "@/utils/helpers/PhoneHelper";
 
 interface UserServiceInfo {
     fullName: string;
-    phoneNumber: string;
+    textNumber: string;
     photoUrl: string;
     email: string | undefined;
     normalServiceData?: ServicesDataInterface;
@@ -43,7 +44,7 @@ const RendererOfTheUsersInvolvedInTheService = ({
                     {user.email && (
                         <h4 className="text | gray-dark">{user.email}</h4>
                     )}
-                    <h4 className="text | gray-dark">{user.phoneNumber}</h4>
+                    <h4 className="text | gray-dark">{user.textNumber}</h4>
                 </div>
             </div>
         );
@@ -52,7 +53,7 @@ const RendererOfTheUsersInvolvedInTheService = ({
     const toRenderUser = (user: UserInterface): UserServiceInfo => {
         return {
             fullName: user.fullName,
-            phoneNumber: flatPhone(user.phoneNumber),
+            textNumber: flatPhone(user.phoneNumber),
             photoUrl: user.photoUrl.url,
             email: user.email,
         };
@@ -60,7 +61,10 @@ const RendererOfTheUsersInvolvedInTheService = ({
 
     useEffect(() => {
         if (service.serviceUserData) {
-            setServerUser(service.serviceUserData);
+            setServerUser({
+                ...service.serviceUserData,
+                textNumber: getPhoneNumber(service.serviceUserData),
+            });
         } else {
             getUserById(service.serviceUserId)
                 .then((res) => {
@@ -78,7 +82,10 @@ const RendererOfTheUsersInvolvedInTheService = ({
 
     useEffect(() => {
         if (service.requestUserData) {
-            setReqUser(service.requestUserData);
+            setReqUser({
+                ...service.requestUserData,
+                textNumber: getPhoneNumber(service.requestUserData),
+            });
         } else if (service.userId) {
             getUserById(service.userId)
                 .then((res) => {
@@ -129,7 +136,6 @@ const RendererOfTheUsersInvolvedInTheService = ({
                     renderUser(reqUser)
                 )}
             </div>
-
         </>
     );
 };
