@@ -39,7 +39,7 @@ const Home = () => {
                 >
                     <HandPointRight />
                     <span className="text | big-medium-v3 bold">
-                        Comienza{" "}
+                        Comiza{" "}
                         <i className="text big-medium-v3 bolder">Ahora!</i>
                     </span>
                 </Link>

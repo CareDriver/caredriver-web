@@ -1,0 +1,15 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.caredriver.CareDriver",
+            "sha256_cert_fingerprints": [
+                "33:A5:F8:AF:12:48:DA:6A:CC:84:04:1B:FF:BF:35:C5:9B:27:62:57:78:6F:18:A6:DB:3B:E7:A5:C0:E8:BC:8E",
+                "3A:0F:99:4F:B0:83:75:3F:47:4F:B8:15:F7:F3:0D:63:C2:CC:9F:2D:4F:7A:47:3B:E2:51:66:8D:9B:80:CE:AA"
+            ]
+        }
+    }
+]
