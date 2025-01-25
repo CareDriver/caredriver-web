@@ -15,15 +15,15 @@ const PrivacyTermsSection: React.FC<Props> = ({ isCheck, setCheck }) => {
         <p className="text | light">
             Acepto las{" "}
             <a
-                className="text | underline"
+                className="text | bold underline"
                 href={POLICY_AND_PRIVACY}
                 target="_blank"
             >
                 políticas de privacidad
             </a>
-            ,
+            ,{" "}
             <a
-                className="text | underline"
+                className="text | bold underline"
                 href={SECURITY_TERMS}
                 target="_blank"
             >

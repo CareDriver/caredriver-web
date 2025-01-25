@@ -27,11 +27,11 @@ export class EnterpriseManagerEditedAsAdmin
 
         try {
             if (oldEnterprise.logoImgUrl.ref !== newEnterprise.logoImgUrl.ref) {
-                await toast.promise(deleteFile(oldEnterprise.logoImgUrl.ref), {
+                /* await toast.promise(deleteFile(oldEnterprise.logoImgUrl.ref), {
                     pending: "Eliminando logo anterior",
                     success: "Logo anterior eliminado",
                     error: "Error al eliminar el logo anterior, intentalo de nuevo por favor",
-                });
+                }); */
             }
 
             await toast.promise(

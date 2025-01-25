@@ -105,11 +105,11 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
 
     const decline = async () => {
         if (!loading) {
-            await toast.promise(review(false), {
+            /* await toast.promise(review(false), {
                 pending: "Eliminando la foto de perfil",
                 success: "Foto eliminada",
                 error: "Error al eliminar la foto de perfil, inténtalo de nuevo por favor",
-            });
+            }); */
         }
     };
 
@@ -197,9 +197,9 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
                     />
                 </div>
 
-                <p className="text | light margin-top-25">
+                {/* <p className="text | light margin-top-25">
                     La nueva foto sera eliminada si se rechaza la solicitud
-                </p>
+                </p> */}
             </BaseFormWithTwoButtons>
         </div>
     );

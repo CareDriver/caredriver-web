@@ -38,12 +38,12 @@ export const uploadFileBlod = async (location: string, file: Blob) => {
 };
 
 export const deleteFile = async (refLocation: string) => {
-    try {
+    /* try {
         const mountainsRef = ref(storage, refLocation);
         await deleteObject(mountainsRef);
     } catch (e) {
         console.log(e);
-    }
+    } */
 };
 
 import { doc, deleteDoc } from "firebase/firestore";

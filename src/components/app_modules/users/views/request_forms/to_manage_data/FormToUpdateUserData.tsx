@@ -72,11 +72,11 @@ const FormToUpdateUserData: React.FC<Props> = ({ user }) => {
         );
 
         if (hadPhoto) {
-            await toast.promise(deleteFile(user.photoUrl.ref), {
+            /* await toast.promise(deleteFile(user.photoUrl.ref), {
                 pending: "Eliminado antigua foto de perfil",
                 success: "Antigua foto eliminada",
                 error: "Error al eliminar la antigua foto de perfil, inténtalo de nuevo por favor",
-            });
+            }); */
         }
 
         return newPhoto;

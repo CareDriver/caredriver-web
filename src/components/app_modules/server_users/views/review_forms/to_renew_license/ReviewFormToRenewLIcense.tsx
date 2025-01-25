@@ -126,11 +126,11 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
         if (user && req && userReq) {
             setReviewState((prev) => ({ ...prev, loading: true }));
             try {
-                await toast.promise(deleteImages, {
+                /* await toast.promise(deleteImages, {
                     pending: "Eliminando foto de confirmación del usario",
                     success: "Foto eliminada",
                     error: "Error al eliminar la foto, inténtalo de nuevo por favor",
-                });
+                }); */
                 await toast.promise(saveReview(wasApproved), {
                     pending: "Guardando revision",
                     success: "Revision guardada",

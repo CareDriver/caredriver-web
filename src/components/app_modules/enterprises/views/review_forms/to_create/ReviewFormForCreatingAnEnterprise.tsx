@@ -75,11 +75,11 @@ const ReviewFormForCreatingAnEnterprise = ({
                     loading: true,
                 });
                 try {
-                    await toast.promise(deleteFile(enterprise.logoImgUrl.ref), {
+                    /* await toast.promise(deleteFile(enterprise.logoImgUrl.ref), {
                         pending: "Eliminado el logo",
                         success: "Logo eliminado",
                         error: "Error al eliminar el logo, inténtalo de nuevo por favor",
-                    });
+                    }); */
 
                     await toast.promise(
                         declineEnterpriseReq(enterprise, user.id),

@@ -171,7 +171,7 @@ export const deleteImagesIfLimitOfApproves = async (
         serviceReq.reviewedByHistory &&
         serviceReq.reviewedByHistory?.length + 1 === MIN_NUM_OF_APPROVALS
     ) {
-        try {
+        /* try {
             await toast.promise(deleteImages(serviceReq), {
                 pending: "Eliminando imágenes, por favor espera",
                 success: "Images eliminadas",
@@ -179,7 +179,7 @@ export const deleteImagesIfLimitOfApproves = async (
             });
         } catch (e) {
             console.log(e);
-        }
+        } */
     }
 };
 

@@ -162,14 +162,14 @@ const ReviewFormForEditingAnEnterprise: React.FC<Props> = ({
                             },
                         );
                         if (logoChanged) {
-                            await toast.promise(
+                            /* await toast.promise(
                                 deleteFile(enterpriseEditDoc.logoImgUrl.ref),
                                 {
                                     pending: "Eliminado el logo",
                                     success: "Logo eliminado",
                                     error: "Error al eliminar el logo, inténtalo de nuevo por favor",
                                 },
-                            );
+                            ); */
                         }
                         router.push(
                             routeToRequestsToEditEnterpriseAsAdmin(
