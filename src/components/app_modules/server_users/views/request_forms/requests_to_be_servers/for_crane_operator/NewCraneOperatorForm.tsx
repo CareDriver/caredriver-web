@@ -36,7 +36,6 @@ import {
 } from "@/components/app_modules/server_users/models/VehicleFields";
 import {
     AttachmentField,
-    EntityDataField,
     EntityField,
 } from "@/components/form/models/FormFields";
 import {
@@ -60,6 +59,8 @@ import EnterpriseSelectorById from "@/components/app_modules/enterprises/views/s
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import { isPhoneValid } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
+import Link from "next/link";
+import { routeToAllEnterprisesAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
 
 interface Form {
     personalData: PersonalData;
@@ -350,6 +351,12 @@ const NewCraneOperatorForm: React.FC<Props> = ({
                                 Empresa de Grúa
                             </h2>
 
+                            <Link
+                                href={routeToAllEnterprisesAsUser("tow")}
+                                className="small-general-button text | bold margin-bottom-15"
+                            >
+                                Quiero registrar mi empresa operadora de gruas
+                            </Link>
                             <EnterpriseSelectorById
                                 typeOfEnterprise="tow"
                                 field={{

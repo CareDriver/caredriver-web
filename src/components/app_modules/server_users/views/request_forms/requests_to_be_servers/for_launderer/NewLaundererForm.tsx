@@ -48,6 +48,8 @@ import EnterpriseSelectorById from "@/components/app_modules/enterprises/views/s
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import { isPhoneValid } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
+import Link from "next/link";
+import { routeToAllEnterprisesAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
 
 interface Form {
     personalData: PersonalData;
@@ -272,6 +274,13 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                                 <Soap />
                                 Lavadero
                             </h2>
+
+                            <Link
+                                href={routeToAllEnterprisesAsUser("laundry")}
+                                className="small-general-button text | bold margin-bottom-15"
+                            >
+                                Quiero registrar mi lavadero
+                            </Link>
 
                             <EnterpriseSelectorById
                                 typeOfEnterprise="laundry"
