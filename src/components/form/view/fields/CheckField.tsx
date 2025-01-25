@@ -4,7 +4,7 @@ interface Props {
         setCheck: (state: boolean) => void;
     };
     content: {
-        checkDescription: string;
+        checkDescription: React.ReactNode;
     };
 }
 
@@ -20,7 +20,7 @@ const CheckField: React.FC<Props> = ({ marker, content }) => {
                 checked={marker.isCheck}
                 onChange={() => {}}
             />
-            <p>{content.checkDescription}</p>
+            {content.checkDescription}
         </div>
     );
 };

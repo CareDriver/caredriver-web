@@ -1,4 +1,8 @@
-import { NAME_BUSINESS } from "@/models/Business";
+import {
+    NAME_BUSINESS,
+    POLICY_AND_PRIVACY,
+    SECURITY_TERMS,
+} from "@/models/Business";
 import CheckField from "../fields/CheckField";
 
 interface Props {
@@ -7,7 +11,28 @@ interface Props {
 }
 
 const PrivacyTermsSection: React.FC<Props> = ({ isCheck, setCheck }) => {
-    const PRIVACY_TEMS = `Acepto las políticas de privacidad, términos y condiciones de uso, recibir comunicaciones de ${NAME_BUSINESS} y chatear con nosotros por WhatsApp.`;
+    const PRIVACY_TEMS = (
+        <p className="text | light">
+            Acepto las{" "}
+            <a
+                className="text | underline"
+                href={POLICY_AND_PRIVACY}
+                target="_blank"
+            >
+                políticas de privacidad
+            </a>
+            ,
+            <a
+                className="text | underline"
+                href={SECURITY_TERMS}
+                target="_blank"
+            >
+                términos y condiciones
+            </a>
+            , recibir comunicaciones de ${NAME_BUSINESS} y chatear con nosotros
+            por WhatsApp.
+        </p>
+    );
 
     return (
         <CheckField

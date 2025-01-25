@@ -216,7 +216,12 @@ const EnterpriseEditForm: React.FC<Props> = ({
                     </h3>
                     <CheckField
                         content={{
-                            checkDescription: `Marca la casilla si la empresa tiene convenio con ${NAME_BUSINESS}`,
+                            checkDescription: (
+                                <p className="text | light">
+                                    Marca la casilla si la empresa tiene
+                                    convenio con ${NAME_BUSINESS}
+                                </p>
+                            ),
                         }}
                         marker={{
                             isCheck: form.hasCommition,

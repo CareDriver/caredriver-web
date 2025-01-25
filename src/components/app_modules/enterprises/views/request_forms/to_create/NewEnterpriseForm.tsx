@@ -39,7 +39,10 @@ import EnterpriseOwnerAdder from "./EnterpriseOwnerAdder";
 import { ServiceType } from "@/interfaces/Services";
 import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import { PageStateContext } from "@/context/PageStateContext";
-import { validateEnterpriseDescription, validateEnterpriseName } from "../../../validators/EnterpriseValidator";
+import {
+    validateEnterpriseDescription,
+    validateEnterpriseName,
+} from "../../../validators/EnterpriseValidator";
 import CheckField from "@/components/form/view/fields/CheckField";
 import Handshake from "@/icons/Handshake";
 import { AuthContext } from "@/context/AuthContext";
@@ -109,7 +112,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                 );
 
                 var id = genDocId();
-                let enterprisePhone = parseBoliviaPhone(form.phone.value)
+                let enterprisePhone = parseBoliviaPhone(form.phone.value);
                 const enterprise: Enterprise = {
                     id,
                     type: enterpriseType,
@@ -129,7 +132,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                     addedUsers: [],
                     addedUsersId: [],
                     commition: form.hasCommition,
-                    comissionsHistory: []
+                    comissionsHistory: [],
                 };
 
                 await toast.promise(sendEnterpriseReq(id, enterprise), {
@@ -249,7 +252,12 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
                     </h3>
                     <CheckField
                         content={{
-                            checkDescription: `Marca la casilla si la empresa tiene convenio con ${NAME_BUSINESS}`,
+                            checkDescription: (
+                                <p className="text | light">
+                                    Marca la casilla si la empresa tiene
+                                    convenio con ${NAME_BUSINESS}
+                                </p>
+                            ),
                         }}
                         marker={{
                             isCheck: form.hasCommition,

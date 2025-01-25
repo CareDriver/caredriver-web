@@ -18,6 +18,11 @@ export const DEFAULT_ARTICLE_IMAGE = DOMAIN.concat(
     "images/articles/deafultarticle.png",
 );
 
+export const POLICY_AND_PRIVACY =
+    DOMAIN_LANDING_PAGE.concat("policyandprivacy/");
+
+export const SECURITY_TERMS = DOMAIN_LANDING_PAGE.concat("securityterms/");
+
 export const CareDriverAuthor: Author = {
     name: NAME_BUSINESS,
     url: "https://caredriver.netlify.app/aboutus/",
