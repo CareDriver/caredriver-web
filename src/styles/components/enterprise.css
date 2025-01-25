@@ -64,6 +64,7 @@
 }
 
 .enterprise-item[data-state="selected"] {
+    transition: background-color ease-in 200ms;
     background-color: var(--purple-light);
 }
 
