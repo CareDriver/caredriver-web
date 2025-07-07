@@ -7,22 +7,19 @@ import { Metadata } from "next";
 const pageTitle = `${NAME_BUSINESS} | Revisar Solicitud de Operador de Grúa`;
 
 export const metadata: Metadata = {
-    title: pageTitle,
-    applicationName: NAME_BUSINESS,
-    authors: CareDriverAuthor,
+  title: pageTitle,
+  applicationName: NAME_BUSINESS,
+  authors: CareDriverAuthor,
 };
 
 const Page = ({ params }: { params: any }) => {
-    return (
-        <GuardOfRequests>
-            <ConsentForm moduleTarget="mechanicservicereq" id={params.id}>
-                <ReviewFormToBeServerUserWithLoader
-                    reqId={params.id}
-                    type="tow"
-                />
-            </ConsentForm>
-        </GuardOfRequests>
-    );
+  return (
+    <GuardOfRequests>
+      <ConsentForm moduleTarget="mechanicservicereq" id={params.id}>
+        <ReviewFormToBeServerUserWithLoader reqId={params.id} type="tow" />
+      </ConsentForm>
+    </GuardOfRequests>
+  );
 };
 
 export default Page;

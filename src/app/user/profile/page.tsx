@@ -5,21 +5,21 @@ import { Metadata } from "next";
 
 const pageTitle = `${NAME_BUSINESS} | Perfil de Usuario`;
 const pageDescription =
-    "Consulta tu perfil, revisa tu saldo disponible y comunícate con los administradores para recargar saldo.";
+  "Consulta tu perfil, revisa tu saldo disponible y comunícate con los administradores para recargar saldo.";
 
 export const metadata: Metadata = {
-    title: pageTitle,
-    description: pageDescription,
-    applicationName: NAME_BUSINESS,
-    authors: CareDriverAuthor,
+  title: pageTitle,
+  description: pageDescription,
+  applicationName: NAME_BUSINESS,
+  authors: CareDriverAuthor,
 };
 
 const Page = () => {
-    return (
-        <GuardForServerUsers>
-            <UserProfileForServerUser />
-        </GuardForServerUsers>
-    );
+  return (
+    <GuardForServerUsers>
+      <UserProfileForServerUser />
+    </GuardForServerUsers>
+  );
 };
 
 export default Page;

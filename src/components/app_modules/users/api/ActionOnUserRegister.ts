@@ -6,14 +6,14 @@ import { collection, doc, DocumentReference, setDoc } from "firebase/firestore";
 const actionOnUserCollection = collection(firestore, Collections.ActionOnUsers);
 
 export const saveActionOnUser = async (
-    uid: string,
-    data: ActionOnUserInterface,
+  uid: string,
+  data: ActionOnUserInterface,
 ): Promise<DocumentReference> => {
-    try {
-        const docRef = doc(actionOnUserCollection, uid);
-        await setDoc(docRef, data);
-        return docRef;
-    } catch (error) {
-        throw error;
-    }
+  try {
+    const docRef = doc(actionOnUserCollection, uid);
+    await setDoc(docRef, data);
+    return docRef;
+  } catch (error) {
+    throw error;
+  }
 };

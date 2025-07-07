@@ -19,154 +19,153 @@ import { RequestLimitValidatorToChangePhoto } from "../../../validators/for_requ
 import { routeToProfileAsUser } from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
 
 const FormToChangeProfilePhoto = () => {
-    const { checkingUserAuth, user } = useContext(AuthContext);
-    const [newPhoto, setNewPhoto] = useState<AttachmentField>(
-        DEFAUL_ATTACHMENT_FIELD,
-    );
-    const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
-    const router = useRouter();
-    const requestLimitValidator = new RequestLimitValidatorToChangePhoto();
+  const { checkingUserAuth, user } = useContext(AuthContext);
+  const [newPhoto, setNewPhoto] = useState<AttachmentField>(
+    DEFAUL_ATTACHMENT_FIELD,
+  );
+  const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
+  const router = useRouter();
+  const requestLimitValidator = new RequestLimitValidatorToChangePhoto();
 
-    const submit = async (e: FormEvent) => {
-        e.preventDefault();
-        if (formState.loading) {
-            return;
-        }
-
-        setFormState((prev) => ({
-            ...prev,
-            loading: true,
-        }));
-
-        if (
-            !isValidAttachmentField(newPhoto) ||
-            !user ||
-            !user.id ||
-            !newPhoto.value
-        ) {
-            setFormState((prev) => ({
-                ...prev,
-                loading: false,
-                isValid: false,
-            }));
-            toast.error("Formulario invalido");
-            return;
-        }
-
-        if (user && user.id) {
-            let thereAreActiveReqs = await toast.promise(
-                requestLimitValidator.hasRequestsSent(user.id),
-                {
-                    pending: "Verificando peticiones activas",
-                    error: "Error verificando peticiones activas, inténtalo de nuevo por favor",
-                },
-            );
-            if (thereAreActiveReqs) {
-                toast.warning(
-                    "Ya enviaste una petición para actualizar tu foto, espera a que se revise",
-                );
-                setFormState((prev) => ({
-                    ...prev,
-                    loading: false,
-                }));
-                return;
-            } else {
-                toast.success(
-                    "Valido para enviar una nueva petición para actualizar tu foto",
-                );
-            }
-        }
-        try {
-            var id = genDocId();
-            const imgWithRef = await toast.promise(
-                uploadFileBase64(DirectoryPath.Users, newPhoto.value),
-                {
-                    pending: "Subiendo foto, por favor espera",
-                    success: "Foto subida",
-                    error: "Error al subir la foto, inténtalo de nuevo por favor",
-                },
-            );
-            await toast.promise(
-                saveChangePhotoReq(id, {
-                    id,
-                    newPhoto: imgWithRef,
-                    userId: user.id,
-                    userName: user.fullName,
-                    active: true,
-                }),
-                {
-                    pending: "Enviando la petición, por favor espera",
-                    success:
-                        "Tu petición sera revisada por uno de nuestros administradores",
-                    error: "Error al enviar la petición, inténtalo de nuevo por favor",
-                },
-            );
-            router.push(routeToProfileAsUser());
-        } catch (e) {
-            setFormState((prev) => ({
-                ...prev,
-                loading: false,
-                isValid: true,
-            }));
-        }
-    };
-
-    useEffect(() => {
-        setFormState({
-            ...formState,
-            isValid: isValidAttachmentField(newPhoto),
-        });
-    }, [newPhoto]);
-
-    if (checkingUserAuth) {
-        return <PageLoading />;
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (formState.loading) {
+      return;
     }
 
-    return (
-        user && (
-            <section className="service-form-wrapper | max-height-100">
-                <h1 className="text | big bold">
-                    Actualiza tu Foto de Perfil
-                </h1>
-                <p>
-                    Se mandara una solicitud por WhatsApp para que puedas
-                    actualizar tu foto de perfil.
-                </p>
+    setFormState((prev) => ({
+      ...prev,
+      loading: true,
+    }));
 
-                <BaseForm
-                    content={{
-                        button: {
-                            content: {
-                                legend: "Solicitar cambio de foto",
-                            },
-                            behavior: {
-                                loading: formState.loading,
-                                isValid: formState.isValid,
-                            },
-                        },
-                        styleClasses: "max-width-60",
-                    }}
-                    behavior={{
-                        loading: formState.loading,
-                        onSummit: submit,
-                    }}
-                >
-                    <ImageUploader
-                        content={{
-                            id: "req-to-change-profile-photo",
-                            legend: "Nueva Foto de Perfil",
-                            imageInCircle: true,
-                        }}
-                        uploader={{
-                            image: newPhoto,
-                            setImage: setNewPhoto,
-                        }}
-                    />
-                </BaseForm>
-                <span className="circles-right-bottomv2 green"></span>
-            </section>
-        )
-    );
+    if (
+      !isValidAttachmentField(newPhoto) ||
+      !user ||
+      !user.id ||
+      !newPhoto.value
+    ) {
+      setFormState((prev) => ({
+        ...prev,
+        loading: false,
+        isValid: false,
+      }));
+      toast.error("Formulario invalido");
+      return;
+    }
+
+    if (user && user.id) {
+      let thereAreActiveReqs = await toast.promise(
+        requestLimitValidator.hasRequestsSent(user.id),
+        {
+          pending: "Verificando peticiones activas",
+          error:
+            "Error verificando peticiones activas, inténtalo de nuevo por favor",
+        },
+      );
+      if (thereAreActiveReqs) {
+        toast.warning(
+          "Ya enviaste una petición para actualizar tu foto, espera a que se revise",
+        );
+        setFormState((prev) => ({
+          ...prev,
+          loading: false,
+        }));
+        return;
+      } else {
+        toast.success(
+          "Valido para enviar una nueva petición para actualizar tu foto",
+        );
+      }
+    }
+    try {
+      var id = genDocId();
+      const imgWithRef = await toast.promise(
+        uploadFileBase64(DirectoryPath.Users, newPhoto.value),
+        {
+          pending: "Subiendo foto, por favor espera",
+          success: "Foto subida",
+          error: "Error al subir la foto, inténtalo de nuevo por favor",
+        },
+      );
+      await toast.promise(
+        saveChangePhotoReq(id, {
+          id,
+          newPhoto: imgWithRef,
+          userId: user.id,
+          userName: user.fullName,
+          active: true,
+        }),
+        {
+          pending: "Enviando la petición, por favor espera",
+          success:
+            "Tu petición sera revisada por uno de nuestros administradores",
+          error: "Error al enviar la petición, inténtalo de nuevo por favor",
+        },
+      );
+      router.push(routeToProfileAsUser());
+    } catch (e) {
+      setFormState((prev) => ({
+        ...prev,
+        loading: false,
+        isValid: true,
+      }));
+    }
+  };
+
+  useEffect(() => {
+    setFormState((prev) => ({
+      ...prev,
+      isValid: isValidAttachmentField(newPhoto),
+    }));
+  }, [newPhoto, formState]);
+
+  if (checkingUserAuth) {
+    return <PageLoading />;
+  }
+
+  return (
+    user && (
+      <section className="service-form-wrapper | max-height-100">
+        <h1 className="text | big bold">Actualiza tu Foto de Perfil</h1>
+        <p>
+          Se mandara una solicitud por WhatsApp para que puedas actualizar tu
+          foto de perfil.
+        </p>
+
+        <BaseForm
+          content={{
+            button: {
+              content: {
+                legend: "Solicitar cambio de foto",
+              },
+              behavior: {
+                loading: formState.loading,
+                isValid: formState.isValid,
+              },
+            },
+            styleClasses: "max-width-60",
+          }}
+          behavior={{
+            loading: formState.loading,
+            onSummit: submit,
+          }}
+        >
+          <ImageUploader
+            content={{
+              id: "req-to-change-profile-photo",
+              legend: "Nueva Foto de Perfil",
+              imageInCircle: true,
+            }}
+            uploader={{
+              image: newPhoto,
+              setImage: setNewPhoto,
+            }}
+          />
+        </BaseForm>
+        <span className="circles-right-bottomv2 green"></span>
+      </section>
+    )
+  );
 };
 
 export default FormToChangeProfilePhoto;

@@ -3,8 +3,8 @@
 import "react-international-phone/style.css";
 import { auth } from "@/firebase/FirebaseConfig";
 import {
-    checkEmailExists,
-    saveUser,
+  checkEmailExists,
+  saveUser,
 } from "@/components/app_modules/users/api/UserRequester";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FormEvent, useContext, useEffect, useState } from "react";
@@ -31,231 +31,220 @@ import AuthProviders from "../providers/AuthProviders";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
 interface Form {
-    fullName: TextFieldForm;
-    phone: TextFieldForm;
-    email: TextFieldForm;
-    password: TextFieldForm;
-    location: Locations;
-    code: string;
+  fullName: TextFieldForm;
+  phone: TextFieldForm;
+  email: TextFieldForm;
+  password: TextFieldForm;
+  location: Locations;
+  code: string;
 }
 
 enum View {
-    FILLING_OUT_FORM,
-    VERIFYING_CODE,
+  FILLING_OUT_FORM,
+  VERIFYING_CODE,
 }
 
 const SignUpForm = () => {
-    const [view, setView] = useState(View.FILLING_OUT_FORM);
-    const { loading, isValid, setLoading, setValid } =
-        useContext(AuthenticatorContext);
+  const [view, setView] = useState(View.FILLING_OUT_FORM);
+  const { loading, isValid, setLoading, setValid } =
+    useContext(AuthenticatorContext);
 
-    const [form, setForm] = useState<Form>(DEFAULT_FORM);
+  const [form, setForm] = useState<Form>(DEFAULT_FORM);
 
-    const signUp = async () => {
-        if (!isValidForm(form)) {
-            setLoading(false);
-            setValid(false);
-            toast.error("Formulario invalido");
-            return;
-        }
-
-        createUserWithEmailAndPassword(
-            auth,
-            form.email.value.toLocaleLowerCase().trim(),
-            form.password.value.trim(),
-        )
-            .then((res) => {
-                let newUser: UserInterface = formToNewUser(form);
-                newUser.id = res.user.uid;
-
-                saveUser(res.user.uid, newUser)
-                    .then(() => {
-                        toast.success("Registro exitoso");
-                        window.location.replace("/redirector");
-                    })
-                    .catch(() => {
-                        setLoading(false);
-                        toast.error(
-                            "Error al guardar los datos, inténtalo de nuevo por favor",
-                        );
-                    });
-            })
-            .catch((e) => {
-                let errorCode = e.code;
-                if (errorCode === "auth/email-already-in-use") {
-                    toast.error("El correo electrónico ya está en uso");
-                    setForm({
-                        ...form,
-                        email: {
-                            ...form.email,
-                            message: "El correo electrónico ya está en uso",
-                        },
-                    });
-                    setLoading(false);
-                    setValid(false);
-                } else {
-                    toast.error("Algo fallo, inténtalo de nuevo por favor");
-                    setLoading(false);
-                    setValid(false);
-                }
-            });
-    };
-
-    const sentCode = async (e: FormEvent) => {
-        e.preventDefault();
-        if (loading) {
-            return;
-        }
-
-        setLoading(true);
-
-        if (!isValidForm(form)) {
-            setLoading(false);
-            setValid(false);
-            toast.error("Formulario invalido");
-            return;
-        }
-
-        try {
-            let amountOfUsers = await checkEmailExists(
-                form.email.value.trim().toLocaleLowerCase(),
-            );
-            if (amountOfUsers > 0) {
-                setForm((prev) => ({
-                    ...prev,
-                    email: {
-                        ...prev.email,
-                        message: "El correo ya fue registrado",
-                    },
-                }));
-                setLoading(false);
-                setValid(false);
-                toast.error("El correo ya fue registrado, inicia sesión");
-                return;
-            }
-
-            try {
-                let codeSent: string = await sendVerificationCode(
-                    form.phone.value,
-                );
-                setForm((prev) => ({
-                    ...prev,
-                    code: codeSent,
-                }));
-
-                setLoading(false);
-                setView(View.VERIFYING_CODE);
-            } catch (e) {
-                setLoading(false);
-                setValid(false);
-                toast.error("Ocurrio un error, inténtalo de nuevo por favor");
-            }
-        } catch (e) {
-            setLoading(false);
-            setValid(false);
-            toast.error("Ocurrio un error, inténtalo de nuevo por favor");
-        }
-    };
-
-    useEffect(() => {
-        setValid(isValidForm(form));
-    }, [form]);
-
-    if (view === View.VERIFYING_CODE) {
-        return (
-            <CodeVerifier onSummbit={signUp} verificationCode={form.code} />
-        );
+  const signUp = async () => {
+    if (!isValidForm(form)) {
+      setLoading(false);
+      setValid(false);
+      toast.error("Formulario invalido");
+      return;
     }
 
-    return (
-        <>
-            <BaseForm
-                content={{
-                    button: {
-                        content: {
-                            legend: "Verificar datos",
-                        },
-                        behavior: {
-                            isValid: isValid,
-                            loading: loading,
-                        },
-                    },
-                }}
-                behavior={{
-                    loading: loading,
-                    onSummit: sentCode,
-                }}
-            >
-                <EmailField
-                    values={form.email}
-                    setter={(e) => setForm((prev) => ({ ...prev, email: e }))}
-                />
-                <PasswordField
-                    values={form.password}
-                    setter={(e) =>
-                        setForm((prev) => ({ ...prev, password: e }))
-                    }
-                />
-                <TextField
-                    field={{
-                        values: form.fullName,
-                        setter: (e) =>
-                            setForm((prev) => ({
-                                ...prev,
-                                fullName: e,
-                            })),
-                        validator: isValidName,
-                    }}
-                    legend="Nombre completo"
-                />
-                <PhoneField
-                    values={form.phone}
-                    setter={(e) => setForm((prev) => ({ ...prev, phone: e }))}
-                />
-                <LocationField
-                    location={form.location}
-                    setter={(e) =>
-                        setForm((prev) => ({ ...prev, location: e }))
-                    }
-                />
-            </BaseForm>
-            <AuthProviders alternativeLegend="O registrate con"/>
-            <Link
-                href={routeToSingIn()}
-                className="text | normal center"
-            >
-                ¿Ya tienes cuenta? <b>Inicia sesión</b>
-            </Link>
-        </>
-    );
+    createUserWithEmailAndPassword(
+      auth,
+      form.email.value.toLocaleLowerCase().trim(),
+      form.password.value.trim(),
+    )
+      .then((res) => {
+        let newUser: UserInterface = formToNewUser(form);
+        newUser.id = res.user.uid;
+
+        saveUser(res.user.uid, newUser)
+          .then(() => {
+            toast.success("Registro exitoso");
+            window.location.replace("/redirector");
+          })
+          .catch(() => {
+            setLoading(false);
+            toast.error(
+              "Error al guardar los datos, inténtalo de nuevo por favor",
+            );
+          });
+      })
+      .catch((e) => {
+        let errorCode = e.code;
+        if (errorCode === "auth/email-already-in-use") {
+          toast.error("El correo electrónico ya está en uso");
+          setForm({
+            ...form,
+            email: {
+              ...form.email,
+              message: "El correo electrónico ya está en uso",
+            },
+          });
+          setLoading(false);
+          setValid(false);
+        } else {
+          toast.error("Algo fallo, inténtalo de nuevo por favor");
+          setLoading(false);
+          setValid(false);
+        }
+      });
+  };
+
+  const sentCode = async (e: FormEvent) => {
+    e.preventDefault();
+    if (loading) {
+      return;
+    }
+
+    setLoading(true);
+
+    if (!isValidForm(form)) {
+      setLoading(false);
+      setValid(false);
+      toast.error("Formulario invalido");
+      return;
+    }
+
+    try {
+      let amountOfUsers = await checkEmailExists(
+        form.email.value.trim().toLocaleLowerCase(),
+      );
+      if (amountOfUsers > 0) {
+        setForm((prev) => ({
+          ...prev,
+          email: {
+            ...prev.email,
+            message: "El correo ya fue registrado",
+          },
+        }));
+        setLoading(false);
+        setValid(false);
+        toast.error("El correo ya fue registrado, inicia sesión");
+        return;
+      }
+
+      try {
+        let codeSent: string = await sendVerificationCode(form.phone.value);
+        setForm((prev) => ({
+          ...prev,
+          code: codeSent,
+        }));
+
+        setLoading(false);
+        setView(View.VERIFYING_CODE);
+      } catch (e) {
+        setLoading(false);
+        setValid(false);
+        toast.error("Ocurrio un error, inténtalo de nuevo por favor");
+      }
+    } catch (e) {
+      setLoading(false);
+      setValid(false);
+      toast.error("Ocurrio un error, inténtalo de nuevo por favor");
+    }
+  };
+
+  useEffect(() => {
+    setValid(isValidForm(form));
+  }, [form, setValid]);
+
+  if (view === View.VERIFYING_CODE) {
+    return <CodeVerifier onSummbit={signUp} verificationCode={form.code} />;
+  }
+
+  return (
+    <>
+      <BaseForm
+        content={{
+          button: {
+            content: {
+              legend: "Verificar datos",
+            },
+            behavior: {
+              isValid: isValid,
+              loading: loading,
+            },
+          },
+        }}
+        behavior={{
+          loading: loading,
+          onSummit: sentCode,
+        }}
+      >
+        <EmailField
+          values={form.email}
+          setter={(e) => setForm((prev) => ({ ...prev, email: e }))}
+        />
+        <PasswordField
+          values={form.password}
+          setter={(e) => setForm((prev) => ({ ...prev, password: e }))}
+        />
+        <TextField
+          field={{
+            values: form.fullName,
+            setter: (e) =>
+              setForm((prev) => ({
+                ...prev,
+                fullName: e,
+              })),
+            validator: isValidName,
+          }}
+          legend="Nombre completo"
+        />
+        <PhoneField
+          values={form.phone}
+          setter={(e) => setForm((prev) => ({ ...prev, phone: e }))}
+        />
+        <LocationField
+          location={form.location}
+          setter={(e) => setForm((prev) => ({ ...prev, location: e }))}
+        />
+      </BaseForm>
+      <AuthProviders alternativeLegend="O registrate con" />
+      <Link href={routeToSingIn()} className="text | normal center">
+        ¿Ya tienes cuenta? <b>Inicia sesión</b>
+      </Link>
+    </>
+  );
 };
 
 export default SignUpForm;
 
 const DEFAULT_FORM: Form = {
-    fullName: DEFAUL_TEXT_FIELD,
-    phone: DEFAUL_TEXT_FIELD,
-    email: DEFAUL_TEXT_FIELD,
-    password: DEFAUL_TEXT_FIELD,
-    code: "",
-    location: Locations.CochabambaBolivia,
+  fullName: DEFAUL_TEXT_FIELD,
+  phone: DEFAUL_TEXT_FIELD,
+  email: DEFAUL_TEXT_FIELD,
+  password: DEFAUL_TEXT_FIELD,
+  code: "",
+  location: Locations.CochabambaBolivia,
 };
 
 const isValidForm = (form: Form): boolean => {
-    return (
-        isValidTextField(form.email) &&
-        isValidTextField(form.password) &&
-        isValidTextField(form.fullName) &&
-        isValidTextField(form.phone)
-    );
+  return (
+    isValidTextField(form.email) &&
+    isValidTextField(form.password) &&
+    isValidTextField(form.fullName) &&
+    isValidTextField(form.phone)
+  );
 };
 
 function formToNewUser(form: Form): UserInterface {
-    return {
-        ...EMPTY_USER_DATA,
-        fullName: form.fullName.value.toLocaleLowerCase().trimEnd().trimStart(),
-        phoneNumber: parseBoliviaPhone(form.phone.value),
-        location: form.location,
-        email: form.email.value.toLocaleLowerCase().trim(),
-    };
+  return {
+    ...EMPTY_USER_DATA,
+    fullName: form.fullName.value.toLocaleLowerCase().trimEnd().trimStart(),
+    phoneNumber: parseBoliviaPhone(form.phone.value),
+    location: form.location,
+    email: form.email.value.toLocaleLowerCase().trim(),
+  };
 }

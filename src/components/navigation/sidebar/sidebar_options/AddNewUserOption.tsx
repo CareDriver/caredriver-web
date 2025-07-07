@@ -3,17 +3,17 @@ import { routeToCreateNewUserAsAdmin } from "@/utils/route_builders/as_admin/Rou
 import Link from "next/link";
 
 const AddNewUserOption = ({ pathname }: { pathname: string }) => {
-    return (
-        <Link
-            href={routeToCreateNewUserAsAdmin()}
-            className={`sidebar-option ${
-                pathname.includes(routeToCreateNewUserAsAdmin()) && "selected"
-            }`}
-        >
-            <UserPlus />
-            <span>Nuevo usuario</span>
-        </Link>
-    );
+  return (
+    <Link
+      href={routeToCreateNewUserAsAdmin()}
+      className={`sidebar-option ${
+        pathname.includes(routeToCreateNewUserAsAdmin()) && "selected"
+      }`}
+    >
+      <UserPlus />
+      <span>Nuevo usuario</span>
+    </Link>
+  );
 };
 
 export default AddNewUserOption;

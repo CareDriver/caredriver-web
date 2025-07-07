@@ -6,17 +6,17 @@ import { Metadata } from "next";
 const pageTitle = `${NAME_BUSINESS} | Solicitudes para Lavadero`;
 
 export const metadata: Metadata = {
-    title: pageTitle,
-    applicationName: NAME_BUSINESS,
-    authors: CareDriverAuthor,
+  title: pageTitle,
+  applicationName: NAME_BUSINESS,
+  authors: CareDriverAuthor,
 };
 
 const Page = () => {
-    return (
-        <GuardOfRequests>
-            <ListOfRequestsToBeServerUser type="laundry" />
-        </GuardOfRequests>
-    );
+  return (
+    <GuardOfRequests>
+      <ListOfRequestsToBeServerUser type="laundry" />
+    </GuardOfRequests>
+  );
 };
 
 export default Page;

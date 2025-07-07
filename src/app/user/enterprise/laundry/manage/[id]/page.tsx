@@ -6,23 +6,23 @@ import { Metadata } from "next";
 
 const pageTitle = `${NAME_BUSINESS} | Administra Tu Empresa de Lavado de Vehículos`;
 const pageDescription =
-    "Gestiona los datos de tu lavadero y envía solicitudes de registro de nuevos usuarios lavadores para ampliar los servicios de lavado.";
+  "Gestiona los datos de tu lavadero y envía solicitudes de registro de nuevos usuarios lavadores para ampliar los servicios de lavado.";
 
 export const metadata: Metadata = {
-    title: pageTitle,
-    description: pageDescription,
-    applicationName: NAME_BUSINESS,
-    authors: CareDriverAuthor,
+  title: pageTitle,
+  description: pageDescription,
+  applicationName: NAME_BUSINESS,
+  authors: CareDriverAuthor,
 };
 
 const Page = ({ params }: { params: any }) => {
-    return (
-        <GuardForServerUsers>
-            <PageStateProviderContainer>
-                <EnterprisePanelForUserServer id={params.id} />
-            </PageStateProviderContainer>
-        </GuardForServerUsers>
-    );
+  return (
+    <GuardForServerUsers>
+      <PageStateProviderContainer>
+        <EnterprisePanelForUserServer id={params.id} />
+      </PageStateProviderContainer>
+    </GuardForServerUsers>
+  );
 };
 
 export default Page;

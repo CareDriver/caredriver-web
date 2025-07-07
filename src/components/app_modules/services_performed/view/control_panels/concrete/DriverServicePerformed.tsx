@@ -19,53 +19,48 @@ import ShareServiceByLink from "../../renderers/ShareServiceByLink";
 import { checkPermission } from "@/components/guards/validators/RoleValidator";
 
 interface Props {
-    service: ServiceRequestInterface;
-    reviewerUser: UserInterface;
+  service: ServiceRequestInterface;
+  reviewerUser: UserInterface;
 }
 
 const DriverServicePerformed: React.FC<Props> = ({ service, reviewerUser }) => {
-    const renderMap = () => (
-        <MapRealTime
-            databaseURL={buildUrlDB(
-                UserServices.Driver,
-                service.location
-                    ? service.location
-                    : Locations.CochabambaBolivia,
-            )}
-            serviceId={service.id}
-            isCanceled={service.canceled ? service.canceled : false}
-            isFinished={service.finished ? service.finished : false}
-        />
-    );
+  const renderMap = () => (
+    <MapRealTime
+      databaseURL={buildUrlDB(
+        UserServices.Driver,
+        service.location ? service.location : Locations.CochabambaBolivia,
+      )}
+      serviceId={service.id}
+      isCanceled={service.canceled ? service.canceled : false}
+      isFinished={service.finished ? service.finished : false}
+    />
+  );
 
-    return (
-        <section className="render-data-wrapper">
-            <ServiceHeaderRenderer service={service} />
-            <ShareServiceByLink reviewerUser={reviewerUser} service={service} />
-            <RendererOfTheUsersInvolvedInTheService service={service} />
-            <ServicePriceDetailsRenderer service={service} />
+  return (
+    <section className="render-data-wrapper">
+      <ServiceHeaderRenderer service={service} />
+      <ShareServiceByLink reviewerUser={reviewerUser} service={service} />
+      <RendererOfTheUsersInvolvedInTheService service={service} />
+      <ServicePriceDetailsRenderer service={service} />
 
-            <GuardOfModule
-                user={reviewerUser}
-                roles={ROLES_TO_VIEW_USER_SERVICES}
-            >
-                <VehicleDetailRenderer
-                    titleSection={`Detalles del vehículo de Transporte
+      <GuardOfModule user={reviewerUser} roles={ROLES_TO_VIEW_USER_SERVICES}>
+        <VehicleDetailRenderer
+          titleSection={`Detalles del vehículo de Transporte
                     ${
-                        service.vehicle?.type &&
-                        " - ".concat(
-                            VEHICLE_CATEGORY_TO_SPANISH[service.vehicle.type],
-                        )
+                      service.vehicle?.type &&
+                      " - ".concat(
+                        VEHICLE_CATEGORY_TO_SPANISH[service.vehicle.type],
+                      )
                     }`}
-                    vehicle={service.vehicle}
-                />
-                <ServiceRouteRenderer service={service} />
-                {renderMap()}
-            </GuardOfModule>
-            {!checkPermission(reviewerUser.role, ROLES_TO_VIEW_USER_SERVICES) &&
-                isLessTime(service.sharing) &&
-                renderMap()}
-        </section>
-    );
+          vehicle={service.vehicle}
+        />
+        <ServiceRouteRenderer service={service} />
+        {renderMap()}
+      </GuardOfModule>
+      {!checkPermission(reviewerUser.role, ROLES_TO_VIEW_USER_SERVICES) &&
+        isLessTime(service.sharing) &&
+        renderMap()}
+    </section>
+  );
 };
 export default DriverServicePerformed;

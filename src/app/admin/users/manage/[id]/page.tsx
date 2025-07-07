@@ -4,15 +4,15 @@ import UserProfileForAppUser from "@/components/app_modules/users/views/control_
 import { PageStateProviderContainer } from "@/context/PageStateContext";
 
 const Page = ({ params }: { params: any }) => {
-    return (
-        <GuardForReadOnlyUserInfo>
-            <ConsentForm moduleTarget="userinfo" id={params.id}>
-                <PageStateProviderContainer>
-                    <UserProfileForAppUser userId={params.id} />
-                </PageStateProviderContainer>
-            </ConsentForm>
-        </GuardForReadOnlyUserInfo>
-    );
+  return (
+    <GuardForReadOnlyUserInfo>
+      <ConsentForm moduleTarget="userinfo" id={params.id}>
+        <PageStateProviderContainer>
+          <UserProfileForAppUser userId={params.id} />
+        </PageStateProviderContainer>
+      </ConsentForm>
+    </GuardForReadOnlyUserInfo>
+  );
 };
 
 export default Page;

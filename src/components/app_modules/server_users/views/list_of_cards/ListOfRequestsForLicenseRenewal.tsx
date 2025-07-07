@@ -2,8 +2,8 @@
 
 import { LicenseUpdateReq } from "@/interfaces/PersonalDocumentsInterface";
 import {
-    getLicencesToUpdateNumPages,
-    getLicencesToUpdatePaginated,
+  getLicencesToUpdateNumPages,
+  getLicencesToUpdatePaginated,
 } from "@/components/app_modules/server_users/api/LicenseUpdaterReq";
 import { DocumentSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -15,85 +15,73 @@ import WholeScreenText from "@/components/modules/WholeScreenText";
 import PageLoading from "@/components/loaders/PageLoading";
 
 const ListOfRequestsForLicenseRenewal = () => {
-    const PAGE_SIZE = 20;
-    const [data, setData] = useState<LicenseUpdateReq[] | null>(null);
-    const [page, setPage] = useState<number>(1);
-    const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(
-        undefined,
-    );
-    const [pages, setPages] = useState<number | null>(null);
+  const PAGE_SIZE = 20;
+  const [data, setData] = useState<LicenseUpdateReq[] | null>(null);
+  const [page, setPage] = useState<number>(1);
+  const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(
+    undefined,
+  );
+  const [pages, setPages] = useState<number | null>(null);
 
-    const handleNextClick = () => {
-        if (page === pages) return;
-        setPage((prev) => prev + 1);
-    };
+  const handleNextClick = () => {
+    if (page === pages) return;
+    setPage((prev) => prev + 1);
+  };
 
-    useEffect(() => {
-        getLicencesToUpdateNumPages(PAGE_SIZE)
-            .then((pages) => {
-                setPages(pages);
-            })
-            .catch((e) => {
-                console.log(e);
-            });
-    }, []);
+  useEffect(() => {
+    getLicencesToUpdateNumPages(PAGE_SIZE)
+      .then((pages) => {
+        setPages(pages);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
 
-    useEffect(() => {
-        const startAfterDoc = lastDoc;
-        const endBeforeDoc = undefined;
-        getLicencesToUpdatePaginated(
-            "next",
-            startAfterDoc,
-            endBeforeDoc,
-            PAGE_SIZE,
-        )
-            .then((result) => {
-                if (data) {
-                    setData([...data, ...result.result]);
-                } else {
-                    setData(result.result);
-                }
-                setLastDoc(result.lastDoc);
-            })
-            .catch(() => {});
-    }, [page]);
+  useEffect(() => {
+    const startAfterDoc = lastDoc;
+    const endBeforeDoc = undefined;
+    getLicencesToUpdatePaginated("next", startAfterDoc, endBeforeDoc, PAGE_SIZE)
+      .then((result) => {
+        if (data) {
+          setData([...data, ...result.result]);
+        } else {
+          setData(result.result);
+        }
+        setLastDoc(result.lastDoc);
+      })
+      .catch(() => {});
+  }, [page, data, lastDoc]);
 
-    if (!data) {
-        return <PageLoading />;
-    }
+  if (!data) {
+    return <PageLoading />;
+  }
 
-    if (data.length <= 0) {
-        return (
-            <WholeScreenText text="No hay peticiones para actualizar licencias" />
-        );
-    }
-
+  if (data.length <= 0) {
     return (
-        <div className="render-data-wrapper">
-            <h1
-                className={
-                    "text | big bold margin-bottom-25 capitalize"
-                }
-            >
-                Solicitudes para renovar Licencias
-            </h1>
-            <InfiniteScroll
-                dataLength={data.length}
-                next={handleNextClick}
-                hasMore={page !== pages}
-                loader={<DataLoading />}
-            >
-                <div className="personal-data-req-wrapper">
-                    {data.map((req, i) => (
-                        <LicenseCard
-                            license={req}
-                            key={`license-update-req-item-${i}`}
-                        />
-                    ))}
-                </div>
-            </InfiniteScroll>
-        </div>
+      <WholeScreenText text="No hay peticiones para actualizar licencias" />
     );
+  }
+
+  return (
+    <div className="render-data-wrapper">
+      <h1 className={"text | big bold margin-bottom-25 capitalize"}>
+        Solicitudes para renovar Licencias
+      </h1>
+      <InfiniteScroll
+        dataLength={data.length}
+        next={handleNextClick}
+        hasMore={page !== pages}
+        loader={<DataLoading />}
+      >
+        <div className="personal-data-req-wrapper">
+          {data.map((req, i) => (
+            <LicenseCard license={req} key={`license-update-req-item-${i}`} />
+          ))}
+        </div>
+      </InfiniteScroll>
+    </div>
+  );
 };
 
 export default ListOfRequestsForLicenseRenewal;

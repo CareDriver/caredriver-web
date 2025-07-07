@@ -3,13 +3,13 @@ import NewVehicleRegistrationAsIndependent from "@/components/app_modules/server
 import GuardForServerUsers from "@/components/guards/views/page_guards/concrets/GuardForServerUsers";
 
 const Page = () => {
-    return (
-        <GuardForServerUsers>
-            <ServiceContainer>
-                <NewVehicleRegistrationAsIndependent type="motorcycle" />
-            </ServiceContainer>
-        </GuardForServerUsers>
-    );
+  return (
+    <GuardForServerUsers>
+      <ServiceContainer>
+        <NewVehicleRegistrationAsIndependent type="motorcycle" />
+      </ServiceContainer>
+    </GuardForServerUsers>
+  );
 };
 
 export default Page;

@@ -1,83 +1,81 @@
 .service-item-wrapper {
-    display: block;
+  display: block;
 
-    padding: 1.666666667rem;
-    border: 0.166666667rem solid var(--main-light);
-    border-radius: 0.833333333rem;
+  padding: 1.666666667rem;
+  border: 0.166666667rem solid var(--main-light);
+  border-radius: 0.833333333rem;
 
-    transition: all ease 200ms;
+  transition: all ease 200ms;
 }
 
 .service-item-wrapper.canceled-service {
-    border-color: var(--red);
+  border-color: var(--red);
 }
 
 .service-item-wrapper.finished-service {
-    border-color: var(--main-light);
+  border-color: var(--main-light);
 }
 
 .service-item-wrapper.active-service {
-    border-color: var(--yellow);
+  border-color: var(--yellow);
 }
 
 .service-item-state {
-    color: var(--main-light);
+  color: var(--main-light);
 }
 
 .service-item-state.canceled-state {
-    color: var(--gray-darker);
+  color: var(--gray-darker);
 }
 
 .service-item-wrapper:hover {
-    border-radius: 1.5rem;
+  border-radius: 1.5rem;
 }
 
 .filter-date-wrapper {
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    gap: 0.555555556rem;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  gap: 0.555555556rem;
 
-    width: fit-content;
-    border: 0.111111111rem solid var(--second-dark);
-    border-radius: 0.555555556rem;
-    padding-right: 1.111111111rem;
-    font-size: 1.111111111rem;
+  width: fit-content;
+  border: 0.111111111rem solid var(--second-dark);
+  border-radius: 0.555555556rem;
+  padding-right: 1.111111111rem;
+  font-size: 1.111111111rem;
 }
 
-
-
 .filter-date-input {
-    border: none;
-    background-color: transparent;
-    font-size: 1.111111111rem;
+  border: none;
+  background-color: transparent;
+  font-size: 1.111111111rem;
 }
 
 @media only screen and (max-width: 430px) {
-    .filter-date-wrapper {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0;
-        padding-right: 0;
-    }
+  .filter-date-wrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    padding-right: 0;
+  }
 
-    .filter-date-input {
-        padding: 0.277777778rem;
-        width: 100%;
-    }
+  .filter-date-input {
+    padding: 0.277777778rem;
+    width: 100%;
+  }
 }
 
 .filter-date-button {
-    border: none;
-    background-color: transparent;
-    font-size: 1.111111111rem;
-    padding: 0.555555556rem 0.555555556rem 0.555555556rem 1.111111111rem;
-    font-weight: 900;
+  border: none;
+  background-color: transparent;
+  font-size: 1.111111111rem;
+  padding: 0.555555556rem 0.555555556rem 0.555555556rem 1.111111111rem;
+  font-weight: 900;
 
-    height: 100%;
-    background-color: var(--gray-light);
+  height: 100%;
+  background-color: var(--gray-light);
 }
 
 .filter-date-button:hover {
-    background-color: var(--gray-medium);
+  background-color: var(--gray-medium);
 }

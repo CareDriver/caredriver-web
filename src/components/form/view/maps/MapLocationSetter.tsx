@@ -2,101 +2,101 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import {
-    DEFAULT_LOCATION,
-    GOOGLEMAPS_TOKEN,
+  DEFAULT_LOCATION,
+  GOOGLEMAPS_TOKEN,
 } from "@/components/form/models/MapProperties";
 import { GeoPoint } from "firebase/firestore";
 import { geoPointToLatLng } from "../../utils/MapLocationHelper";
-import { MAIN_COLOR, SECOND_COLOR_LIGHT, WHITE_COLOR } from "@/models/Colors";
+import { MAIN_COLOR, SECOND_COLOR_LIGHT } from "@/models/Colors";
 import { createGoogleMapsUrl } from "@/utils/helpers/MapHelper";
-import LocationDot from "@/icons/LocationDot";
 import GoogleMapsRedirector from "./GoogleMapsRedirector";
-import "@/styles/modules/map.css"
+import "@/styles/modules/map.css";
 
 interface Props {
-    location: GeoPoint | undefined;
-    setLocation: (g: GeoPoint) => void;
+  location: GeoPoint | undefined;
+  setLocation: (g: GeoPoint) => void;
 }
 
 const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
-    const mapRef = useRef<HTMLDivElement>(null);
-    var lastMarker: google.maps.marker.AdvancedMarkerElement | null = null;
-    const [googleMapsUrl, setGoogleMapsUrl] = useState<string | null>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [googleMapsUrl, setGoogleMapsUrl] = useState<string | null>(null);
 
-    useEffect(() => {
-        const initMap = async () => {
-            const loader = new Loader({
-                apiKey: GOOGLEMAPS_TOKEN,
-                version: "weekly",
-            });
+  useEffect(() => {
+    let lastMarker: google.maps.marker.AdvancedMarkerElement | null = null;
 
-            const { Map } = await loader.importLibrary("maps");
+    const initMap = async () => {
+      const loader = new Loader({
+        apiKey: GOOGLEMAPS_TOKEN,
+        version: "weekly",
+      });
 
-            const position = location ? location : DEFAULT_LOCATION;
+      const { Map } = await loader.importLibrary("maps");
 
-            const mapOptions: google.maps.MapOptions = {
-                center: geoPointToLatLng(position),
-                zoom: 17,
-                mapId: "GOOGLEMAP_FORM_ID",
-            };
+      const position = location ? location : DEFAULT_LOCATION;
 
-            const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
-            const { AdvancedMarkerElement, PinElement } =
-                (await google.maps.importLibrary(
-                    "marker",
-                )) as google.maps.MarkerLibrary;
+      const mapOptions: google.maps.MapOptions = {
+        center: geoPointToLatLng(position),
+        zoom: 17,
+        mapId: "GOOGLEMAP_FORM_ID",
+      };
 
-            const pin = new PinElement({
-                scale: 2,
-                background: MAIN_COLOR,
-                glyphColor: SECOND_COLOR_LIGHT,
-                borderColor: SECOND_COLOR_LIGHT,
-            });
+      const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
+      const { AdvancedMarkerElement, PinElement } =
+        (await google.maps.importLibrary(
+          "marker",
+        )) as google.maps.MarkerLibrary;
 
-            if (location) {
-                lastMarker = new AdvancedMarkerElement({
-                    map,
-                    position: geoPointToLatLng(location),
-                    content: pin.element,
-                });
-                let mapUrl: string = createGoogleMapsUrl({
-                    lat: location.latitude,
-                    lng: location.longitude,
-                });
-                setGoogleMapsUrl(mapUrl);
-            }
+      const pin = new PinElement({
+        scale: 2,
+        background: MAIN_COLOR,
+        glyphColor: SECOND_COLOR_LIGHT,
+        borderColor: SECOND_COLOR_LIGHT,
+      });
 
-            map.addListener("click", (mapsMouseEvent: any) => {
-                var newPosition = {
-                    lat: mapsMouseEvent.latLng.toJSON().lat,
-                    lng: mapsMouseEvent.latLng.toJSON().lng,
-                };
+      if (location) {
+        lastMarker = new AdvancedMarkerElement({
+          map,
+          position: geoPointToLatLng(location),
+          content: pin.element,
+        });
+        let mapUrl: string = createGoogleMapsUrl({
+          lat: location.latitude,
+          lng: location.longitude,
+        });
+        setGoogleMapsUrl(mapUrl);
+      }
 
-                if (lastMarker !== null) {
-                    lastMarker.position = newPosition;
-                } else {
-                    lastMarker = new AdvancedMarkerElement({
-                        map,
-                        position: newPosition,
-                        content: pin.element,
-                    });
-                }
-
-                let mapUrl: string = createGoogleMapsUrl(newPosition);
-                setGoogleMapsUrl(mapUrl);
-                setLocation(new GeoPoint(newPosition.lat, newPosition.lng));
-            });
+      map.addListener("click", (mapsMouseEvent: any) => {
+        var newPosition = {
+          lat: mapsMouseEvent.latLng.toJSON().lat,
+          lng: mapsMouseEvent.latLng.toJSON().lng,
         };
 
-        initMap();
-    }, []);
+        if (lastMarker !== null) {
+          lastMarker.position = newPosition;
+        } else {
+          lastMarker = new AdvancedMarkerElement({
+            map,
+            position: newPosition,
+            content: pin.element,
+          });
+        }
 
-    return (
-        <div className="map-main-wrapper">
-            <div className="map-content-wrapper" ref={mapRef}></div>
-            <GoogleMapsRedirector googleMapsUrl={googleMapsUrl} />
-        </div>
-    );
+        let mapUrl: string = createGoogleMapsUrl(newPosition);
+        setGoogleMapsUrl(mapUrl);
+        setLocation(new GeoPoint(newPosition.lat, newPosition.lng));
+      });
+    };
+
+    initMap();
+  }, [location, setLocation]);
+
+  return (
+    <div className="map-main-wrapper">
+      <div className="map-content-wrapper" ref={mapRef}></div>
+      <GoogleMapsRedirector googleMapsUrl={googleMapsUrl} />
+    </div>
+  );
 };
 
 export default MapLocationSetter;

@@ -8,38 +8,38 @@ import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 interface Props {
-    roles: UserRole[];
-    children: React.ReactNode;
+  roles: UserRole[];
+  children: React.ReactNode;
 }
 
 const GuardOfPage: React.FC<Props> = ({ roles, children }) => {
-    const { checkingUserAuth, user } = useContext(AuthContext);
-    const [hasPermition, setPermition] = useState<boolean>(false);
+  const { checkingUserAuth, user } = useContext(AuthContext);
+  const [hasPermition, setPermition] = useState<boolean>(false);
 
-    const redirectToHome = () => {
-        window.location.replace(routeToNoFound());
-        toast.warning("Permiso denegado", {
-            toastId: "check-permition-validator-page",
-        });
-    };
+  const redirectToHome = () => {
+    window.location.replace(routeToNoFound());
+    toast.warning("Permiso denegado", {
+      toastId: "check-permition-validator-page",
+    });
+  };
 
-    useEffect(() => {
-        if (!checkingUserAuth) {
-            if (!user) {
-                redirectToHome();
-            } else if (!checkPermission(user.role, roles)) {
-                redirectToHome();
-            } else {
-                setPermition(true);
-            }
-        }
-    }, [checkingUserAuth]);
+  useEffect(() => {
+    if (!checkingUserAuth) {
+      if (!user) {
+        redirectToHome();
+      } else if (!checkPermission(user.role, roles)) {
+        redirectToHome();
+      } else {
+        setPermition(true);
+      }
+    }
+  }, [checkingUserAuth, roles, user]);
 
-    return checkingUserAuth || hasPermition === false ? (
-        <PageLoading />
-    ) : (
-        <>{children}</>
-    );
+  return checkingUserAuth || hasPermition === false ? (
+    <PageLoading />
+  ) : (
+    <>{children}</>
+  );
 };
 
 export default GuardOfPage;

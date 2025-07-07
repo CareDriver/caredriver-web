@@ -9,25 +9,25 @@ import HomeServices from "./HomeServices";
 import HomePresentation from "./HomePresentation";
 
 const Home = () => {
-    const { checkingUserAuth, user } = useContext(AuthContext);
+  const { checkingUserAuth, user } = useContext(AuthContext);
 
-    useEffect(() => {
-        if (!checkingUserAuth) {
-            if (user) {
-                window.location.replace("/redirector");
-            }
-        }
-    }, [checkingUserAuth]);
+  useEffect(() => {
+    if (!checkingUserAuth) {
+      if (user) {
+        window.location.replace("/redirector");
+      }
+    }
+  }, [checkingUserAuth, user]);
 
-    return (
-        <main className="home-container">
-            <HomePresentation />
-            <div className="home-info-wrapper home-sub-container | margin-top-15 z-index-1">
-                <HomeServices />
-                <HomeDescription />
-            </div>
-        </main>
-    );
+  return (
+    <main className="home-container">
+      <HomePresentation />
+      <div className="home-info-wrapper home-sub-container | margin-top-15 z-index-1">
+        <HomeServices />
+        <HomeDescription />
+      </div>
+    </main>
+  );
 };
 
 export default Home;

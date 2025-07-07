@@ -6,17 +6,17 @@ import { Metadata } from "next";
 const pageTitle = `${NAME_BUSINESS} | Solicitudes para Mecánico`;
 
 export const metadata: Metadata = {
-    title: pageTitle,
-    applicationName: NAME_BUSINESS,
-    authors: CareDriverAuthor,
+  title: pageTitle,
+  applicationName: NAME_BUSINESS,
+  authors: CareDriverAuthor,
 };
 
 const Page = () => {
-    return (
-        <GuardOfRequests>
-            <ListOfRequestsToBeServerUser type="mechanical" />
-        </GuardOfRequests>
-    );
+  return (
+    <GuardOfRequests>
+      <ListOfRequestsToBeServerUser type="mechanical" />
+    </GuardOfRequests>
+  );
 };
 
 export default Page;

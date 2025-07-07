@@ -1,4 +1,4 @@
 export enum TypeOfServicePerformed {
-    Requested = "pedidos",
-    Served = "hechos",
+  Requested = "pedidos",
+  Served = "hechos",
 }

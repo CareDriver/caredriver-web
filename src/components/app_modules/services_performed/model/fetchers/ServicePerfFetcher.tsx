@@ -4,24 +4,24 @@ import { ServiceType } from "@/interfaces/Services";
 import { ServiceRequestInterface } from "@/interfaces/ServiceRequestInterface";
 
 export async function findServicePerfByFakeId(
-    fakedId: string,
-    type: ServiceType,
+  fakedId: string,
+  type: ServiceType,
 ): Promise<ServiceRequestInterface | undefined> {
-    let collectionRef = getCollectionOfServicesPerf(type);
-    let dataQuery = query(collectionRef, where("fakedId", "==", fakedId));
+  let collectionRef = getCollectionOfServicesPerf(type);
+  let dataQuery = query(collectionRef, where("fakedId", "==", fakedId));
 
-    let documents = await getDocs(dataQuery);
-    if (documents.empty) {
-        return undefined;
-    }
+  let documents = await getDocs(dataQuery);
+  if (documents.empty) {
+    return undefined;
+  }
 
-    let serviceFound = documents.docs[0].data() as ServiceRequestInterface;
-    return serviceFound;
+  let serviceFound = documents.docs[0].data() as ServiceRequestInterface;
+  return serviceFound;
 }
 
 export async function verifyExistenceFfTheServicePerfByFakeId(
-    fakedId: string,
-    type: ServiceType,
+  fakedId: string,
+  type: ServiceType,
 ): Promise<boolean> {
-    return findServicePerfByFakeId(fakedId, type) !== undefined;
+  return findServicePerfByFakeId(fakedId, type) !== undefined;
 }

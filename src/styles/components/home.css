@@ -1,66 +1,67 @@
 .home-container {
-    position: relative;
-    overflow: hidden;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr auto;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
 
-    height: 100dvh;
-    padding: 3.125rem;
+  height: 100dvh;
+  padding: 3.125rem;
 
-    background-color: var(--second-dark);
+  background-color: var(--second-dark);
 }
 
 .home-sub-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .home-sub-container-name > svg {
-    width: 40rem;
-    height: auto;
+  width: 40rem;
+  height: auto;
 
-    fill: var(--main-light);
+  fill: var(--main-light);
 }
 
 .home-service {
-    cursor: default;
-    transition: 300ms all ease;
+  cursor: default;
+  transition: 300ms all ease;
 }
 
 .home-service:hover,
 .home-service:hover > svg {
-    transform: scale(1.06);
+  transform: scale(1.06);
 }
 
 .home-action-button-responsive {
-    display: none;
+  display: none;
 }
 
 @media only screen and (max-width: 660px) {
-    .home-sub-container-name > svg {
-        width: 32rem;
-    }
+  .home-sub-container-name > svg {
+    width: 32rem;
+  }
 }
 
 @media only screen and (max-width: 510px) {
-    .home-sub-container-name > svg {
-        width: 32rem;
-    }
+  .home-sub-container-name > svg {
+    width: 32rem;
+  }
 
-    .action-button, .home-service {
-        display: none;
-    }
+  .action-button,
+  .home-service {
+    display: none;
+  }
 
-    .home-action-button-responsive {
-        display: flex;
-    }
+  .home-action-button-responsive {
+    display: flex;
+  }
 }
 
 @media only screen and (max-width: 429px) {
-    .home-sub-container-name > svg {
-        width: 24rem;
-    }
+  .home-sub-container-name > svg {
+    width: 24rem;
+  }
 }

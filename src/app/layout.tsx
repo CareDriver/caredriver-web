@@ -1,9 +1,9 @@
 import Layout from "@/layouts/Layout";
 
 export default function RootLayout({
-    children,
+  children,
 }: {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-    return <Layout>{children}</Layout>;
+  return <Layout>{children}</Layout>;
 }

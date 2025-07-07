@@ -9,41 +9,39 @@ import RequestInProgress from "../../RequestInProgress";
 import PageLoading from "@/components/loaders/PageLoading";
 
 const CraneOperatorPanelRedirector = () => {
-    const { user, checkingUserAuth } = useContext(AuthContext);
-    const [state, setState] = useState<ServiceReqState>(
-        ServiceReqState.NotSent,
-    );
+  const { user, checkingUserAuth } = useContext(AuthContext);
+  const [state, setState] = useState<ServiceReqState>(ServiceReqState.NotSent);
 
-    const getView = () => {
-        switch (state) {
-            case ServiceReqState.Approved:
-                return <CraneOperatorPanel />;
-            case ServiceReqState.Reviewing:
-                return <RequestInProgress />;
-            default:
-                return <NewCraneOperatorForm baseUser={user} />;
-        }
-    };
+  const getView = () => {
+    switch (state) {
+      case ServiceReqState.Approved:
+        return <CraneOperatorPanel />;
+      case ServiceReqState.Reviewing:
+        return <RequestInProgress />;
+      default:
+        return <NewCraneOperatorForm baseUser={user} />;
+    }
+  };
 
-    useEffect(() => {
-        if (!checkingUserAuth && user) {
-            if (
-                user.serviceRequests &&
-                user.serviceRequests.tow &&
-                user.serviceRequests.tow.state === ServiceReqState.Reviewing
-            ) {
-                setState(ServiceReqState.Reviewing);
-            } else if (
-                user.serviceRequests &&
-                user.serviceRequests.tow &&
-                user.serviceRequests.tow.state === ServiceReqState.Approved
-            ) {
-                setState(ServiceReqState.Approved);
-            }
-        }
-    }, [checkingUserAuth]);
+  useEffect(() => {
+    if (!checkingUserAuth && user) {
+      if (
+        user.serviceRequests &&
+        user.serviceRequests.tow &&
+        user.serviceRequests.tow.state === ServiceReqState.Reviewing
+      ) {
+        setState(ServiceReqState.Reviewing);
+      } else if (
+        user.serviceRequests &&
+        user.serviceRequests.tow &&
+        user.serviceRequests.tow.state === ServiceReqState.Approved
+      ) {
+        setState(ServiceReqState.Approved);
+      }
+    }
+  }, [checkingUserAuth, user]);
 
-    return checkingUserAuth ? <PageLoading /> : getView();
+  return checkingUserAuth ? <PageLoading /> : getView();
 };
 
 export default CraneOperatorPanelRedirector;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import UserIcon from "@/icons/UserIcon";
 
 import { AuthContext } from "@/context/AuthContext";
@@ -15,204 +15,198 @@ import "react-international-phone/style.css";
 import Phone from "@/icons/Phone";
 
 interface Props {
-    baseUser?: UserInterface;
-    personalData: PersonalData;
-    setPersonalData: (p: PersonalData) => void;
+  baseUser?: UserInterface;
+  personalData: PersonalData;
+  setPersonalData: (p: PersonalData) => void;
 }
 
 const PersonalDataForm: React.FC<Props> = ({
-    baseUser,
-    personalData,
-    setPersonalData,
+  baseUser,
+  personalData,
+  setPersonalData,
 }) => {
-    const { user, checkingUserAuth } = useContext(AuthContext);
-    const [requesterUser, setRequesterUser] = useState<
-        UserInterface | undefined
-    >(baseUser);
-    const [loading, setLoading] = useState<boolean>(true);
+  const { user, checkingUserAuth } = useContext(AuthContext);
+  const [requesterUser, setRequesterUser] = useState<UserInterface | undefined>(
+    baseUser,
+  );
+  const [loading, setLoading] = useState<boolean>(true);
+  const fillInformation = useCallback(() => {
+    if (requesterUser) {
+      var hasIdCard: boolean =
+        requesterUser.identityCard !== null &&
+        requesterUser.identityCard !== undefined;
+      setPersonalData({
+        fullname: {
+          value: requesterUser.fullName,
+          message: null,
+        },
+        photo: {
+          value:
+            requesterUser.photoUrl.url.length > 0
+              ? requesterUser.photoUrl.url
+              : undefined,
+          message:
+            requesterUser.photoUrl.url.length > 0
+              ? null
+              : "No se subió una foto de perfil, por favor sube una foto",
+        },
+        alternativePhoneNumber: {
+          value: flatPhone(requesterUser.alternativePhoneNumber) ?? "",
+          message: null,
+        },
+        idCard: {
+          frontCard: {
+            value: requesterUser.identityCard
+              ? requesterUser.identityCard.frontCard.url
+              : undefined,
+            message: hasIdCard
+              ? null
+              : "No se subió una foto frontal del carnet de identidad",
+          },
+          backCard: {
+            value: requesterUser.identityCard
+              ? requesterUser.identityCard.backCard.url
+              : undefined,
+            message: hasIdCard
+              ? null
+              : "No se subió una foto posterior del carnet de identidad",
+          },
+          location: {
+            value: requesterUser.identityCard
+              ? requesterUser.identityCard.location
+              : "",
+            message: hasIdCard
+              ? null
+              : "No se agrego la localización en base al carnet de identidad",
+          },
+        },
+      });
+      setLoading(false);
+    } else {
+      setPersonalData({
+        fullname: {
+          value: "",
+          message: "Completa este campo por favor",
+        },
+        photo: {
+          value: undefined,
+          message: "Sube una foto de perfil",
+        },
+        alternativePhoneNumber: {
+          value: "",
+          message: null,
+        },
+        idCard: {
+          frontCard: {
+            value: undefined,
+            message: "No se subió una foto frontal del carnet de identidad",
+          },
+          backCard: {
+            value: undefined,
+            message: "No se subió una foto posterior del carnet de identidad",
+          },
+          location: {
+            value: "",
+            message:
+              "No se agrego la localización en base al carnet de identidad",
+          },
+        },
+      });
+      setLoading(false);
+    }
+  }, [requesterUser, setPersonalData, setLoading]);
 
-    const loadRequesterUserData = () => {
-        if (!baseUser && user) {
-            setRequesterUser(user);
+  const loadRequesterUserData = useCallback(() => {
+    if (!baseUser && user) {
+      setRequesterUser(user);
+    }
+
+    fillInformation();
+  }, [user, baseUser, setRequesterUser, fillInformation]);
+
+  useEffect(() => {
+    if (!checkingUserAuth) {
+      loadRequesterUserData();
+    }
+  }, [checkingUserAuth, loadRequesterUserData]);
+
+  return (
+    <>
+      <div className="form-sub-container | margin-top-25">
+        <h2 className="text icon-wrapper | medium-big bold">
+          <UserIcon />
+          Datos Personales
+        </h2>
+
+        {loading && (
+          <span className="row-wrapper">
+            <span className="loader | loader-gray small-loader"></span>
+            <span className="text | bold gray-dark">Cargando datos</span>
+          </span>
+        )}
+        <div
+          className="form-sub-container"
+          data-state={loading ? "loading" : "loaded"}
+        >
+          <TextField
+            field={{
+              values: personalData.fullname,
+              setter: (e) =>
+                setPersonalData({
+                  ...personalData,
+                  fullname: e,
+                }),
+              validator: isValidName,
+            }}
+            legend="Nombre completo"
+          />
+          <ImageUploader
+            uploader={{
+              image: personalData.photo,
+              setImage: (i) => {
+                setPersonalData({
+                  ...personalData,
+                  photo: i,
+                });
+              },
+            }}
+            content={{
+              id: "personal-data-photo-uploader",
+              legend: "Foto de Perfil",
+              imageInCircle: true,
+            }}
+          />
+          <div>
+            <h3 className="text | bold icon-wrapper">
+              <Phone /> Numero de teléfono alternativo (Opcional)
+            </h3>
+            <p className="text | light">
+              Este campo es opcional, puedes agregar un numero alternativo para
+              que nuestros administradores puedan contactarte mas rápido.
+            </p>
+          </div>
+          <PhoneField
+            values={personalData.alternativePhoneNumber}
+            setter={(e) =>
+              setPersonalData({
+                ...personalData,
+                alternativePhoneNumber: e,
+              })
+            }
+          />
+        </div>
+      </div>
+      <IdentityCardForm
+        idCardForm={personalData.idCard}
+        setIdCardForm={(i) =>
+          setPersonalData({
+            ...personalData,
+            idCard: i,
+          })
         }
-
-        fillInformation();
-    };
-
-    const fillInformation = () => {
-        if (requesterUser) {
-            var hasIdCard: boolean =
-                requesterUser.identityCard !== null &&
-                requesterUser.identityCard !== undefined;
-            setPersonalData({
-                fullname: {
-                    value: requesterUser.fullName,
-                    message: null,
-                },
-                photo: {
-                    value:
-                        requesterUser.photoUrl.url.length > 0
-                            ? requesterUser.photoUrl.url
-                            : undefined,
-                    message:
-                        requesterUser.photoUrl.url.length > 0
-                            ? null
-                            : "No se subió una foto de perfil, por favor sube una foto",
-                },
-                alternativePhoneNumber: {
-                    value: flatPhone(requesterUser.alternativePhoneNumber) ?? "",
-                    message: null,
-                },
-                idCard: {
-                    frontCard: {
-                        value: requesterUser.identityCard
-                            ? requesterUser.identityCard.frontCard.url
-                            : undefined,
-                        message: hasIdCard
-                            ? null
-                            : "No se subió una foto frontal del carnet de identidad",
-                    },
-                    backCard: {
-                        value: requesterUser.identityCard
-                            ? requesterUser.identityCard.backCard.url
-                            : undefined,
-                        message: hasIdCard
-                            ? null
-                            : "No se subió una foto posterior del carnet de identidad",
-                    },
-                    location: {
-                        value: requesterUser.identityCard
-                            ? requesterUser.identityCard.location
-                            : "",
-                        message: hasIdCard
-                            ? null
-                            : "No se agrego la localización en base al carnet de identidad",
-                    },
-                },
-            });
-            setLoading(false);
-        } else {
-            setPersonalData({
-                fullname: {
-                    value: "",
-                    message: "Completa este campo por favor",
-                },
-                photo: {
-                    value: undefined,
-                    message: "Sube una foto de perfil",
-                },
-                alternativePhoneNumber: {
-                    value: "",
-                    message: null,
-                },
-                idCard: {
-                    frontCard: {
-                        value: undefined,
-                        message:
-                            "No se subió una foto frontal del carnet de identidad",
-                    },
-                    backCard: {
-                        value: undefined,
-                        message:
-                            "No se subió una foto posterior del carnet de identidad",
-                    },
-                    location: {
-                        value: "",
-                        message:
-                            "No se agrego la localización en base al carnet de identidad",
-                    },
-                },
-            });
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        if (!checkingUserAuth) {
-            loadRequesterUserData();
-        }
-    }, [checkingUserAuth]);
-
-    return (
-        <>
-            <div className="form-sub-container | margin-top-25">
-                <h2 className="text icon-wrapper | medium-big bold">
-                    <UserIcon />
-                    Datos Personales
-                </h2>
-
-                {loading && (
-                    <span className="row-wrapper">
-                        <span className="loader | loader-gray small-loader"></span>
-                        <span className="text | bold gray-dark">
-                            Cargando datos
-                        </span>
-                    </span>
-                )}
-                <div
-                    className="form-sub-container"
-                    data-state={loading ? "loading" : "loaded"}
-                >
-                    <TextField
-                        field={{
-                            values: personalData.fullname,
-                            setter: (e) =>
-                                setPersonalData({
-                                    ...personalData,
-                                    fullname: e,
-                                }),
-                            validator: isValidName,
-                        }}
-                        legend="Nombre completo"
-                    />
-                    <ImageUploader
-                        uploader={{
-                            image: personalData.photo,
-                            setImage: (i) => {
-                                setPersonalData({
-                                    ...personalData,
-                                    photo: i,
-                                });
-                            },
-                        }}
-                        content={{
-                            id: "personal-data-photo-uploader",
-                            legend: "Foto de Perfil",
-                            imageInCircle: true,
-                        }}
-                    />
-                    <div>
-                        <h3 className="text | bold icon-wrapper">
-                            <Phone /> Numero de teléfono alternativo (Opcional)
-                        </h3>
-                        <p className="text | light">
-                            Este campo es opcional, puedes agregar un numero
-                            alternativo para que nuestros administradores puedan
-                            contactarte mas rápido.
-                        </p>
-                    </div>
-                    <PhoneField
-                        values={personalData.alternativePhoneNumber}
-                        setter={(e) =>
-                            setPersonalData({
-                                ...personalData,
-                                alternativePhoneNumber: e,
-                            })
-                        }
-                    />
-                </div>
-            </div>
-            <IdentityCardForm
-                idCardForm={personalData.idCard}
-                setIdCardForm={(i) =>
-                    setPersonalData({
-                        ...personalData,
-                        idCard: i,
-                    })
-                }
-            />
-        </>
-    );
+      />
+    </>
+  );
 };
 
 export default PersonalDataForm;

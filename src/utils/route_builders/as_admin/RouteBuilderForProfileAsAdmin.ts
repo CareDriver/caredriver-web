@@ -1,3 +1,3 @@
 export function routeToProfileAsAdmin(): string {
-    return "/admin/profile";
+  return "/admin/profile";
 }

@@ -1,7 +1,7 @@
 export function routeToSingIn() {
-    return "/auth/signin";
+  return "/auth/signin";
 }
 
 export function routeToSingUp() {
-    return "/auth/signup";
+  return "/auth/signup";
 }

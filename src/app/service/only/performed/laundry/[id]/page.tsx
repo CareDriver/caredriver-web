@@ -3,13 +3,13 @@ import ConsentForm from "@/components/guards/views/consent_forms/ConsentForm";
 import GuardForServices from "@/components/guards/views/page_guards/concrets/GuardForServices";
 
 const Page = ({ params }: { params: any }) => {
-    return (
-        <GuardForServices serviceType="laundry" serviceFakeId={params.id}>
-            <ConsentForm moduleTarget="laundryserviceonly" id={params.id}>
-                <ServicePerformedWithLoader id={params.id} type="laundry" />
-            </ConsentForm>
-        </GuardForServices>
-    );
+  return (
+    <GuardForServices serviceType="laundry" serviceFakeId={params.id}>
+      <ConsentForm moduleTarget="laundryserviceonly" id={params.id}>
+        <ServicePerformedWithLoader id={params.id} type="laundry" />
+      </ConsentForm>
+    </GuardForServices>
+  );
 };
 
 export default Page;

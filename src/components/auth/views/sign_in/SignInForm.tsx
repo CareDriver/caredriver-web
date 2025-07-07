@@ -16,111 +16,105 @@ import { routeToSingUp } from "@/utils/route_builders/as_not_logged/RouteBuilder
 import AuthProviders from "../providers/AuthProviders";
 
 interface Form {
-    email: TextFieldForm;
-    password: TextFieldForm;
+  email: TextFieldForm;
+  password: TextFieldForm;
 }
 
 const SignInForm = () => {
-    const { loading, isValid, setLoading, setValid } =
-        useContext(AuthenticatorContext);
-    const [form, setForm] = useState<Form>(DEFAULT_FORM);
+  const { loading, isValid, setLoading, setValid } =
+    useContext(AuthenticatorContext);
+  const [form, setForm] = useState<Form>(DEFAULT_FORM);
 
-    const login = async () => {
-        signInWithEmailAndPassword(
-            auth,
-            form.email.value.toLocaleLowerCase().trim(),
-            form.password.value.trim(),
-        )
-            .then((res) => {
-                window.location.replace("/redirector");
-            })
-            .catch((e) => {
-                let message: string = e.message;
-                if (message.includes("user-disabled")) {
-                    toast.warning(
-                        "Tu cuenta fue deshabilitada, por favor contacta a uno de nuestros administradores",
-                    );
-                } else {
-                    toast.error("Credenciales inválidas, inténtalo de nuevo");
-                }
-
-                setLoading(false);
-                setValid(false);
-            });
-    };
-
-    const summitForm = async (e: FormEvent) => {
-        e.preventDefault();
-
-        if (loading) {
-            return;
+  const login = async () => {
+    signInWithEmailAndPassword(
+      auth,
+      form.email.value.toLocaleLowerCase().trim(),
+      form.password.value.trim(),
+    )
+      .then((res) => {
+        window.location.replace("/redirector");
+      })
+      .catch((e) => {
+        let message: string = e.message;
+        if (message.includes("user-disabled")) {
+          toast.warning(
+            "Tu cuenta fue deshabilitada, por favor contacta a uno de nuestros administradores",
+          );
+        } else {
+          toast.error("Credenciales inválidas, inténtalo de nuevo");
         }
 
-        setLoading(true);
+        setLoading(false);
+        setValid(false);
+      });
+  };
 
-        if (!isValidForm(form)) {
-            setLoading(false);
-            setValid(false);
-            toast.error("Formulario invalido");
-            return;
-        }
+  const summitForm = async (e: FormEvent) => {
+    e.preventDefault();
 
-        await login();
-    };
+    if (loading) {
+      return;
+    }
 
-    useEffect(() => {
-        setValid(isValidForm(form));
-    }, [form]);
+    setLoading(true);
 
-    return (
-        <>
-            <BaseForm
-                content={{
-                    button: {
-                        content: {
-                            legend: "Iniciar sesión",
-                        },
-                        behavior: {
-                            isValid: isValid,
-                            loading: loading,
-                        },
-                    
-                    }
-                }}
-                behavior={{
-                    loading: loading,
-                    onSummit: summitForm,
-                }}
-            >
-                <EmailField
-                    values={form.email}
-                    setter={(e) => setForm((prev) => ({ ...prev, email: e }))}
-                />
-                <PasswordField
-                    values={form.password}
-                    setter={(e) =>
-                        setForm((prev) => ({ ...prev, password: e }))
-                    }
-                />
-            </BaseForm>
-            <AuthProviders alternativeLegend="O inicia sesion con"/>
-            <Link
-                href={routeToSingUp()}
-                className="text | normal center"
-            >
-                ¿Aun no tienes una cuenta? <b>Crea una cuenta</b>
-            </Link>
-        </>
-    );
+    if (!isValidForm(form)) {
+      setLoading(false);
+      setValid(false);
+      toast.error("Formulario invalido");
+      return;
+    }
+
+    await login();
+  };
+
+  useEffect(() => {
+    setValid(isValidForm(form));
+  }, [form, setValid]);
+
+  return (
+    <>
+      <BaseForm
+        content={{
+          button: {
+            content: {
+              legend: "Iniciar sesión",
+            },
+            behavior: {
+              isValid: isValid,
+              loading: loading,
+            },
+          },
+        }}
+        behavior={{
+          loading: loading,
+          onSummit: summitForm,
+        }}
+      >
+        <EmailField
+          values={form.email}
+          setter={(e) => setForm((prev) => ({ ...prev, email: e }))}
+        />
+        <PasswordField
+          values={form.password}
+          setter={(e) => setForm((prev) => ({ ...prev, password: e }))}
+        />
+      </BaseForm>
+      <AuthProviders alternativeLegend="O inicia sesion con" />
+      <Link href={routeToSingUp()} className="text | normal center">
+        ¿Aun no tienes una cuenta? <b>Crea una cuenta</b>
+      </Link>
+    </>
+  );
 };
 
 export default SignInForm;
 
 const DEFAULT_FORM: Form = {
-    email: DEFAUL_TEXT_FIELD,
-    password: DEFAUL_TEXT_FIELD,
+  email: DEFAUL_TEXT_FIELD,
+  password: DEFAUL_TEXT_FIELD,
 };
 
 function isValidForm(form: Form): boolean {
-    return isValidTextField(form.email) && isValidTextField(form.password);
+  return isValidTextField(form.email) && isValidTextField(form.password);
 }

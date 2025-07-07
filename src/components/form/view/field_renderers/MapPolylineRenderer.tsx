@@ -4,8 +4,8 @@ import { Loader } from "@googlemaps/js-api-loader";
 import { GOOGLEMAPS_TOKEN } from "@/components/form/models/MapProperties";
 import { CoordinateRegister } from "@/interfaces/RouteNavigationInterface";
 import {
-    toLocationFromCoordRes,
-    toLocationsFromCoordRes,
+  toLocationFromCoordRes,
+  toLocationsFromCoordRes,
 } from "@/components/form/utils/CoordinateConverter";
 import { timestampDateInSpanishWithHour } from "@/utils/helpers/DateHelper";
 import { GeoPoint, Timestamp } from "firebase/firestore";
@@ -15,272 +15,259 @@ import { MAIN_COLOR, SECOND_COLOR_LIGHT, WHITE_COLOR } from "@/models/Colors";
 import { NAME_BUSINESS } from "@/models/Business";
 import { createGoogleMapsUrl } from "@/utils/helpers/MapHelper";
 import GoogleMapsRedirector from "../maps/GoogleMapsRedirector";
-import "@/styles/modules/map.css"
+import "@/styles/modules/map.css";
 
 const MapPolylineRenderer = ({
-    priorArrivalRoute,
-    serviceInProgressRoute,
+  priorArrivalRoute,
+  serviceInProgressRoute,
 }: {
-    priorArrivalRoute: CoordinateRegister[];
-    serviceInProgressRoute: CoordinateRegister[];
+  priorArrivalRoute: CoordinateRegister[];
+  serviceInProgressRoute: CoordinateRegister[];
 }) => {
-    const [googleMapsUrl, setGoogleMapsUrl] = useState<string | null>(null);
+  const [googleMapsUrl, setGoogleMapsUrl] = useState<string | null>(null);
 
-    const mapRef = useRef<HTMLDivElement>(null);
-    const mapInstanceRef = useRef<google.maps.Map | null>(null);
-    const [mapLoaded, setMapLoaded] = useState(false);
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<google.maps.Map | null>(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
-    const priorPolylineRef = useRef<google.maps.Polyline | null>(null);
-    const inProgressPolylineRef = useRef<google.maps.Polyline | null>(null);
-    const priorMarksRef = useRef<google.maps.marker.AdvancedMarkerElement[]>(
-        [],
-    );
-    const inProgessMarksRef = useRef<
+  const priorPolylineRef = useRef<google.maps.Polyline | null>(null);
+  const inProgressPolylineRef = useRef<google.maps.Polyline | null>(null);
+  const priorMarksRef = useRef<google.maps.marker.AdvancedMarkerElement[]>([]);
+  const inProgessMarksRef = useRef<google.maps.marker.AdvancedMarkerElement[]>(
+    [],
+  );
+
+  useEffect(() => {
+    const renderPath = (
+      ref: React.MutableRefObject<google.maps.Polyline | null>,
+      color: string,
+      points: CoordinateRegister[],
+    ) => {
+      if (mapInstanceRef.current) {
+        const path = new google.maps.Polyline({
+          path: toLocationsFromCoordRes(points),
+          geodesic: true,
+          strokeColor: color,
+          strokeOpacity: 0.8,
+          strokeWeight: 12,
+        });
+
+        path.setMap(mapInstanceRef.current);
+        ref.current = path;
+      }
+    };
+
+    const renderPoints = async (
+      background: string,
+      borderColor: string,
+      glyphColor: string,
+      coordinates: CoordinateRegister[],
+      markers: React.MutableRefObject<
         google.maps.marker.AdvancedMarkerElement[]
-    >([]);
+      >,
+    ) => {
+      if (coordinates.length > 0) {
+        const { AdvancedMarkerElement, PinElement } =
+          (await google.maps.importLibrary(
+            "marker",
+          )) as google.maps.MarkerLibrary;
 
-    useEffect(() => {
-        const renderPath = (
-            ref: React.MutableRefObject<google.maps.Polyline | null>,
-            color: string,
-            points: CoordinateRegister[],
-        ) => {
-            if (mapInstanceRef.current) {
-                const path = new google.maps.Polyline({
-                    path: toLocationsFromCoordRes(points),
-                    geodesic: true,
-                    strokeColor: color,
-                    strokeOpacity: 0.8,
-                    strokeWeight: 12,
-                });
+        var scale = 1;
+        var majorScale = scale + 1;
 
-                path.setMap(mapInstanceRef.current);
-                ref.current = path;
-            }
-        };
+        var first = coordinates[0];
+        renderPoint(
+          AdvancedMarkerElement,
+          PinElement,
+          majorScale,
+          background,
+          borderColor,
+          glyphColor,
+          first,
+          markers,
+        );
 
-        const renderPoints = async (
-            background: string,
-            borderColor: string,
-            glyphColor: string,
-            coordinates: CoordinateRegister[],
-            markers: React.MutableRefObject<
-                google.maps.marker.AdvancedMarkerElement[]
-            >,
-        ) => {
-            if (coordinates.length > 0) {
-                const { AdvancedMarkerElement, PinElement } =
-                    (await google.maps.importLibrary(
-                        "marker",
-                    )) as google.maps.MarkerLibrary;
-
-                var scale = 1;
-                var majorScale = scale + 1;
-
-                var first = coordinates[0];
-                renderPoint(
-                    AdvancedMarkerElement,
-                    PinElement,
-                    majorScale,
-                    background,
-                    borderColor,
-                    glyphColor,
-                    first,
-                    markers,
-                );
-
-                for (let i = 1; i < coordinates.length; i++) {
-                    let coordinatte = coordinates[i];
-                    renderPoint(
-                        AdvancedMarkerElement,
-                        PinElement,
-                        scale,
-                        background,
-                        borderColor,
-                        glyphColor,
-                        coordinatte,
-                        markers,
-                    );
-                }
-            }
-        };
-
-        const renderPoint = (
-            Marker: typeof google.maps.marker.AdvancedMarkerElement,
-            Pin: typeof google.maps.marker.PinElement,
-            scale: number,
-            background: string,
-            borderColor: string,
-            glyphColor: string,
-            coordinate: CoordinateRegister,
-            markers: React.MutableRefObject<
-                google.maps.marker.AdvancedMarkerElement[]
-            >,
-        ) => {
-            var locationCoordinate = new GeoPoint(
-                coordinate.lat,
-                coordinate.long,
-            );
-            if (!existMark(locationCoordinate, markers)) {
-                const pin = new Pin({
-                    scale,
-                    background,
-                    glyphColor,
-                    borderColor,
-                });
-                const mark = new Marker({
-                    map: mapInstanceRef.current,
-                    position: geoPointToLatLng(locationCoordinate),
-                    content: pin.element,
-                    gmpClickable: true,
-                });
-
-                const contentString =
-                    '<div id="content">' +
-                    '<div id="siteNotice">' +
-                    "</div>" +
-                    `<h3 id="firstHeading" class="firstHeading">${NAME_BUSINESS} - Coordenada</h3>` +
-                    '<div id="bodyContent">' +
-                    `<p>${timestampDateInSpanishWithHour(
-                        Timestamp.fromMillis(coordinate.timestamp),
-                    )}</p>` +
-                    `${
-                        isNullOrEmptyText(coordinate.comment)
-                            ? "<i>sin comentario</i>"
-                            : `<b>comentario: </b> </i>${coordinate.comment}</i>`
-                    }` +
-                    "</div>" +
-                    "</div>";
-
-                let infoWindow = new google.maps.InfoWindow({
-                    content: contentString,
-                    position: geoPointToLatLng(locationCoordinate),
-                    ariaLabel: "Comment",
-                });
-                mark.addListener("click", () => {
-                    infoWindow.close();
-                    infoWindow.open(mark.map, mark);
-                });
-
-                let mapUrl: string = createGoogleMapsUrl({
-                    lat: coordinate.lat,
-                    lng: coordinate.long,
-                });
-                setGoogleMapsUrl(mapUrl);
-                markers.current.push(mark);
-            }
-        };
-
-        const initMap = async () => {
-            const loader = new Loader({
-                apiKey: GOOGLEMAPS_TOKEN,
-                version: "weekly",
-            });
-
-            const { Map } = await loader.importLibrary("maps");
-
-            const mapOptions: google.maps.MapOptions = {
-                center: toLocationFromCoordRes(priorArrivalRoute[0]),
-                zoom: 16,
-                mapId: "GOOGLEMAP_FORM_ID",
-            };
-
-            const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
-            mapInstanceRef.current = map;
-            if (priorArrivalRoute.length > 0) {
-                renderPath(
-                    priorPolylineRef,
-                    SECOND_COLOR_LIGHT,
-                    priorArrivalRoute,
-                );
-            }
-
-            if (serviceInProgressRoute.length > 0) {
-                renderPath(
-                    inProgressPolylineRef,
-                    MAIN_COLOR,
-                    serviceInProgressRoute,
-                );
-            }
-
-            setMapLoaded(true);
-        };
-
-        const renderPriorMarks = async () => {
-            if (priorArrivalRoute.length > 0) {
-                let background = SECOND_COLOR_LIGHT;
-                let borderColor = SECOND_COLOR_LIGHT;
-                let glyphColor = WHITE_COLOR;
-                await renderPoints(
-                    background,
-                    borderColor,
-                    glyphColor,
-                    priorArrivalRoute,
-                    priorMarksRef,
-                );
-            }
-        };
-
-        const renderInProgressMarks = async () => {
-            if (serviceInProgressRoute.length > 0) {
-                let background = MAIN_COLOR;
-                let borderColor = SECOND_COLOR_LIGHT;
-                let glyphColor = SECOND_COLOR_LIGHT;
-                await renderPoints(
-                    background,
-                    borderColor,
-                    glyphColor,
-                    serviceInProgressRoute,
-                    inProgessMarksRef,
-                );
-            }
-        };
-
-        const existMark = (
-            c: GeoPoint,
-            markers: React.MutableRefObject<
-                google.maps.marker.AdvancedMarkerElement[]
-            >,
-        ) => {
-            return markers.current.some(
-                (mark) =>
-                    mark.position?.lat === c.latitude &&
-                    mark.position?.lng === c.longitude,
-            );
-        };
-
-        if (!mapLoaded) {
-            initMap().then(() => {
-                renderPriorMarks();
-                renderInProgressMarks();
-            });
-        } else {
-            if (mapRef.current) {
-                if (priorPolylineRef.current) {
-                    priorPolylineRef.current.setPath(
-                        toLocationsFromCoordRes(priorArrivalRoute),
-                    );
-                    renderPriorMarks();
-                }
-                if (
-                    serviceInProgressRoute.length > 0 &&
-                    inProgressPolylineRef.current
-                ) {
-                    inProgressPolylineRef.current.setPath(
-                        toLocationsFromCoordRes(serviceInProgressRoute),
-                    );
-                    renderInProgressMarks();
-                }
-            }
+        for (let i = 1; i < coordinates.length; i++) {
+          let coordinatte = coordinates[i];
+          renderPoint(
+            AdvancedMarkerElement,
+            PinElement,
+            scale,
+            background,
+            borderColor,
+            glyphColor,
+            coordinatte,
+            markers,
+          );
         }
-    }, [priorArrivalRoute, serviceInProgressRoute]);
+      }
+    };
 
-    return (
-        <div className="map-main-wrapper">
-            <div className="map-content-wrapper" ref={mapRef}></div>
-            <GoogleMapsRedirector googleMapsUrl={googleMapsUrl}/>
-        </div>
-    )
+    const renderPoint = (
+      Marker: typeof google.maps.marker.AdvancedMarkerElement,
+      Pin: typeof google.maps.marker.PinElement,
+      scale: number,
+      background: string,
+      borderColor: string,
+      glyphColor: string,
+      coordinate: CoordinateRegister,
+      markers: React.MutableRefObject<
+        google.maps.marker.AdvancedMarkerElement[]
+      >,
+    ) => {
+      var locationCoordinate = new GeoPoint(coordinate.lat, coordinate.long);
+      if (!existMark(locationCoordinate, markers)) {
+        const pin = new Pin({
+          scale,
+          background,
+          glyphColor,
+          borderColor,
+        });
+        const mark = new Marker({
+          map: mapInstanceRef.current,
+          position: geoPointToLatLng(locationCoordinate),
+          content: pin.element,
+          gmpClickable: true,
+        });
+
+        const contentString =
+          '<div id="content">' +
+          '<div id="siteNotice">' +
+          "</div>" +
+          `<h3 id="firstHeading" class="firstHeading">${NAME_BUSINESS} - Coordenada</h3>` +
+          '<div id="bodyContent">' +
+          `<p>${timestampDateInSpanishWithHour(
+            Timestamp.fromMillis(coordinate.timestamp),
+          )}</p>` +
+          `${
+            isNullOrEmptyText(coordinate.comment)
+              ? "<i>sin comentario</i>"
+              : `<b>comentario: </b> </i>${coordinate.comment}</i>`
+          }` +
+          "</div>" +
+          "</div>";
+
+        let infoWindow = new google.maps.InfoWindow({
+          content: contentString,
+          position: geoPointToLatLng(locationCoordinate),
+          ariaLabel: "Comment",
+        });
+        mark.addListener("click", () => {
+          infoWindow.close();
+          infoWindow.open(mark.map, mark);
+        });
+
+        let mapUrl: string = createGoogleMapsUrl({
+          lat: coordinate.lat,
+          lng: coordinate.long,
+        });
+        setGoogleMapsUrl(mapUrl);
+        markers.current.push(mark);
+      }
+    };
+
+    const initMap = async () => {
+      const loader = new Loader({
+        apiKey: GOOGLEMAPS_TOKEN,
+        version: "weekly",
+      });
+
+      const { Map } = await loader.importLibrary("maps");
+
+      const mapOptions: google.maps.MapOptions = {
+        center: toLocationFromCoordRes(priorArrivalRoute[0]),
+        zoom: 16,
+        mapId: "GOOGLEMAP_FORM_ID",
+      };
+
+      const map = new Map(mapRef.current as HTMLDivElement, mapOptions);
+      mapInstanceRef.current = map;
+      if (priorArrivalRoute.length > 0) {
+        renderPath(priorPolylineRef, SECOND_COLOR_LIGHT, priorArrivalRoute);
+      }
+
+      if (serviceInProgressRoute.length > 0) {
+        renderPath(inProgressPolylineRef, MAIN_COLOR, serviceInProgressRoute);
+      }
+
+      setMapLoaded(true);
+    };
+
+    const renderPriorMarks = async () => {
+      if (priorArrivalRoute.length > 0) {
+        let background = SECOND_COLOR_LIGHT;
+        let borderColor = SECOND_COLOR_LIGHT;
+        let glyphColor = WHITE_COLOR;
+        await renderPoints(
+          background,
+          borderColor,
+          glyphColor,
+          priorArrivalRoute,
+          priorMarksRef,
+        );
+      }
+    };
+
+    const renderInProgressMarks = async () => {
+      if (serviceInProgressRoute.length > 0) {
+        let background = MAIN_COLOR;
+        let borderColor = SECOND_COLOR_LIGHT;
+        let glyphColor = SECOND_COLOR_LIGHT;
+        await renderPoints(
+          background,
+          borderColor,
+          glyphColor,
+          serviceInProgressRoute,
+          inProgessMarksRef,
+        );
+      }
+    };
+
+    const existMark = (
+      c: GeoPoint,
+      markers: React.MutableRefObject<
+        google.maps.marker.AdvancedMarkerElement[]
+      >,
+    ) => {
+      return markers.current.some(
+        (mark) =>
+          mark.position?.lat === c.latitude &&
+          mark.position?.lng === c.longitude,
+      );
+    };
+
+    if (!mapLoaded) {
+      initMap().then(() => {
+        renderPriorMarks();
+        renderInProgressMarks();
+      });
+    } else {
+      if (mapRef.current) {
+        if (priorPolylineRef.current) {
+          priorPolylineRef.current.setPath(
+            toLocationsFromCoordRes(priorArrivalRoute),
+          );
+          renderPriorMarks();
+        }
+        if (
+          serviceInProgressRoute.length > 0 &&
+          inProgressPolylineRef.current
+        ) {
+          inProgressPolylineRef.current.setPath(
+            toLocationsFromCoordRes(serviceInProgressRoute),
+          );
+          renderInProgressMarks();
+        }
+      }
+    }
+  }, [priorArrivalRoute, serviceInProgressRoute, mapLoaded]);
+
+  return (
+    <div className="map-main-wrapper">
+      <div className="map-content-wrapper" ref={mapRef}></div>
+      <GoogleMapsRedirector googleMapsUrl={googleMapsUrl} />
+    </div>
+  );
 };
 
 export default MapPolylineRenderer;

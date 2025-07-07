@@ -6,15 +6,15 @@ import { Collections } from "@/firebase/CollecionNames";
 export const towReqCollection = collection(firestore, Collections.TowRequests);
 
 export const saveTowReq = async (
-    id: string,
-    request: UserRequest,
+  id: string,
+  request: UserRequest,
 ): Promise<DocumentReference> => {
-    try {
-        const towReqRef = doc(towReqCollection, id);
-        await setDoc(towReqRef, request);
-        return towReqRef;
-    } catch (error) {
-        console.log(error);
-        throw error;
-    }
+  try {
+    const towReqRef = doc(towReqCollection, id);
+    await setDoc(towReqRef, request);
+    return towReqRef;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };

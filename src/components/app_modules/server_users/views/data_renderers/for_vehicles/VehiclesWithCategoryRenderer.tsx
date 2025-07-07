@@ -2,20 +2,20 @@ import { Vehicle } from "@/interfaces/UserRequest";
 import VehicleRendererWithCategory from "./VehicleRendererWithCategory";
 
 const VehiclesWithCategoryRenderer = ({
-    vehicles,
+  vehicles,
 }: {
-    vehicles: Vehicle[];
+  vehicles: Vehicle[];
 }) => {
-    return (
-        <>
-            {vehicles.map((vehicle, i) => (
-                <VehicleRendererWithCategory
-                    vehicle={vehicle}
-                    key={`vehicle-render-${i}`}
-                />
-            ))}
-        </>
-    );
+  return (
+    <>
+      {vehicles.map((vehicle, i) => (
+        <VehicleRendererWithCategory
+          vehicle={vehicle}
+          key={`vehicle-render-${i}`}
+        />
+      ))}
+    </>
+  );
 };
 
 export default VehiclesWithCategoryRenderer;

@@ -4,11 +4,11 @@ import GuardOfPage from "../base/GuardOfPage";
 import { ROLES_TO_REVIEW_REQUESTS } from "@/components/guards/models/PermissionsByUserRole";
 
 const GuardOfRequests = ({ children }: { children: React.ReactNode }) => {
-    return (
-        <GuardOfPage roles={ROLES_TO_REVIEW_REQUESTS}>
-            <WrapperWithSideBar>{children}</WrapperWithSideBar>
-        </GuardOfPage>
-    );
+  return (
+    <GuardOfPage roles={ROLES_TO_REVIEW_REQUESTS}>
+      <WrapperWithSideBar>{children}</WrapperWithSideBar>
+    </GuardOfPage>
+  );
 };
 
 export default GuardOfRequests;

@@ -1,16 +1,16 @@
 .map-main-wrapper {
-    position: relative;
+  position: relative;
 }
 
 .map-content-wrapper {
-    height: 60vh;
-    width: 100%;
-    border-radius: 15px;
+  height: 60vh;
+  width: 100%;
+  border-radius: 15px;
 }
 
 .map-button-redirector {
-    position: absolute;
-    bottom: 1rem;
-    left: 1rem;
-    z-index: 1000;
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 1000;
 }

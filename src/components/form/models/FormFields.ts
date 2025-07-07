@@ -1,34 +1,34 @@
 import { GeoPoint } from "firebase/firestore";
 
 interface BaseField {
-    message: null | string;
+  message: null | string;
 }
 
 export interface TextField extends BaseField {
-    value: string;
+  value: string;
 }
 
 export interface DateField extends BaseField {
-    value: Date | undefined;
+  value: Date | undefined;
 }
 
 export interface EntityField extends BaseField {
-    value: string | undefined;
+  value: string | undefined;
 }
 
 export interface EntityDataField<T> extends BaseField {
-    value: T | undefined;
+  value: T | undefined;
 }
 
 export interface AttachmentField extends BaseField {
-    value: string | undefined;
+  value: string | undefined;
 }
 
 export interface GeoPointField extends BaseField {
-    value: GeoPoint | undefined;
+  value: GeoPoint | undefined;
 }
 
 export interface VerificationCodeField extends BaseField {
-    codeSent: string;
-    currentCode: string;
+  codeSent: string;
+  currentCode: string;
 }

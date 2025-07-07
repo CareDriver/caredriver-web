@@ -9,27 +9,27 @@ import Head from "next/head";
 import Script from "next/script";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-    return (
-        <html lang="es">
-            <Head>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />      
-            </Head>
-            <body>
-                <AuthProvider>{children}</AuthProvider>
-                <ToastContainer
-                    position="bottom-right"
-                    autoClose={4000}
-                    hideProgressBar={true}
-                    newestOnTop={true}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable={true}
-                    pauseOnHover
-                    theme="light"
-                />
-                <Script id="liveagent-script" strategy="afterInteractive">
-                    {`
+  return (
+    <html lang="es">
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={4000}
+          hideProgressBar={true}
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable={true}
+          pauseOnHover
+          theme="light"
+        />
+        <Script id="liveagent-script" strategy="afterInteractive">
+          {`
                         (function(d, src, c) {
                             var t = d.scripts[d.scripts.length - 1], 
                                 s = d.createElement('script'); 
@@ -46,10 +46,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                             LiveAgent.createButton('b3cuww8j', e);
                         });
                     `}
-                </Script>
-            </body>
-        </html>
-    );
+        </Script>
+      </body>
+    </html>
+  );
 };
 
 export default Layout;

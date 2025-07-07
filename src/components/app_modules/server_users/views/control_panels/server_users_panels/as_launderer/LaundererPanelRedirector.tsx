@@ -10,41 +10,41 @@ import LaundererPanel from "./LaundererPanel";
 import PageLoading from "@/components/loaders/PageLoading";
 
 const LaundererPanelRedirector = () => {
-    const { user, checkingUserAuth } = useContext(AuthContext);
-    const [serviceState, setServiceState] = useState<ServiceReqState>(
-        ServiceReqState.NotSent,
-    );
+  const { user, checkingUserAuth } = useContext(AuthContext);
+  const [serviceState, setServiceState] = useState<ServiceReqState>(
+    ServiceReqState.NotSent,
+  );
 
-    const getView = () => {
-        switch (serviceState) {
-            case ServiceReqState.Approved:
-                return <LaundererPanel />;
-            case ServiceReqState.Reviewing:
-                return <RequestInProgress />;
-            default:
-                return <NewLaundererForm baseUser={user} />;
-        }
-    };
+  const getView = () => {
+    switch (serviceState) {
+      case ServiceReqState.Approved:
+        return <LaundererPanel />;
+      case ServiceReqState.Reviewing:
+        return <RequestInProgress />;
+      default:
+        return <NewLaundererForm baseUser={user} />;
+    }
+  };
 
-    useEffect(() => {
-        if (!checkingUserAuth && user) {
-            if (
-                user.serviceRequests &&
-                user.serviceRequests.laundry &&
-                user.serviceRequests.laundry.state === ServiceReqState.Reviewing
-            ) {
-                setServiceState(ServiceReqState.Reviewing);
-            } else if (
-                user.serviceRequests &&
-                user.serviceRequests.laundry &&
-                user.serviceRequests.laundry.state === ServiceReqState.Approved
-            ) {
-                setServiceState(ServiceReqState.Approved);
-            }
-        }
-    }, [checkingUserAuth]);
+  useEffect(() => {
+    if (!checkingUserAuth && user) {
+      if (
+        user.serviceRequests &&
+        user.serviceRequests.laundry &&
+        user.serviceRequests.laundry.state === ServiceReqState.Reviewing
+      ) {
+        setServiceState(ServiceReqState.Reviewing);
+      } else if (
+        user.serviceRequests &&
+        user.serviceRequests.laundry &&
+        user.serviceRequests.laundry.state === ServiceReqState.Approved
+      ) {
+        setServiceState(ServiceReqState.Approved);
+      }
+    }
+  }, [checkingUserAuth, user]);
 
-    return checkingUserAuth ? <PageLoading /> : getView();
+  return checkingUserAuth ? <PageLoading /> : getView();
 };
 
 export default LaundererPanelRedirector;

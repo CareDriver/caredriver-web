@@ -2,11 +2,11 @@ import ListOfRequestsForChangeEnteprise from "@/components/app_modules/server_us
 import GuardOfRequests from "@/components/guards/views/page_guards/concrets/GuardOfRequests";
 
 const Page = () => {
-    return (
-        <GuardOfRequests>
-            <ListOfRequestsForChangeEnteprise />
-        </GuardOfRequests>
-    );
+  return (
+    <GuardOfRequests>
+      <ListOfRequestsForChangeEnteprise />
+    </GuardOfRequests>
+  );
 };
 
 export default Page;

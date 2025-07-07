@@ -12,7 +12,6 @@ admin.initializeApp({
 });
 */
 
-
 // -----------------------------------------------------
 
 /* const admin = require('firebase-admin');

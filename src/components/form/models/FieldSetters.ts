@@ -1,11 +1,11 @@
 import { Locations } from "@/interfaces/Locations";
 import {
-    AttachmentField,
-    DateField,
-    EntityDataField,
-    EntityField,
-    GeoPointField,
-    TextField,
+  AttachmentField,
+  DateField,
+  EntityDataField,
+  EntityField,
+  GeoPointField,
+  TextField,
 } from "./FormFields";
 import { InputValidator } from "@/validators/InputValidatorSignature";
 import { UserRole } from "@/interfaces/UserInterface";
@@ -34,13 +34,13 @@ export type GeoPointFieldSetter = FieldSetter<GeoPointField>;
 export type RoleFieldSetter = FieldSetter<UserRole>;
 
 export interface TextFieldWithSetter {
-    values: TextField;
-    setter: TextFieldSetter;
-    validator: InputValidator;
+  values: TextField;
+  setter: TextFieldSetter;
+  validator: InputValidator;
 }
 
 export interface DateFieldWithSetter {
-    values: DateField;
-    setter: DateFieldSetter;
-    validator: InputValidator;
+  values: DateField;
+  setter: DateFieldSetter;
+  validator: InputValidator;
 }

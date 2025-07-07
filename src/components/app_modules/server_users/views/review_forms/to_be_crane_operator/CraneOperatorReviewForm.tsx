@@ -1,10 +1,10 @@
 "use client";
 import { UserRequest, Vehicle } from "@/interfaces/UserRequest";
 import {
-    deleteImagesIfLimitOfApproves,
-    MIN_NUM_OF_APPROVALS,
-    saveReview,
-    setFirstService,
+  deleteImagesIfLimitOfApproves,
+  MIN_NUM_OF_APPROVALS,
+  saveReview,
+  setFirstService,
 } from "@/components/app_modules/server_users/api/ServicesRequester";
 import PersonalDataRenderer from "../../../../users/views/data_renderers/for_user_data/PersonalDataRenderer";
 import SelfieRenderer from "../../../../../form/view/field_renderers/SelfieRenderer";
@@ -12,14 +12,14 @@ import VehiclesWithCategoryRenderer from "../../data_renderers/for_vehicles/Vehi
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import {
-    getUserById,
-    updateUser,
+  getUserById,
+  updateUser,
 } from "@/components/app_modules/users/api/UserRequester";
 import {
-    flatPhone,
-    ServiceRequestsInterface,
-    ServiceVehicles,
-    UserInterface,
+  flatPhone,
+  ServiceRequestsInterface,
+  ServiceVehicles,
+  UserInterface,
 } from "@/interfaces/UserInterface";
 import { VehicleType } from "@/interfaces/VehicleInterface";
 import { ServiceReqState, Services } from "@/interfaces/Services";
@@ -36,352 +36,336 @@ import IdCardRenderer from "../../../../users/views/data_renderers/for_user_data
 import { addUserServerToEnterprise } from "@/components/app_modules/enterprises/api/EnterpriseUserAdder";
 import BaseFormWithTwoButtons from "@/components/form/view/forms/BaseFormWithTwoButtons";
 import {
-    DEFAULT_REVIEW_STATE,
-    ReviewState,
+  DEFAULT_REVIEW_STATE,
+  ReviewState,
 } from "@/components/form/models/Reviews";
 import { getIdSaved } from "@/utils/generators/IdGenerator";
 import UserStateRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserStateRenderer";
 import { notifyRequestApprovalUser } from "../../../api/UserServerNotifier";
 
 const CraneOperatorReviewForm = ({
-    serviceReq,
+  serviceReq,
 }: {
-    serviceReq: UserRequest;
+  serviceReq: UserRequest;
 }) => {
-    const { user: adminUser } = useContext(AuthContext);
-    const [reviewState, setReviewState] =
-        useState<ReviewState>(DEFAULT_REVIEW_STATE);
-    const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(
-        null,
-    );
-    const [requesterUser, setRequesterUser] = useState<
-        UserInterface | null | undefined
-    >(null);
+  const { user: adminUser } = useContext(AuthContext);
+  const [reviewState, setReviewState] =
+    useState<ReviewState>(DEFAULT_REVIEW_STATE);
+  const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(
+    null,
+  );
+  const [requesterUser, setRequesterUser] = useState<
+    UserInterface | null | undefined
+  >(null);
 
-    const wasReviewed = (): boolean => {
-        return reviewState.reviewed || !serviceReq.active;
-    };
+  const wasReviewed = (): boolean => {
+    return reviewState.reviewed || !serviceReq.active;
+  };
 
-    const saveReviewHistory = async (wasApproved: boolean) => {
-        try {
-            if (adminUser && adminUser.id) {
-                const isLimitToReviews: boolean =
-                    serviceReq.reviewedByHistory !== undefined &&
-                    serviceReq.reviewedByHistory.length + 1 ===
-                        MIN_NUM_OF_APPROVALS;
-                await saveReview(
-                    serviceReq,
-                    adminUser.id,
-                    wasApproved,
-                    towReqCollection,
-                );
+  const saveReviewHistory = async (wasApproved: boolean) => {
+    try {
+      if (adminUser && adminUser.id) {
+        const isLimitToReviews: boolean =
+          serviceReq.reviewedByHistory !== undefined &&
+          serviceReq.reviewedByHistory.length + 1 === MIN_NUM_OF_APPROVALS;
+        await saveReview(
+          serviceReq,
+          adminUser.id,
+          wasApproved,
+          towReqCollection,
+        );
 
-                if (isLimitToReviews) {
-                    var tow = getVehicle(VehicleType.CAR);
-                    if (requesterUser) {
-                        var vehicles: ServiceVehicles =
-                            requesterUser.serviceVehicles !== undefined
-                                ? { ...requesterUser.serviceVehicles }
-                                : {};
-                        var newReqState: ServiceRequestsInterface =
-                            requesterUser.serviceRequests !== undefined
-                                ? { ...requesterUser.serviceRequests }
-                                : {};
+        if (isLimitToReviews) {
+          var tow = getVehicle(VehicleType.CAR);
+          if (requesterUser) {
+            var vehicles: ServiceVehicles =
+              requesterUser.serviceVehicles !== undefined
+                ? { ...requesterUser.serviceVehicles }
+                : {};
+            var newReqState: ServiceRequestsInterface =
+              requesterUser.serviceRequests !== undefined
+                ? { ...requesterUser.serviceRequests }
+                : {};
 
-                        const serviceReqState = {
-                            id: serviceReq.id,
-                            state: wasApproved
-                                ? ServiceReqState.Approved
-                                : ServiceReqState.Refused,
-                        };
+            const serviceReqState = {
+              id: serviceReq.id,
+              state: wasApproved
+                ? ServiceReqState.Approved
+                : ServiceReqState.Refused,
+            };
 
-                        if (tow) {
-                            tow = {
-                                ...tow,
-                                license: {
-                                    frontImgUrl: tow.license.frontImgUrl,
-                                    backImgUrl: tow.license.backImgUrl,
-                                    expiredDateLicense:
-                                        tow.license.expiredDateLicense,
-                                    licenseNumber: tow.license.licenseNumber,
-                                },
-                            };
-                        }
-
-                        if (wasApproved && tow) {
-                            vehicles = { ...vehicles, tow };
-                        }
-
-                        if (tow) {
-                            newReqState = {
-                                ...newReqState,
-                                tow: serviceReqState,
-                            };
-                        }
-
-                        var userToUpdate: Partial<UserInterface> = {};
-
-                        if (vehicles && newReqState) {
-                            userToUpdate = {
-                                ...userToUpdate,
-                                serviceVehicles: vehicles,
-                                serviceRequests: newReqState,
-                            };
-                        } else {
-                            userToUpdate = {
-                                ...userToUpdate,
-                                serviceRequests: newReqState,
-                            };
-                        }
-
-                        if (wasApproved && serviceReq.towEnterprite) {
-                            userToUpdate = {
-                                ...userToUpdate,
-
-                                towEnterpriseId: serviceReq.towEnterprite,
-                            };
-                            if (
-                                !requesterUser.services.includes(Services.Tow)
-                            ) {
-                                userToUpdate = {
-                                    ...userToUpdate,
-                                    services: [
-                                        ...requesterUser.services,
-                                        Services.Tow,
-                                    ],
-                                };
-                            }
-                        }
-
-                        if (wasApproved) {
-                            userToUpdate = await setFirstService(
-                                requesterUser,
-                                userToUpdate,
-                                adminUser.id,
-                            );
-                        }
-
-                        await updateUser(serviceReq.userId, userToUpdate);
-                        if (enterprise && wasApproved) {
-                            await toast.promise(
-                                addUserServerToEnterprise(
-                                    enterprise,
-                                    serviceReq.userId,
-                                    getIdSaved(requesterUser.fakeId),
-                                ),
-                                {
-                                    pending:
-                                        "Agregando al usuario al servicio como usuario servidor",
-                                    success: "Usuario agregado al servicio",
-                                    error: "Error al agregar al usuario al servicio",
-                                },
-                            );
-                        }
-
-                        if (wasApproved) {
-                            await notifyRequestApprovalUser(
-                                requesterUser,
-                                "tow",
-                            );
-                        }
-                    } else {
-                        toast.error("El usuario no fue encontrado");
-                    }
-                }
+            if (tow) {
+              tow = {
+                ...tow,
+                license: {
+                  frontImgUrl: tow.license.frontImgUrl,
+                  backImgUrl: tow.license.backImgUrl,
+                  expiredDateLicense: tow.license.expiredDateLicense,
+                  licenseNumber: tow.license.licenseNumber,
+                },
+              };
             }
-        } catch (e) {
-            console.log(e);
-        }
-    };
 
-    const getVehicle = (type: VehicleType): Vehicle | null => {
-        if (serviceReq.vehicles) {
-            const vehicles = serviceReq.vehicles.filter(
-                (veh) => veh.type.type === type,
-            );
-            if (vehicles.length > 0) {
-                return vehicles[0];
+            if (wasApproved && tow) {
+              vehicles = { ...vehicles, tow };
             }
-        }
 
-        return null;
-    };
-
-    const review = async (wasApproved: boolean) => {
-        setReviewState({
-            ...reviewState,
-            loading: true,
-        });
-        try {
-            await deleteImagesIfLimitOfApproves(serviceReq);
-            await toast.promise(saveReviewHistory(wasApproved), {
-                pending: "Registrando revision, por favor espera",
-                success: "Revision registrada",
-                error: "Error al registrar revision, vuelve a intentarlo por favor",
-            });
-            setReviewState({
-                loading: false,
-                reviewed: true,
-            });
-        } catch (e) {
-            setReviewState({
-                loading: false,
-                reviewed: false,
-            });
-        }
-    };
-
-    const approve = async () => {
-        if (!reviewState.loading) {
-            await review(true);
-        }
-    };
-
-    const decline = async () => {
-        if (!reviewState.loading) {
-            await review(false);
-        }
-    };
-
-    const fetchWorkshop = async () => {
-        if (serviceReq.towEnterprite) {
-            try {
-                const data = await getEnterpriseById(serviceReq.towEnterprite);
-                setEnterpise(data);
-            } catch (e) {
-                setEnterpise(undefined);
-                console.log(e);
+            if (tow) {
+              newReqState = {
+                ...newReqState,
+                tow: serviceReqState,
+              };
             }
-        } else {
-            setEnterpise(undefined);
-        }
-    };
 
-    useEffect(() => {
-        fetchWorkshop();
-    }, []);
+            var userToUpdate: Partial<UserInterface> = {};
 
-    useEffect(() => {
-        getUserById(serviceReq.userId).then((res) => {
-            if (res) {
-                setRequesterUser(res);
+            if (vehicles && newReqState) {
+              userToUpdate = {
+                ...userToUpdate,
+                serviceVehicles: vehicles,
+                serviceRequests: newReqState,
+              };
             } else {
-                setRequesterUser(undefined);
+              userToUpdate = {
+                ...userToUpdate,
+                serviceRequests: newReqState,
+              };
             }
-        });
-    }, []);
 
-    return (
-        <div className="service-form-wrapper | max-width-60">
-            <h1 className="text | big bold">
-                Solicitud para ser Operador de Grúa
-            </h1>
-            <div className="row-wrapper | gap-20">
-                <ApprovalsRenderer
-                    serviceReq={serviceReq}
-                    reviewed={reviewState.reviewed}
-                />
+            if (wasApproved && serviceReq.towEnterprite) {
+              userToUpdate = {
+                ...userToUpdate,
 
-                <UserStateWithMessageRenderer userData={requesterUser} />
-            </div>
-            {requesterUser && <UserStateRenderer user={requesterUser} />}
+                towEnterpriseId: serviceReq.towEnterprite,
+              };
+              if (!requesterUser.services.includes(Services.Tow)) {
+                userToUpdate = {
+                  ...userToUpdate,
+                  services: [...requesterUser.services, Services.Tow],
+                };
+              }
+            }
 
-            <BaseFormWithTwoButtons
-                content={{
-                    firstButton: {
-                        content: {
-                            legend: "Rechazar",
-                            buttonClassStyle: wasReviewed()
-                                ? "hidden"
-                                : "general-button gray",
-                            loaderClassStyle: "loader-gray",
-                        },
-                        behavior: {
-                            loading: reviewState.loading,
-                            setLoading: (l) =>
-                                setReviewState((prev) => ({
-                                    ...prev,
-                                    loading: l,
-                                })),
-                            isValid: !wasReviewed(),
-                            action: decline,
-                        },
-                    },
-                    secondButton: {
-                        content: {
-                            legend: "Aprobar",
-                            buttonClassStyle:
-                                wasReviewed() ||
-                                requesterUser?.deleted ||
-                                enterprise?.deleted
-                                    ? "hidden"
-                                    : undefined,
-                        },
-                        behavior: {
-                            loading: reviewState.loading,
-                            setLoading: (l) =>
-                                setReviewState((prev) => ({
-                                    ...prev,
-                                    loading: l,
-                                })),
-                            isValid: !wasReviewed(),
-                            action: approve,
-                        },
-                    },
-                }}
-                behavior={{
-                    loading: reviewState.loading,
-                }}
-            >
-                <PersonalDataRenderer
-                    location={serviceReq.location}
-                    name={serviceReq.newFullName}
-                    photo={serviceReq.newProfilePhotoImgUrl}
-                />
-                {requesterUser ? (
-                    <IdCardRenderer idCard={requesterUser.identityCard} />
-                ) : (
-                    <span className="row-wrapper text | bold gray-medium">
-                        <span className="loader-gray-medium | small-loader"></span>{" "}
-                        Cargando carnet de identidad
-                    </span>
-                )}
+            if (wasApproved) {
+              userToUpdate = await setFirstService(
+                requesterUser,
+                userToUpdate,
+                adminUser.id,
+              );
+            }
 
-                <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-                {serviceReq.vehicles && (
-                    <VehiclesWithCategoryRenderer
-                        vehicles={serviceReq.vehicles}
-                    />
-                )}
-                {enterprise === null ? (
-                    <span className="loader-green"></span>
-                ) : enterprise === undefined ? (
-                    <FieldDeleted description="No se encontró la Empresa Operadora de Grúa, es posible que fue eliminada" />
-                ) : (
-                    <CraneEnterpriseRenderer crane={enterprise} />
-                )}
+            await updateUser(serviceReq.userId, userToUpdate);
+            if (enterprise && wasApproved) {
+              await toast.promise(
+                addUserServerToEnterprise(
+                  enterprise,
+                  serviceReq.userId,
+                  getIdSaved(requesterUser.fakeId),
+                ),
+                {
+                  pending:
+                    "Agregando al usuario al servicio como usuario servidor",
+                  success: "Usuario agregado al servicio",
+                  error: "Error al agregar al usuario al servicio",
+                },
+              );
+            }
 
-                {requesterUser ? (
-                    <UserContactsRendererForForm
-                        email={requesterUser.email}
-                        phoneNumber={flatPhone(requesterUser.phoneNumber)}
-                        alternativePhoneNumber={flatPhone(
-                            requesterUser.alternativePhoneNumber,
-                        )}
-                    />
-                ) : (
-                    <span className="row-wrapper text | bold gray-medium">
-                        <span className="loader-gray-medium | small-loader"></span>{" "}
-                        Cargando formas de contacto con el usuario
-                    </span>
-                )}
+            if (wasApproved) {
+              await notifyRequestApprovalUser(requesterUser, "tow");
+            }
+          } else {
+            toast.error("El usuario no fue encontrado");
+          }
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
-                {requesterUser && (
-                    <UserStateWithMessageRenderer userData={requesterUser} />
-                )}
-            </BaseFormWithTwoButtons>
-        </div>
-    );
+  const getVehicle = (type: VehicleType): Vehicle | null => {
+    if (serviceReq.vehicles) {
+      const vehicles = serviceReq.vehicles.filter(
+        (veh) => veh.type.type === type,
+      );
+      if (vehicles.length > 0) {
+        return vehicles[0];
+      }
+    }
+
+    return null;
+  };
+
+  const review = async (wasApproved: boolean) => {
+    setReviewState({
+      ...reviewState,
+      loading: true,
+    });
+    try {
+      await deleteImagesIfLimitOfApproves(serviceReq);
+      await toast.promise(saveReviewHistory(wasApproved), {
+        pending: "Registrando revision, por favor espera",
+        success: "Revision registrada",
+        error: "Error al registrar revision, vuelve a intentarlo por favor",
+      });
+      setReviewState({
+        loading: false,
+        reviewed: true,
+      });
+    } catch (e) {
+      setReviewState({
+        loading: false,
+        reviewed: false,
+      });
+    }
+  };
+
+  const approve = async () => {
+    if (!reviewState.loading) {
+      await review(true);
+    }
+  };
+
+  const decline = async () => {
+    if (!reviewState.loading) {
+      await review(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchWorkshop = async () => {
+      if (serviceReq.towEnterprite) {
+        try {
+          const data = await getEnterpriseById(serviceReq.towEnterprite);
+          setEnterpise(data);
+        } catch (e) {
+          setEnterpise(undefined);
+          console.log(e);
+        }
+      } else {
+        setEnterpise(undefined);
+      }
+    };
+
+    fetchWorkshop();
+  }, [serviceReq.towEnterprite]);
+
+  useEffect(() => {
+    getUserById(serviceReq.userId).then((res) => {
+      if (res) {
+        setRequesterUser(res);
+      } else {
+        setRequesterUser(undefined);
+      }
+    });
+  }, [serviceReq.userId]);
+
+  return (
+    <div className="service-form-wrapper | max-width-60">
+      <h1 className="text | big bold">Solicitud para ser Operador de Grúa</h1>
+      <div className="row-wrapper | gap-20">
+        <ApprovalsRenderer
+          serviceReq={serviceReq}
+          reviewed={reviewState.reviewed}
+        />
+
+        <UserStateWithMessageRenderer userData={requesterUser} />
+      </div>
+      {requesterUser && <UserStateRenderer user={requesterUser} />}
+
+      <BaseFormWithTwoButtons
+        content={{
+          firstButton: {
+            content: {
+              legend: "Rechazar",
+              buttonClassStyle: wasReviewed()
+                ? "hidden"
+                : "general-button gray",
+              loaderClassStyle: "loader-gray",
+            },
+            behavior: {
+              loading: reviewState.loading,
+              setLoading: (l) =>
+                setReviewState((prev) => ({
+                  ...prev,
+                  loading: l,
+                })),
+              isValid: !wasReviewed(),
+              action: decline,
+            },
+          },
+          secondButton: {
+            content: {
+              legend: "Aprobar",
+              buttonClassStyle:
+                wasReviewed() || requesterUser?.deleted || enterprise?.deleted
+                  ? "hidden"
+                  : undefined,
+            },
+            behavior: {
+              loading: reviewState.loading,
+              setLoading: (l) =>
+                setReviewState((prev) => ({
+                  ...prev,
+                  loading: l,
+                })),
+              isValid: !wasReviewed(),
+              action: approve,
+            },
+          },
+        }}
+        behavior={{
+          loading: reviewState.loading,
+        }}
+      >
+        <PersonalDataRenderer
+          location={serviceReq.location}
+          name={serviceReq.newFullName}
+          photo={serviceReq.newProfilePhotoImgUrl}
+        />
+        {requesterUser ? (
+          <IdCardRenderer idCard={requesterUser.identityCard} />
+        ) : (
+          <span className="row-wrapper text | bold gray-medium">
+            <span className="loader-gray-medium | small-loader"></span> Cargando
+            carnet de identidad
+          </span>
+        )}
+
+        <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+        {serviceReq.vehicles && (
+          <VehiclesWithCategoryRenderer vehicles={serviceReq.vehicles} />
+        )}
+        {enterprise === null ? (
+          <span className="loader-green"></span>
+        ) : enterprise === undefined ? (
+          <FieldDeleted description="No se encontró la Empresa Operadora de Grúa, es posible que fue eliminada" />
+        ) : (
+          <CraneEnterpriseRenderer crane={enterprise} />
+        )}
+
+        {requesterUser ? (
+          <UserContactsRendererForForm
+            email={requesterUser.email}
+            phoneNumber={flatPhone(requesterUser.phoneNumber)}
+            alternativePhoneNumber={flatPhone(
+              requesterUser.alternativePhoneNumber,
+            )}
+          />
+        ) : (
+          <span className="row-wrapper text | bold gray-medium">
+            <span className="loader-gray-medium | small-loader"></span> Cargando
+            formas de contacto con el usuario
+          </span>
+        )}
+
+        {requesterUser && (
+          <UserStateWithMessageRenderer userData={requesterUser} />
+        )}
+      </BaseFormWithTwoButtons>
+    </div>
+  );
 };
 
 export default CraneOperatorReviewForm;

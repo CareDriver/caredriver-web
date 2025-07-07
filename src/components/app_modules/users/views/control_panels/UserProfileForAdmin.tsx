@@ -11,28 +11,28 @@ import { ROLES_TO_EDIT_USER_PROFILE } from "@/components/guards/models/Permissio
 import UserPhotoRenderer from "../data_renderers/for_user_data/UserPhotoRenderer";
 
 const UserProfileForAdmin = () => {
-    const { user, checkingUserAuth } = useContext(AuthContext);
+  const { user, checkingUserAuth } = useContext(AuthContext);
 
-    if (checkingUserAuth) {
-        return <PageLoading />;
-    }
+  if (checkingUserAuth) {
+    return <PageLoading />;
+  }
 
-    return (
-        user && (
-            <section className="user-page-wrapper">
-                <section className="profile-wrapper">
-                    <UserPhotoRenderer photo={user.photoUrl} />
-                    <div className="profile-info-wrapper max-width-80">
-                        <h1 className="text | capitalize bold big wrap">{user.fullName}</h1>
-                        <h2 className="profile-email">{user.email}</h2>
-                    </div>
-                </section>
-                <GuardOfModule user={user} roles={ROLES_TO_EDIT_USER_PROFILE}>
-                    <FormToUpdateUserData user={user} />
-                </GuardOfModule>
-            </section>
-        )
-    );
+  return (
+    user && (
+      <section className="user-page-wrapper">
+        <section className="profile-wrapper">
+          <UserPhotoRenderer photo={user.photoUrl} />
+          <div className="profile-info-wrapper max-width-80">
+            <h1 className="text | capitalize bold big wrap">{user.fullName}</h1>
+            <h2 className="profile-email">{user.email}</h2>
+          </div>
+        </section>
+        <GuardOfModule user={user} roles={ROLES_TO_EDIT_USER_PROFILE}>
+          <FormToUpdateUserData user={user} />
+        </GuardOfModule>
+      </section>
+    )
+  );
 };
 
 export default UserProfileForAdmin;

@@ -1,6 +1,6 @@
 export enum DriverRegistration {
-    CallingEnterprise,
-    Independent,
+  CallingEnterprise,
+  Independent,
 }
 
 export type VehicleToAddAsDriver = "car" | "motorcycle";

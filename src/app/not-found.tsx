@@ -2,12 +2,12 @@ import NoFound from "@/components/modules/NoFound";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Pagina no encontrada",
-    description: "",
+  title: "Pagina no encontrada",
+  description: "",
 };
 
 const Page = () => {
-    return <NoFound />;
+  return <NoFound />;
 };
 
 export default Page;

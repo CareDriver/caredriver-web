@@ -8,47 +8,49 @@ import { getAssociatedEnterprise } from "../../utils/UserEnterpriseHelper";
 import Repeat from "@/icons/Repeat";
 
 interface Props {
-    typeOfEnterprise: ServiceType;
-    user: UserInterface | undefined;
+  typeOfEnterprise: ServiceType;
+  user: UserInterface | undefined;
 }
 
 const UserAssociatedEnterpriseRenderer: React.FC<Props> = ({
-    typeOfEnterprise,
-    user,
+  typeOfEnterprise,
+  user,
 }) => {
-    const ASSOCIATED_ENTERPRISE_ID: string | undefined =
-        getAssociatedEnterprise(user, typeOfEnterprise);
-    const HAS_ASSOCIATED_ENTERPRISE: boolean =
-        ASSOCIATED_ENTERPRISE_ID !== undefined;
+  const ASSOCIATED_ENTERPRISE_ID: string | undefined = getAssociatedEnterprise(
+    user,
+    typeOfEnterprise,
+  );
+  const HAS_ASSOCIATED_ENTERPRISE: boolean =
+    ASSOCIATED_ENTERPRISE_ID !== undefined;
 
-    return (
-        <>
-            {HAS_ASSOCIATED_ENTERPRISE ? (
-                <EnterpriseRendererAsPopup
-                    enterprise={{
-                        id: ASSOCIATED_ENTERPRISE_ID,
-                        type: typeOfEnterprise,
-                    }}
-                />
-            ) : (
-                <div className="max-width-40 margin-top-25 margin-bottom-25">
-                    <FieldDeleted description="No estas asociado a ninguna empresa" />
-                </div>
-            )}
+  return (
+    <>
+      {HAS_ASSOCIATED_ENTERPRISE ? (
+        <EnterpriseRendererAsPopup
+          enterprise={{
+            id: ASSOCIATED_ENTERPRISE_ID,
+            type: typeOfEnterprise,
+          }}
+        />
+      ) : (
+        <div className="max-width-40 margin-top-25 margin-bottom-25">
+          <FieldDeleted description="No estas asociado a ninguna empresa" />
+        </div>
+      )}
 
-            <Link
-                href={routeToRenewEnterpriseAsUser(typeOfEnterprise)}
-                className={`small-general-button ${
-                    HAS_ASSOCIATED_ENTERPRISE ? "gray" : "yellow"
-                } | text bold | icon-wrapper`}
-            >
-                <Repeat />
-                {HAS_ASSOCIATED_ENTERPRISE
-                    ? "Cambiar de empresa"
-                    : "Asociarse a una empresa"}
-            </Link>
-        </>
-    );
+      <Link
+        href={routeToRenewEnterpriseAsUser(typeOfEnterprise)}
+        className={`small-general-button ${
+          HAS_ASSOCIATED_ENTERPRISE ? "gray" : "yellow"
+        } | text bold | icon-wrapper`}
+      >
+        <Repeat />
+        {HAS_ASSOCIATED_ENTERPRISE
+          ? "Cambiar de empresa"
+          : "Asociarse a una empresa"}
+      </Link>
+    </>
+  );
 };
 
 export default UserAssociatedEnterpriseRenderer;

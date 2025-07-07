@@ -3,16 +3,16 @@ import ConsentForm from "@/components/guards/views/consent_forms/ConsentForm";
 import GuardOfRequests from "@/components/guards/views/page_guards/concrets/GuardOfRequests";
 
 const Page = ({ params }: { params: any }) => {
-    return (
-        <GuardOfRequests>
-            <ConsentForm moduleTarget="editcranereq" id={params.id}>
-                <ReviewFormForEditingAnEnterpriseWithLoader
-                    reqId={params.id}
-                    type="tow"
-                />
-            </ConsentForm>
-        </GuardOfRequests>
-    );
+  return (
+    <GuardOfRequests>
+      <ConsentForm moduleTarget="editcranereq" id={params.id}>
+        <ReviewFormForEditingAnEnterpriseWithLoader
+          reqId={params.id}
+          type="tow"
+        />
+      </ConsentForm>
+    </GuardOfRequests>
+  );
 };
 
 export default Page;
