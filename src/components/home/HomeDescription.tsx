@@ -9,6 +9,9 @@ const HomeDescription = () => {
           soluciones confiables.
         </i>
       </p>
+      <p style={{ textAlign: "center", padding: "16px", color: "#aaa" }}>
+        © 2025 DriverCare Innovations SRL
+      </p>
     </div>
   );
 };

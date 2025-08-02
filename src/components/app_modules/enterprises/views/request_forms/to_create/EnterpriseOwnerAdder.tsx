@@ -3,7 +3,7 @@ import UserSelector from "@/components/app_modules/users/views/selectors/UserSel
 import { EntityField } from "@/components/form/models/FormFields";
 import { Locations } from "@/interfaces/Locations";
 import { UserInterface } from "@/interfaces/UserInterface";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { verifyUserAvailabilityToBeEnterpriseOwner } from "../../../validators/validators_of_user_aggregators_to_enterprise/as_owners/EnterpriseOwnerValidator";
 import { toast } from "react-toastify";
 import { PageStateContext } from "@/context/PageStateContext";
@@ -21,17 +21,21 @@ interface Props {
   };
 }
 
+const SUCCESS_USER_FOUND_MESSAGE =
+  "Usuario valido para ser dueño de la empresa";
+
 const EnterpriseOwnerAdder: React.FC<Props> = ({ owner, enterprise }) => {
   const { isValid, setLoading, setValid } = useContext(PageStateContext);
   const [userToBeOwner, setUserToBeOwner] = useState<UserInterface | undefined>(
     undefined,
   );
-  const SUCCESS_USER_FOUND_MESSAGE =
-    "Usuario valido para ser dueño de la empresa";
 
-  const processTheUserFound = async (userFound: UserInterface | undefined) => {
-    setUserToBeOwner(userFound);
-  };
+  const processTheUserFound = useCallback(
+    (userFound: UserInterface | undefined) => {
+      setUserToBeOwner(userFound);
+    },
+    [],
+  );
 
   useEffect(() => {
     if (userToBeOwner) {
@@ -63,13 +67,7 @@ const EnterpriseOwnerAdder: React.FC<Props> = ({ owner, enterprise }) => {
         message: null,
       });
     }
-  }, [
-    enterprise.localization,
-    userToBeOwner,
-    enterprise.type,
-    owner,
-    setLoading,
-  ]);
+  }, [enterprise.localization, userToBeOwner, setLoading]);
 
   return (
     <div>

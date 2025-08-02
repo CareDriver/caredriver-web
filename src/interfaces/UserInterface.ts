@@ -52,11 +52,22 @@ export const userRoles = [
   UserRole.Admin,
 ];
 
+export enum Gender {
+  Male = "male",
+  Female = "female",
+  Other = "other",
+}
+
 export interface UserInterface {
   id?: string; // Unique identifier for the user
   fakeId?: string;
   role?: UserRole; // the role that the user has in the application
   fullName: string; // Full name of the user
+  gender?: Gender; // Gender of the user
+  fullNameArrayLower?: string[]; // Array with full name separated by words ej: ["nombre", "apellido"]
+  homeAddress: string; // Home address of the user
+  addressPhoto: RefAttachment; // attachment of the "factura de luz"
+  bloodType?: string; // mandatory for drivers
   phoneNumber: PhoneNumber; // Phone number of the user (includes country code, ej: +591 76543218)
   lastPhoneVerification: Timestamp; // Last time the phone number was verified
   alternativePhoneNumber?: PhoneNumber;
@@ -75,6 +86,7 @@ export interface UserInterface {
   balance: Price; // current debt of a server user towards the application, will contain the money that the user owes to the application following the services made and last time he/she paid
   minimumBalance: Price;
   balanceHistory?: BalanceHistory[]; // Array of the payments made by the service user to the app.
+
   location?: Locations; // Location user begins
   disable?: boolean; // true when user did not paid to the app and was disabled.
   disabledUntil?: Timestamp;
@@ -107,7 +119,7 @@ export const flatPhone = (phone: PhoneNumber | undefined | null): string => {
     return "";
   }
 
-  return phone.countryCode + phone.number;
+  return phone.countryCode + " " + phone.number;
 };
 
 export interface IdentityCard {

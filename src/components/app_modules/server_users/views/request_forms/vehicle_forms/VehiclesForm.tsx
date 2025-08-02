@@ -9,6 +9,7 @@ import Plus from "@/icons/Plus";
 import {
   isValidLicenseNumber,
   isValidLicenseDate,
+  isValidLicenseCategory,
 } from "@/components/app_modules/server_users/validators/for_data/DriveValidator";
 import ChevronDown from "@/icons/ChevronDown";
 import {
@@ -19,7 +20,6 @@ import {
 } from "@/components/app_modules/server_users/models/VehicleFields";
 import TransmissionField from "@/components/form/view/fields/TransmissionField";
 import TextFieldRenderer from "@/components/form/view/field_renderers/TextFieldRenderer";
-import NumberField from "@/components/form/view/fields/NumberField";
 import {
   AttachmentField,
   DateField as DateFieldForForm,
@@ -29,6 +29,9 @@ import DateField from "@/components/form/view/fields/DateField";
 import ImageUploader from "@/components/form/view/attachment_fields/ImageUploader";
 import { DEFAULT_LICENSE } from "@/components/app_modules/server_users/models/LicenseFields";
 import LicenceNumberField from "@/components/form/view/fields/LicenceNumberField";
+import Trash from "@/icons/Trash";
+import CTextField from "@/components/form/view/fields/TextField";
+import CCheckField from "@/components/form/view/fields/CheckField";
 
 const VehiclesForm = ({
   vehicles,
@@ -96,6 +99,63 @@ const VehiclesForm = ({
     );
   };
 
+  const changeCategoryLicense = (i: number, category: TextField) => {
+    setVehicles(
+      vehicles.map((vehicle, j) => {
+        if (j === i) {
+          return {
+            ...vehicle,
+            license: {
+              ...vehicle.license,
+              category,
+            },
+          };
+        }
+        return vehicle;
+      }),
+    );
+  };
+
+  const changeRequireGlasses = (i: number, requires: boolean) => {
+    setVehicles(
+      vehicles.map((vehicle, j) => {
+        if (j === i) {
+          return {
+            ...vehicle,
+            license: {
+              ...vehicle.license,
+              requireGlasses: {
+                value: requires,
+                message: null,
+              },
+            },
+          };
+        }
+        return vehicle;
+      }),
+    );
+  };
+
+  const changeRequireHeadphones = (i: number, requires: boolean) => {
+    setVehicles(
+      vehicles.map((vehicle, j) => {
+        if (j === i) {
+          return {
+            ...vehicle,
+            license: {
+              ...vehicle.license,
+              requiredHeadphones: {
+                value: requires,
+                message: null,
+              },
+            },
+          };
+        }
+        return vehicle;
+      }),
+    );
+  };
+
   const changeDateLicense = (i: number, date: DateFieldForForm) => {
     setVehicles(
       vehicles.map((vehicle, j) => {
@@ -149,6 +209,26 @@ const VehiclesForm = ({
     }
   };
 
+  const removeTransmission = (
+    vehicleIndex: number,
+    transmissionIndex: number,
+  ) => {
+    setVehicles(
+      vehicles.map((vehicle, i) => {
+        if (i === vehicleIndex) {
+          return {
+            ...vehicle,
+            type: {
+              ...vehicle.type,
+              mode: vehicle.type.mode.filter((_, j) => j !== transmissionIndex),
+            },
+          };
+        }
+        return vehicle;
+      }),
+    );
+  };
+
   const addMissingTransmission = (i: number) => {
     if (vehicles[i].type.mode.length < 2) {
       var missingTransmission =
@@ -190,11 +270,11 @@ const VehiclesForm = ({
   };
 
   return (
-    <div className="form-sub-container | margin-top-25">
+    <div className="form-sub-container | margin-top-32">
       {vehicles.map((vehicle, i) => (
         <div className="form-sub-container" key={`vehicle-${i}`}>
           <h2 className="text icon-wrapper | medium-big bold">
-            <Car /> Tipo de vehículo
+            <Car /> Tipo de vehículo que conduces
           </h2>
           {/* THIS FIELDSET IS NECCESARY TO AVOID 
                     VEHICLES WITH THE SAME CATEGORY SELECTED */}
@@ -230,12 +310,26 @@ const VehiclesForm = ({
             />
           ) : (
             <>
-              {vehicle.type.mode.map((mode, i) => (
-                <TextFieldRenderer
-                  key={`vehicle-mode-selected-${i}`}
-                  content={`Transmisión ${TRANSMITION_TO_SPANISH_V2[mode]}`}
-                  legend="Transmisión"
-                />
+              {vehicle.type.mode.map((mode, j) => (
+                <div
+                  key={`vehicle-mode-selected-${j}`}
+                  className="transmission-field-wrapper"
+                >
+                  <TextFieldRenderer
+                    content={`Transmisión ${TRANSMITION_TO_SPANISH_V2[mode]}`}
+                    legend="Transmisión"
+                  />
+                  {vehicle.type.mode.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeTransmission(i, j)}
+                      className="icon-wrapper small-general-button text | gray-icon gray touchable"
+                    >
+                      <Trash />
+                      Eliminar
+                    </button>
+                  )}
+                </div>
               ))}
             </>
           )}
@@ -253,8 +347,12 @@ const VehiclesForm = ({
             </div>
           )}
 
-          <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">
-            <AddressCar /> Licencia
+          <div className="">
+            <div className="separator-horizontal"></div>
+          </div>
+
+          <h2 className="text icon-wrapper | lb medium-big bold ">
+            <AddressCar /> Licencia de Conducir
           </h2>
 
           <LicenceNumberField
@@ -264,6 +362,15 @@ const VehiclesForm = ({
               validator: isValidLicenseNumber,
             }}
           />
+
+          <CTextField
+            field={{
+              values: vehicle.license.category,
+              setter: (d) => changeCategoryLicense(i, d),
+              validator: isValidLicenseCategory,
+            }}
+            legend="Categoría de Licencia"
+          />
           <DateField
             field={{
               values: vehicle.license.expirationDate,
@@ -271,6 +378,30 @@ const VehiclesForm = ({
               validator: isValidLicenseDate,
             }}
             legend="Fecha de expiración"
+          />
+
+          <CCheckField
+            marker={{
+              isCheck: vehicle.license.requireGlasses.value,
+              setCheck: (s) => changeRequireGlasses(i, s),
+            }}
+            content={{
+              checkDescription: (
+                <p>Marca si requiere usar lentes para conducir</p>
+              ),
+            }}
+          />
+
+          <CCheckField
+            marker={{
+              isCheck: vehicle.license.requiredHeadphones.value,
+              setCheck: (s) => changeRequireHeadphones(i, s),
+            }}
+            content={{
+              checkDescription: (
+                <p>Marca si requiere usar audífonos para conducir</p>
+              ),
+            }}
           />
 
           <ImageUploader
@@ -309,6 +440,9 @@ const VehiclesForm = ({
           </button>
         </div>
       )}
+      <div>
+        <div className="separator-horizontal"></div>
+      </div>
     </div>
   );
 };

@@ -452,6 +452,7 @@ export const getEnterprisesAdminPaginated = async (
   startAfterDoc?: DocumentSnapshot,
   endBeforeDoc?: DocumentSnapshot,
   numPerPage: number = 8,
+  searchTerm: string = "",
 ) => {
   let dataQuery = query(
     enterpriseCollection,

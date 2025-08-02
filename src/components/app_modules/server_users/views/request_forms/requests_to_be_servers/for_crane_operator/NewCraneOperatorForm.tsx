@@ -89,6 +89,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
   const uploadImages = async () => {
     let vehiclesData: Vehicle = emptyVehicleCar;
     var newProfilePhotoImgUrl: string | RefAttachment = EMPTY_REF_ATTACHMENT;
+    var addressPhotoRef: string | RefAttachment = EMPTY_REF_ATTACHMENT;
     var realTimePhotoImgUrl: RefAttachment = EMPTY_REF_ATTACHMENT;
 
     if (requesterUser) {
@@ -102,6 +103,22 @@ const NewCraneOperatorForm: React.FC<Props> = ({
           newProfilePhotoImgUrl = await uploadFileBase64(
             DirectoryPath.TempProfilePhotos,
             form.personalData.photo.value,
+          );
+        } catch (e) {
+          throw e;
+        }
+      }
+
+      addressPhotoRef = requesterUser.addressPhoto;
+      if (
+        !checkingUserAuth &&
+        form.personalData.addressPhoto.value &&
+        isImageBase64(form.personalData.addressPhoto.value)
+      ) {
+        try {
+          addressPhotoRef = await uploadFileBase64(
+            DirectoryPath.ElectricityBills,
+            form.personalData.addressPhoto.value,
           );
         } catch (e) {
           throw e;
@@ -131,6 +148,10 @@ const NewCraneOperatorForm: React.FC<Props> = ({
                 ),
                 frontImgUrl: frontImgUrl,
                 backImgUrl: behindImgUrl,
+                category: form.vehicle.license.category.value,
+                requireGlasses: form.vehicle.license.requireGlasses.value,
+                requireHeadphones:
+                  form.vehicle.license.requiredHeadphones.value,
               },
             };
           }
@@ -154,6 +175,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
     return {
       vehiclesData,
       newProfilePhotoImgUrl,
+      addressPhotoRef,
       realTimePhotoImgUrl,
     };
   };
@@ -161,6 +183,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
   const uploadForm = async (
     vehicleData: Vehicle,
     newProfilePhotoImgUrl: string | RefAttachment,
+    addressPhotoImgUrl: string | RefAttachment,
     realTimePhotoImgUrl: RefAttachment,
   ) => {
     if (requesterUser && form.enterprise.value) {
@@ -172,6 +195,8 @@ const NewCraneOperatorForm: React.FC<Props> = ({
             formId,
             requesterUser.id === undefined ? "" : requesterUser.id,
             form.personalData.fullname.value,
+            form.personalData.homeAddress.value,
+            addressPhotoImgUrl,
             newProfilePhotoImgUrl,
             form.enterprise.value,
             realTimePhotoImgUrl,
@@ -249,14 +274,23 @@ const NewCraneOperatorForm: React.FC<Props> = ({
     }
     try {
       await updateIdCard(form.personalData.idCard, requesterUser);
-      const { vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl } =
-        await toast.promise(uploadImages(), {
-          pending: "Subiendo imágenes, por favor espera",
-          success: "Imágenes subidas",
-          error: "Error al subir imágenes, inténtalo de nuevo por favor",
-        });
+      const {
+        vehiclesData,
+        newProfilePhotoImgUrl,
+        addressPhotoRef,
+        realTimePhotoImgUrl,
+      } = await toast.promise(uploadImages(), {
+        pending: "Subiendo imágenes, por favor espera",
+        success: "Imágenes subidas",
+        error: "Error al subir imágenes, inténtalo de nuevo por favor",
+      });
       await toast.promise(
-        uploadForm(vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl),
+        uploadForm(
+          vehiclesData,
+          newProfilePhotoImgUrl,
+          addressPhotoRef,
+          realTimePhotoImgUrl,
+        ),
         {
           pending: "Enviando el formulario, por favor espera",
           success: "Formulario enviado",
@@ -306,7 +340,8 @@ const NewCraneOperatorForm: React.FC<Props> = ({
                 legend: "Enviar Solicitud",
               },
               behavior: {
-                isValid: formState.isValid,
+                // isValid: formState.isValid,
+                isValid: true,
                 loading: formState.loading,
               },
             },
@@ -327,6 +362,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
           <VehicleForm
             vehicle={form.vehicle}
             setVehicle={(d) => setForm((prev) => ({ ...prev, vehicle: d }))}
+            craneOperator
           />
 
           {!baseEnterprise && (

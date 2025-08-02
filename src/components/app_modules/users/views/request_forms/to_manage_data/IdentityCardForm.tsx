@@ -16,9 +16,10 @@ const IdentityCardForm: React.FC<Props> = ({ idCardForm, setIdCardForm }) => {
         <h2 className="text icon-wrapper | medium-big bold lb">
           <CardIcon /> Carnet de identidad
         </h2>
-        <p className="text | light">
+        <p className="text | light" style={{ marginTop: 8 }}>
           Estos datos se guardarán en tu perfil. Si los cambias, también{" "}
-          <b>se cambiarán en las solicitudes que ya fueron enviadas.</b>
+          <b>se cambiarán en las solicitudes que ya fueron enviadas.</b>{" "}
+          Asegúrate de que sean legibles todas las letras.
         </p>
       </div>
       <TextField
@@ -27,8 +28,9 @@ const IdentityCardForm: React.FC<Props> = ({ idCardForm, setIdCardForm }) => {
           setter: (e) => setIdCardForm({ ...idCardForm, location: e }),
           validator: isValidLocationName,
         }}
-        legend="Localización"
+        legend="Lugar de Emisión (ej: Cochabamba)"
       />
+
       <ImageUploader
         uploader={{
           image: idCardForm.frontCard,

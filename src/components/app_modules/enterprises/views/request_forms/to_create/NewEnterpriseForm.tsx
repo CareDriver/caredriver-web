@@ -50,8 +50,8 @@ import PageLoading from "@/components/loaders/PageLoading";
 import { compressFileBase64 } from "@/utils/compressors/FileCompressor";
 import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
 import { DRIVER_PLURAL, NAME_BUSINESS } from "@/models/Business";
-import { DEFAULT_CIPHERS } from "node:tls";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
+import { generateKeywords } from "@/utils/helpers/StringHelper";
 
 interface Form {
   name: TextFieldForm;
@@ -117,6 +117,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
           id,
           type: enterpriseType,
           name: form.name.value,
+          nameArrayLower: generateKeywords(form.name.value),
           description: form.description.value,
           logoImgUrl: imgWithRef,
           coordinates: form.coordinates.value,
@@ -246,7 +247,7 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
             content={{
               checkDescription: (
                 <p className="text | light">
-                  Marca la casilla si la empresa tiene convenio con $
+                  Marca la casilla si la empresa tiene convenio con
                   {NAME_BUSINESS}
                 </p>
               ),

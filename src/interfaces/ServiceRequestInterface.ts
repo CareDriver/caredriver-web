@@ -4,6 +4,15 @@ import { VehicleInterface } from "./VehicleInterface";
 import { HistoryLocationInterface, PhoneNumber } from "./UserInterface";
 import { Locations } from "./Locations";
 
+export enum ServicesApp {
+  Normal = "Normal",
+  Driver = "Conductor",
+  Mechanic = "Mecánico",
+  Tow = "Remolque",
+  CarWash = "Lavadero",
+  // Burden = "Carga",
+}
+
 // This will manage services requests the user
 export interface ServiceRequestInterface {
   id?: string; // Unique identifier for the trip
@@ -62,6 +71,7 @@ export interface ServiceRequestInterface {
   serviceUserAlreadyRated?: boolean; // If the service user was already rated by the normal user
   requestUserAlreadyRated?: boolean; // If the normal user was already rated by the service user
   location?: Locations;
+  service: ServicesApp;
 }
 
 // Type to set a service request definition
@@ -101,5 +111,6 @@ export const initialServiceData = (
         comments: [],
       },
     },
+    service: ServicesApp.Driver,
   };
 };

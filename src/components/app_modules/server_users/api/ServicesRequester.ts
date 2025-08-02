@@ -201,6 +201,7 @@ export const setFirstService = async (
   current: Partial<UserInterface>,
   adminId: string,
 ): Promise<Partial<UserInterface>> => {
+  // TODO: DAR EL BALANCE INICIAL CON TIEMPO DE EXPIRACIÓN
   const balanceGift = 5;
   if (user.services.length === 1) {
     current = {
@@ -211,7 +212,7 @@ export const setFirstService = async (
       },
     };
     await toast.promise(saveBalanceGift(user, adminId), {
-      pending: `Regalando ${balanceGift} Bs. de saldo por ser nuevo usuario servidor`,
+      pending: `Regalando ${balanceGift} Bs. de saldo por ser nuevo proveedor de servicios`,
       success: `${balanceGift} Bs. de saldo regalado`,
       error: "Error al regalar saldo, inténtalo de nuevo por favor",
     });
@@ -238,7 +239,7 @@ export const saveBalanceGift = async (user: UserInterface, adminId: string) => {
         currency: "Bs. (BOB)",
       },
       userWhoChanged: adminId,
-      modificationReason: "Regalo por ser nuevo usuario servidor",
+      modificationReason: "Regalo por ser nuevo proveedor de servicios",
     });
   } catch (e) {
     console.log(e);

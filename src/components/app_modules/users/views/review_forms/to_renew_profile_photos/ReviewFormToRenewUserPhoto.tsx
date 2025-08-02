@@ -25,6 +25,7 @@ import BaseFormWithTwoButtons from "@/components/form/view/forms/BaseFormWithTwo
 import { isNull } from "@/validators/NullDataValidator";
 import { routeToUserRequestsToRenewPhotoAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 import { Unsubscribe } from "firebase/firestore";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
 const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
   const { user } = useContext(AuthContext);
@@ -168,6 +169,16 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
             location={userReq.location}
             name={userReq.fullName}
             photo={userReq.photoUrl}
+            homeAddress={userReq.homeAddress}
+            addressPhoto={userReq.addressPhoto}
+            alternativePhoneNumber={
+              userReq?.alternativePhoneNumber
+                ? parseBoliviaPhone(
+                    (userReq?.alternativePhoneNumber?.countryCode ?? "") +
+                      (userReq?.alternativePhoneNumber?.number ?? ""),
+                  ).number
+                : ""
+            }
           >
             <TextFieldRenderer
               content={userReq.services.toString().replaceAll(",", " - ")}

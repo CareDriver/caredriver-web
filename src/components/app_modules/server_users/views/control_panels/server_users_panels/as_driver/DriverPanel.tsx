@@ -85,7 +85,7 @@ const DriverPanel = () => {
             ServiceReqState.Reviewing ? (
             <>
               <h3 className="text | medium-big gray gray-dark bold margin-top-5">
-                Tu solicitud esta siendo revisada
+                Tu solicitud está siendo revisada
               </h3>
               <h4 className="text | gray gray-dark bold">
                 Espera a que uno de nuestros administradores apruebe tu

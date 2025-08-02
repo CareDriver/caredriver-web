@@ -50,6 +50,8 @@ export const EMPTY_USER_DATA: UserInterface = {
 
   balance: defaultBalance,
   minimumBalance: defaultMinBalance,
+  homeAddress: "",
+  addressPhoto: EMPTY_REF_ATTACHMENT,
 };
 
 export const signUpWithGoogle = async (

@@ -242,7 +242,7 @@ const isValidForm = (form: Form): boolean => {
 function formToNewUser(form: Form): UserInterface {
   return {
     ...EMPTY_USER_DATA,
-    fullName: form.fullName.value.toLocaleLowerCase().trimEnd().trimStart(),
+    fullName: form.fullName.value.trimEnd().trimStart(),
     phoneNumber: parseBoliviaPhone(form.phone.value),
     location: form.location,
     email: form.email.value.toLocaleLowerCase().trim(),

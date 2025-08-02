@@ -14,6 +14,7 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import DataLoading from "@/components/loaders/DataLoading";
 import { ServiceType } from "@/interfaces/Services";
 import { routeToManageEnterpriseAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
+import UserGear from "@/icons/UserGear";
 
 interface Props {
   user: UserInterface;
@@ -84,38 +85,44 @@ const EnterpriseListForSupportUser: React.FC<Props> = ({
   if (data.length <= 0) {
     return (
       <div className="auto-height">
-        <h2 className="text">
+        {/* <h2 className="text">
           <i>
             No se encontró ninguna empresa donde eres <b>usuario soporte </b>.
           </i>
-        </h2>
+        </h2> */}
       </div>
     );
   }
 
   return (
-    <InfiniteScroll
-      dataLength={data.length}
-      next={handleNextClick}
-      hasMore={page !== pages}
-      loader={<DataLoading />}
-    >
-      <div className="enterprise-list">
-        {data.map(
-          (enterprise, i) =>
-            enterprise.id && (
-              <SimpleEnterpriseCard
-                key={`enterprise-item-${i}`}
-                route={routeToManageEnterpriseAsUser(
-                  enterprise.type,
-                  enterprise.id,
-                )}
-                enterprise={enterprise}
-              />
-            ),
-        )}
-      </div>
-    </InfiniteScroll>
+    <>
+      <h2 className="text | medium-big bold | icon-wrapper lb">
+        <UserGear />
+        Empresas donde eres usuario soporte
+      </h2>
+      <InfiniteScroll
+        dataLength={data.length}
+        next={handleNextClick}
+        hasMore={page !== pages}
+        loader={<DataLoading />}
+      >
+        <div className="enterprise-list">
+          {data.map(
+            (enterprise, i) =>
+              enterprise.id && (
+                <SimpleEnterpriseCard
+                  key={`enterprise-item-${i}`}
+                  route={routeToManageEnterpriseAsUser(
+                    enterprise.type,
+                    enterprise.id,
+                  )}
+                  enterprise={enterprise}
+                />
+              ),
+          )}
+        </div>
+      </InfiniteScroll>
+    </>
   );
 };
 

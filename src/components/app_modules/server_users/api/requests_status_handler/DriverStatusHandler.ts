@@ -45,7 +45,7 @@ export class DriverStatusHandler implements HandleableServiceStatus {
     return {
       title: `Solicitud para trabajar como ${DRIVER}`,
       description:
-        "Necesitamos verificar que todos los datos que se llenen sean validos antes registrar al nuevo usuario servidor.",
+        "Necesitamos verificar que todos los datos que se llenen sean validos antes de darte permisos para ofrecer servicios en CareDriver.",
     };
   };
 

@@ -46,6 +46,7 @@ import { compressFileBase64 } from "@/utils/compressors/FileCompressor";
 import { NAME_BUSINESS } from "@/models/Business";
 import { isNullOrEmptyText } from "@/validators/TextValidator";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
+import { generateKeywords } from "@/utils/helpers/StringHelper";
 
 interface Form {
   name: TextFieldForm;
@@ -215,7 +216,7 @@ const EnterpriseEditForm: React.FC<Props> = ({
             content={{
               checkDescription: (
                 <p className="text | light">
-                  Marca la casilla si la empresa tiene convenio con $
+                  Marca la casilla si la empresa tiene convenio con
                   {NAME_BUSINESS}
                 </p>
               ),
@@ -291,6 +292,7 @@ async function formToEnterprise(
   return {
     ...baseEnterprise,
     name: form.name.value,
+    nameArrayLower: generateKeywords(form.name.value),
     description: form.description.value,
     logoImgUrl: image,
     coordinates: form.coordinates.value,

@@ -22,7 +22,8 @@ const ShareServiceByLink: React.FC<Props> = ({ reviewerUser, service }) => {
 
   return (
     service && (
-      <GuardOfModule user={reviewerUser} roles={ROLES_TO_VIEW_USER_SERVICES}>
+      <>
+        {/* <GuardOfModule user={reviewerUser} roles={ROLES_TO_VIEW_USER_SERVICES}>
         {service.sharing && isLessTime(service.sharing) && (
           <button
             onClick={copyLink}
@@ -41,7 +42,8 @@ const ShareServiceByLink: React.FC<Props> = ({ reviewerUser, service }) => {
             </span>
           </button>
         )}
-      </GuardOfModule>
+      </GuardOfModule> */}
+      </>
     )
   );
 };

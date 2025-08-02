@@ -6,6 +6,7 @@ import DateFieldRenderer from "../../../../../form/view/field_renderers/DateFiel
 import TextFieldRenderer from "@/components/form/view/field_renderers/TextFieldRenderer";
 
 const IdCardRenderer = ({ idCard }: { idCard: IdentityCard | undefined }) => {
+  console.log(idCard);
   return (
     <div className="form-sub-container | margin-top-25">
       <h2 className="text icon-wrapper | medium-big bold lb">

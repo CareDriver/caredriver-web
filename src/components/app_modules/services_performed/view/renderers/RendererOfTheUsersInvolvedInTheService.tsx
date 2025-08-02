@@ -12,6 +12,7 @@ import "@/styles/components/users.css";
 import FieldDeleted from "@/components/form/view/field_renderers/FieldDeleted";
 import UserPhotoRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserPhotoRenderer";
 import { getPhoneNumber } from "@/utils/helpers/PhoneHelper";
+import { ServicesRender } from "@/interfaces/Services";
 
 interface UserServiceInfo {
   fullName: string;
@@ -103,20 +104,25 @@ const RendererOfTheUsersInvolvedInTheService = ({
     <>
       <div className="margin-top-50 | max-width-60">
         <h2 className="text icon-wrapper | medium-big bold margin-bottom-15">
-          <HelmetSafety /> Usuario servidor
+          <HelmetSafety /> {ServicesRender[service.service]}:
         </h2>
 
         {serverUser === null ? (
           <span className="loader"></span>
         ) : serverUser === undefined ? (
-          <FieldDeleted description={"El usuario servidor no fue asignado"} />
+          <FieldDeleted description={"El usuario no fue asignado"} />
         ) : (
           renderUser(serverUser)
         )}
       </div>
+      <br />
+      <div className="max-width-50">
+        <div className="separator-horizontal"></div>
+      </div>
+
       <div className="margin-top-25 margin-bottom-25 | max-width-60">
         <h2 className="text icon-wrapper | medium-big bold margin-bottom-15">
-          <UserIcon /> Usuario solicitador del servicio
+          <UserIcon /> Usuario que solicitó el servicio:
         </h2>
         {reqUser === null ? (
           <span className="loader"></span>

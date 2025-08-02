@@ -33,6 +33,7 @@ const PhoneField: React.FC<Props> = ({ values, setter }) => {
         defaultCountry="bo"
         countries={countries}
         value={values.value}
+        placeholder="Ej: 765432189"
         onChange={stateValidator.changeValueAsText}
         inputStyle={{
           width: "100%",

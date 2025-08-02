@@ -45,7 +45,7 @@ const LicenceNumberField: React.FC<Props> = ({ field }) => {
     const { isValid, message } = field.validator(number);
 
     field.setter({
-      value: abbreviateLocation(licenseNumber.location) + SEPARATOR + number,
+      value: number,
       message: isValid ? null : message,
     });
     setLicenseNumber((prev) => ({ ...prev, number: number }));
@@ -74,7 +74,7 @@ const LicenceNumberField: React.FC<Props> = ({ field }) => {
             onChange={(e) => setNumberLicense(e.target.value)}
             className="form-section-input"
           />
-          <legend className="form-section-legend">Número</legend>
+          <legend className="form-section-legend">Número de Licencia</legend>
         </fieldset>
       </div>
       {field.values.message && (

@@ -50,7 +50,7 @@ export function isAbleToBeSupportIntoEnterprise(
     return {
       isValid: false,
       message:
-        "El usuario tiene peticiones activas para ser usuario servidor para este tipo de servicio",
+        "El usuario tiene peticiones activas para ser proveedor de servicios para este tipo de servicio",
     };
   }
 

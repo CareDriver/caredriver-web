@@ -60,10 +60,9 @@ const EnterpriseListForUserServer: React.FC<Props> = ({
     return (
       <div className="auto-height">
         <h2 className="text" onClick={sendMessageForFistEnterprise}>
-          No eres dueño de ninguna empresa,{" "}
+          Si tienes una {ENTERPRISE_TO_SPANISH[typeOfEnterprise]},{" "}
           <i className="text | bold">
-            contactanos para registrar tu{" "}
-            {ENTERPRISE_TO_SPANISH[typeOfEnterprise]} con nosotros.
+            contáctanos para registrarla y ofrecer tus servicios en CareDriver
           </i>
         </h2>
         <button
@@ -97,8 +96,8 @@ const EnterpriseListForUserServer: React.FC<Props> = ({
       {data.length < MAX_NUMBER_ENTERPRISES && (
         <div className="auto-height">
           <h2 className="text" onClick={sendMessageForFistEnterprise}>
-            <i className="text | bold">Tienes mas empresas? </i>
-            contactanos para registrar tu{" "}
+            <i className="text | bold">¿Tienes mas empresas? </i>
+            contáctanos para registrar tu{" "}
             {ENTERPRISE_TO_SPANISH[typeOfEnterprise]} con nosotros.
           </h2>
           <button

@@ -46,7 +46,7 @@ const ServerUserSideBar = ({
   return (
     <>
       {isUserServer(user) && (
-        <UserRoleSideBar customRole={"Usuario Servidor"}>
+        <UserRoleSideBar customRole={"Proveedor de Servicios"}>
           <UserGear />
         </UserRoleSideBar>
       )}

@@ -45,7 +45,7 @@ const DriverServicePerformed: React.FC<Props> = ({ service, reviewerUser }) => {
 
       <GuardOfModule user={reviewerUser} roles={ROLES_TO_VIEW_USER_SERVICES}>
         <VehicleDetailRenderer
-          titleSection={`Detalles del vehículo de Transporte
+          titleSection={`Detalles del vehículo a conducir
                     ${
                       service.vehicle?.type &&
                       " - ".concat(

@@ -31,7 +31,7 @@ export class LaundererStatusHandler implements HandleableServiceStatus {
     return {
       title: "Solicitud para trabajar como Lavadero",
       description:
-        "Necesitamos verificar que todos los datos que se llenen sean validos antes registrar al nuevo usuario servidor.",
+        "Necesitamos verificar que todos los datos que se llenen sean validos antes de darte permisos para ofrecer servicios en CareDriver.",
     };
   };
   updateRefuseState = async (): Promise<void> => {

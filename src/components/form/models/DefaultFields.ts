@@ -1,5 +1,7 @@
+import { Gender } from "@/interfaces/UserInterface";
 import {
   AttachmentField,
+  CheckField,
   DateField,
   EntityDataField,
   EntityField,
@@ -10,6 +12,16 @@ import {
 
 export const DEFAUL_TEXT_FIELD: TextField = {
   value: "",
+  message: null,
+};
+
+export const DEFAULT_CHECK_FIELD: CheckField = {
+  value: false,
+  message: null,
+};
+
+export const DEFAUL_TEXT_FIELD_GENDER: TextField = {
+  value: Gender.Male,
   message: null,
 };
 

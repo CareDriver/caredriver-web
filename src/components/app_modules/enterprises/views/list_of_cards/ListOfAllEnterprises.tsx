@@ -29,6 +29,8 @@ const ListOfAllEnterprises = ({ type }: { type: ServiceType }) => {
     undefined,
   );
   const [pages, setPages] = useState<number | null>(null);
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
     getEnterprisesAdminNumPages(numPerPage, type).then((pages) =>
@@ -45,6 +47,7 @@ const ListOfAllEnterprises = ({ type }: { type: ServiceType }) => {
       startAfterDoc,
       endBeforeDoc,
       numPerPage,
+      searchTerm,
     ).then((result) => {
       if (data) {
         setData((prev) => prev && [...prev, ...result.result]);
@@ -72,6 +75,27 @@ const ListOfAllEnterprises = ({ type }: { type: ServiceType }) => {
         <Plus />
         <span className="text | bold">Nueva empresa</span>
       </Link>
+      <div className="search-wrapper">
+        <input
+          type="text"
+          placeholder="Buscar por nombre de empresa"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          className="search-input"
+        />
+        <button
+          className="small-general-button"
+          onClick={() => {
+            setPage(1);
+            setLastDoc(undefined);
+            setData(null);
+            setSearchTerm(searchInput.trim().toLowerCase());
+          }}
+        >
+          Buscar
+        </button>
+      </div>
+
       {data.length > 0 ? (
         <InfiniteScroll
           dataLength={data.length}

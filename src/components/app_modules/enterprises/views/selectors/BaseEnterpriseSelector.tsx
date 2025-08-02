@@ -16,7 +16,6 @@ import {
   cutTextWithDotsByLength,
   MAX_LENGTH_FOR_NAMES_DISPLAY,
 } from "@/utils/text_helpers/TextCutter";
-import Image from "next/image";
 
 interface Props {
   typeOfEnterprise: ServiceType;
@@ -106,9 +105,8 @@ const BaseEnterpriseSelector: React.FC<Props> = ({
   }, [
     checkingUserAuth,
     page,
-    PAGE_SIZE,
-    data,
-    lastDoc,
+    // data,
+    // lastDoc,
     typeOfEnterprise,
     user,
   ]);
@@ -177,7 +175,7 @@ const BaseEnterpriseSelector: React.FC<Props> = ({
             onClick={handleNextClick}
           >
             <Plus />
-            Mostrar mas
+            Mostrar más
           </button>
         </div>
       )}

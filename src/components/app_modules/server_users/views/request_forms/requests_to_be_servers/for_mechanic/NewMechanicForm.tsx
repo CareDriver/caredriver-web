@@ -76,6 +76,7 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
 
   const uploadImages = async () => {
     var newProfilePhotoImgUrl: string | RefAttachment = EMPTY_REF_ATTACHMENT;
+    var addressPhotoImgUrl: string | RefAttachment = EMPTY_REF_ATTACHMENT;
     var realTimePhotoImgUrl: RefAttachment = EMPTY_REF_ATTACHMENT;
 
     if (requesterUser) {
@@ -89,6 +90,22 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
           newProfilePhotoImgUrl = await uploadFileBase64(
             DirectoryPath.TempProfilePhotos,
             form.personalData.photo.value,
+          );
+        } catch (e) {
+          throw e;
+        }
+      }
+
+      addressPhotoImgUrl = requesterUser.addressPhoto;
+      if (
+        !checkingUserAuth &&
+        form.personalData.addressPhoto.value &&
+        isImageBase64(form.personalData.addressPhoto.value)
+      ) {
+        try {
+          addressPhotoImgUrl = await uploadFileBase64(
+            DirectoryPath.ElectricityBills,
+            form.personalData.addressPhoto.value,
           );
         } catch (e) {
           throw e;
@@ -109,12 +126,14 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
 
     return {
       newProfilePhotoImgUrl,
+      addressPhotoImgUrl,
       realTimePhotoImgUrl,
     };
   };
 
   const uploadForm = async (
     newProfilePhotoImgUrl: string | RefAttachment,
+    addressPhotoImgUrl: string | RefAttachment,
     realTimePhotoImgUrl: RefAttachment,
   ) => {
     if (requesterUser) {
@@ -126,6 +145,8 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
             formId,
             requesterUser.id === undefined ? "" : requesterUser.id,
             form.personalData.fullname.value,
+            form.personalData.homeAddress.value,
+            addressPhotoImgUrl,
             newProfilePhotoImgUrl,
             realTimePhotoImgUrl,
             requesterUser.services,
@@ -191,14 +212,18 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
 
     try {
       await updateIdCard(form.personalData.idCard, requesterUser);
-      const { newProfilePhotoImgUrl, realTimePhotoImgUrl } =
+      const { newProfilePhotoImgUrl, addressPhotoImgUrl, realTimePhotoImgUrl } =
         await toast.promise(uploadImages(), {
           pending: "Subiendo imágenes, por favor espera",
           success: "Imágenes subidas",
           error: "Error al subir imágenes, inténtalo de nuevo por favor",
         });
       await toast.promise(
-        uploadForm(newProfilePhotoImgUrl, realTimePhotoImgUrl),
+        uploadForm(
+          newProfilePhotoImgUrl,
+          addressPhotoImgUrl,
+          realTimePhotoImgUrl,
+        ),
         {
           pending: "Enviando el formulario, por favor espera",
           success: "Formulario enviado",
@@ -246,7 +271,8 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
                 legend: "Enviar Solicitud",
               },
               behavior: {
-                isValid: formState.isValid,
+                // isValid: formState.isValid,
+                isValid: true,
                 loading: formState.loading,
               },
             },

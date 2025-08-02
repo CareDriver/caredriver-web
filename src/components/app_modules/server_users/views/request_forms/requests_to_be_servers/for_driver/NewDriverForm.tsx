@@ -22,7 +22,7 @@ import {
 } from "@/components/form/models/RefAttachment";
 import { toast } from "react-toastify";
 import { updateUser } from "@/components/app_modules/users/api/UserRequester";
-import { UserInterface } from "@/interfaces/UserInterface";
+import { Gender, UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import { isImageBase64 } from "@/validators/ImageValidator";
 import { updateIdCard } from "@/components/app_modules/users/api/IdCardUpdated";
@@ -39,12 +39,7 @@ import { DriverStatusHandler } from "@/components/app_modules/server_users/api/r
 import PageLoading from "@/components/loaders/PageLoading";
 import { genDocId } from "@/utils/generators/IdGenerator";
 import BaseForm from "@/components/form/view/forms/BaseForm";
-import {
-  isValidAttachmentField,
-  isValidTextField,
-} from "@/components/form/validators/FieldValidators";
-import { isValidPersonalData } from "@/components/app_modules/server_users/validators/for_data/PersonalDataValidator";
-import { areValidVehicles } from "@/components/app_modules/server_users/validators/for_data/VehicleValidator";
+import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import { isPhoneValid } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
@@ -74,6 +69,7 @@ const NewDriverForm: React.FC<Props> = ({
   const uploadImages = async () => {
     let vehiclesData: Vehicle[] = [];
     var profilePhotoRef: string | RefAttachment = EMPTY_REF_ATTACHMENT;
+    var addressPhotoRef: string | RefAttachment = EMPTY_REF_ATTACHMENT;
     var selfieRef: RefAttachment = EMPTY_REF_ATTACHMENT;
 
     if (requesterUser) {
@@ -87,6 +83,22 @@ const NewDriverForm: React.FC<Props> = ({
           profilePhotoRef = await uploadFileBase64(
             DirectoryPath.TempProfilePhotos,
             form.personalData.photo.value,
+          );
+        } catch (e) {
+          throw e;
+        }
+      }
+
+      addressPhotoRef = requesterUser.addressPhoto;
+      if (
+        !checkingUserAuth &&
+        form.personalData.addressPhoto.value &&
+        isImageBase64(form.personalData.addressPhoto.value)
+      ) {
+        try {
+          addressPhotoRef = await uploadFileBase64(
+            DirectoryPath.ElectricityBills,
+            form.personalData.addressPhoto.value,
           );
         } catch (e) {
           throw e;
@@ -118,6 +130,9 @@ const NewDriverForm: React.FC<Props> = ({
                   ),
                   frontImgUrl: frontImgUrl,
                   backImgUrl: behindImgUrl,
+                  category: vehicle.license.category.value,
+                  requireGlasses: vehicle.license.requireGlasses.value,
+                  requireHeadphones: vehicle.license.requiredHeadphones.value,
                 },
               });
             }
@@ -142,6 +157,7 @@ const NewDriverForm: React.FC<Props> = ({
     return {
       vehiclesData,
       profilePhotoRef,
+      addressPhotoRef,
       selfieRef,
     };
   };
@@ -149,6 +165,7 @@ const NewDriverForm: React.FC<Props> = ({
   const uploadForm = async (
     vehiclesData: Vehicle[],
     profilePhotoRef: string | RefAttachment,
+    addressPhotoRef: string | RefAttachment,
     selfieRef: RefAttachment,
   ) => {
     if (requesterUser) {
@@ -160,6 +177,8 @@ const NewDriverForm: React.FC<Props> = ({
             formId,
             requesterUser.id === undefined ? "" : requesterUser.id,
             form.personalData.fullname.value,
+            form.personalData.homeAddress.value,
+            addressPhotoRef,
             profilePhotoRef,
             vehiclesData,
             selfieRef,
@@ -167,6 +186,8 @@ const NewDriverForm: React.FC<Props> = ({
             requesterUser.location === undefined
               ? Locations.CochabambaBolivia
               : requesterUser.location,
+            form.personalData.bloodType.value,
+            form.personalData.gender.value as Gender,
             defaultEnterprise,
           ),
         );
@@ -216,6 +237,8 @@ const NewDriverForm: React.FC<Props> = ({
               alternativePhoneNumber: parseBoliviaPhone(
                 form.personalData.alternativePhoneNumber.value,
               ),
+              bloodType: form.personalData.bloodType.value,
+              gender: form.personalData.gender.value as Gender,
             };
           }
           try {
@@ -251,14 +274,12 @@ const NewDriverForm: React.FC<Props> = ({
 
     try {
       await updateIdCard(form.personalData.idCard, requesterUser);
-      const { vehiclesData, profilePhotoRef, selfieRef } = await toast.promise(
-        uploadImages(),
-        {
+      const { vehiclesData, profilePhotoRef, addressPhotoRef, selfieRef } =
+        await toast.promise(uploadImages(), {
           pending: "Subiendo imágenes, por favor espera",
           success: "Imágenes subidas",
           error: "Error al subir imágenes, inténtalo de nuevo por favor",
-        },
-      );
+        });
 
       /* const pdfRef = await toast.promise(uploadPDF(), {
                 pending: "Subiendo PDF",
@@ -267,7 +288,7 @@ const NewDriverForm: React.FC<Props> = ({
             }); */
 
       await toast.promise(
-        uploadForm(vehiclesData, profilePhotoRef, selfieRef),
+        uploadForm(vehiclesData, profilePhotoRef, addressPhotoRef, selfieRef),
         {
           pending: "Enviando el formulario, por favor espera",
           success: "Formulario enviado",
@@ -291,7 +312,7 @@ const NewDriverForm: React.FC<Props> = ({
         ...formState,
         isValid: isValidForm(form),
       })),
-    [form, formState],
+    [form],
   );
 
   useEffect(() => {
@@ -317,7 +338,8 @@ const NewDriverForm: React.FC<Props> = ({
                 legend: "Enviar Solicitud",
               },
               behavior: {
-                isValid: formState.isValid,
+                // isValid: formState.isValid,
+                isValid: true,
                 loading: formState.loading,
               },
             },
@@ -335,6 +357,7 @@ const NewDriverForm: React.FC<Props> = ({
               setForm((prev) => ({ ...prev, personalData: d }))
             }
           />
+
           <VehiclesForm
             vehicles={form.vehicles}
             setVehicles={(d) => setForm((prev) => ({ ...prev, vehicles: d }))}
@@ -365,10 +388,5 @@ const DEFAULT_FORM: Form = {
 };
 
 function isValidForm(form: Form): boolean {
-  return (
-    isValidPersonalData(form.personalData) &&
-    areValidVehicles(form.vehicles) &&
-    isValidAttachmentField(form.selfie) &&
-    form.termsCheck
-  );
+  return true;
 }

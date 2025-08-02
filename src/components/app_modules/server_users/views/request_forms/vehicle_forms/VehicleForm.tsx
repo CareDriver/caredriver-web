@@ -18,7 +18,6 @@ import {
   TextField,
 } from "@/components/form/models/FormFields";
 import DateField from "@/components/form/view/fields/DateField";
-import NumberField from "@/components/form/view/fields/NumberField";
 import TransmissionField from "@/components/form/view/fields/TransmissionField";
 import TextFieldRenderer from "@/components/form/view/field_renderers/TextFieldRenderer";
 import LicenceNumberField from "@/components/form/view/fields/LicenceNumberField";
@@ -26,9 +25,11 @@ import LicenceNumberField from "@/components/form/view/fields/LicenceNumberField
 const VehicleForm = ({
   vehicle,
   setVehicle,
+  craneOperator = false,
 }: {
   vehicle: Vehicle;
   setVehicle: (v: Vehicle) => void;
+  craneOperator?: boolean;
 }) => {
   const changeTransmission = (type: VehicleTransmission) => {
     setVehicle({
@@ -94,42 +95,46 @@ const VehicleForm = ({
     <div className="form-sub-container | margin-top-25">
       {
         <div className="form-sub-container">
-          <h2 className="text icon-wrapper | medium-big bold">
-            <Car /> Caracteristicas del vehículo
-          </h2>
-
-          <TextFieldRenderer
-            content={VEHICLE_CATEGORY_TO_SPANISH[vehicle.type.type]}
-            legend="Categoria"
-          />
-          {vehicle.type.mode.length === 1 ? (
-            <TransmissionField
-              transmission={vehicle.type.mode[0]}
-              setter={changeTransmission}
-            />
-          ) : (
+          {!craneOperator && (
             <>
-              {vehicle.type.mode.map((mode, i) => (
-                <TextFieldRenderer
-                  key={`vehicle-mode-selected-${i}`}
-                  content={`Transmisión ${TRANSMITION_TO_SPANISH_V2[mode]}`}
-                  legend="Transmisión"
-                />
-              ))}
-            </>
-          )}
+              <h2 className="text icon-wrapper | medium-big bold">
+                <Car /> Caracteristícas del vehículo
+              </h2>
 
-          {vehicle.type.mode.length == 1 && (
-            <div>
-              <button
-                type="button"
-                onClick={addMissingTransmission}
-                className="icon-wrapper small-general-button text | gray-icon gray bold touchable"
-              >
-                <Plus />
-                Agregar otra Transmisión
-              </button>
-            </div>
+              <TextFieldRenderer
+                content={VEHICLE_CATEGORY_TO_SPANISH[vehicle.type.type]}
+                legend="Categoria"
+              />
+              {vehicle.type.mode.length === 1 ? (
+                <TransmissionField
+                  transmission={vehicle.type.mode[0]}
+                  setter={changeTransmission}
+                />
+              ) : (
+                <>
+                  {vehicle.type.mode.map((mode, i) => (
+                    <TextFieldRenderer
+                      key={`vehicle-mode-selected-${i}`}
+                      content={`Transmisión ${TRANSMITION_TO_SPANISH_V2[mode]}`}
+                      legend="Transmisión"
+                    />
+                  ))}
+                </>
+              )}
+
+              {vehicle.type.mode.length == 1 && (
+                <div>
+                  <button
+                    type="button"
+                    onClick={addMissingTransmission}
+                    className="icon-wrapper small-general-button text | gray-icon gray bold touchable"
+                  >
+                    <Plus />
+                    Agregar otra Transmisión
+                  </button>
+                </div>
+              )}
+            </>
           )}
 
           <h2 className="text icon-wrapper | lb medium-big bold margin-top-25">

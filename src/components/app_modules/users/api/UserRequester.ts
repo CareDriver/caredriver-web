@@ -23,6 +23,7 @@ import {
   getDocInRealTime,
   RealTimeResponse,
 } from "@/utils/requesters/RealTimeFetcher";
+import { generateKeywords } from "@/utils/helpers/StringHelper";
 
 const usersCollection = collection(firestore, "users");
 
@@ -82,6 +83,10 @@ const saveUser = async (
 ): Promise<DocumentReference> => {
   try {
     const userRef = doc(usersCollection, uid);
+    const data: UserInterface = {
+      ...userData,
+      fullNameArrayLower: generateKeywords(userData.fullName),
+    };
     await setDoc(userRef, userData);
     return userRef;
   } catch (error) {
@@ -307,10 +312,10 @@ export const getSearchUsersPaginated = async (
         ]),
         or(
           where("fullName", "==", searchField),
-          where("email", "==", searchField),
-          where("phoneNumber", "==", "+591" + searchField),
-          where("phoneNumber", "==", "+" + searchField),
-          where("phoneNumber", "==", searchField),
+          where("email", "==", searchField.toLowerCase()),
+          where("phoneNumber", "==", "+591" + searchField.toLowerCase()),
+          where("phoneNumber", "==", "+" + searchField.toLowerCase()),
+          where("phoneNumber", "==", searchField.toLowerCase()),
         ),
       ),
       orderBy("fullName"),

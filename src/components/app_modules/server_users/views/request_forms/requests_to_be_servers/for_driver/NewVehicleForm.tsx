@@ -20,7 +20,7 @@ import {
 } from "@/components/form/models/RefAttachment";
 import { toast } from "react-toastify";
 import { updateUser } from "@/components/app_modules/users/api/UserRequester";
-import { UserInterface } from "@/interfaces/UserInterface";
+import { Gender, UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import { isImageBase64 } from "@/validators/ImageValidator";
 import VehicleForm from "../../vehicle_forms/VehicleForm";
@@ -91,6 +91,7 @@ const NewVehicleForm: React.FC<Props> = ({
   const uploadImages = async () => {
     let vehiclesData: Vehicle[] = [];
     var profilePhotoRef: string | RefAttachment = EMPTY_REF_ATTACHMENT;
+    var addressPhotoRef: string | RefAttachment = EMPTY_REF_ATTACHMENT;
     var selfieRef: RefAttachment = EMPTY_REF_ATTACHMENT;
 
     if (requesterUser) {
@@ -104,6 +105,21 @@ const NewVehicleForm: React.FC<Props> = ({
           profilePhotoRef = await uploadFileBase64(
             DirectoryPath.TempProfilePhotos,
             form.personalData.photo.value,
+          );
+        } catch (e) {
+          throw e;
+        }
+      }
+
+      if (
+        !checkingUserAuth &&
+        form.personalData.addressPhoto.value &&
+        isImageBase64(form.personalData.addressPhoto.value)
+      ) {
+        try {
+          addressPhotoRef = await uploadFileBase64(
+            DirectoryPath.ElectricityBills,
+            form.personalData.addressPhoto.value,
           );
         } catch (e) {
           throw e;
@@ -133,6 +149,10 @@ const NewVehicleForm: React.FC<Props> = ({
                 ),
                 frontImgUrl: frontImgUrl,
                 backImgUrl: behindImgUrl,
+                category: form.vehicle.license.category.value,
+                requireGlasses: form.vehicle.license.requireGlasses.value,
+                requireHeadphones:
+                  form.vehicle.license.requiredHeadphones.value,
               },
             });
           }
@@ -156,6 +176,7 @@ const NewVehicleForm: React.FC<Props> = ({
     return {
       vehiclesData,
       profilePhotoRef,
+      addressPhotoRef,
       selfieRef,
     };
   };
@@ -163,6 +184,7 @@ const NewVehicleForm: React.FC<Props> = ({
   const uploadForm = async (
     vehiclesData: Vehicle[],
     profilePhotoRef: string | RefAttachment,
+    addressPhotoRef: string | RefAttachment,
     selfieRef: RefAttachment,
   ) => {
     if (requesterUser) {
@@ -174,6 +196,8 @@ const NewVehicleForm: React.FC<Props> = ({
             formId,
             requesterUser.id === undefined ? "" : requesterUser.id,
             form.personalData.fullname.value,
+            form.personalData.homeAddress.value,
+            addressPhotoRef,
             profilePhotoRef,
             vehiclesData,
             selfieRef,
@@ -181,6 +205,8 @@ const NewVehicleForm: React.FC<Props> = ({
             requesterUser.location === undefined
               ? Locations.CochabambaBolivia
               : requesterUser.location,
+            requesterUser.bloodType ?? "None",
+            requesterUser.gender ?? Gender.Male,
             defaultEnterprise,
           ),
         );
@@ -253,6 +279,7 @@ const NewVehicleForm: React.FC<Props> = ({
       const {
         vehiclesData,
         profilePhotoRef: newProfilePhotoImgUrl,
+        addressPhotoRef,
         selfieRef: realTimePhotoImgUrl,
       } = await toast.promise(uploadImages(), {
         pending: "Subiendo imágenes, por favor espera",
@@ -266,7 +293,12 @@ const NewVehicleForm: React.FC<Props> = ({
                 error: "Error al subir el PDF, inténtalo de nuevo",
             }); */
       await toast.promise(
-        uploadForm(vehiclesData, newProfilePhotoImgUrl, realTimePhotoImgUrl),
+        uploadForm(
+          vehiclesData,
+          newProfilePhotoImgUrl,
+          addressPhotoRef,
+          realTimePhotoImgUrl,
+        ),
         {
           pending: "Enviando el formulario, por favor espera",
           success: "Formulario enviado",
@@ -313,7 +345,7 @@ const NewVehicleForm: React.FC<Props> = ({
               ServiceReqState.Reviewing;
       if (isValid) {
         router.push(routeToRequestToBeServerUserAsUser("driver"));
-        toast.error("Tu petición esta siendo revisada", {
+        toast.error("Tu petición está siendo revisada", {
           toastId: "vehicle-already-registered-like-req-message",
         });
       }
@@ -356,7 +388,8 @@ const NewVehicleForm: React.FC<Props> = ({
               },
               behavior: {
                 loading: formState.loading,
-                isValid: formState.isValid,
+                // isValid: formState.isValid,
+                isValid: true,
               },
             },
             styleClasses: "max-width-80",

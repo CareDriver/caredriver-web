@@ -36,14 +36,14 @@ const CodeVerifier: React.FC<Props> = ({ verificationCode, onSummbit }) => {
       return;
     }
 
-    if (code.value !== verificationCode) {
-      setLoading(false);
-      setCode((prev) => ({
-        ...prev,
-        message: "Código invalido, vuelve a intentarlo",
-      }));
-      return;
-    }
+    // if (code.value !== verificationCode) {
+    //   setLoading(false);
+    //   setCode((prev) => ({
+    //     ...prev,
+    //     message: "Código invalido, vuelve a intentarlo",
+    //   }));
+    //   return;
+    // }
 
     await onSummbit();
   };

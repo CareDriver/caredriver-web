@@ -4,6 +4,7 @@ import { Timestamp } from "firebase/firestore";
 export enum VehicleType {
   CAR = "car",
   MOTORCYCLE = "motorcycle",
+  TOW = "tow",
 }
 
 export enum VehicleTransmission {

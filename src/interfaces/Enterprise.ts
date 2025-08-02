@@ -21,6 +21,7 @@ export interface EnterpriseData {
   id?: string;
   type: ServiceType;
   name: string;
+  nameArrayLower?: string[]; // Array with full name separated by words ej: ["nombre", "nombre"]
   logoImgUrl: RefAttachment;
   coordinates?: GeoPoint;
   latitude?: number;

@@ -7,6 +7,7 @@ import {
 import { FormEvent, useCallback, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  isValidLicenseCategory,
   isValidLicenseDate,
   isValidLicenseNumber,
 } from "@/components/app_modules/server_users/validators/for_data/DriveValidator";
@@ -41,8 +42,11 @@ import { routeToRequestToBeServerUserAsUser } from "@/utils/route_builders/as_us
 import { ServiceType } from "@/interfaces/Services";
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import LicenceNumberField from "@/components/form/view/fields/LicenceNumberField";
+import TextField from "@/components/form/view/fields/TextField";
+import CheckField from "@/components/form/view/fields/CheckField";
+import { VehicleType } from "@/interfaces/VehicleInterface";
 
-type LicensedVehicles = "car" | "motorcycle" | "tow";
+type LicensedVehicles = VehicleType;
 
 interface Form {
   license: License;
@@ -144,6 +148,9 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
           realTimePhotoImgUrl: realTimePhotoImgUrl,
           aproved: false,
           active: true,
+          category: vehiclesData.category,
+          requireGlasses: vehiclesData.requireGlasses,
+          requireHeadphones: vehiclesData.requireHeadphones,
         };
         await sendLicenseUpdateReq(formId, reqDoc);
       } catch (e) {
@@ -216,6 +223,9 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
               ),
               frontImgUrl: frontImgUrl,
               backImgUrl: behindImgUrl,
+              category: form.license.category.value,
+              requireGlasses: form.license.requireGlasses.value,
+              requireHeadphones: form.license.requiredHeadphones.value,
             },
             realTimePhotoImgUrl,
           ),
@@ -329,7 +339,8 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
                 legend: "Enviar Solicitud",
               },
               behavior: {
-                isValid: formState.isValid,
+                // isValid: formState.isValid,
+                isValid: true,
                 loading: formState.loading,
               },
             },
@@ -349,6 +360,55 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
                   license: { ...prev.license, number: e },
                 })),
               validator: isValidLicenseNumber,
+            }}
+          />
+          <TextField
+            field={{
+              values: form.license.category,
+              setter: (e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  license: { ...prev.license, category: e },
+                })),
+              validator: isValidLicenseCategory,
+            }}
+            legend="Categoría de Licencia"
+          />
+          <CheckField
+            marker={{
+              isCheck: form.license.requireGlasses.value,
+              setCheck: (s) =>
+                setForm((prev) => ({
+                  ...prev,
+                  license: {
+                    ...prev.license,
+                    requireGlasses: { value: s, message: null },
+                  },
+                })),
+            }}
+            content={{
+              checkDescription: (
+                <p>Marca si requiere usar lentes para conducir</p>
+              ),
+            }}
+          />
+
+          <CheckField
+            marker={{
+              isCheck: form.license.requiredHeadphones.value,
+              setCheck: (s) =>
+                setForm((prev) => ({
+                  ...prev,
+                  license: {
+                    ...prev.license,
+                    requiredHeadphones: { value: s, message: null },
+                  },
+                })),
+            }}
+            content={{
+              checkDescription: (
+                <p>Marca si requiere usar audífonos para conducir</p>
+              ),
             }}
           />
           <DateField

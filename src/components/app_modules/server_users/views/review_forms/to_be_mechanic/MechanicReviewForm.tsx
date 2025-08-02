@@ -39,6 +39,8 @@ import {
 import BaseFormWithTwoButtons from "@/components/form/view/forms/BaseFormWithTwoButtons";
 import { getIdSaved } from "@/utils/generators/IdGenerator";
 import { notifyRequestApprovalUser } from "../../../api/UserServerNotifier";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
+import { RefAttachment } from "@/components/form/models/RefAttachment";
 
 const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const { user: adminUser } = useContext(AuthContext);
@@ -110,6 +112,13 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               );
             }
 
+            userToUpdate.photoUrl =
+              serviceReq.newProfilePhotoImgUrl as RefAttachment;
+            userToUpdate.addressPhoto =
+              serviceReq.addressPhoto as RefAttachment;
+            userToUpdate.homeAddress = serviceReq.homeAddress;
+            userToUpdate.bloodType = serviceReq.bloodType ?? "";
+
             await updateUser(serviceReq.userId, userToUpdate);
             if (enterprise && wasApproved) {
               await toast.promise(
@@ -120,7 +129,7 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 ),
                 {
                   pending:
-                    "Agregando al usuario al servicio como usuario servidor",
+                    "Agregando al usuario al servicio como proveedor de servicios",
                   success: "Usuario agregado al servicio",
                   error: "Error al agregar al usuario al servicio",
                 },
@@ -265,7 +274,18 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
         <PersonalDataRenderer
           location={serviceReq.location}
           name={serviceReq.newFullName}
+          homeAddress={serviceReq.homeAddress}
+          addressPhoto={serviceReq.addressPhoto}
           photo={serviceReq.newProfilePhotoImgUrl}
+          bloodType={requesterUser?.bloodType}
+          alternativePhoneNumber={
+            requesterUser?.alternativePhoneNumber
+              ? parseBoliviaPhone(
+                  (requesterUser?.alternativePhoneNumber?.countryCode ?? "") +
+                    (requesterUser?.alternativePhoneNumber?.number ?? ""),
+                ).number
+              : ""
+          }
         />
 
         {requesterUser ? (

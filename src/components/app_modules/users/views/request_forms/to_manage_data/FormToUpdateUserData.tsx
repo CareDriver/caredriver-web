@@ -28,9 +28,10 @@ import {
 import Pen from "@/icons/Pen";
 import ImageUploader from "@/components/form/view/attachment_fields/ImageUploader";
 import { isImageBase64 } from "@/validators/ImageValidator";
-import { deleteFile, uploadFileBase64 } from "@/utils/requesters/FileUploader";
+import { uploadFileBase64 } from "@/utils/requesters/FileUploader";
 import { RefAttachment } from "@/components/form/models/RefAttachment";
 import { DirectoryPath } from "@/firebase/StoragePaths";
+import { generateKeywords } from "@/utils/helpers/StringHelper";
 
 interface Form {
   email: TextFieldForm;
@@ -149,6 +150,7 @@ const FormToUpdateUserData: React.FC<Props> = ({ user }) => {
       userNewData = {
         ...userNewData,
         fullName: form.fullName.value.toLocaleLowerCase().trimEnd().trimStart(),
+        fullNameArrayLower: generateKeywords(form.fullName.value),
       };
     }
 

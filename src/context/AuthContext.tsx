@@ -64,7 +64,7 @@ const loadUserLoggedData = (
       fakeId: userData.fakeId ?? "",
       fullName: userData?.fullName ?? "",
       phoneNumber: userData?.phoneNumber ?? DEFAULT_PHONE,
-      lastPhoneVerification: Timestamp.now(),
+      lastPhoneVerification: userData.lastPhoneVerification ?? Timestamp.now(),
       alternativePhoneNumber: userData.alternativePhoneNumber,
       photoUrl: userData?.photoUrl ?? EMPTY_REF_ATTACHMENT,
       vehicles: userData?.vehicles ?? [],
@@ -91,6 +91,8 @@ const loadUserLoggedData = (
       laundryEnterpriseId: userData.laundryEnterpriseId,
       mechanicalWorkShopId: userData.mechanicalWorkShopId,
       towEnterpriseId: userData.towEnterpriseId,
+      homeAddress: "",
+      addressPhoto: userData.addressPhoto ?? EMPTY_REF_ATTACHMENT,
     };
   }
 

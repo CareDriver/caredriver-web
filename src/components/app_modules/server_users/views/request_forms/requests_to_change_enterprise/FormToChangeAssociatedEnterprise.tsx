@@ -240,7 +240,8 @@ const FormToChangeAssociatedEnterprise: React.FC<Props> = ({
             },
             behavior: {
               loading: formState.loading,
-              isValid: formState.isValid,
+              // isValid: formState.isValid,
+              isValid: true,
             },
           },
           styleClasses: "max-width-80",

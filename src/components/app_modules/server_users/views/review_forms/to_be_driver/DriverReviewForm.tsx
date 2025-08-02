@@ -42,10 +42,9 @@ import {
 import { getIdSaved } from "@/utils/generators/IdGenerator";
 import UserStateRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserStateRenderer";
 import { DRIVER } from "@/models/Business";
-import {
-  notifyByPhoneApprovalServerUser,
-  notifyRequestApprovalUser,
-} from "../../../api/UserServerNotifier";
+import { notifyRequestApprovalUser } from "../../../api/UserServerNotifier";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
+import { RefAttachment } from "@/components/form/models/RefAttachment";
 
 const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const { user: adminUser } = useContext(AuthContext);
@@ -104,6 +103,9 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                   backImgUrl: car.license.backImgUrl,
                   expiredDateLicense: car.license.expiredDateLicense,
                   licenseNumber: car.license.licenseNumber,
+                  category: car.license.category,
+                  requireGlasses: car.license.requireGlasses,
+                  requireHeadphones: car.license.requireHeadphones,
                 },
               };
             }
@@ -115,6 +117,9 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                   backImgUrl: motorcycle.license.backImgUrl,
                   expiredDateLicense: motorcycle.license.expiredDateLicense,
                   licenseNumber: motorcycle.license.licenseNumber,
+                  category: motorcycle.license.category,
+                  requireGlasses: motorcycle.license.requireGlasses,
+                  requireHeadphones: motorcycle.license.requireHeadphones,
                 },
               };
             }
@@ -186,6 +191,13 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               );
             }
 
+            userToUpdate.photoUrl =
+              serviceReq.newProfilePhotoImgUrl as RefAttachment;
+            userToUpdate.addressPhoto =
+              serviceReq.addressPhoto as RefAttachment;
+            userToUpdate.homeAddress = serviceReq.homeAddress;
+            userToUpdate.bloodType = serviceReq.bloodType ?? "";
+
             await updateUser(serviceReq.userId, userToUpdate);
             if (enterprise && wasApproved) {
               await toast.promise(
@@ -196,7 +208,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 ),
                 {
                   pending:
-                    "Agregando al usuario al servicio como usuario servidor",
+                    "Agregando al usuario al servicio como proveedor de servicios",
                   success: "Usuario agregado al servicio",
                   error: "Error al agregar al usuario al servicio",
                 },
@@ -350,8 +362,19 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
       >
         <PersonalDataRenderer
           location={serviceReq.location}
+          homeAddress={serviceReq.homeAddress}
+          addressPhoto={serviceReq.addressPhoto}
           name={serviceReq.newFullName}
           photo={serviceReq.newProfilePhotoImgUrl}
+          bloodType={requesterUser?.bloodType}
+          alternativePhoneNumber={
+            requesterUser?.alternativePhoneNumber
+              ? parseBoliviaPhone(
+                  (requesterUser?.alternativePhoneNumber?.countryCode ?? "") +
+                    (requesterUser?.alternativePhoneNumber?.number ?? ""),
+                ).number
+              : ""
+          }
         />
 
         {requesterUser ? (

@@ -5,13 +5,13 @@ import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA59UUgknX3dx5_S-3pmBjafe-ogxSAzNE",
-  authDomain: "caredriver-61ac3.firebaseapp.com",
-  projectId: "caredriver-61ac3",
-  storageBucket: "caredriver-61ac3.appspot.com",
-  messagingSenderId: "331188920579",
-  appId: "1:331188920579:web:bc38df57aa0b2c733f0936",
-  measurementId: "G-163WQGJ4V8",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID!,
 };
 
 const app = initializeApp(firebaseConfig);

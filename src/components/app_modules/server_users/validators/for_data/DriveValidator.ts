@@ -25,6 +25,20 @@ export const isValidLicenseNumber = (licenseNumber: string): InputState => {
   }
 };
 
+export const isValidLicenseCategory = (category: string): InputState => {
+  if (category.length < 1 && category.length > 2) {
+    return {
+      isValid: false,
+      message: "Numero invalido",
+    };
+  } else {
+    return {
+      isValid: true,
+      message: "Número de licencia válido",
+    };
+  }
+};
+
 export const isValidLicenseDate = (finalDate: Date): InputState => {
   const currentDate = new Date();
 

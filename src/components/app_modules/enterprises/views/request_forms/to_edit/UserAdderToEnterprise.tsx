@@ -115,7 +115,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
       setFormState((prev) => ({
         ...prev,
         isValid: false,
-        message: "El usuario no esta en la misma localización que el servicio",
+        message: "El usuario no está en la misma localización que el servicio",
       }));
     } else if (userFound.role !== UserRole.User) {
       setFormState((prev) => ({
@@ -224,7 +224,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                   disabled={!formState.isValid}
                 >
                   <HelmetSafety />
-                  Usuario Servidor
+                  Proveedor de Servicios
                 </button>
                 <button
                   type="button"
@@ -249,12 +249,12 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                 <div className="margin-top-25">
                   <h1 className="text | medium-big bold | icon-wrapper">
                     <UserTie />
-                    Registrate como usuario servidor
+                    Registrate como proveedor de servicios
                   </h1>
                   <p className="text | light margin-top-15">
                     Como dueño o administrador de esta empresa, tambien puedes
-                    hacer una solicitud para trabajar como usuario servidor
-                    asociada a esta empresa.
+                    hacer una solicitud para trabajar como proveedor de
+                    servicios asociada a esta empresa.
                   </p>
                   <button
                     type="button"
@@ -262,7 +262,7 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
                     onClick={() => registerAsUserServer(userLogged)}
                   >
                     <HelmetSafety />
-                    Registrarme como Usuario Servidor
+                    Registrarme como Proveedor de Servicios
                   </button>
                 </div>
               </div>

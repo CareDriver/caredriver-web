@@ -1,5 +1,6 @@
 import { DRIVER } from "@/models/Business";
 import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
+import { ServicesApp } from "./ServiceRequestInterface";
 
 export type ServiceType = "mechanical" | "tow" | "laundry" | "driver";
 
@@ -24,6 +25,11 @@ export const ServicesRender = {
   mechanical: "Mecánico",
   tow: "Operador de Grua", // servicios de grúa
   laundry: "Lavadero",
+  [ServicesApp.Normal]: "Normal",
+  [ServicesApp.Driver]: toCapitalize(DRIVER),
+  [ServicesApp.Mechanic]: "Mecánico",
+  [ServicesApp.Tow]: "Operador de Grua", // servicios de grúa
+  [ServicesApp.CarWash]: "Lavadero",
 };
 
 export enum ServiceReqState {

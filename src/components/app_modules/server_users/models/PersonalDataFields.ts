@@ -1,6 +1,7 @@
 import {
   DEFAUL_TEXT_FIELD,
   DEFAUL_ATTACHMENT_FIELD,
+  DEFAUL_TEXT_FIELD_GENDER,
 } from "@/components/form/models/DefaultFields";
 import {
   AttachmentField,
@@ -16,6 +17,10 @@ export interface IdCard {
 export interface PersonalData {
   fullname: TextField;
   photo: AttachmentField;
+  gender: TextField;
+  homeAddress: TextField;
+  addressPhoto: AttachmentField; // factura de luz
+  bloodType: TextField; // blood type, mandatory for drivers
   idCard: IdCard;
   alternativePhoneNumber: TextField;
 }
@@ -29,6 +34,10 @@ export const DEFAULT_ID_CARD: IdCard = {
 export const DEFAULT_PERSONAL_DATA: PersonalData = {
   fullname: DEFAUL_TEXT_FIELD,
   photo: DEFAUL_ATTACHMENT_FIELD,
+  gender: DEFAUL_TEXT_FIELD_GENDER,
+  homeAddress: DEFAUL_TEXT_FIELD,
+  addressPhoto: DEFAUL_ATTACHMENT_FIELD,
+  bloodType: DEFAUL_TEXT_FIELD,
   idCard: DEFAULT_ID_CARD,
   alternativePhoneNumber: DEFAUL_TEXT_FIELD,
 };

@@ -1,4 +1,7 @@
-import { MAX_LENGTH_FOR_NAMES } from "@/utils/text_helpers/TextCutter";
+import {
+  MAX_LENGTH_FOR_ADDRESS,
+  MAX_LENGTH_FOR_NAMES,
+} from "@/utils/text_helpers/TextCutter";
 import { InputState } from "@/validators/InputValidatorSignature";
 import { PhoneNumberUtil } from "google-libphonenumber";
 
@@ -19,6 +22,32 @@ export const isValidName = (name: string): InputState => {
     return {
       isValid: false,
       message: `No puedes ingresar mas de ${MAX_LENGTH_FOR_NAMES} caracteres para tu nombre`,
+    };
+  } else {
+    return {
+      isValid: true,
+      message: "Nombre valido",
+    };
+  }
+};
+
+export const isValidAddress = (name: string): InputState => {
+  const nameRegex: RegExp = /^[^\s][a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ\s\-,]*$/;
+
+  if (name.trim() === "") {
+    return {
+      isValid: false,
+      message: "Por favor, ingresa tu nombre completo",
+    };
+  } else if (!nameRegex.test(name)) {
+    return {
+      isValid: false,
+      message: "Por favor, ingresa un nombre valido",
+    };
+  } else if (name.length > MAX_LENGTH_FOR_ADDRESS) {
+    return {
+      isValid: false,
+      message: `No puedes ingresar mas de ${MAX_LENGTH_FOR_ADDRESS} caracteres para tu nombre`,
     };
   } else {
     return {

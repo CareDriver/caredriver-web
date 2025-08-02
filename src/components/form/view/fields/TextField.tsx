@@ -4,16 +4,17 @@ import { TextFieldStateHandler } from "../../utils/TextFieldStateHandler";
 interface Props {
   field: TextFieldWithSetter;
   legend: string;
+  placeholder?: string;
 }
 
-const TextField: React.FC<Props> = ({ field, legend }) => {
+const TextField: React.FC<Props> = ({ field, legend, placeholder = "" }) => {
   const stateHandler = new TextFieldStateHandler(field.setter, field.validator);
 
   return (
     <fieldset className="form-section">
       <input
         type="text"
-        placeholder=""
+        placeholder={placeholder}
         autoComplete="off"
         value={field.values.value}
         onChange={stateHandler.changeValue}

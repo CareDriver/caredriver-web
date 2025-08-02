@@ -6,16 +6,24 @@ import { DEFAULT_PHOTO } from "../../../models/MissingUserData";
 
 interface Props {
   name: string;
+  homeAddress: string;
+  addressPhoto: string | RefAttachment;
   photo: string | RefAttachment;
   location: string | undefined;
   children?: React.ReactNode;
+  bloodType?: string;
+  alternativePhoneNumber: string;
 }
 
 const PersonalDataRenderer: React.FC<Props> = ({
   name,
+  homeAddress,
   photo,
+  addressPhoto,
   location,
   children,
+  bloodType,
+  alternativePhoneNumber,
 }) => {
   return (
     <div className="form-sub-container | margin-top-25">
@@ -27,6 +35,13 @@ const PersonalDataRenderer: React.FC<Props> = ({
       <div className="form-sub-container">
         <TextFieldRenderer content={name} legend="Nombre completo" />
         <TextFieldRenderer content={location} legend="Localización" />
+        {bloodType && (
+          <TextFieldRenderer content={bloodType} legend="Tipo de Sangre" />
+        )}
+        <TextFieldRenderer
+          content={alternativePhoneNumber}
+          legend="Número alternativo"
+        />
 
         <ImageRenderer
           content={{
@@ -36,6 +51,21 @@ const PersonalDataRenderer: React.FC<Props> = ({
             defaultImage: DEFAULT_PHOTO,
           }}
           imageInCircle={true}
+        />
+
+        <TextFieldRenderer
+          content={homeAddress}
+          legend="Dirección de Domicilio"
+        />
+
+        <ImageRenderer
+          content={{
+            image: addressPhoto,
+            legend: "Foto de factura de luz",
+            noFoundReason: "El usuario no subió una foto de factura de luz",
+            defaultImage: DEFAULT_PHOTO,
+          }}
+          imageInCircle={false}
         />
         {children && <>{children}</>}
       </div>

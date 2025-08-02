@@ -13,7 +13,7 @@ const SelfieSection: React.FC<Props> = ({ image, setImage }) => {
     <div className="form-sub-container | margin-top-25">
       <div>
         <h2 className="text icon-wrapper | lb medium-big bold">
-          <PersonQuestion /> Confirmación del usuario
+          <PersonQuestion /> Confirmación de identidad
         </h2>
         <p className="text | light">
           Sube una selfie para verificar que eres quien está solicitando nuestro

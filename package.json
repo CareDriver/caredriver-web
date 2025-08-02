@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
+    "lint": "eslint src/",
     "ci-check": "npm run prettier:check && npm run lint && npm run type-check",
     "prettier:check": "prettier --check .",
     "prettier:fix": "prettier --write .",

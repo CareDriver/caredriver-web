@@ -98,6 +98,14 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
             <>
               <h3 className="text | medium">{user.location}</h3>
               <h3 className="text | medium">{flatPhone(user.phoneNumber)}</h3>
+              {user.alternativePhoneNumber && (
+                <>
+                  <br />
+                  <h3 className="text | small">
+                    Número alternativo{flatPhone(user.alternativePhoneNumber)}
+                  </h3>
+                </>
+              )}
               <div className="separator-horizontal"></div>
 
               {user.createdAt && (
@@ -112,7 +120,7 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                   {isUserServer(user) && user.serverUserAt && (
                     <h4 className={`text | medium ${role.color}`}>
                       <b className="text | medium bold">
-                        Usuario servidor desde el{" "}
+                        Proveedor de servicios desde el{" "}
                       </b>{" "}
                       <i>{timestampDateInSpanish(user.serverUserAt)}</i>
                     </h4>

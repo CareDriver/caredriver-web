@@ -30,6 +30,7 @@ import {
   DEFAULT_REVIEW_STATE,
   ReviewState,
 } from "@/components/form/models/Reviews";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
 const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
   const { user } = useContext(AuthContext);
@@ -228,6 +229,16 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
             location={userReq.location}
             name={userData.fullName}
             photo={userData.photoUrl}
+            homeAddress={userData.homeAddress}
+            addressPhoto={userData.addressPhoto}
+            alternativePhoneNumber={
+              userData?.alternativePhoneNumber
+                ? parseBoliviaPhone(
+                    (userData?.alternativePhoneNumber?.countryCode ?? "") +
+                      (userData?.alternativePhoneNumber?.number ?? ""),
+                  ).number
+                : ""
+            }
           >
             <TextFieldRenderer
               content={userReq.services.toString().replaceAll(",", " - ")}

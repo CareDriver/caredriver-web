@@ -38,6 +38,7 @@ import { ServiceType } from "@/interfaces/Services";
 import { getIdSaved } from "@/utils/generators/IdGenerator";
 import UserStateRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserStateRenderer";
 import { Unsubscribe } from "firebase/firestore";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 
 interface Props {
   reqId: string;
@@ -345,6 +346,18 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
               name={requesterUser.fullName}
               location={requesterUser.location}
               photo={requesterUser.photoUrl}
+              bloodType={requesterUser.bloodType}
+              alternativePhoneNumber={
+                requesterUser?.alternativePhoneNumber
+                  ? parseBoliviaPhone(
+                      (requesterUser?.alternativePhoneNumber?.countryCode ??
+                        "") +
+                        (requesterUser?.alternativePhoneNumber?.number ?? ""),
+                    ).number
+                  : ""
+              }
+              homeAddress={requesterUser.homeAddress}
+              addressPhoto={requesterUser.addressPhoto}
             />
           )}
         </div>

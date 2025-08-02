@@ -29,7 +29,7 @@ const PrivacyTermsSection: React.FC<Props> = ({ isCheck, setCheck }) => {
       >
         términos y condiciones
       </a>
-      , recibir comunicaciones de ${NAME_BUSINESS} y chatear con nosotros por
+      , recibir comunicaciones de {NAME_BUSINESS} y chatear con nosotros por
       WhatsApp.
     </p>
   );

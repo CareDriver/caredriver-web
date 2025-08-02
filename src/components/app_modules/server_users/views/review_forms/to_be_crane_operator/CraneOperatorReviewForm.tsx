@@ -42,6 +42,8 @@ import {
 import { getIdSaved } from "@/utils/generators/IdGenerator";
 import UserStateRenderer from "@/components/app_modules/users/views/data_renderers/for_user_data/UserStateRenderer";
 import { notifyRequestApprovalUser } from "../../../api/UserServerNotifier";
+import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
+import { RefAttachment } from "@/components/form/models/RefAttachment";
 
 const CraneOperatorReviewForm = ({
   serviceReq,
@@ -102,6 +104,9 @@ const CraneOperatorReviewForm = ({
                   backImgUrl: tow.license.backImgUrl,
                   expiredDateLicense: tow.license.expiredDateLicense,
                   licenseNumber: tow.license.licenseNumber,
+                  category: tow.license.category,
+                  requireGlasses: tow.license.requireGlasses,
+                  requireHeadphones: tow.license.requireHeadphones,
                 },
               };
             }
@@ -146,6 +151,13 @@ const CraneOperatorReviewForm = ({
               }
             }
 
+            userToUpdate.photoUrl =
+              serviceReq.newProfilePhotoImgUrl as RefAttachment;
+            userToUpdate.addressPhoto =
+              serviceReq.addressPhoto as RefAttachment;
+            userToUpdate.homeAddress = serviceReq.homeAddress;
+            userToUpdate.bloodType = serviceReq.bloodType ?? "";
+
             if (wasApproved) {
               userToUpdate = await setFirstService(
                 requesterUser,
@@ -164,7 +176,7 @@ const CraneOperatorReviewForm = ({
                 ),
                 {
                   pending:
-                    "Agregando al usuario al servicio como usuario servidor",
+                    "Agregando al usuario al servicio como proveedor de servicios",
                   success: "Usuario agregado al servicio",
                   error: "Error al agregar al usuario al servicio",
                 },
@@ -321,8 +333,19 @@ const CraneOperatorReviewForm = ({
       >
         <PersonalDataRenderer
           location={serviceReq.location}
+          homeAddress={serviceReq.homeAddress}
+          addressPhoto={serviceReq.addressPhoto}
           name={serviceReq.newFullName}
           photo={serviceReq.newProfilePhotoImgUrl}
+          bloodType={requesterUser?.bloodType}
+          alternativePhoneNumber={
+            requesterUser?.alternativePhoneNumber
+              ? parseBoliviaPhone(
+                  (requesterUser?.alternativePhoneNumber?.countryCode ?? "") +
+                    (requesterUser?.alternativePhoneNumber?.number ?? ""),
+                ).number
+              : ""
+          }
         />
         {requesterUser ? (
           <IdCardRenderer idCard={requesterUser.identityCard} />

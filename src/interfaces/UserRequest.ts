@@ -9,6 +9,7 @@ import {
 } from "../components/form/models/RefAttachment";
 import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
 import { DRIVER } from "@/models/Business";
+import { Gender } from "./UserInterface";
 
 export interface VehicleTypeAndMode {
   type: VehicleType;
@@ -50,8 +51,12 @@ export function inputToServiceType(input: string): ServiceType {
 export interface UserRequest {
   id: string;
   userId: string; // same identifier of the user
-  newFullName: string;
-  newProfilePhotoImgUrl: string | RefAttachment; // if changing the name
+  newFullName: string; // if changing the name
+  homeAddress: string;
+  addressPhoto: string | RefAttachment;
+  newProfilePhotoImgUrl: string | RefAttachment;
+  bloodType?: string;
+  gender?: Gender;
   aproved?: boolean; // if the request was aproved, false when rejected or not reviewed yet
   active?: boolean; // will be true when it is a new request or update request and was not reviewed yet
   reviewedByHistory?: {
@@ -83,6 +88,9 @@ export const emptyVehicleCar: Vehicle = {
     licenseNumber: "",
     backImgUrl: EMPTY_REF_ATTACHMENT,
     frontImgUrl: EMPTY_REF_ATTACHMENT,
+    category: "",
+    requireGlasses: false,
+    requireHeadphones: false,
   },
 };
 
@@ -91,12 +99,18 @@ export const licenseBuilder = (
   expiredDateLicense: Date,
   frontImgUrl: RefAttachment,
   backImgUrl: RefAttachment,
+  category: "",
+  requireGlasses: boolean,
+  requireHeadphones: boolean,
 ): LicenseInterface => {
   return {
     licenseNumber,
     expiredDateLicense: Timestamp.fromDate(expiredDateLicense),
     frontImgUrl,
     backImgUrl,
+    category,
+    requireGlasses,
+    requireHeadphones,
   };
 };
 
@@ -104,17 +118,23 @@ export const driveReqBuilder = (
   id: string,
   userId: string,
   newFullName: string,
+  homeAddress: string,
+  addressPhoto: string | RefAttachment,
   newProfilePhotoImgUrl: string | RefAttachment,
   vehicles: Vehicle[],
   realTimePhotoImgUrl: RefAttachment,
   services: Services[],
   location: Locations,
+  bloodType: string,
+  gender: Gender,
   driverEnterprise: string | undefined,
 ): UserRequest => {
   let userRequest: UserRequest = {
     id,
     userId,
     newFullName,
+    homeAddress,
+    addressPhoto,
     newProfilePhotoImgUrl,
     aproved: false,
     active: true,
@@ -123,6 +143,8 @@ export const driveReqBuilder = (
     services: services,
     location,
     vehicles,
+    gender,
+    bloodType,
   };
 
   if (driverEnterprise) {
@@ -139,6 +161,8 @@ export const emptyDriveReq = (): UserRequest => {
     id: "",
     userId: "",
     newFullName: "",
+    homeAddress: "",
+    addressPhoto: EMPTY_REF_ATTACHMENT,
     newProfilePhotoImgUrl: EMPTY_REF_ATTACHMENT,
     aproved: false,
     active: true,
@@ -155,6 +179,8 @@ export const mechanicReqBuilder = (
   id: string,
   userId: string,
   newFullName: string,
+  homeAddress: string,
+  addressPhoto: string | RefAttachment,
   newProfilePhotoImgUrl: string | RefAttachment,
   realTimePhotoImgUrl: RefAttachment,
   services: Services[],
@@ -167,6 +193,8 @@ export const mechanicReqBuilder = (
       id,
       userId,
       newFullName,
+      homeAddress,
+      addressPhoto,
       newProfilePhotoImgUrl,
       aproved: false,
       active: true,
@@ -182,6 +210,8 @@ export const mechanicReqBuilder = (
       id,
       userId,
       newFullName,
+      homeAddress,
+      addressPhoto,
       newProfilePhotoImgUrl,
       aproved: false,
       active: true,
@@ -198,6 +228,8 @@ export const laundryReqBuilder = (
   id: string,
   userId: string,
   newFullName: string,
+  homeAddress: string,
+  addressPhoto: string | RefAttachment,
   newProfilePhotoImgUrl: string | RefAttachment,
   realTimePhotoImgUrl: RefAttachment,
   services: Services[],
@@ -208,6 +240,8 @@ export const laundryReqBuilder = (
     id,
     userId,
     newFullName,
+    homeAddress,
+    addressPhoto,
     newProfilePhotoImgUrl,
     aproved: false,
     active: true,
@@ -223,6 +257,8 @@ export const towReqBuilder = (
   id: string,
   userId: string,
   newFullName: string,
+  homeAddress: string,
+  addressPhoto: string | RefAttachment,
   newProfilePhotoImgUrl: string | RefAttachment,
   towEnterprite: string,
   realTimePhotoImgUrl: RefAttachment,
@@ -234,6 +270,8 @@ export const towReqBuilder = (
     id,
     userId,
     newFullName,
+    homeAddress,
+    addressPhoto,
     newProfilePhotoImgUrl,
     aproved: false,
     active: true,

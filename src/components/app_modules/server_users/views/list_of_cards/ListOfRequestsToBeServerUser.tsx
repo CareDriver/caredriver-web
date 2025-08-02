@@ -58,7 +58,7 @@ const ListOfRequestsToBeServerUser = ({ type }: { type: ServiceType }) => {
       .catch((e) => {
         console.log(e);
       });
-  }, [page, collection, data, lastDoc]);
+  }, [page]);
 
   return data ? (
     data.length > 0 ? (
