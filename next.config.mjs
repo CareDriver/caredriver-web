@@ -1,3 +1,9 @@
+import withBundleAnalyzer from '@next/bundle-analyzer';
+
+const analyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -8,6 +14,13 @@ const nextConfig = {
       "ibb.com",
     ],
   },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Prevent firebase-admin from being bundled on the client
+      config.externals.push('firebase-admin');
+    }
+    return config;
+  },
 };
 
-export default nextConfig;
+export default analyzer(nextConfig);
