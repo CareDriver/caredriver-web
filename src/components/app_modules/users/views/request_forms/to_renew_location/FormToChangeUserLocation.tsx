@@ -17,7 +17,7 @@ import { routeToProfileAsUser } from "@/utils/route_builders/as_user/RouteBuilde
 const FormToChangeUserLocation = () => {
   const { checkingUserAuth, user, userProps } = useContext(AuthContext);
   const [newLocation, setNewLocation] = useState<Locations>(
-    user?.location ?? Locations.CochabambaBolivia,
+    user?.location ?? Locations.CochabambaBolivia
   );
   const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
 
@@ -34,13 +34,13 @@ const FormToChangeUserLocation = () => {
       message = greeting()
         .concat(`Soy ${user?.fullName}, `)
         .concat(
-          `, quisiera que me agreguen al grupo de Whatsaap de ${newLocation} 🌎`,
+          `, quisiera que me agreguen al grupo de Whatsaap de ${newLocation} 🌎`
         );
     } else {
       message = greeting()
         .concat(`Soy ${user?.fullName}, `)
         .concat(
-          `quisiera cambiarme de grupo de Whatsaap, 🔁🌎 porque ahora estoy en ${newLocation}.`,
+          `quisiera cambiarme de grupo de Whatsaap, 🔁🌎 porque ahora estoy en ${newLocation}.`
         )
         .concat(`\nMi antigua ubicación era ${oldLocation} 👀`);
     }
@@ -76,7 +76,7 @@ const FormToChangeUserLocation = () => {
             success: "Localización actualizada",
             error:
               "Error al actualizar tu localización, inténtalo de nuevo por favor",
-          },
+          }
         );
 
         sendMessage(newLocation, user.location);
@@ -104,19 +104,26 @@ const FormToChangeUserLocation = () => {
   return (
     user && (
       <section className="service-form-wrapper | max-height-100">
-        <h1 className="text | big bold">Cambia tu Localización</h1>
+        <h1 className="text | big bold">Cambia tu ubicación</h1>
+        <p className="text | light">
+          La Ubicación sirve para recibir solicitudes de servicios en el área
+          donde te encuentras. Cámbiala sólo cuando te mudes de ciudad.
+        </p>
+        <br />
         <p className="text | light">
           Podrás mandar un mensaje de solicitud por WhatsApp para cambiar el
           grupo donde perteneces.
         </p>
+
+        <br />
 
         <BaseForm
           content={{
             button: {
               content: {
                 legend: userProps.hasLocation
-                  ? "Cambiar localización"
-                  : "Agregar localización",
+                  ? "Cambiar ubicación"
+                  : "Agregar ubicación",
               },
               behavior: {
                 loading: formState.loading,

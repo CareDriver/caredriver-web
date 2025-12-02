@@ -43,6 +43,7 @@ const SignUpWithPhone = () => {
         {
           size: "invisible",
           callback: (response) => {},
+          render: "explicit",
         },
       );
     }

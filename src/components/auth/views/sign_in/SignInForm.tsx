@@ -26,6 +26,7 @@ const SignInForm = () => {
   const [form, setForm] = useState<Form>(DEFAULT_FORM);
 
   const login = async () => {
+    console.log("Logging in with", form.email.value);
     signInWithEmailAndPassword(
       auth,
       form.email.value.toLocaleLowerCase().trim(),
@@ -43,6 +44,8 @@ const SignInForm = () => {
         } else {
           toast.error("Credenciales inválidas, inténtalo de nuevo");
         }
+
+        console.log(e);
 
         setLoading(false);
         setValid(false);
@@ -70,7 +73,7 @@ const SignInForm = () => {
 
   useEffect(() => {
     setValid(isValidForm(form));
-  }, [form, setValid]);
+  }, [form]);
 
   return (
     <>

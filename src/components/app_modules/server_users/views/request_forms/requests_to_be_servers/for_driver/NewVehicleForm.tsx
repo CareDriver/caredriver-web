@@ -49,6 +49,8 @@ import BaseForm from "@/components/form/view/forms/BaseForm";
 import { isPhoneValid } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 import { VehicleToAddAsDriver } from "@/components/app_modules/server_users/models/DriverRegistration";
+import { BloodTypes } from "@/interfaces/BloodTypes";
+import { acceptTerms } from "@/utils/requesters/AcceptTerms";
 
 interface Form {
   personalData: PersonalData;
@@ -71,10 +73,11 @@ const NewVehicleForm: React.FC<Props> = ({
   const { user, checkingUserAuth } = useContext(AuthContext);
   const router = useRouter();
   const [requesterUser, setRequesterUser] = useState<UserInterface | undefined>(
-    baseUser,
+    baseUser
   );
   const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
   const [form, setForm] = useState<Form>(DEFAULT_FORM(type));
+  const [invalidFormMessage, setInvalidFormMessage] = useState<string>("");
 
   /* const uploadPDF = async (): Promise<ImgWithRef | null> => {
         if (pdf.value) {
@@ -104,7 +107,7 @@ const NewVehicleForm: React.FC<Props> = ({
         try {
           profilePhotoRef = await uploadFileBase64(
             DirectoryPath.TempProfilePhotos,
-            form.personalData.photo.value,
+            form.personalData.photo.value
           );
         } catch (e) {
           throw e;
@@ -119,7 +122,7 @@ const NewVehicleForm: React.FC<Props> = ({
         try {
           addressPhotoRef = await uploadFileBase64(
             DirectoryPath.ElectricityBills,
-            form.personalData.addressPhoto.value,
+            form.personalData.addressPhoto.value
           );
         } catch (e) {
           throw e;
@@ -133,11 +136,11 @@ const NewVehicleForm: React.FC<Props> = ({
         try {
           const frontImgUrl = await uploadFileBase64(
             DirectoryPath.Licenses,
-            form.vehicle.license.frontPhoto.value,
+            form.vehicle.license.frontPhoto.value
           );
           const behindImgUrl = await uploadFileBase64(
             DirectoryPath.Licenses,
-            form.vehicle.license.behindPhoto.value,
+            form.vehicle.license.behindPhoto.value
           );
           if (form.vehicle.license.expirationDate.value) {
             vehiclesData.push({
@@ -145,7 +148,7 @@ const NewVehicleForm: React.FC<Props> = ({
               license: {
                 licenseNumber: form.vehicle.license.number.value,
                 expiredDateLicense: Timestamp.fromDate(
-                  form.vehicle.license.expirationDate.value,
+                  form.vehicle.license.expirationDate.value
                 ),
                 frontImgUrl: frontImgUrl,
                 backImgUrl: behindImgUrl,
@@ -165,7 +168,7 @@ const NewVehicleForm: React.FC<Props> = ({
         try {
           selfieRef = await uploadFileBase64(
             DirectoryPath.Selfies,
-            form.selfie.value,
+            form.selfie.value
           );
         } catch (e) {
           throw e;
@@ -185,11 +188,19 @@ const NewVehicleForm: React.FC<Props> = ({
     vehiclesData: Vehicle[],
     profilePhotoRef: string | RefAttachment,
     addressPhotoRef: string | RefAttachment,
-    selfieRef: RefAttachment,
+    selfieRef: RefAttachment
   ) => {
     if (requesterUser) {
       var formId = genDocId();
       try {
+        /* const pdfRef = await toast.promise(uploadPDF(), {
+          pending: "Subiendo PDF de Antecedentes",
+          success: "PDF de Antecedentes Subido",
+          error: "Error al subir el PDF, inténtalo de nuevo",
+        });
+
+        if (!pdfRef) return; */
+
         await saveDriveReq(
           formId,
           driveReqBuilder(
@@ -205,10 +216,10 @@ const NewVehicleForm: React.FC<Props> = ({
             requesterUser.location === undefined
               ? Locations.CochabambaBolivia
               : requesterUser.location,
-            requesterUser.bloodType ?? "None",
+            requesterUser.bloodType ?? BloodTypes.OPositive,
             requesterUser.gender ?? Gender.Male,
-            defaultEnterprise,
-          ),
+            defaultEnterprise
+          )
         );
 
         var newReqState =
@@ -238,7 +249,7 @@ const NewVehicleForm: React.FC<Props> = ({
             toUpdate = {
               ...toUpdate,
               alternativePhoneNumber: parseBoliviaPhone(
-                form.personalData.alternativePhoneNumber.value,
+                form.personalData.alternativePhoneNumber.value
               ),
             };
           }
@@ -256,6 +267,7 @@ const NewVehicleForm: React.FC<Props> = ({
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setInvalidFormMessage(getInvalidFormMessage());
     if (formState.loading) {
       return;
     }
@@ -275,6 +287,8 @@ const NewVehicleForm: React.FC<Props> = ({
     }
 
     try {
+      await acceptTerms(user?.id ?? "");
+
       await updateIdCard(form.personalData.idCard, requesterUser);
       const {
         vehiclesData,
@@ -297,13 +311,13 @@ const NewVehicleForm: React.FC<Props> = ({
           vehiclesData,
           newProfilePhotoImgUrl,
           addressPhotoRef,
-          realTimePhotoImgUrl,
+          realTimePhotoImgUrl
         ),
         {
           pending: "Enviando el formulario, por favor espera",
           success: "Formulario enviado",
           error: "Error al enviar el formulario, inténtalo de nuevo por favor",
-        },
+        }
       );
       window.location.reload();
     } catch (e) {
@@ -315,13 +329,42 @@ const NewVehicleForm: React.FC<Props> = ({
     }
   };
 
+  function isValidForm(form: Form): boolean {
+    return (
+      isValidPersonalData(form.personalData) &&
+      isValidVehicle(form.vehicle) &&
+      isValidAttachmentField(form.selfie) &&
+      form.termsCheck
+    );
+  }
+
+  function getInvalidFormMessage(): string {
+    if (!isValidPersonalData(form.personalData)) {
+      return "Por favor, completa tus datos personales correctamente.";
+    }
+
+    if (!isValidVehicle(form.vehicle)) {
+      return "Por favor, completa los datos de tu licencia de conducir correctamente.";
+    }
+
+    if (!isValidAttachmentField(form.selfie)) {
+      return "Por favor, tomate una selfie para verificar tu identidad.";
+    }
+
+    if (!form.termsCheck) {
+      return "Debes aceptar los términos y condiciones y la política de privacidad.";
+    }
+
+    return "";
+  }
+
   useEffect(
     () =>
       setFormState((prev) => ({
         ...prev,
         isValid: isValidForm(form),
       })),
-    [form],
+    [form]
   );
 
   const verifyRequestAvailability = useCallback(() => {
@@ -421,6 +464,12 @@ const NewVehicleForm: React.FC<Props> = ({
             setCheck={(d) => setForm((prev) => ({ ...prev, termsCheck: d }))}
           />
         </BaseForm>
+
+        {invalidFormMessage && (
+          <p style={{ color: "red", fontSize: 16, marginTop: 16 }}>
+            * {invalidFormMessage}
+          </p>
+        )}
       </div>
     )
   );
@@ -443,11 +492,3 @@ const DEFAULT_FORM = (typeVehicle: VehicleToAddAsDriver): Form => {
   };
 };
 
-function isValidForm(form: Form): boolean {
-  return (
-    isValidPersonalData(form.personalData) &&
-    isValidVehicle(form.vehicle) &&
-    isValidAttachmentField(form.selfie) &&
-    form.termsCheck
-  );
-}

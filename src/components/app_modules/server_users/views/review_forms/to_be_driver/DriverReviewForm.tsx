@@ -45,6 +45,7 @@ import { DRIVER } from "@/models/Business";
 import { notifyRequestApprovalUser } from "../../../api/UserServerNotifier";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 import { RefAttachment } from "@/components/form/models/RefAttachment";
+import { BloodTypes } from "@/interfaces/BloodTypes";
 
 const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const { user: adminUser } = useContext(AuthContext);
@@ -196,7 +197,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
             userToUpdate.addressPhoto =
               serviceReq.addressPhoto as RefAttachment;
             userToUpdate.homeAddress = serviceReq.homeAddress;
-            userToUpdate.bloodType = serviceReq.bloodType ?? "";
+            userToUpdate.bloodType = serviceReq.bloodType ?? BloodTypes.OPositive;
 
             await updateUser(serviceReq.userId, userToUpdate);
             if (enterprise && wasApproved) {
@@ -375,6 +376,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 ).number
               : ""
           }
+          alternativePhoneNumberName={requesterUser?.alternativePhoneNumberName ?? ""}
         />
 
         {requesterUser ? (

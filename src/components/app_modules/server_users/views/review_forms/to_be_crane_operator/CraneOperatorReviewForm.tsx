@@ -44,6 +44,7 @@ import UserStateRenderer from "@/components/app_modules/users/views/data_rendere
 import { notifyRequestApprovalUser } from "../../../api/UserServerNotifier";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 import { RefAttachment } from "@/components/form/models/RefAttachment";
+import { BloodTypes } from "@/interfaces/BloodTypes";
 
 const CraneOperatorReviewForm = ({
   serviceReq,
@@ -54,7 +55,7 @@ const CraneOperatorReviewForm = ({
   const [reviewState, setReviewState] =
     useState<ReviewState>(DEFAULT_REVIEW_STATE);
   const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(
-    null,
+    null
   );
   const [requesterUser, setRequesterUser] = useState<
     UserInterface | null | undefined
@@ -74,7 +75,7 @@ const CraneOperatorReviewForm = ({
           serviceReq,
           adminUser.id,
           wasApproved,
-          towReqCollection,
+          towReqCollection
         );
 
         if (isLimitToReviews) {
@@ -156,13 +157,14 @@ const CraneOperatorReviewForm = ({
             userToUpdate.addressPhoto =
               serviceReq.addressPhoto as RefAttachment;
             userToUpdate.homeAddress = serviceReq.homeAddress;
-            userToUpdate.bloodType = serviceReq.bloodType ?? "";
+            userToUpdate.bloodType =
+              serviceReq.bloodType ?? BloodTypes.OPositive;
 
             if (wasApproved) {
               userToUpdate = await setFirstService(
                 requesterUser,
                 userToUpdate,
-                adminUser.id,
+                adminUser.id
               );
             }
 
@@ -172,14 +174,14 @@ const CraneOperatorReviewForm = ({
                 addUserServerToEnterprise(
                   enterprise,
                   serviceReq.userId,
-                  getIdSaved(requesterUser.fakeId),
+                  getIdSaved(requesterUser.fakeId)
                 ),
                 {
                   pending:
                     "Agregando al usuario al servicio como proveedor de servicios",
                   success: "Usuario agregado al servicio",
                   error: "Error al agregar al usuario al servicio",
-                },
+                }
               );
             }
 
@@ -199,7 +201,7 @@ const CraneOperatorReviewForm = ({
   const getVehicle = (type: VehicleType): Vehicle | null => {
     if (serviceReq.vehicles) {
       const vehicles = serviceReq.vehicles.filter(
-        (veh) => veh.type.type === type,
+        (veh) => veh.type.type === type
       );
       if (vehicles.length > 0) {
         return vehicles[0];
@@ -342,9 +344,12 @@ const CraneOperatorReviewForm = ({
             requesterUser?.alternativePhoneNumber
               ? parseBoliviaPhone(
                   (requesterUser?.alternativePhoneNumber?.countryCode ?? "") +
-                    (requesterUser?.alternativePhoneNumber?.number ?? ""),
+                    (requesterUser?.alternativePhoneNumber?.number ?? "")
                 ).number
               : ""
+          }
+          alternativePhoneNumberName={
+            requesterUser?.alternativePhoneNumberName ?? ""
           }
         />
         {requesterUser ? (
@@ -373,7 +378,7 @@ const CraneOperatorReviewForm = ({
             email={requesterUser.email}
             phoneNumber={flatPhone(requesterUser.phoneNumber)}
             alternativePhoneNumber={flatPhone(
-              requesterUser.alternativePhoneNumber,
+              requesterUser.alternativePhoneNumber
             )}
           />
         ) : (

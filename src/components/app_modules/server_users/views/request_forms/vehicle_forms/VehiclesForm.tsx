@@ -30,8 +30,9 @@ import ImageUploader from "@/components/form/view/attachment_fields/ImageUploade
 import { DEFAULT_LICENSE } from "@/components/app_modules/server_users/models/LicenseFields";
 import LicenceNumberField from "@/components/form/view/fields/LicenceNumberField";
 import Trash from "@/icons/Trash";
-import CTextField from "@/components/form/view/fields/TextField";
 import CCheckField from "@/components/form/view/fields/CheckField";
+import LicenseCategoryField from "@/components/form/view/fields/LicenseCategoryField";
+import { LicenseCategories } from "@/interfaces/LicenseCategories";
 
 const VehiclesForm = ({
   vehicles,
@@ -107,7 +108,10 @@ const VehiclesForm = ({
             ...vehicle,
             license: {
               ...vehicle.license,
-              category,
+              category: {
+                ...category,
+                value: category.value as LicenseCategories,
+              },
             },
           };
         }
@@ -273,8 +277,14 @@ const VehiclesForm = ({
     <div className="form-sub-container | margin-top-32">
       {vehicles.map((vehicle, i) => (
         <div className="form-sub-container" key={`vehicle-${i}`}>
+          {vehicles.length > 1 && i > 0 && (
+            <div className="separator-horizontal"></div>
+          )}
           <h2 className="text icon-wrapper | medium-big bold">
-            <Car /> Tipo de vehículo que conduces
+            <Car />{" "}
+            {vehicles.length > 1
+              ? `${i + 1}° Tipo de vehículo que conduces`
+              : "Tipo de vehículo que conduces"}
           </h2>
           {/* THIS FIELDSET IS NECCESARY TO AVOID 
                     VEHICLES WITH THE SAME CATEGORY SELECTED */}
@@ -362,14 +372,14 @@ const VehiclesForm = ({
               validator: isValidLicenseNumber,
             }}
           />
-
-          <CTextField
-            field={{
-              values: vehicle.license.category,
-              setter: (d) => changeCategoryLicense(i, d),
-              validator: isValidLicenseCategory,
-            }}
-            legend="Categoría de Licencia"
+          <LicenseCategoryField
+            location={vehicle.license.category.value}
+            setter={(d) =>
+              changeCategoryLicense(i, {
+                ...vehicle.license.category,
+                value: d,
+              })
+            }
           />
           <DateField
             field={{
@@ -436,7 +446,7 @@ const VehiclesForm = ({
             className="icon-wrapper small-general-button text | gray-icon gray bold touchable"
           >
             <Plus />
-            Agregar otro Vehículo
+            Agregar otro Vehículo y Licencia de Conducir
           </button>
         </div>
       )}

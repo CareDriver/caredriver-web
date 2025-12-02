@@ -3,6 +3,7 @@ import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
+import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
@@ -25,6 +26,28 @@ export const initializeRealtimeDatabase = (databaseURL: string) => {
   return getDatabase(app);
 };
 
-export { app, auth, firestore, storage };
+// Pass your reCAPTCHA v3 site key (public key) to activate()
+/* const appCheckClientKey = process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_CLIENT_KEY;
+if (appCheckClientKey) {
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider(appCheckClientKey),
+    isTokenAutoRefreshEnabled: true,
+  });
+}
+ */
 
-// yRU7YFfWWJeDot5OE1Arx7ElJ0oVwcjD
+
+// ⚠️ Solo inicializar App Check en el navegador
+export function initAppCheck() {
+  if (typeof window !== "undefined") {
+    if (!(window as any)._appCheckInitialized) {
+      initializeAppCheck(app, {
+        provider: new (window as any).RecaptchaV3Provider("tu-site-key"),
+        isTokenAutoRefreshEnabled: true,
+      });
+      (window as any)._appCheckInitialized = true; // evita inicializar dos veces
+    }
+  }
+}
+
+export { app, auth, firestore, storage };

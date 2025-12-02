@@ -1,5 +1,6 @@
 "use client";
 
+// @ts-ignore: No type declarations for this CSS side-effect import
 import "react-international-phone/style.css";
 import { auth } from "@/firebase/FirebaseConfig";
 import {
@@ -7,7 +8,7 @@ import {
   saveUser,
 } from "@/components/app_modules/users/api/UserRequester";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { UserInterface } from "@/interfaces/UserInterface";
 import EmailField from "@/components/form/view/fields/EmailField";
@@ -29,6 +30,8 @@ import { sendVerificationCode } from "../../api/VerificationCodeSender";
 import CodeVerifier from "../verifiers/CodeVerifier";
 import AuthProviders from "../providers/AuthProviders";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
+import PrivacyTermsSection from "@/components/form/view/sections/PrivacyTermsSection";
+import { acceptTerms } from "@/utils/requesters/AcceptTerms";
 
 interface Form {
   fullName: TextFieldForm;
@@ -37,6 +40,7 @@ interface Form {
   password: TextFieldForm;
   location: Locations;
   code: string;
+  termsChecked: boolean;
 }
 
 enum View {
@@ -59,14 +63,33 @@ const SignUpForm = () => {
       return;
     }
 
+    let amountOfUsers = await checkEmailExists(
+      form.email.value.trim().toLocaleLowerCase()
+    );
+    if (amountOfUsers > 0) {
+      setForm((prev) => ({
+        ...prev,
+        email: {
+          ...prev.email,
+          message: "El correo ya fue registrado",
+        },
+      }));
+      setLoading(false);
+      setValid(false);
+      toast.error("El correo ya fue registrado, inicia sesión");
+      return;
+    }
+
     createUserWithEmailAndPassword(
       auth,
       form.email.value.toLocaleLowerCase().trim(),
-      form.password.value.trim(),
+      form.password.value.trim()
     )
-      .then((res) => {
+      .then(async (res) => {
         let newUser: UserInterface = formToNewUser(form);
         newUser.id = res.user.uid;
+
+        await acceptTerms(res.user.uid ?? "");
 
         saveUser(res.user.uid, newUser)
           .then(() => {
@@ -76,7 +99,7 @@ const SignUpForm = () => {
           .catch(() => {
             setLoading(false);
             toast.error(
-              "Error al guardar los datos, inténtalo de nuevo por favor",
+              "Error al guardar los datos, inténtalo de nuevo por favor"
             );
           });
       })
@@ -101,7 +124,7 @@ const SignUpForm = () => {
       });
   };
 
-  const sentCode = async (e: FormEvent) => {
+  /* const sentCode = async (e: FormEvent) => {
     e.preventDefault();
     if (loading) {
       return;
@@ -118,7 +141,7 @@ const SignUpForm = () => {
 
     try {
       let amountOfUsers = await checkEmailExists(
-        form.email.value.trim().toLocaleLowerCase(),
+        form.email.value.trim().toLocaleLowerCase()
       );
       if (amountOfUsers > 0) {
         setForm((prev) => ({
@@ -153,7 +176,7 @@ const SignUpForm = () => {
       setValid(false);
       toast.error("Ocurrio un error, inténtalo de nuevo por favor");
     }
-  };
+  }; */
 
   useEffect(() => {
     setValid(isValidForm(form));
@@ -179,12 +202,20 @@ const SignUpForm = () => {
         }}
         behavior={{
           loading: loading,
-          onSummit: sentCode,
+          onSummit: signUp,
         }}
       >
         <EmailField
           values={form.email}
-          setter={(e) => setForm((prev) => ({ ...prev, email: e }))}
+          setter={(e) =>
+            setForm((prev) => ({
+              ...prev,
+              email: {
+                value: e.value.toLowerCase().trim(),
+                message: e.message,
+              },
+            }))
+          }
         />
         <PasswordField
           values={form.password}
@@ -210,7 +241,14 @@ const SignUpForm = () => {
           location={form.location}
           setter={(e) => setForm((prev) => ({ ...prev, location: e }))}
         />
+        <PrivacyTermsSection
+          isCheck={form.termsChecked}
+          setCheck={(checked) =>
+            setForm((prev) => ({ ...prev, termsChecked: checked }))
+          }
+        />
       </BaseForm>
+
       <AuthProviders alternativeLegend="O registrate con" />
       <Link href={routeToSingIn()} className="text | normal center">
         ¿Ya tienes cuenta? <b>Inicia sesión</b>
@@ -228,6 +266,7 @@ const DEFAULT_FORM: Form = {
   password: DEFAUL_TEXT_FIELD,
   code: "",
   location: Locations.CochabambaBolivia,
+  termsChecked: false,
 };
 
 const isValidForm = (form: Form): boolean => {
@@ -235,7 +274,8 @@ const isValidForm = (form: Form): boolean => {
     isValidTextField(form.email) &&
     isValidTextField(form.password) &&
     isValidTextField(form.fullName) &&
-    isValidTextField(form.phone)
+    isValidTextField(form.phone) &&
+    form.termsChecked
   );
 };
 

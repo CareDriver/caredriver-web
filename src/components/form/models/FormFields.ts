@@ -24,6 +24,10 @@ export interface EntityDataField<T> extends BaseField {
   value: T | undefined;
 }
 
+export interface EntityDataFieldMandatory<T> extends BaseField {
+  value: T;
+}
+
 export interface AttachmentField extends BaseField {
   value: string | undefined;
 }

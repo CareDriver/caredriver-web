@@ -65,11 +65,11 @@ const ImageUploader: React.FC<Props> = ({ uploader, content }) => {
       message: null,
     });
     if (file) {
-      if (file.size > 1024 * 1024) {
+      if (file.size > 2048 * 2048) {
         uploader.setImage({
           ...uploader.image,
           message:
-            "La imagen es demasiado grande. Por favor, sube una imagen menor a 1MB.",
+            "La imagen es demasiado grande. Por favor, sube una imagen menor a 2MB.",
         });
         return;
       }

@@ -22,7 +22,7 @@ const DriverRegistrationWaySelector: React.FC<Props> = ({
         {NAME_BUSINESS}
       </h3>
       <div className="row-wrapper margin-top-15">
-        <button
+        {/* <button
           className={`small-general-button touchable icon-wrapper | lb ${
             registrationWay !== DriverRegistration.CallingEnterprise && "gray"
           }`}
@@ -31,14 +31,14 @@ const DriverRegistrationWaySelector: React.FC<Props> = ({
           }
         >
           <Whatsapp /> Asociado a una Empresa
-        </button>
+        </button> */}
         <button
           className={`small-general-button touchable icon-wrapper | lb ${
             registrationWay !== DriverRegistration.Independent && "gray"
           }`}
           onClick={() => setRegistrationWay(DriverRegistration.Independent)}
         >
-          <FilePen /> Independiente
+          <FilePen /> Formulario de Registro Independiente
         </button>
       </div>
     </div>

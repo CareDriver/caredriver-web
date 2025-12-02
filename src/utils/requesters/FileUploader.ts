@@ -1,5 +1,4 @@
 import {
-  deleteObject,
   getDownloadURL,
   ref,
   uploadBytes,

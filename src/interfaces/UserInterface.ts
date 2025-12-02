@@ -10,6 +10,7 @@ import {
   RefAttachment,
 } from "../components/form/models/RefAttachment";
 import { Branding } from "./BrandingInterface";
+import { BloodTypes } from "./BloodTypes";
 
 export interface HistoryLocationInterface {
   latitude?: number;
@@ -67,9 +68,10 @@ export interface UserInterface {
   fullNameArrayLower?: string[]; // Array with full name separated by words ej: ["nombre", "apellido"]
   homeAddress: string; // Home address of the user
   addressPhoto: RefAttachment; // attachment of the "factura de luz"
-  bloodType?: string; // mandatory for drivers
+  bloodType?: BloodTypes; // mandatory for drivers
   phoneNumber: PhoneNumber; // Phone number of the user (includes country code, ej: +591 76543218)
   lastPhoneVerification: Timestamp; // Last time the phone number was verified
+  alternativePhoneNumberName?: string;
   alternativePhoneNumber?: PhoneNumber;
   photoUrl: RefAttachment; // URL of the user's photo
   email?: string; // User's email

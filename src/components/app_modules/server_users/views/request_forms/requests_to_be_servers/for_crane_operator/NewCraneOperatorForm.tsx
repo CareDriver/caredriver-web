@@ -61,6 +61,7 @@ import { isPhoneValid } from "@/components/app_modules/users/validators/for_data
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 import Link from "next/link";
 import { routeToAllEnterprisesAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
+import { acceptTerms } from "@/utils/requesters/AcceptTerms";
 
 interface Form {
   personalData: PersonalData;
@@ -81,10 +82,16 @@ const NewCraneOperatorForm: React.FC<Props> = ({
 }) => {
   const { user, checkingUserAuth } = useContext(AuthContext);
   const [requesterUser, setRequesterUser] = useState<UserInterface | undefined>(
-    baseUser,
+    baseUser
   );
   const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
   const [form, setForm] = useState<Form>(DEFAULT_FORM(baseEnterprise));
+  const [invalidFormMessage, setInvalidFormMessage] = useState<string>("");
+  const [policeRecorderFile, setPoliceRecorderFile] = useState<AttachmentField>(
+    {
+      ...DEFAUL_ATTACHMENT_FIELD,
+    }
+  );
 
   const uploadImages = async () => {
     let vehiclesData: Vehicle = emptyVehicleCar;
@@ -102,7 +109,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
         try {
           newProfilePhotoImgUrl = await uploadFileBase64(
             DirectoryPath.TempProfilePhotos,
-            form.personalData.photo.value,
+            form.personalData.photo.value
           );
         } catch (e) {
           throw e;
@@ -118,7 +125,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
         try {
           addressPhotoRef = await uploadFileBase64(
             DirectoryPath.ElectricityBills,
-            form.personalData.addressPhoto.value,
+            form.personalData.addressPhoto.value
           );
         } catch (e) {
           throw e;
@@ -132,11 +139,11 @@ const NewCraneOperatorForm: React.FC<Props> = ({
         try {
           const frontImgUrl = await uploadFileBase64(
             DirectoryPath.Licenses,
-            form.vehicle.license.frontPhoto.value,
+            form.vehicle.license.frontPhoto.value
           );
           const behindImgUrl = await uploadFileBase64(
             DirectoryPath.Licenses,
-            form.vehicle.license.behindPhoto.value,
+            form.vehicle.license.behindPhoto.value
           );
           if (form.vehicle.license.expirationDate.value) {
             vehiclesData = {
@@ -144,7 +151,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
               license: {
                 licenseNumber: form.vehicle.license.number.value,
                 expiredDateLicense: Timestamp.fromDate(
-                  form.vehicle.license.expirationDate.value,
+                  form.vehicle.license.expirationDate.value
                 ),
                 frontImgUrl: frontImgUrl,
                 backImgUrl: behindImgUrl,
@@ -164,7 +171,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
         try {
           realTimePhotoImgUrl = await uploadFileBase64(
             DirectoryPath.Selfies,
-            form.selfie.value,
+            form.selfie.value
           );
         } catch (e) {
           throw e;
@@ -184,11 +191,19 @@ const NewCraneOperatorForm: React.FC<Props> = ({
     vehicleData: Vehicle,
     newProfilePhotoImgUrl: string | RefAttachment,
     addressPhotoImgUrl: string | RefAttachment,
-    realTimePhotoImgUrl: RefAttachment,
+    realTimePhotoImgUrl: RefAttachment
   ) => {
     if (requesterUser && form.enterprise.value) {
       var formId = nanoid(30);
       try {
+        const pdfRef = await toast.promise(uploadPDF(), {
+          pending: "Subiendo PDF de Antecedentes",
+          success: "PDF de Antecedentes Subido",
+          error: "Error al subir el PDF, inténtalo de nuevo",
+        });
+
+        if (!pdfRef) return;
+
         await saveTowReq(
           formId,
           towReqBuilder(
@@ -205,7 +220,8 @@ const NewCraneOperatorForm: React.FC<Props> = ({
               ? Locations.CochabambaBolivia
               : requesterUser.location,
             [vehicleData],
-          ),
+            pdfRef
+          )
         );
 
         if (requesterUser.id) {
@@ -225,7 +241,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
             toUpdate = {
               ...toUpdate,
               alternativePhoneNumber: parseBoliviaPhone(
-                form.personalData.alternativePhoneNumber.value,
+                form.personalData.alternativePhoneNumber.value
               ),
             };
           }
@@ -242,8 +258,44 @@ const NewCraneOperatorForm: React.FC<Props> = ({
     }
   };
 
+  function getInvalidFormMessage(): string {
+    if (!isValidPersonalData(form.personalData)) {
+      return "Por favor, completa tus datos personales correctamente.";
+    }
+
+    if (!isValidVehicle(form.vehicle)) {
+      return "Por favor, completa los datos de tu licencia de conducir correctamente.";
+    }
+
+    if (!isValidAttachmentField(form.selfie)) {
+      return "Por favor, tomate una selfie para verificar tu identidad.";
+    }
+
+    if (!form.termsCheck) {
+      return "Debes aceptar los términos y condiciones y la política de privacidad.";
+    }
+
+    return "";
+  }
+
+  const uploadPDF = async () => {
+    if (policeRecorderFile.value) {
+      try {
+        return await uploadFileBase64(
+          DirectoryPath.Documents,
+          policeRecorderFile.value
+        );
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    return null;
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setInvalidFormMessage(getInvalidFormMessage());
     if (formState.loading) {
       return;
     }
@@ -273,6 +325,8 @@ const NewCraneOperatorForm: React.FC<Props> = ({
       return;
     }
     try {
+      await acceptTerms(user?.id ?? "");
+
       await updateIdCard(form.personalData.idCard, requesterUser);
       const {
         vehiclesData,
@@ -289,13 +343,13 @@ const NewCraneOperatorForm: React.FC<Props> = ({
           vehiclesData,
           newProfilePhotoImgUrl,
           addressPhotoRef,
-          realTimePhotoImgUrl,
+          realTimePhotoImgUrl
         ),
         {
           pending: "Enviando el formulario, por favor espera",
           success: "Formulario enviado",
           error: "Error al enviar el formulario, inténtalo de nuevo por favor",
-        },
+        }
       );
       window.location.reload();
     } catch (e) {
@@ -307,13 +361,24 @@ const NewCraneOperatorForm: React.FC<Props> = ({
     }
   };
 
+  function isValidForm(form: Form): boolean {
+    return (
+      isValidPersonalData(form.personalData) &&
+      isValidVehicle(form.vehicle) &&
+      isValidAttachmentField(form.selfie) &&
+      isValidEntityDataField(form.enterprise) &&
+      policeRecorderFile.value !== undefined &&
+      form.termsCheck
+    );
+  }
+
   useEffect(
     () =>
       setFormState((prev) => ({
         ...prev,
         isValid: isValidForm(form),
       })),
-    [form],
+    [form]
   );
 
   useEffect(() => {
@@ -409,6 +474,11 @@ const NewCraneOperatorForm: React.FC<Props> = ({
             setCheck={(d) => setForm((prev) => ({ ...prev, termsCheck: d }))}
           />
         </BaseForm>
+        {invalidFormMessage && (
+          <p style={{ color: "red", fontSize: 16, marginTop: 16 }}>
+            * {invalidFormMessage}
+          </p>
+        )}
       </div>
     )
   );
@@ -425,13 +495,3 @@ const DEFAULT_FORM = (baseEnterprise: string | undefined): Form => {
     termsCheck: false,
   };
 };
-
-function isValidForm(form: Form): boolean {
-  return (
-    isValidPersonalData(form.personalData) &&
-    isValidVehicle(form.vehicle) &&
-    isValidAttachmentField(form.selfie) &&
-    isValidEntityDataField(form.enterprise) &&
-    form.termsCheck
-  );
-}

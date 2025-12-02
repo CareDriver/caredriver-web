@@ -14,11 +14,13 @@ import {
   isValidName,
 } from "../../../validators/for_data/CredentialsValidator";
 import PhoneField from "@/components/form/view/fields/PhoneField";
+// @ts-ignore - side-effect CSS import without type declarations
 import "react-international-phone/style.css";
 import Phone from "@/icons/Phone";
-import PersonCircleCheck from "@/icons/PersonCircleCheck";
-import HomeAddress from "@/icons/HomeAddress";
 import ChevronDown from "@/icons/ChevronDown";
+import HomeAddress from "@/icons/HomeAddress";
+import BloodTypeField from "@/components/form/view/fields/BloodTypeField";
+import { BloodTypes } from "@/interfaces/BloodTypes";
 
 interface Props {
   baseUser?: UserInterface;
@@ -47,7 +49,7 @@ const PersonalDataForm: React.FC<Props> = ({
           message: null,
         },
         bloodType: {
-          value: requesterUser.bloodType || "",
+          value: requesterUser.bloodType || BloodTypes.OPositive,
           message: null,
         },
         gender: {
@@ -80,6 +82,10 @@ const PersonalDataForm: React.FC<Props> = ({
         },
         alternativePhoneNumber: {
           value: flatPhone(requesterUser.alternativePhoneNumber) ?? "",
+          message: null,
+        },
+        alternativePhoneNumberName: {
+          value: requesterUser.alternativePhoneNumberName ?? "",
           message: null,
         },
         idCard: {
@@ -115,7 +121,7 @@ const PersonalDataForm: React.FC<Props> = ({
           message: "Completa este campo por favor",
         },
         bloodType: {
-          value: "",
+          value: BloodTypes.OPositive,
           message: "Completa est campo por favor",
         },
         gender: {
@@ -132,10 +138,16 @@ const PersonalDataForm: React.FC<Props> = ({
         },
         addressPhoto: {
           value: undefined,
-          message: "Sube una foto de la factura de luz de tu domicilio.",
+          message:
+            "Sube una foto de la factura de luz de tu domicilio por favor.",
         },
         alternativePhoneNumber: {
           value: "",
+          message: null,
+        },
+        alternativePhoneNumberName: {
+          value:
+            "Escribe el nombre de un contacto alternativo, como un familiar por favor.",
           message: null,
         },
         idCard: {
@@ -205,6 +217,7 @@ const PersonalDataForm: React.FC<Props> = ({
               validator: isValidName,
             }}
             legend="Nombre completo"
+            placeholder="Ej: Juan Pérez Gómez"
           />
           <fieldset className="form-section | select-item">
             <ChevronDown />
@@ -234,7 +247,8 @@ const PersonalDataForm: React.FC<Props> = ({
           <p className="text | light">
             Sube una foto donde se vea claramente tu rostro. Evita imágenes
             oscuras, borrosas o con gafas de sol. Esto ayuda a que los demás te
-            identifiquen con confianza
+            identifiquen con confianza. Recomendamos que la foto tenga fondo
+            blanco o claro.
           </p>
 
           <ImageUploader
@@ -258,15 +272,29 @@ const PersonalDataForm: React.FC<Props> = ({
           </div>
           <div>
             <h3 className="text | bold icon-wrapper">
-              <Phone /> Numero de teléfono alternativo (Opcional)
+              <Phone /> Número de teléfono alternativo
             </h3>
             <p className="text | light" style={{ marginTop: 8 }}>
-              Este campo es opcional, puedes agregar un numero alternativo
-              (diferente a tu número personal{" "}
+              Agrega un numero alternativo de un familiar o persona cercana a
+              tí, (diferente a tu número personal{" "}
               {requesterUser?.phoneNumber.number}) para que nuestros
-              administradores puedan contactarte mas rápido.
+              administradores puedan contactarte mas rápido en caso de cualquier
+              inconveniente.
             </p>
           </div>
+          <TextField
+            field={{
+              values: personalData.alternativePhoneNumberName,
+              setter: (e) =>
+                setPersonalData({
+                  ...personalData,
+                  alternativePhoneNumberName: e,
+                }),
+              validator: isValidName,
+            }}
+            legend="Nombre del contacto"
+            placeholder="Ej: Juan Pérez Gómez"
+          />
           <PhoneField
             values={personalData.alternativePhoneNumber}
             setter={(e) =>
@@ -311,7 +339,7 @@ const PersonalDataForm: React.FC<Props> = ({
             }),
           validator: isValidAddress,
         }}
-        legend="Dirección"
+        legend="Dirección de Domicilio"
         placeholder="Ej: Av. América entre Calle A y Calle B No. 123"
       />
 
@@ -339,17 +367,18 @@ const PersonalDataForm: React.FC<Props> = ({
           imageInCircle: false,
         }}
       />
-      <TextField
-        field={{
-          values: personalData.bloodType,
-          setter: (e) =>
-            setPersonalData({
-              ...personalData,
-              bloodType: e,
-            }),
-          validator: isValidName,
-        }}
-        legend="Tipo de sangre (en caso de accidentes)"
+
+      <BloodTypeField
+        location={personalData.bloodType.value}
+        setter={(d) =>
+          setPersonalData({
+            ...personalData,
+            bloodType: {
+              value: d,
+              message: "",
+            },
+          })
+        }
       />
       <div>
         <div className="separator-horizontal"></div>

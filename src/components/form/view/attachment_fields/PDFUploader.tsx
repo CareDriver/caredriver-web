@@ -148,7 +148,7 @@ const PDFUploader: React.FC<Props> = ({ uploader, content }) => {
           >
             <FileArrowUp />
             <span className="text | normal gray-dark | margin-top-15">
-              Subir PDF
+              Haz clic para subir un PDF
             </span>
             <p className="text | medium-big bold gray-dark">{content.legend}</p>
           </div>

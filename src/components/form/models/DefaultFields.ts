@@ -4,11 +4,13 @@ import {
   CheckField,
   DateField,
   EntityDataField,
+  EntityDataFieldMandatory,
   EntityField,
   GeoPointField,
   TextField,
   VerificationCodeField,
 } from "./FormFields";
+import { BloodTypes } from "@/interfaces/BloodTypes";
 
 export const DEFAUL_TEXT_FIELD: TextField = {
   value: "",
@@ -22,6 +24,11 @@ export const DEFAULT_CHECK_FIELD: CheckField = {
 
 export const DEFAUL_TEXT_FIELD_GENDER: TextField = {
   value: Gender.Male,
+  message: null,
+};
+
+export const DEFAUL_BLOOD_TYPE: EntityDataFieldMandatory<BloodTypes> = {
+  value: BloodTypes.OPositive,
   message: null,
 };
 
@@ -39,6 +46,15 @@ export const DEFAUL_ENTITY_DATA_FIELD: EntityDataField<any> = {
   value: undefined,
   message: null,
 };
+
+export function createEntityDataFieldMandatory<T>(
+  initialValue: T,
+): EntityDataFieldMandatory<T> {
+  return {
+    value: initialValue,
+    message: null,
+  };
+}
 
 export const DEFAUL_ATTACHMENT_FIELD: AttachmentField = {
   value: undefined,

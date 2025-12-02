@@ -15,6 +15,8 @@ import CodeVerifier from "../verifiers/CodeVerifier";
 import { useRouter } from "next/navigation";
 import { routeToProfileAsUser } from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
 import { updateUser } from "@/components/app_modules/users/api/UserRequester";
+// eslint-disable-next-line import/no-unresolved
+// @ts-ignore
 import "react-international-phone/style.css";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 

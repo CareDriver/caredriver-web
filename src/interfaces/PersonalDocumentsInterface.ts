@@ -1,6 +1,7 @@
 import { Timestamp } from "firebase/firestore";
 import { RefAttachment } from "../components/form/models/RefAttachment";
 import { VehicleType } from "./VehicleInterface";
+import { LicenseCategories } from "./LicenseCategories";
 
 // Interface for a license document
 export interface LicenseInterface {
@@ -8,7 +9,7 @@ export interface LicenseInterface {
   expiredDateLicense: Timestamp; // The date the license is going to expire
   frontImgUrl?: RefAttachment; // The url of the front image of the license
   backImgUrl?: RefAttachment; // The url of the back image of the license
-  category: string; // Categoría de la licencia, A, B, C
+  category: LicenseCategories; // Categoría de la licencia, A, B, C
   requireGlasses: boolean;
   requireHeadphones: boolean;
 }
@@ -25,7 +26,7 @@ export interface LicenseUpdateReq {
   realTimePhotoImgUrl: RefAttachment;
   aproved: boolean;
   active: boolean;
-  category: string;
+  category: LicenseCategories;
   requireGlasses: boolean;
   requireHeadphones: boolean;
 }

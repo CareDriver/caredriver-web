@@ -23,7 +23,7 @@ const DriverInstrucctionsAsNewWithEnterprise = () => {
 
   return (
     <div className="margin-top-50">
-      <h3 className="text | medium-big bold icon-wrapper">
+      {/* <h3 className="text | medium-big bold icon-wrapper">
         <Car />
         Sigue estos pasos para ser {DRIVER}
       </h3>
@@ -52,7 +52,7 @@ const DriverInstrucctionsAsNewWithEnterprise = () => {
             <EnterpriseRendererForContact enterprise={enterpriseSelected} />
           </div>
         </Popup>
-      )}
+      )} */}
     </div>
   );
 };

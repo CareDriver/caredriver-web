@@ -65,6 +65,7 @@ const loadUserLoggedData = (
       fullName: userData?.fullName ?? "",
       phoneNumber: userData?.phoneNumber ?? DEFAULT_PHONE,
       lastPhoneVerification: userData.lastPhoneVerification ?? Timestamp.now(),
+      alternativePhoneNumberName: userData.alternativePhoneNumberName,
       alternativePhoneNumber: userData.alternativePhoneNumber,
       photoUrl: userData?.photoUrl ?? EMPTY_REF_ATTACHMENT,
       vehicles: userData?.vehicles ?? [],

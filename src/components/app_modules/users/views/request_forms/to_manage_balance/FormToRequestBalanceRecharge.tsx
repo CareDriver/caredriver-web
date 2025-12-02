@@ -31,7 +31,11 @@ const FormToRequestBalanceRecharge: React.FC<Props> = ({ user }) => {
               .toString()
               .replace("-", "")} ${user.minimumBalance.currency}`}
       </p>
-      {
+      <p>
+        Para recargar saldo, ingresa a la aplicación móvil, haz click en tu
+        saldo y verás la opción para recargar.
+      </p>
+      {/* {
         <div className="margin-top-5">
           <button
             type="button"
@@ -42,7 +46,7 @@ yellow"
             Recargar saldo
           </button>
         </div>
-      }
+      } */}
     </section>
   );
 };

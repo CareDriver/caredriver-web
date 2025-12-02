@@ -7,20 +7,20 @@ import {
 import { userReqTypes } from "@/interfaces/UserRequest";
 import { routeToLandingPageServiceDetails } from "@/models/Business";
 import { greeting } from "@/utils/senders/Greeter";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 export async function notifyByPhoneApprovalServerUser(
   phone: string,
-  serviceType: ServiceType,
+  serviceType: ServiceType
 ) {
   const message = greeting()
-    .concat(" 🎉 Tu Solicitud fue aprovada para ser ")
+    .concat(" 🎉 Tu Solicitud fue aprobada para ser ")
     .concat(userReqTypes[serviceType])
     .concat(", ahora puedes ofrecer tu servicio en nuestra aplicacion. ")
     .concat("Ve al siguiente link para mas informacion")
     .concat(routeToLandingPageServiceDetails(serviceType));
 
-  await toast.promise(
+  /*   await toast.promise(
     fetch("/api/sms", {
       method: "POST",
       headers: {
@@ -32,16 +32,16 @@ export async function notifyByPhoneApprovalServerUser(
       }),
     }),
     {
-      pending: "Notificando la aprovacion al usuario",
+      pending: "Notificando la aprobacion al usuario",
       success: "Usuario notificado",
       error: "Error al notificar al usuario, inténtalo de nuevo por favor",
     },
-  );
+  ); */
 }
 
 export async function notifyRequestApprovalUser(
   requesterUser: UserInterface,
-  serviceType: ServiceType,
+  serviceType: ServiceType
 ) {
   const phoneNumber: PhoneNumber | undefined =
     requesterUser.phoneNumber ?? requesterUser.alternativePhoneNumber;
@@ -49,7 +49,7 @@ export async function notifyRequestApprovalUser(
   if (phoneNumber) {
     await notifyByPhoneApprovalServerUser(
       flatPhone(phoneNumber).replace("+", ""),
-      serviceType,
+      serviceType
     );
   }
 }

@@ -10,13 +10,14 @@ interface Props {
 
 const PoliceRecordUploader: React.FC<Props> = ({ file, setFile }) => {
   return (
-    <div className="form-sub-container | margin-top-25 max-width-60">
+    <div className="form-sub-container | margin-top-25 ">
       <div>
         <h2 className="text icon-wrapper | lb medium-big bold">
           <Landmark /> Antecedentes policiales
         </h2>
         <p className="text | light">
-          Sube un <b>PDF</b> de tus Antecedentes policiales.
+          Sube un <b>PDF</b> de tus Antecedentes policiales para continuar con
+          la solicitud.
         </p>
       </div>
       <PDFUploader
@@ -29,6 +30,7 @@ const PoliceRecordUploader: React.FC<Props> = ({ file, setFile }) => {
           legend: "Antecedentes policiales",
         }}
       />
+      <div className="separator-horizontal"></div>
     </div>
   );
 };

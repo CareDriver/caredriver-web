@@ -9,7 +9,7 @@ export async function POST(request) {
       headers: {
         accept: "application/json",
         "content-type": "application/json",
-        authorization: "Bearer yRU7YFfWWJeDot5OE1Arx7ElJ0oVwcjD",
+        authorization: `Bearer ${process.env.WHAPI_TOKEN}`,
       },
       body: JSON.stringify({
         typing_time: 0,

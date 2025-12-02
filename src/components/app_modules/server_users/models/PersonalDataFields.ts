@@ -2,11 +2,14 @@ import {
   DEFAUL_TEXT_FIELD,
   DEFAUL_ATTACHMENT_FIELD,
   DEFAUL_TEXT_FIELD_GENDER,
+  DEFAUL_BLOOD_TYPE,
 } from "@/components/form/models/DefaultFields";
 import {
   AttachmentField,
+  EntityDataFieldMandatory,
   TextField,
 } from "@/components/form/models/FormFields";
+import { BloodTypes } from "@/interfaces/BloodTypes";
 
 export interface IdCard {
   frontCard: AttachmentField;
@@ -20,8 +23,9 @@ export interface PersonalData {
   gender: TextField;
   homeAddress: TextField;
   addressPhoto: AttachmentField; // factura de luz
-  bloodType: TextField; // blood type, mandatory for drivers
+  bloodType: EntityDataFieldMandatory<BloodTypes>; // blood type, mandatory for drivers
   idCard: IdCard;
+  alternativePhoneNumberName: TextField;
   alternativePhoneNumber: TextField;
 }
 
@@ -37,7 +41,8 @@ export const DEFAULT_PERSONAL_DATA: PersonalData = {
   gender: DEFAUL_TEXT_FIELD_GENDER,
   homeAddress: DEFAUL_TEXT_FIELD,
   addressPhoto: DEFAUL_ATTACHMENT_FIELD,
-  bloodType: DEFAUL_TEXT_FIELD,
+  bloodType: DEFAUL_BLOOD_TYPE,
   idCard: DEFAULT_ID_CARD,
+  alternativePhoneNumberName: DEFAUL_TEXT_FIELD,
   alternativePhoneNumber: DEFAUL_TEXT_FIELD,
 };

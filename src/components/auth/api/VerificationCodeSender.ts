@@ -1,16 +1,16 @@
 import { generateVerificationCode } from "generate-verification-code/dist";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 export async function sendVerificationCode(phone: string) {
   let codeSent: string = String(
     generateVerificationCode({
       length: 6,
       type: "string",
-    }),
+    })
   );
 
-  const message: string = `✉️ Tu código de verificación es ${codeSent}`;
-
+  // const message: string = `✉️ Tu código de verificación es ${codeSent}`;
+  /* 
   await toast.promise(
     fetch("/api/sms", {
       method: "POST",
@@ -27,7 +27,7 @@ export async function sendVerificationCode(phone: string) {
       success: "Código enviado",
       error: "Error al enviar el código, inténtalo de nuevo por favor",
     },
-  );
+  ); */
 
   return codeSent;
 }

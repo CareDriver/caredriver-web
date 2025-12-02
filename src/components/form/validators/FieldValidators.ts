@@ -9,25 +9,25 @@ import {
 } from "../models/FormFields";
 
 export function isValidTextField(field: TextField): boolean {
-  return field.message === null && !isNullOrEmptyText(field.value);
+  return !field.message && !isNullOrEmptyText(field.value);
 }
 
 export function isValidDateField(field: DateField): boolean {
-  return field.message === null && field.value !== undefined;
+  return !field.message && field.value !== undefined;
 }
 
 export function isValidAttachmentField(field: AttachmentField): boolean {
-  return field.message === null && field.value !== undefined;
+  return !field.message && field.value !== undefined;
 }
 
 export function isValidEntityField(field: EntityField): boolean {
-  return field.message === null && field.value !== undefined;
+  return !field.message && field.value !== undefined;
 }
 
 export function isValidEntityDataField(field: EntityDataField<any>): boolean {
-  return field.message === null && field.value !== undefined;
+  return !field.message && field.value !== undefined;
 }
 
 export function isValidGeoPointField(field: GeoPointField): boolean {
-  return field.message === null && field.value !== undefined;
+  return !field.message && field.value !== undefined;
 }

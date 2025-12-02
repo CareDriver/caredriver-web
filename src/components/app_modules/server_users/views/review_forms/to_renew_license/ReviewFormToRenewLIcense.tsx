@@ -40,7 +40,7 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
   const [userReq, setUserReq] = useState<UserInterface | null>(null);
   const router = useRouter();
   const [userData, setUserData] = useState<UserInterface | null | undefined>(
-    null,
+    null
   );
 
   const wasReviewed = (): boolean => {
@@ -52,7 +52,7 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
       toast.error(reason);
       router.push(routeToRequestsToRenewLicenseAsAdmin());
     },
-    [router],
+    [router]
   );
 
   const fetchUserReq = useCallback(async () => {
@@ -235,9 +235,12 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
               userData?.alternativePhoneNumber
                 ? parseBoliviaPhone(
                     (userData?.alternativePhoneNumber?.countryCode ?? "") +
-                      (userData?.alternativePhoneNumber?.number ?? ""),
+                      (userData?.alternativePhoneNumber?.number ?? "")
                   ).number
                 : ""
+            }
+            alternativePhoneNumberName={
+              userData?.alternativePhoneNumberName ?? ""
             }
           >
             <TextFieldRenderer

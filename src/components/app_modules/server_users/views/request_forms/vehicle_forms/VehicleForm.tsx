@@ -21,6 +21,8 @@ import DateField from "@/components/form/view/fields/DateField";
 import TransmissionField from "@/components/form/view/fields/TransmissionField";
 import TextFieldRenderer from "@/components/form/view/field_renderers/TextFieldRenderer";
 import LicenceNumberField from "@/components/form/view/fields/LicenceNumberField";
+import LicenseCategoryField from "@/components/form/view/fields/LicenseCategoryField";
+import { LicenseCategories } from "@/interfaces/LicenseCategories";
 
 const VehicleForm = ({
   vehicle,
@@ -61,9 +63,22 @@ const VehicleForm = ({
     });
   };
 
+  const changeCategoryLicense = (category: TextField) => {
+    setVehicle({
+      ...vehicle,
+      license: {
+        ...vehicle.license,
+        category: {
+          ...category,
+          value: category.value as LicenseCategories,
+        },
+      },
+    });
+  };
+
   const changeLicenseImage = (
     image: AttachmentField,
-    side: "frontPhoto" | "behindPhoto",
+    side: "frontPhoto" | "behindPhoto"
   ) => {
     setVehicle({
       ...vehicle,
@@ -154,6 +169,15 @@ const VehicleForm = ({
               validator: isValidLicenseDate,
             }}
             legend="Fecha de expiración"
+          />
+          <LicenseCategoryField
+            location={vehicle.license.category.value}
+            setter={(d) =>
+              changeCategoryLicense({
+                ...vehicle.license.category,
+                value: d,
+              })
+            }
           />
           <ImageUploader
             uploader={{

@@ -10,6 +10,8 @@ import {
 import { InputValidator } from "@/validators/InputValidatorSignature";
 import { UserRole } from "@/interfaces/UserInterface";
 import { VehicleTransmission } from "@/interfaces/VehicleInterface";
+import { LicenseCategories } from "@/interfaces/LicenseCategories";
+import { BloodTypes } from "@/interfaces/BloodTypes";
 
 export type FieldSetter<T> = (data: T) => void;
 
@@ -24,6 +26,10 @@ export type EntityDataFieldSetter<T> = FieldSetter<EntityDataField<T>>;
 export type AttachmentFieldSetter = FieldSetter<AttachmentField>;
 
 export type LocationFieldSetter = FieldSetter<Locations>;
+
+export type LicenseCategoryFieldSetter = FieldSetter<LicenseCategories>;
+
+export type BloodTypeFieldSetter = FieldSetter<BloodTypes>;
 
 export type OptionFieldSetter = FieldSetter<string>;
 

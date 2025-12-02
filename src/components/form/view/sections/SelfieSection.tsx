@@ -16,9 +16,8 @@ const SelfieSection: React.FC<Props> = ({ image, setImage }) => {
           <PersonQuestion /> Confirmación de identidad
         </h2>
         <p className="text | light">
-          Sube una selfie para verificar que eres quien está solicitando nuestro
-          servicio. Esta foto será eliminada cuando tu solicitud sea aceptada o
-          rechazada.
+          Apreta en la cámara y sácate una selfie para verificar que eres tú
+          quien está realizando la solicitud.
         </p>
       </div>
       <SelfieUploader

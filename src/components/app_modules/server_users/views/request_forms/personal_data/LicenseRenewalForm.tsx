@@ -45,6 +45,8 @@ import LicenceNumberField from "@/components/form/view/fields/LicenceNumberField
 import TextField from "@/components/form/view/fields/TextField";
 import CheckField from "@/components/form/view/fields/CheckField";
 import { VehicleType } from "@/interfaces/VehicleInterface";
+import LicenseCategoryField from "@/components/form/view/fields/LicenseCategoryField";
+import { LicenseCategories } from "@/interfaces/LicenseCategories";
 
 type LicensedVehicles = VehicleType;
 
@@ -67,6 +69,8 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
   const { user, checkingUserAuth } = useContext(AuthContext);
   const [form, setForm] = useState<Form>(DEFAULT_FORM);
   const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
+  const [invalidFormMessage, setInvalidFormMessage] = useState<string>("");
+
   const requestLimitValidator = new RequestLimitValidatorToUpdateLicence();
   const isValidForm = useCallback((): boolean => {
     return (
@@ -76,6 +80,25 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
       isValidAttachmentField(form.license.frontPhoto) &&
       isValidAttachmentField(form.selfie)
     );
+  }, [form]);
+
+  const getLicenseFormErrors = useCallback((): string => {
+    if (!isValidTextField(form.license.number)) {
+      return "El número de licencia es inválido.";
+    }
+    if (!isValidDateField(form.license.expirationDate)) {
+      return "La fecha de vencimiento es inválida.";
+    }
+    if (!isValidAttachmentField(form.license.behindPhoto)) {
+      return "La foto del reverso de la licencia es inválida.";
+    }
+    if (!isValidAttachmentField(form.license.frontPhoto)) {
+      return "La foto del anverso de la licencia es inválida.";
+    }
+    if (!isValidAttachmentField(form.selfie)) {
+      return "La foto de selfie es inválida.";
+    }
+    return "";
   }, [form]);
 
   const uploadImages = async () => {
@@ -161,6 +184,7 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setInvalidFormMessage(getLicenseFormErrors());
     if (formState.loading) {
       return;
     }
@@ -362,17 +386,17 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
               validator: isValidLicenseNumber,
             }}
           />
-          <TextField
-            field={{
-              values: form.license.category,
-              setter: (e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  license: { ...prev.license, category: e },
-                })),
-              validator: isValidLicenseCategory,
-            }}
-            legend="Categoría de Licencia"
+          <LicenseCategoryField
+            location={form.license.category.value}
+            setter={(category) =>
+              setForm((prev) => ({
+                ...prev,
+                license: {
+                  ...prev.license,
+                  category: { value: category, message: null },
+                },
+              }))
+            }
           />
           <CheckField
             marker={{
@@ -468,6 +492,11 @@ const LicenseRenewalForm: React.FC<Props> = ({ type }) => {
             }
           />
         </BaseForm>
+        {invalidFormMessage && (
+          <p style={{ color: "red", fontSize: 16, marginTop: 16 }}>
+            * {invalidFormMessage}
+          </p>
+        )}
       </div>
     )
   );

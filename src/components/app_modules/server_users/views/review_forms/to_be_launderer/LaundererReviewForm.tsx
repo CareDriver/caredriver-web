@@ -40,6 +40,7 @@ import { getIdSaved } from "@/utils/generators/IdGenerator";
 import { notifyRequestApprovalUser } from "../../../api/UserServerNotifier";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 import { RefAttachment } from "@/components/form/models/RefAttachment";
+import { BloodTypes } from "@/interfaces/BloodTypes";
 
 const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const { user: adminUser } = useContext(AuthContext);
@@ -49,7 +50,7 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
     UserInterface | null | undefined
   >(null);
   const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(
-    null,
+    null
   );
 
   const wasReviewed = (): boolean => {
@@ -66,7 +67,7 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
           serviceReq,
           adminUser.id,
           wasApproved,
-          laundryReqCollection,
+          laundryReqCollection
         );
 
         if (isLimitToReviews) {
@@ -106,7 +107,7 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               userToUpdate = await setFirstService(
                 requesterUser,
                 userToUpdate,
-                adminUser.id,
+                adminUser.id
               );
             }
 
@@ -115,7 +116,8 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
             userToUpdate.addressPhoto =
               serviceReq.addressPhoto as RefAttachment;
             userToUpdate.homeAddress = serviceReq.homeAddress;
-            userToUpdate.bloodType = serviceReq.bloodType ?? "";
+            userToUpdate.bloodType =
+              serviceReq.bloodType ?? BloodTypes.OPositive;
 
             await updateUser(serviceReq.userId, userToUpdate);
             if (enterprise && wasApproved) {
@@ -123,14 +125,14 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 addUserServerToEnterprise(
                   enterprise,
                   serviceReq.userId,
-                  getIdSaved(requesterUser.fakeId),
+                  getIdSaved(requesterUser.fakeId)
                 ),
                 {
                   pending:
                     "Agregando al usuario al servicio como proveedor de servicios",
                   success: "Usuario agregado al servicio",
                   error: "Error al agregar al usuario al servicio",
-                },
+                }
               );
             }
 
@@ -280,9 +282,12 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
             requesterUser?.alternativePhoneNumber
               ? parseBoliviaPhone(
                   (requesterUser?.alternativePhoneNumber?.countryCode ?? "") +
-                    (requesterUser?.alternativePhoneNumber?.number ?? ""),
+                    (requesterUser?.alternativePhoneNumber?.number ?? "")
                 ).number
               : ""
+          }
+          alternativePhoneNumberName={
+            requesterUser?.alternativePhoneNumberName ?? ""
           }
         />
 
@@ -307,7 +312,7 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
             email={requesterUser.email}
             phoneNumber={flatPhone(requesterUser.phoneNumber)}
             alternativePhoneNumber={flatPhone(
-              requesterUser.alternativePhoneNumber,
+              requesterUser.alternativePhoneNumber
             )}
           />
         ) : (

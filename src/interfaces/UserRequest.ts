@@ -10,6 +10,8 @@ import {
 import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
 import { DRIVER } from "@/models/Business";
 import { Gender } from "./UserInterface";
+import { LicenseCategories } from "./LicenseCategories";
+import { BloodTypes } from "./BloodTypes";
 
 export interface VehicleTypeAndMode {
   type: VehicleType;
@@ -55,7 +57,7 @@ export interface UserRequest {
   homeAddress: string;
   addressPhoto: string | RefAttachment;
   newProfilePhotoImgUrl: string | RefAttachment;
-  bloodType?: string;
+  bloodType?: BloodTypes;
   gender?: Gender;
   aproved?: boolean; // if the request was aproved, false when rejected or not reviewed yet
   active?: boolean; // will be true when it is a new request or update request and was not reviewed yet
@@ -88,7 +90,7 @@ export const emptyVehicleCar: Vehicle = {
     licenseNumber: "",
     backImgUrl: EMPTY_REF_ATTACHMENT,
     frontImgUrl: EMPTY_REF_ATTACHMENT,
-    category: "",
+    category: LicenseCategories.CategoryP,
     requireGlasses: false,
     requireHeadphones: false,
   },
@@ -99,9 +101,9 @@ export const licenseBuilder = (
   expiredDateLicense: Date,
   frontImgUrl: RefAttachment,
   backImgUrl: RefAttachment,
-  category: "",
+  category: LicenseCategories,
   requireGlasses: boolean,
-  requireHeadphones: boolean,
+  requireHeadphones: boolean
 ): LicenseInterface => {
   return {
     licenseNumber,
@@ -125,9 +127,10 @@ export const driveReqBuilder = (
   realTimePhotoImgUrl: RefAttachment,
   services: Services[],
   location: Locations,
-  bloodType: string,
+  bloodType: BloodTypes,
   gender: Gender,
   driverEnterprise: string | undefined,
+  pdfRef?: RefAttachment 
 ): UserRequest => {
   let userRequest: UserRequest = {
     id,
@@ -153,6 +156,14 @@ export const driveReqBuilder = (
       driverEnterprise,
     };
   }
+
+  if (pdfRef) {
+    userRequest = {
+      ...userRequest,
+      policeRecordsPdf: pdfRef,
+    };
+  }
+
   return userRequest;
 };
 
@@ -186,7 +197,7 @@ export const mechanicReqBuilder = (
   services: Services[],
   location: Locations,
   mechanicalWorkShop: string | undefined,
-  mechanicTools: string,
+  mechanicTools: string
 ): UserRequest => {
   if (mechanicalWorkShop) {
     return {
@@ -234,7 +245,7 @@ export const laundryReqBuilder = (
   realTimePhotoImgUrl: RefAttachment,
   services: Services[],
   location: Locations,
-  laundryEnterprite: string,
+  laundryEnterprite: string
 ): UserRequest => {
   return {
     id,
@@ -265,6 +276,7 @@ export const towReqBuilder = (
   services: Services[],
   location: Locations,
   vehicles: Vehicle[],
+  pdfRef: RefAttachment
 ): UserRequest => {
   return {
     id,
@@ -281,5 +293,6 @@ export const towReqBuilder = (
     location,
     towEnterprite: towEnterprite,
     vehicles,
+    policeRecordsPdf: pdfRef,
   };
 };

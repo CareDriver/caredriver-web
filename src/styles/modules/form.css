@@ -390,7 +390,7 @@ input[type="password"] {
   overflow-y: auto;
 
   width: 100%;
-  max-height: 11vh;
+  max-height: 30vh;
   border-radius: 0.9375rem;
 
   background-color: var(--white);

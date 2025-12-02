@@ -50,6 +50,7 @@ import { isPhoneValid } from "@/components/app_modules/users/validators/for_data
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 import Link from "next/link";
 import { routeToAllEnterprisesAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
+import { acceptTerms } from "@/utils/requesters/AcceptTerms";
 
 interface Form {
   personalData: PersonalData;
@@ -66,10 +67,11 @@ interface Props {
 const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
   const { user, checkingUserAuth } = useContext(AuthContext);
   const [requesterUser, setRequesterUser] = useState<UserInterface | undefined>(
-    baseUser,
+    baseUser
   );
   const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
   const [form, setForm] = useState<Form>(DEFAULT_FORM(baseEnterprise));
+  const [invalidFormMessage, setInvalidFormMessage] = useState<string>("");
 
   const uploadImages = async () => {
     var newProfilePhotoImgUrl: string | RefAttachment = EMPTY_REF_ATTACHMENT;
@@ -86,7 +88,7 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
         try {
           newProfilePhotoImgUrl = await uploadFileBase64(
             DirectoryPath.TempProfilePhotos,
-            form.personalData.photo.value,
+            form.personalData.photo.value
           );
         } catch (e) {
           throw e;
@@ -102,7 +104,7 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
         try {
           addressPhotoImgUrl = await uploadFileBase64(
             DirectoryPath.ElectricityBills,
-            form.personalData.addressPhoto.value,
+            form.personalData.addressPhoto.value
           );
         } catch (e) {
           throw e;
@@ -113,7 +115,7 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
         try {
           realTimePhotoImgUrl = await uploadFileBase64(
             DirectoryPath.Selfies,
-            form.selfie.value,
+            form.selfie.value
           );
         } catch (e) {
           throw e;
@@ -128,10 +130,26 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
     };
   };
 
+  function getInvalidFormMessage(): string {
+    if (!isValidPersonalData(form.personalData)) {
+      return "Por favor, completa tus datos personales correctamente.";
+    }
+
+    if (!isValidAttachmentField(form.selfie)) {
+      return "Por favor, tomate una selfie para verificar tu identidad.";
+    }
+
+    if (!form.termsCheck) {
+      return "Debes aceptar los términos y condiciones y la política de privacidad.";
+    }
+
+    return "";
+  }
+
   const uploadForm = async (
     newProfilePhotoImgUrl: string | RefAttachment,
     addressPhotoImgUrl: string | RefAttachment,
-    realTimePhotoImgUrl: RefAttachment,
+    realTimePhotoImgUrl: RefAttachment
   ) => {
     if (requesterUser && form.enterprise.value) {
       var formId = nanoid(30);
@@ -150,8 +168,8 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
             requesterUser.location === undefined
               ? Locations.CochabambaBolivia
               : requesterUser.location,
-            form.enterprise.value,
-          ),
+            form.enterprise.value
+          )
         );
 
         if (requesterUser.id) {
@@ -171,7 +189,7 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
             toUpdate = {
               ...toUpdate,
               alternativePhoneNumber: parseBoliviaPhone(
-                form.personalData.alternativePhoneNumber.value,
+                form.personalData.alternativePhoneNumber.value
               ),
             };
           }
@@ -189,6 +207,7 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setInvalidFormMessage(getInvalidFormMessage());
     if (formState.loading) {
       return;
     }
@@ -207,6 +226,8 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
     }
 
     try {
+      await acceptTerms(user?.id ?? "");
+
       await updateIdCard(form.personalData.idCard, requesterUser);
       const { newProfilePhotoImgUrl, addressPhotoImgUrl, realTimePhotoImgUrl } =
         await toast.promise(uploadImages(), {
@@ -218,13 +239,13 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
         uploadForm(
           newProfilePhotoImgUrl,
           addressPhotoImgUrl,
-          realTimePhotoImgUrl,
+          realTimePhotoImgUrl
         ),
         {
           pending: "Enviando el formulario, por favor espera",
           success: "Formulario enviado",
           error: "Error al enviar el formulario, inténtalo de nuevo por favor",
-        },
+        }
       );
       window.location.reload();
     } catch (e) {
@@ -242,7 +263,7 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
         ...prev,
         isValid: isValidForm(form),
       })),
-    [form],
+    [form]
   );
 
   useEffect(() => {
@@ -334,6 +355,11 @@ const NewLaundererForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
             setCheck={(d) => setForm((prev) => ({ ...prev, termsCheck: d }))}
           />
         </BaseForm>
+        {invalidFormMessage && (
+          <p style={{ color: "red", fontSize: 16, marginTop: 16 }}>
+            * {invalidFormMessage}
+          </p>
+        )}
       </div>
     )
   );

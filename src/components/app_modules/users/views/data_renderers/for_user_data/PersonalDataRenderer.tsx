@@ -3,6 +3,7 @@ import ImageRenderer from "../../../../../form/view/field_renderers/ImageRendere
 import { RefAttachment } from "@/components/form/models/RefAttachment";
 import TextFieldRenderer from "@/components/form/view/field_renderers/TextFieldRenderer";
 import { DEFAULT_PHOTO } from "../../../models/MissingUserData";
+import PoliceRecordsRenderer from "@/components/app_modules/server_users/views/data_renderers/for_police_records/PoliceRecordsRenderer";
 
 interface Props {
   name: string;
@@ -13,6 +14,8 @@ interface Props {
   children?: React.ReactNode;
   bloodType?: string;
   alternativePhoneNumber: string;
+  alternativePhoneNumberName: string;
+  pdfRef?: RefAttachment;
 }
 
 const PersonalDataRenderer: React.FC<Props> = ({
@@ -24,6 +27,8 @@ const PersonalDataRenderer: React.FC<Props> = ({
   children,
   bloodType,
   alternativePhoneNumber,
+  alternativePhoneNumberName,
+  pdfRef
 }) => {
   return (
     <div className="form-sub-container | margin-top-25">
@@ -38,6 +43,11 @@ const PersonalDataRenderer: React.FC<Props> = ({
         {bloodType && (
           <TextFieldRenderer content={bloodType} legend="Tipo de Sangre" />
         )}
+        <TextFieldRenderer
+          content={alternativePhoneNumberName}
+          legend="Nombre del contacto de número alternativo"
+        />
+
         <TextFieldRenderer
           content={alternativePhoneNumber}
           legend="Número alternativo"
@@ -67,6 +77,12 @@ const PersonalDataRenderer: React.FC<Props> = ({
           }}
           imageInCircle={false}
         />
+
+        {
+          pdfRef && (
+            <PoliceRecordsRenderer  pdf={pdfRef} />
+          ) 
+        }
         {children && <>{children}</>}
       </div>
     </div>
