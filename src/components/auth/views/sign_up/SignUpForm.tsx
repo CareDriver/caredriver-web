@@ -8,7 +8,7 @@ import {
   saveUser,
 } from "@/components/app_modules/users/api/UserRequester";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, FormEvent } from "react";
 import { toast } from "react-toastify";
 import { UserInterface } from "@/interfaces/UserInterface";
 import EmailField from "@/components/form/view/fields/EmailField";
@@ -32,6 +32,7 @@ import AuthProviders from "../providers/AuthProviders";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 import PrivacyTermsSection from "@/components/form/view/sections/PrivacyTermsSection";
 import { acceptTerms } from "@/utils/requesters/AcceptTerms";
+import PhoneConfirmationModal from "../modals/PhoneConfirmationModal";
 
 interface Form {
   fullName: TextFieldForm;
@@ -54,8 +55,11 @@ const SignUpForm = () => {
     useContext(AuthenticatorContext);
 
   const [form, setForm] = useState<Form>(DEFAULT_FORM);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const signUp = async () => {
+    setLoading(true);
+
     if (!isValidForm(form)) {
       setLoading(false);
       setValid(false);
@@ -122,6 +126,31 @@ const SignUpForm = () => {
           setValid(false);
         }
       });
+  };
+
+  const handleSubmit = async (e?: FormEvent): Promise<void> => {
+    // Prevent default from form wrappers if any
+    if (e && e.preventDefault) e.preventDefault();
+
+    if (!isValidForm(form)) {
+      setValid(false);
+      toast.error("Por favor completa correctamente el formulario antes de continuar.");
+      return;
+    }
+
+    // Show confirmation modal about phone number
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmPhone = async () => {
+    setShowConfirmModal(false);
+    await signUp();
+  };
+
+  const handleEditPhone = () => {
+    setShowConfirmModal(false);
+    // Let the user edit the phone field
+    // Focus could be added if PhoneField exposes a ref
   };
 
   /* const sentCode = async (e: FormEvent) => {
@@ -202,7 +231,7 @@ const SignUpForm = () => {
         }}
         behavior={{
           loading: loading,
-          onSummit: signUp,
+          onSummit: handleSubmit,
         }}
       >
         <EmailField
@@ -248,6 +277,14 @@ const SignUpForm = () => {
           }
         />
       </BaseForm>
+
+      <PhoneConfirmationModal
+        phoneNumber={form.phone.value}
+        isOpen={showConfirmModal}
+        onConfirm={handleConfirmPhone}
+        onEdit={handleEditPhone}
+        isLoading={loading}
+      />
 
       <AuthProviders alternativeLegend="O registrate con" />
       <Link href={routeToSingIn()} className="text | normal center">

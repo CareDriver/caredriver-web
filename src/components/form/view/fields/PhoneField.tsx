@@ -27,6 +27,27 @@ const PhoneField: React.FC<Props> = ({ values, setter }) => {
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => setIsFocused(false);
 
+  // Handle change to prevent deletion of +591 prefix and keep value clean
+  const handleChange = (newValue: string) => {
+    // Always ensure +591 prefix
+    let sanitized = newValue.replace(/\D/g, ""); // Remove all non-digits
+
+    // If the sanitized value is empty or too short, still pass the +591 + input
+    if (!sanitized) {
+      stateValidator.changeValueAsText("+591");
+      return;
+    }
+
+    // Remove leading 591 if user typed it
+    if (sanitized.startsWith("591")) {
+      sanitized = sanitized.slice(3);
+    }
+
+    // Ensure +591 prefix
+    const fullValue = "+591" + sanitized;
+    stateValidator.changeValueAsText(fullValue);
+  };
+
   return (
     <fieldset className="form-section">
       <PhoneInput
@@ -34,7 +55,7 @@ const PhoneField: React.FC<Props> = ({ values, setter }) => {
         countries={countries}
         value={values.value}
         placeholder="Ej: 765432189"
-        onChange={stateValidator.changeValueAsText}
+        onChange={handleChange}
         inputStyle={{
           width: "100%",
           padding: "1.666666667rem 1.111111111rem",
