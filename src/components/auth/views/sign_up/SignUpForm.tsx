@@ -1,6 +1,6 @@
 "use client";
 
-// @ts-ignore: No type declarations for this CSS side-effect import
+// @ts-ignore: No type declarations for this CSS side-effect importF
 import "react-international-phone/style.css";
 import { auth } from "@/firebase/FirebaseConfig";
 import {
@@ -16,6 +16,7 @@ import PasswordField from "@/components/form/view/fields/PasswordField";
 import TextField from "@/components/form/view/fields/TextField";
 import PhoneField from "@/components/form/view/fields/PhoneField";
 import LocationField from "@/components/form/view/fields/LocationField";
+// @ts-ignore: No type declarations for this CSS side-effect importF
 import Link from "next/link";
 import { AuthenticatorContext } from "../../contexts/AuthenticatorContext";
 import { isValidTextField } from "@/components/form/validators/FieldValidators";
