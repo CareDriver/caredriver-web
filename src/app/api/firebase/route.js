@@ -7,7 +7,7 @@ const FIREBASE_STORAGE_BUCKET = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET;
 const FIREBASE_PRIVATE_KEY = process.env.FIREBASE_PRIVATE_KEY;
 const FIREBASE_CLIENT_EMAIL = process.env.FIREBASE_CLIENT_EMAIL;
 
-export const runtime = 'edge';
+// export const runtime = 'edge';
 
 const formatPrivateKey = (key) => {
   return key.replace(/\\n/g, "\n");
