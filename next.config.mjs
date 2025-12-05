@@ -41,7 +41,7 @@ const nextConfig = {
     }
     return config;
   },
-  turbopack: {},
+  // turbopack: {},
 };
 
 export default analyzer(nextConfig);
