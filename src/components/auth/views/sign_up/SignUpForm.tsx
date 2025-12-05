@@ -135,7 +135,9 @@ const SignUpForm = () => {
 
     if (!isValidForm(form)) {
       setValid(false);
-      toast.error("Por favor completa correctamente el formulario antes de continuar.");
+      toast.error(
+        "Por favor completa correctamente el formulario antes de continuar."
+      );
       return;
     }
 
@@ -235,6 +237,18 @@ const SignUpForm = () => {
           onSummit: handleSubmit,
         }}
       >
+        <TextField
+          field={{
+            values: form.fullName,
+            setter: (e) =>
+              setForm((prev) => ({
+                ...prev,
+                fullName: e,
+              })),
+            validator: isValidName,
+          }}
+          legend="Nombre completo"
+        />
         <EmailField
           values={form.email}
           setter={(e) =>
@@ -251,18 +265,7 @@ const SignUpForm = () => {
           values={form.password}
           setter={(e) => setForm((prev) => ({ ...prev, password: e }))}
         />
-        <TextField
-          field={{
-            values: form.fullName,
-            setter: (e) =>
-              setForm((prev) => ({
-                ...prev,
-                fullName: e,
-              })),
-            validator: isValidName,
-          }}
-          legend="Nombre completo"
-        />
+
         <PhoneField
           values={form.phone}
           setter={(e) => setForm((prev) => ({ ...prev, phone: e }))}
