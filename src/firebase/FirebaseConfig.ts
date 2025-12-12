@@ -1,9 +1,13 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
-import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
+import {
+  initializeAppCheck,
+  ReCaptchaV3Provider,
+  AppCheck,
+} from "firebase/app-check";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
@@ -16,38 +20,54 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+let appCheckInstance: AppCheck | null = null;
+
+function initAppCheck() {
+  if (typeof window === "undefined") return null;
+
+  try {
+    if (!appCheckInstance) {
+      const appCheckKey = process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_CLIENT_KEY;
+      
+      if (!appCheckKey) {
+        console.warn("App Check key is missing - App Check disabled");
+        return null;
+      }
+
+      // Habilitar debug token en desarrollo
+      if (process.env.NODE_ENV === "development") {
+        console.log("App Check: Using debug mode for development");
+        // Esto generará un token de debug en la consola
+        (window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+      }
+
+      console.log("Initializing App Check...");
+      
+      appCheckInstance = initializeAppCheck(app, {
+        provider: new ReCaptchaV3Provider(appCheckKey),
+        isTokenAutoRefreshEnabled: true,
+      });
+      
+      console.log("App Check initialized successfully");
+    }
+  } catch (error: any) {
+    console.error("Error initializing App Check:", error?.message || error);
+    // No bloquear la aplicación si falla App Check
+    return null;
+  }
+
+  return appCheckInstance;
+}
+
 const auth = getAuth(app);
 const firestore = getFirestore(app);
 const storage = getStorage(app);
 
+export { app, auth, firestore, storage, initAppCheck };
+
 export const initializeRealtimeDatabase = (databaseURL: string) => {
   const configWithDatabaseURL = { ...firebaseConfig, databaseURL };
-  const app = initializeApp(configWithDatabaseURL, `realtime-${databaseURL}`);
-  return getDatabase(app);
+  const rtApp = initializeApp(configWithDatabaseURL, `realtime-${databaseURL}`);
+  return getDatabase(rtApp);
 };
-
-// Pass your reCAPTCHA v3 site key (public key) to activate()
-/* const appCheckClientKey = process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_CLIENT_KEY;
-if (appCheckClientKey) {
-  initializeAppCheck(app, {
-    provider: new ReCaptchaV3Provider(appCheckClientKey),
-    isTokenAutoRefreshEnabled: true,
-  });
-}
- */
-
-
-// ⚠️ Solo inicializar App Check en el navegador
-export function initAppCheck() {
-  if (typeof window !== "undefined") {
-    if (!(window as any)._appCheckInitialized) {
-      initializeAppCheck(app, {
-        provider: new (window as any).RecaptchaV3Provider("tu-site-key"),
-        isTokenAutoRefreshEnabled: true,
-      });
-      (window as any)._appCheckInitialized = true; // evita inicializar dos veces
-    }
-  }
-}
-
-export { app, auth, firestore, storage };

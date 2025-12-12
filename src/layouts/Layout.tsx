@@ -7,35 +7,18 @@ import { ToastContainer } from "react-toastify";
 import AuthProvider from "@/context/AuthContext";
 import Head from "next/head";
 import Script from "next/script";
+import { useEffect } from "react";
+import { initAppCheck } from "@/firebase/FirebaseConfig";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  useEffect(() => {
+    initAppCheck();
+  }, []);
+  
   return (
     <html lang="es">
       <Head>
-        <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-          name="description"
-          content="Plataforma integral de servicios especializados conductores, mecánicos grúas y lavaderos. Envía tu solicitud para ofrecer alguno de estos servicios en nuestra aplicación."
-        />
-        <meta
-          name="keywords"
-          content="transporte, conductor, mecánico, grúa, lavandería, servicios, CareDriver"
-        />
-        <meta property="og:image" content="https://i.ibb.co/8wgXZJB/Screenshot-from-2025-12-05-13-22-46.png"></meta>
-        <meta name="theme-color" content="#07e580" />
-        <meta name="color-scheme" content="light" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
-        <meta property="og:title" content="CareDriver - Panel Web" />
-        <meta
-          property="og:description"
-          content="Plataforma integral de servicios especializados de automóviles."
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="CareDriver" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="CareDriver - Panel Web" />
       </Head>
       <body>
         <AuthProvider>{children}</AuthProvider>

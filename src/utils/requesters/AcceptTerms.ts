@@ -11,7 +11,7 @@ export async function acceptTerms(uid: string) {
     const { token } = await getToken(appCheck, true);
 
     const response = await fetch(
-      "https://us-central1.<tu-proyecto>.cloudfunctions.net/logTermsAcceptance",
+      "https://logtermsacceptance-27j5hqiv7a-uc.a.run.app",
       {
         method: "POST",
         headers: {

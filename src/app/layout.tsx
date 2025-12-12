@@ -2,10 +2,11 @@ import Layout from "@/layouts/Layout";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "CareDriver - Panel de Control",
-  description: "Plataforma integral de transporte y servicios especializados. Conecta con conductores, mecánicos, grúas y servicios de lavandería de confianza.",
-  keywords: "transporte, conductor, mecánico, grúa, lavandería, servicios",
-  authors: [{ name: "CareDriver Team" }],
+  title: "CareDriver - Panel Web",
+  description:
+    "Plataforma de transporte y servicios especializados para automótivles. Envía tu solicitud para convertirte en Conductor, Mecánico, Operador de Grúa o Lavadero.",
+  keywords:
+    "transporte, conductor, mecánico, grúa, lavandería, servicios, caredriver, drivercare, servicios, conductor designado",
   viewport: "width=device-width, initial-scale=1.0, maximum-scale=5.0",
   icons: {
     icon: "/favicon.ico",
@@ -13,10 +14,12 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.json",
   openGraph: {
-    title: "CareDriver - Panel de Control",
-    description: "Plataforma integral de transporte y servicios especializados.",
+    title: "CareDriver - Panel Web",
+    description:
+      "Plataforma de transporte y servicios especializados para automóviles.",
     type: "website",
     siteName: "CareDriver",
+    images: "https://i.ibb.co/8wgXZJB/Screenshot-from-2025-12-05-13-22-46.png",
   },
   robots: "index, follow",
 };
