@@ -202,27 +202,27 @@ export const setFirstService = async (
   adminId: string,
 ): Promise<Partial<UserInterface>> => {
   // TODO: DAR EL BALANCE INICIAL CON TIEMPO DE EXPIRACIÓN
-  const balanceGift = 5;
-  if (user.services.length === 1) {
-    current = {
-      ...current,
-      balance: {
-        currency: "Bs. (BOB)",
-        amount: user.balance.amount + balanceGift,
-      },
-    };
-    await toast.promise(saveBalanceGift(user, adminId), {
-      pending: `Regalando ${balanceGift} Bs. de saldo por ser nuevo proveedor de servicios`,
-      success: `${balanceGift} Bs. de saldo regalado`,
-      error: "Error al regalar saldo, inténtalo de nuevo por favor",
-    });
-  }
-  if (!user.serverUserAt) {
-    current = {
-      ...current,
-      serverUserAt: Timestamp.now(),
-    };
-  }
+  // const balanceGift = 5;
+  // if (user.services.length === 1) {
+  //   current = {
+  //     ...current,
+  //     balance: {
+  //       currency: "Bs. (BOB)",
+  //       amount: user.balance.amount + balanceGift,
+  //     },
+  //   };
+  //   await toast.promise(saveBalanceGift(user, adminId), {
+  //     pending: `Regalando ${balanceGift} Bs. de saldo por ser nuevo proveedor de servicios`,
+  //     success: `${balanceGift} Bs. de saldo regalado`,
+  //     error: "Error al regalar saldo, inténtalo de nuevo por favor",
+  //   });
+  // }
+  // if (!user.serverUserAt) {
+  //   current = {
+  //     ...current,
+  //     serverUserAt: Timestamp.now(),
+  //   };
+  // }
 
   return current;
 };

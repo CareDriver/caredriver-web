@@ -215,9 +215,9 @@ input[type="password"] {
 .form-section-uploaded-image {
   width: 100%;
   height: 35vh;
-  border-radius: var(--rounded-field);
+  /* border-radius: var(--rounded-field); */
 
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .form-section-uploaded-button {
@@ -309,8 +309,8 @@ input[type="password"] {
   width: 15.555555556rem;
   height: 15.555555556rem;
 
-  object-fit: cover;
-  border-radius: 50%;
+  object-fit: contain;
+  /* border-radius: 50%; */
 }
 
 .form-section-uploaded-file-pdf {

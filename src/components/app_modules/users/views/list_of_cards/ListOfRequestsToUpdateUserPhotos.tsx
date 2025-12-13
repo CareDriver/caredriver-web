@@ -19,7 +19,7 @@ const ListOfRequestsToUpdateUserPhotos = () => {
   const [data, setData] = useState<ChangePhotoReqInterface[] | null>(null);
   const [page, setPage] = useState<number>(1);
   const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(
-    undefined,
+    undefined
   );
   const [pages, setPages] = useState<number | null>(null);
 
@@ -70,21 +70,24 @@ const ListOfRequestsToUpdateUserPhotos = () => {
       <h1 className={"text | big bold margin-bottom-25 capitalize"}>
         Solicitudes para cambiar fotos de Perfil
       </h1>
-      <InfiniteScroll
-        dataLength={data.length}
-        next={handleNextClick}
-        hasMore={page !== pages}
-        loader={<DataLoading />}
-      >
-        <div className="personal-data-req-wrapper">
-          {data.map((req, i) => (
-            <UserCardWithNewPhoto
-              photo={req}
-              key={`photo-update-req-item-${i}`}
-            />
-          ))}
-        </div>
-      </InfiniteScroll>
+      {data.length > 0 && (
+        <InfiniteScroll
+          dataLength={data.length}
+          next={handleNextClick}
+          hasMore={page !== pages}
+          loader={<DataLoading />}
+        >
+          <div className="personal-data-req-wrapper">
+            {data.length > 0 &&
+              data.map((req, i) => (
+                <UserCardWithNewPhoto
+                  photo={req}
+                  key={`photo-update-req-item-${i}`}
+                />
+              ))}
+          </div>
+        </InfiniteScroll>
+      )}
     </div>
   );
 };

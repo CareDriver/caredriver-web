@@ -44,7 +44,7 @@ const ReviewFormToBeServerUserWithLoader = ({
       .then((u) => {
         unsubscribe = u;
       })
-      .catch(() => onNotFound());
+      .catch((e) => console.log(e));
 
     return () => unsubscribe && unsubscribe();
   }, [collection, reqId, router, type]);

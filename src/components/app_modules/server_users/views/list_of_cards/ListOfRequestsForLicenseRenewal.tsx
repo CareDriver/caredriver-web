@@ -51,7 +51,7 @@ const ListOfRequestsForLicenseRenewal = () => {
         setLastDoc(result.lastDoc);
       })
       .catch(() => {});
-  }, [page, data, lastDoc]);
+  }, [page]);
 
   if (!data) {
     return <PageLoading />;
