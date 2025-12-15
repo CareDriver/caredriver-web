@@ -224,7 +224,7 @@ const SignUpForm = () => {
         content={{
           button: {
             content: {
-              legend: "Verificar datos",
+              legend: "Registrarse",
             },
             behavior: {
               isValid: isValid,

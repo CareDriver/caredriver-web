@@ -25,7 +25,7 @@ const PhoneConfirmationModal = ({
   editableSetter,
 }: PhoneConfirmationModalProps) => {
   const [internalPhone, setInternalPhone] = useState<TextFieldForm | null>(
-    editableValues ?? null
+    editableValues ?? null,
   );
   const [acceptTerms, setAcceptTerms] = useState(false);
 
