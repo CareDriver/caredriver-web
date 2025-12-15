@@ -142,7 +142,11 @@ const ImageUploader: React.FC<Props> = ({ uploader, content }) => {
             src={uploader.image.value}
             alt="preview"
             className="form-section-uploaded-image"
-            style={content.imageInCircle ? {objectFit: "cover", borderRadius: "50%"} : {}}
+            style={
+              content.imageInCircle
+                ? { objectFit: "cover", borderRadius: "50%" }
+                : {}
+            }
           />
           <button
             onClick={removeImage}

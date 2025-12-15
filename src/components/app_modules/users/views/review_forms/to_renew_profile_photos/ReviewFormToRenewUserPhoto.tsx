@@ -39,7 +39,7 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
       toast.error(reason);
       router.push(routeToUserRequestsToRenewPhotoAsAdmin());
     },
-    [router]
+    [router],
   );
 
   const fetchUserReq = useCallback(async () => {
@@ -175,7 +175,7 @@ const ReviewFormToRenewUserPhoto = ({ reqId }: { reqId: string }) => {
               userReq?.alternativePhoneNumber
                 ? parseBoliviaPhone(
                     (userReq?.alternativePhoneNumber?.countryCode ?? "") +
-                      (userReq?.alternativePhoneNumber?.number ?? "")
+                      (userReq?.alternativePhoneNumber?.number ?? ""),
                   ).number
                 : ""
             }

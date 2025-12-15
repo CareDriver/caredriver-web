@@ -50,7 +50,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
     RequestForChangeOfEnterprise | undefined
   >(undefined);
   const [requesterUser, setRequesterUser] = useState<UserInterface | undefined>(
-    undefined
+    undefined,
   );
   const [oldEnterprise, setOldEnterprise] = useState<
     Enterprise | undefined | null
@@ -67,7 +67,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
 
   const putNewEntepriseOnUser = (
     serviceType: ServiceType,
-    enterpriseId: string
+    enterpriseId: string,
   ): Partial<UserInterface> => {
     switch (serviceType) {
       case "driver":
@@ -93,7 +93,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
 
   const removeUserToEnterprise = async (
     enterprise: Enterprise,
-    user: UserInterface
+    user: UserInterface,
   ) => {
     if (!user.id || !enterprise.id) {
       return;
@@ -114,7 +114,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
 
   const addUserToEnterprise = async (
     enterprise: Enterprise,
-    user: UserInterface
+    user: UserInterface,
   ) => {
     if (!user.id || !enterprise.id) {
       return;
@@ -174,7 +174,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
           pending: "Removiendo de la antigua empresa",
           success: "Removido de la antigua empresa",
           error: "Error al remover de la antigua empresa, inténtalo de nuevo",
-        }
+        },
       );
     }
 
@@ -188,7 +188,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
     // adding enterprise to user
     await updateUser(
       requesterUser.id,
-      putNewEntepriseOnUser(request.serviceType, request.newEnterpriseId)
+      putNewEntepriseOnUser(request.serviceType, request.newEnterpriseId),
     );
 
     // set request as reviewed
@@ -200,7 +200,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
         pending: "Guardando solicitud",
         success: "Solicitud guardada",
         error: "Error al guardar la solicitud",
-      }
+      },
     );
 
     router.push(routeToUserRequestsToChangeEnterpriseAsAdmin());
@@ -221,7 +221,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
         pending: "Rechazando solicitud...",
         success: "Solicitud rechazada",
         error: "Error al rechazar la solicitud, inténtalo de nuevo por favor",
-      }
+      },
     );
 
     router.push(routeToUserRequestsToChangeEnterpriseAsAdmin());
@@ -352,7 +352,7 @@ const ReviewFormToChangeFromEnterpriseToUser: React.FC<Props> = ({ reqId }) => {
                   ? parseBoliviaPhone(
                       (requesterUser?.alternativePhoneNumber?.countryCode ??
                         "") +
-                        (requesterUser?.alternativePhoneNumber?.number ?? "")
+                        (requesterUser?.alternativePhoneNumber?.number ?? ""),
                     ).number
                   : ""
               }

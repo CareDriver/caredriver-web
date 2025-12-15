@@ -1,7 +1,7 @@
-import withBundleAnalyzer from '@next/bundle-analyzer';
+import withBundleAnalyzer from "@next/bundle-analyzer";
 
 const analyzer = withBundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
+  enabled: process.env.ANALYZE === "true",
 });
 
 /** @type {import('next').NextConfig} */
@@ -37,7 +37,7 @@ const nextConfig = {
   webpack: (config, { isServer }) => {
     if (!isServer) {
       // Prevent firebase-admin from being bundled on the client
-      config.externals.push('firebase-admin');
+      config.externals.push("firebase-admin");
     }
     return config;
   },

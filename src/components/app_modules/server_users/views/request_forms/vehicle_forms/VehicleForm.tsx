@@ -78,7 +78,7 @@ const VehicleForm = ({
 
   const changeLicenseImage = (
     image: AttachmentField,
-    side: "frontPhoto" | "behindPhoto"
+    side: "frontPhoto" | "behindPhoto",
   ) => {
     setVehicle({
       ...vehicle,

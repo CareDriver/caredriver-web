@@ -56,7 +56,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
     UserInterface | null | undefined
   >(null);
   const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(
-    null
+    null,
   );
 
   const wasReviewed = (): boolean => {
@@ -73,7 +73,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
           serviceReq,
           adminUser.id,
           wasApproved,
-          driveReqCollection
+          driveReqCollection,
         );
 
         if (isLimitToReviews) {
@@ -189,7 +189,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               userToUpdate = await setFirstService(
                 requesterUser,
                 userToUpdate,
-                adminUser.id
+                adminUser.id,
               );
             }
 
@@ -207,14 +207,14 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 addUserServerToEnterprise(
                   enterprise,
                   serviceReq.userId,
-                  getIdSaved(requesterUser.fakeId)
+                  getIdSaved(requesterUser.fakeId),
                 ),
                 {
                   pending:
                     "Agregando al usuario al servicio como proveedor de servicios",
                   success: "Usuario agregado al servicio",
                   error: "Error al agregar al usuario al servicio",
-                }
+                },
               );
             }
 
@@ -234,7 +234,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const getVehicle = (type: VehicleType): Vehicle | null => {
     if (serviceReq.vehicles) {
       const vehicles = serviceReq.vehicles.filter(
-        (veh) => veh.type.type === type
+        (veh) => veh.type.type === type,
       );
       if (vehicles.length > 0) {
         return vehicles[0];
@@ -374,7 +374,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
             requesterUser?.alternativePhoneNumber
               ? parseBoliviaPhone(
                   (requesterUser?.alternativePhoneNumber?.countryCode ?? "") +
-                    (requesterUser?.alternativePhoneNumber?.number ?? "")
+                    (requesterUser?.alternativePhoneNumber?.number ?? ""),
                 ).number
               : ""
           }
@@ -416,7 +416,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
             email={requesterUser.email}
             phoneNumber={flatPhone(requesterUser.phoneNumber)}
             alternativePhoneNumber={flatPhone(
-              requesterUser.alternativePhoneNumber
+              requesterUser.alternativePhoneNumber,
             )}
           />
         ) : (

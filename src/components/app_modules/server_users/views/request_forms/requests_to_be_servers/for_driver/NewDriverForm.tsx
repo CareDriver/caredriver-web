@@ -68,7 +68,7 @@ const NewDriverForm: React.FC<Props> = ({
 }) => {
   const { user, checkingUserAuth } = useContext(AuthContext);
   const [requesterUser, setRequesterUser] = useState<UserInterface | undefined>(
-    baseUser
+    baseUser,
   );
   const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
   const [form, setForm] = useState<Form>(DEFAULT_FORM);
@@ -76,7 +76,7 @@ const NewDriverForm: React.FC<Props> = ({
   const [policeRecorderFile, setPoliceRecorderFile] = useState<AttachmentField>(
     {
       ...DEFAUL_ATTACHMENT_FIELD,
-    }
+    },
   );
 
   const uploadImages = async () => {
@@ -95,7 +95,7 @@ const NewDriverForm: React.FC<Props> = ({
         try {
           profilePhotoRef = await uploadFileBase64(
             DirectoryPath.TempProfilePhotos,
-            form.personalData.photo.value
+            form.personalData.photo.value,
           );
         } catch (e) {
           throw e;
@@ -111,7 +111,7 @@ const NewDriverForm: React.FC<Props> = ({
         try {
           addressPhotoRef = await uploadFileBase64(
             DirectoryPath.ElectricityBills,
-            form.personalData.addressPhoto.value
+            form.personalData.addressPhoto.value,
           );
         } catch (e) {
           throw e;
@@ -127,11 +127,11 @@ const NewDriverForm: React.FC<Props> = ({
           try {
             const frontImgUrl = await uploadFileBase64(
               DirectoryPath.Licenses,
-              vehicle.license.frontPhoto.value
+              vehicle.license.frontPhoto.value,
             );
             const behindImgUrl = await uploadFileBase64(
               DirectoryPath.Licenses,
-              vehicle.license.behindPhoto.value
+              vehicle.license.behindPhoto.value,
             );
             if (vehicle.license.expirationDate.value) {
               vehiclesData.push({
@@ -139,7 +139,7 @@ const NewDriverForm: React.FC<Props> = ({
                 license: {
                   licenseNumber: vehicle.license.number.value,
                   expiredDateLicense: Timestamp.fromDate(
-                    vehicle.license.expirationDate.value
+                    vehicle.license.expirationDate.value,
                   ),
                   frontImgUrl: frontImgUrl,
                   backImgUrl: behindImgUrl,
@@ -159,7 +159,7 @@ const NewDriverForm: React.FC<Props> = ({
         try {
           selfieRef = await uploadFileBase64(
             DirectoryPath.Selfies,
-            form.selfie.value
+            form.selfie.value,
           );
         } catch (e) {
           throw e;
@@ -179,18 +179,21 @@ const NewDriverForm: React.FC<Props> = ({
     vehiclesData: Vehicle[],
     profilePhotoRef: string | RefAttachment,
     addressPhotoRef: string | RefAttachment,
-    selfieRef: RefAttachment
+    selfieRef: RefAttachment,
   ) => {
     if (requesterUser) {
       var formId = genDocId();
       try {
-        const pdfRef = await toast.promise(uploadPDF(), {
-          pending: "Subiendo PDF de Antecedentes",
-          success: "PDF de Antecedentes Subido",
-          error: "Error al subir el PDF, inténtalo de nuevo",
-        });
+        let pdfRef: RefAttachment | null = EMPTY_REF_ATTACHMENT;
+        if (policeRecorderFile.value) {
+          pdfRef = await toast.promise(uploadPDF(), {
+            pending: "Subiendo PDF de Antecedentes",
+            success: "PDF de Antecedentes Subido",
+            error: "Error al subir el PDF, inténtalo de nuevo",
+          });
+        }
 
-        if(!pdfRef) return;
+        if (!pdfRef) return;
 
         await saveDriveReq(
           formId,
@@ -210,8 +213,8 @@ const NewDriverForm: React.FC<Props> = ({
             form.personalData.bloodType.value,
             form.personalData.gender.value as Gender,
             defaultEnterprise,
-            pdfRef
-          )
+            pdfRef,
+          ),
         );
 
         var newReqState;
@@ -257,7 +260,7 @@ const NewDriverForm: React.FC<Props> = ({
             toUpdate = {
               ...toUpdate,
               alternativePhoneNumber: parseBoliviaPhone(
-                form.personalData.alternativePhoneNumber.value
+                form.personalData.alternativePhoneNumber.value,
               ),
               bloodType: form.personalData.bloodType.value,
               gender: form.personalData.gender.value as Gender,
@@ -280,7 +283,7 @@ const NewDriverForm: React.FC<Props> = ({
       isValidPersonalData(form.personalData) &&
       areValidVehicles(form.vehicles) &&
       isValidAttachmentField(form.selfie) &&
-      policeRecorderFile.value !== undefined &&
+      // policeRecorderFile.value !== undefined &&
       form.termsCheck
     );
   }
@@ -310,7 +313,7 @@ const NewDriverForm: React.FC<Props> = ({
       try {
         return await uploadFileBase64(
           DirectoryPath.Documents,
-          policeRecorderFile.value
+          policeRecorderFile.value,
         );
       } catch (e) {
         console.log(e);
@@ -356,7 +359,7 @@ const NewDriverForm: React.FC<Props> = ({
           pending: "Enviando el formulario, por favor espera",
           success: "Formulario enviado",
           error: "Error al enviar el formulario, inténtalo de nuevo por favor",
-        }
+        },
       );
       window.location.reload();
     } catch (e) {
@@ -375,7 +378,7 @@ const NewDriverForm: React.FC<Props> = ({
         ...formState,
         isValid: isValidForm(form),
       })),
-    [form]
+    [form],
   );
 
   useEffect(() => {

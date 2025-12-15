@@ -9,9 +9,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "@/firebase/FirebaseConfig";
 import { Collections } from "@/firebase/CollecionNames";
 
-export class EnterpriseManagerEditedAsServerUser
-  implements IEditedEnterpriseManager
-{
+export class EnterpriseManagerEditedAsServerUser implements IEditedEnterpriseManager {
   COLLECTION = collection(firestore, Collections.EditEnterprises);
 
   validate = async (

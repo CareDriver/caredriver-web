@@ -14,7 +14,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     initAppCheck();
   }, []);
-  
+
   return (
     <html lang="es">
       <Head>

@@ -19,7 +19,7 @@ const ListOfRequestsToUpdateUserPhotos = () => {
   const [data, setData] = useState<ChangePhotoReqInterface[] | null>(null);
   const [page, setPage] = useState<number>(1);
   const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(
-    undefined
+    undefined,
   );
   const [pages, setPages] = useState<number | null>(null);
 

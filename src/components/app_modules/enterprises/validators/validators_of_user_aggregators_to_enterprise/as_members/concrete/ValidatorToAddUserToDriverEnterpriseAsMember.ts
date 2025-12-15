@@ -10,9 +10,7 @@ import {
 import { InputState } from "@/validators/InputValidatorSignature";
 import { DRIVER } from "@/models/Business";
 
-export class ValidatorToAddUserToDriverEnterpriseAsMember
-  implements IUserAggregatorValidatorToEnterpriseAsMember
-{
+export class ValidatorToAddUserToDriverEnterpriseAsMember implements IUserAggregatorValidatorToEnterpriseAsMember {
   enterprise: Enterprise;
 
   constructor(enterprise: Enterprise) {

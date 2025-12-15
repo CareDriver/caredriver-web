@@ -69,7 +69,7 @@ const SignUpForm = () => {
     }
 
     let amountOfUsers = await checkEmailExists(
-      form.email.value.trim().toLocaleLowerCase()
+      form.email.value.trim().toLocaleLowerCase(),
     );
     if (amountOfUsers > 0) {
       setForm((prev) => ({
@@ -88,7 +88,7 @@ const SignUpForm = () => {
     createUserWithEmailAndPassword(
       auth,
       form.email.value.toLocaleLowerCase().trim(),
-      form.password.value.trim()
+      form.password.value.trim(),
     )
       .then(async (res) => {
         let newUser: UserInterface = formToNewUser(form);
@@ -104,7 +104,7 @@ const SignUpForm = () => {
           .catch(() => {
             setLoading(false);
             toast.error(
-              "Error al guardar los datos, inténtalo de nuevo por favor"
+              "Error al guardar los datos, inténtalo de nuevo por favor",
             );
           });
       })
@@ -136,7 +136,7 @@ const SignUpForm = () => {
     if (!isValidForm(form)) {
       setValid(false);
       toast.error(
-        "Por favor completa correctamente el formulario antes de continuar."
+        "Por favor completa correctamente el formulario antes de continuar.",
       );
       return;
     }

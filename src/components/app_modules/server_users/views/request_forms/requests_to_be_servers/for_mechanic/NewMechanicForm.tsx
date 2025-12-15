@@ -70,7 +70,7 @@ interface Props {
 const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
   const { user, checkingUserAuth } = useContext(AuthContext);
   const [requesterUser, setRequesterUser] = useState<UserInterface | undefined>(
-    baseUser
+    baseUser,
   );
   const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
   const [form, setForm] = useState<Form>(DEFAULT_FORM(baseEnterprise));
@@ -91,7 +91,7 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
         try {
           newProfilePhotoImgUrl = await uploadFileBase64(
             DirectoryPath.TempProfilePhotos,
-            form.personalData.photo.value
+            form.personalData.photo.value,
           );
         } catch (e) {
           throw e;
@@ -107,7 +107,7 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
         try {
           addressPhotoImgUrl = await uploadFileBase64(
             DirectoryPath.ElectricityBills,
-            form.personalData.addressPhoto.value
+            form.personalData.addressPhoto.value,
           );
         } catch (e) {
           throw e;
@@ -118,7 +118,7 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
         try {
           realTimePhotoImgUrl = await uploadFileBase64(
             DirectoryPath.Selfies,
-            form.selfie.value
+            form.selfie.value,
           );
         } catch (e) {
           throw e;
@@ -152,7 +152,7 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
   const uploadForm = async (
     newProfilePhotoImgUrl: string | RefAttachment,
     addressPhotoImgUrl: string | RefAttachment,
-    realTimePhotoImgUrl: RefAttachment
+    realTimePhotoImgUrl: RefAttachment,
   ) => {
     if (requesterUser) {
       var formId = nanoid(30);
@@ -172,8 +172,8 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
               ? Locations.CochabambaBolivia
               : requesterUser.location,
             form.enterprise.value,
-            form.mechanicTools.value
-          )
+            form.mechanicTools.value,
+          ),
         );
 
         if (requesterUser.id) {
@@ -193,7 +193,7 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
             toUpdate = {
               ...toUpdate,
               alternativePhoneNumber: parseBoliviaPhone(
-                form.personalData.alternativePhoneNumber.value
+                form.personalData.alternativePhoneNumber.value,
               ),
             };
           }
@@ -243,13 +243,13 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
         uploadForm(
           newProfilePhotoImgUrl,
           addressPhotoImgUrl,
-          realTimePhotoImgUrl
+          realTimePhotoImgUrl,
         ),
         {
           pending: "Enviando el formulario, por favor espera",
           success: "Formulario enviado",
           error: "Error al enviar el formulario, inténtalo de nuevo por favor",
-        }
+        },
       );
       window.location.reload();
     } catch (e) {
@@ -266,7 +266,7 @@ const NewMechanicForm: React.FC<Props> = ({ baseUser, baseEnterprise }) => {
         ...prev,
         isValid: isValidForm(form),
       })),
-    [form]
+    [form],
   );
 
   useEffect(() => {

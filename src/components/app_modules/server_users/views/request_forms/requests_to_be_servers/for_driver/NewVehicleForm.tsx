@@ -73,7 +73,7 @@ const NewVehicleForm: React.FC<Props> = ({
   const { user, checkingUserAuth } = useContext(AuthContext);
   const router = useRouter();
   const [requesterUser, setRequesterUser] = useState<UserInterface | undefined>(
-    baseUser
+    baseUser,
   );
   const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
   const [form, setForm] = useState<Form>(DEFAULT_FORM(type));
@@ -107,7 +107,7 @@ const NewVehicleForm: React.FC<Props> = ({
         try {
           profilePhotoRef = await uploadFileBase64(
             DirectoryPath.TempProfilePhotos,
-            form.personalData.photo.value
+            form.personalData.photo.value,
           );
         } catch (e) {
           throw e;
@@ -122,7 +122,7 @@ const NewVehicleForm: React.FC<Props> = ({
         try {
           addressPhotoRef = await uploadFileBase64(
             DirectoryPath.ElectricityBills,
-            form.personalData.addressPhoto.value
+            form.personalData.addressPhoto.value,
           );
         } catch (e) {
           throw e;
@@ -136,11 +136,11 @@ const NewVehicleForm: React.FC<Props> = ({
         try {
           const frontImgUrl = await uploadFileBase64(
             DirectoryPath.Licenses,
-            form.vehicle.license.frontPhoto.value
+            form.vehicle.license.frontPhoto.value,
           );
           const behindImgUrl = await uploadFileBase64(
             DirectoryPath.Licenses,
-            form.vehicle.license.behindPhoto.value
+            form.vehicle.license.behindPhoto.value,
           );
           if (form.vehicle.license.expirationDate.value) {
             vehiclesData.push({
@@ -148,7 +148,7 @@ const NewVehicleForm: React.FC<Props> = ({
               license: {
                 licenseNumber: form.vehicle.license.number.value,
                 expiredDateLicense: Timestamp.fromDate(
-                  form.vehicle.license.expirationDate.value
+                  form.vehicle.license.expirationDate.value,
                 ),
                 frontImgUrl: frontImgUrl,
                 backImgUrl: behindImgUrl,
@@ -168,7 +168,7 @@ const NewVehicleForm: React.FC<Props> = ({
         try {
           selfieRef = await uploadFileBase64(
             DirectoryPath.Selfies,
-            form.selfie.value
+            form.selfie.value,
           );
         } catch (e) {
           throw e;
@@ -188,7 +188,7 @@ const NewVehicleForm: React.FC<Props> = ({
     vehiclesData: Vehicle[],
     profilePhotoRef: string | RefAttachment,
     addressPhotoRef: string | RefAttachment,
-    selfieRef: RefAttachment
+    selfieRef: RefAttachment,
   ) => {
     if (requesterUser) {
       var formId = genDocId();
@@ -218,8 +218,8 @@ const NewVehicleForm: React.FC<Props> = ({
               : requesterUser.location,
             requesterUser.bloodType ?? BloodTypes.OPositive,
             requesterUser.gender ?? Gender.Male,
-            defaultEnterprise
-          )
+            defaultEnterprise,
+          ),
         );
 
         var newReqState =
@@ -249,7 +249,7 @@ const NewVehicleForm: React.FC<Props> = ({
             toUpdate = {
               ...toUpdate,
               alternativePhoneNumber: parseBoliviaPhone(
-                form.personalData.alternativePhoneNumber.value
+                form.personalData.alternativePhoneNumber.value,
               ),
             };
           }
@@ -311,13 +311,13 @@ const NewVehicleForm: React.FC<Props> = ({
           vehiclesData,
           newProfilePhotoImgUrl,
           addressPhotoRef,
-          realTimePhotoImgUrl
+          realTimePhotoImgUrl,
         ),
         {
           pending: "Enviando el formulario, por favor espera",
           success: "Formulario enviado",
           error: "Error al enviar el formulario, inténtalo de nuevo por favor",
-        }
+        },
       );
       window.location.reload();
     } catch (e) {
@@ -364,7 +364,7 @@ const NewVehicleForm: React.FC<Props> = ({
         ...prev,
         isValid: isValidForm(form),
       })),
-    [form]
+    [form],
   );
 
   const verifyRequestAvailability = useCallback(() => {
@@ -491,4 +491,3 @@ const DEFAULT_FORM = (typeVehicle: VehicleToAddAsDriver): Form => {
     termsCheck: false,
   };
 };
-

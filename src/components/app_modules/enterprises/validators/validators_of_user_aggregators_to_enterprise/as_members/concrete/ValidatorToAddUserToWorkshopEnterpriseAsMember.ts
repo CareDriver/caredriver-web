@@ -8,9 +8,7 @@ import {
 } from "../UserAggregatorValidatorToEnterpriseHelper";
 import { InputState } from "@/validators/InputValidatorSignature";
 
-export class ValidatorToAddUserToWorkshopEnterpriseAsMember
-  implements IUserAggregatorValidatorToEnterpriseAsMember
-{
+export class ValidatorToAddUserToWorkshopEnterpriseAsMember implements IUserAggregatorValidatorToEnterpriseAsMember {
   enterprise: Enterprise;
 
   constructor(enterprise: Enterprise) {

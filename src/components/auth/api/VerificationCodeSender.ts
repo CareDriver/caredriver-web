@@ -6,7 +6,7 @@ export async function sendVerificationCode(phone: string) {
     generateVerificationCode({
       length: 6,
       type: "string",
-    })
+    }),
   );
 
   // const message: string = `✉️ Tu código de verificación es ${codeSent}`;

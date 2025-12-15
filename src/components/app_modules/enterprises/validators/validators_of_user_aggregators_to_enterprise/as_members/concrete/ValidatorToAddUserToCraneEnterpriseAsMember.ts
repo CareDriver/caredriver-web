@@ -8,9 +8,7 @@ import {
 } from "@/components/app_modules/enterprises/validators/validators_of_user_aggregators_to_enterprise/as_members/UserAggregatorValidatorToEnterpriseHelper";
 import { InputState } from "@/validators/InputValidatorSignature";
 
-export class ValidatorToAddUserToCraneEnterpriseAsMember
-  implements IUserAggregatorValidatorToEnterpriseAsMember
-{
+export class ValidatorToAddUserToCraneEnterpriseAsMember implements IUserAggregatorValidatorToEnterpriseAsMember {
   enterprise: Enterprise;
 
   constructor(enterprise: Enterprise) {

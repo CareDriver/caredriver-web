@@ -11,7 +11,7 @@ import { greeting } from "@/utils/senders/Greeter";
 
 export async function notifyByPhoneApprovalServerUser(
   phone: string,
-  serviceType: ServiceType
+  serviceType: ServiceType,
 ) {
   const message = greeting()
     .concat(" 🎉 Tu Solicitud fue aprobada para ser ")
@@ -41,7 +41,7 @@ export async function notifyByPhoneApprovalServerUser(
 
 export async function notifyRequestApprovalUser(
   requesterUser: UserInterface,
-  serviceType: ServiceType
+  serviceType: ServiceType,
 ) {
   const phoneNumber: PhoneNumber | undefined =
     requesterUser.phoneNumber ?? requesterUser.alternativePhoneNumber;
@@ -49,7 +49,7 @@ export async function notifyRequestApprovalUser(
   if (phoneNumber) {
     await notifyByPhoneApprovalServerUser(
       flatPhone(phoneNumber).replace("+", ""),
-      serviceType
+      serviceType,
     );
   }
 }

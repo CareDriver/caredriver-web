@@ -17,7 +17,7 @@ import { routeToProfileAsUser } from "@/utils/route_builders/as_user/RouteBuilde
 const FormToChangeUserLocation = () => {
   const { checkingUserAuth, user, userProps } = useContext(AuthContext);
   const [newLocation, setNewLocation] = useState<Locations>(
-    user?.location ?? Locations.CochabambaBolivia
+    user?.location ?? Locations.CochabambaBolivia,
   );
   const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
 
@@ -34,13 +34,13 @@ const FormToChangeUserLocation = () => {
       message = greeting()
         .concat(`Soy ${user?.fullName}, `)
         .concat(
-          `, quisiera que me agreguen al grupo de Whatsaap de ${newLocation} 🌎`
+          `, quisiera que me agreguen al grupo de Whatsaap de ${newLocation} 🌎`,
         );
     } else {
       message = greeting()
         .concat(`Soy ${user?.fullName}, `)
         .concat(
-          `quisiera cambiarme de grupo de Whatsaap, 🔁🌎 porque ahora estoy en ${newLocation}.`
+          `quisiera cambiarme de grupo de Whatsaap, 🔁🌎 porque ahora estoy en ${newLocation}.`,
         )
         .concat(`\nMi antigua ubicación era ${oldLocation} 👀`);
     }
@@ -76,7 +76,7 @@ const FormToChangeUserLocation = () => {
             success: "Localización actualizada",
             error:
               "Error al actualizar tu localización, inténtalo de nuevo por favor",
-          }
+          },
         );
 
         sendMessage(newLocation, user.location);

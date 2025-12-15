@@ -103,7 +103,7 @@ export const licenseBuilder = (
   backImgUrl: RefAttachment,
   category: LicenseCategories,
   requireGlasses: boolean,
-  requireHeadphones: boolean
+  requireHeadphones: boolean,
 ): LicenseInterface => {
   return {
     licenseNumber,
@@ -130,7 +130,7 @@ export const driveReqBuilder = (
   bloodType: BloodTypes,
   gender: Gender,
   driverEnterprise: string | undefined,
-  pdfRef?: RefAttachment 
+  pdfRef?: RefAttachment,
 ): UserRequest => {
   let userRequest: UserRequest = {
     id,
@@ -197,7 +197,7 @@ export const mechanicReqBuilder = (
   services: Services[],
   location: Locations,
   mechanicalWorkShop: string | undefined,
-  mechanicTools: string
+  mechanicTools: string,
 ): UserRequest => {
   if (mechanicalWorkShop) {
     return {
@@ -245,7 +245,7 @@ export const laundryReqBuilder = (
   realTimePhotoImgUrl: RefAttachment,
   services: Services[],
   location: Locations,
-  laundryEnterprite: string
+  laundryEnterprite: string,
 ): UserRequest => {
   return {
     id,
@@ -276,7 +276,7 @@ export const towReqBuilder = (
   services: Services[],
   location: Locations,
   vehicles: Vehicle[],
-  pdfRef: RefAttachment
+  pdfRef: RefAttachment,
 ): UserRequest => {
   return {
     id,

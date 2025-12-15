@@ -28,7 +28,7 @@ const PersonalDataRenderer: React.FC<Props> = ({
   bloodType,
   alternativePhoneNumber,
   alternativePhoneNumberName,
-  pdfRef
+  pdfRef,
 }) => {
   return (
     <div className="form-sub-container | margin-top-25">
@@ -78,11 +78,7 @@ const PersonalDataRenderer: React.FC<Props> = ({
           imageInCircle={false}
         />
 
-        {
-          pdfRef && (
-            <PoliceRecordsRenderer  pdf={pdfRef} />
-          ) 
-        }
+        {pdfRef && <PoliceRecordsRenderer pdf={pdfRef} />}
         {children && <>{children}</>}
       </div>
     </div>

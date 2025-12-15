@@ -1,19 +1,54 @@
+import { useState } from "react";
+import PhoneField from "@/components/form/view/fields/PhoneField";
+import { TextField as TextFieldForm } from "@/components/form/models/FormFields";
+import PrivacyTermsSection from "@/components/form/view/sections/PrivacyTermsSection";
+
 interface PhoneConfirmationModalProps {
-  phoneNumber: string;
+  phoneNumber?: string;
   isOpen: boolean;
-  onConfirm: () => void;
+  onConfirm: (phone?: string) => void;
   onEdit: () => void;
   isLoading?: boolean;
+  editable?: boolean;
+  editableValues?: TextFieldForm;
+  editableSetter?: (val: TextFieldForm) => void;
 }
 
 const PhoneConfirmationModal = ({
-  phoneNumber,
+  phoneNumber = "",
   isOpen,
   onConfirm,
   onEdit,
   isLoading = false,
+  editable = false,
+  editableValues,
+  editableSetter,
 }: PhoneConfirmationModalProps) => {
+  const [internalPhone, setInternalPhone] = useState<TextFieldForm | null>(
+    editableValues ?? null,
+  );
+  const [acceptTerms, setAcceptTerms] = useState(false);
+
   if (!isOpen) return null;
+
+  const phoneToShow = editable
+    ? editableValues
+      ? editableValues.value
+      : internalPhone
+        ? internalPhone.value
+        : ""
+    : phoneNumber;
+
+  const handleConfirm = () => {
+    const finalPhone = editable
+      ? editableValues
+        ? editableValues.value
+        : internalPhone
+          ? internalPhone.value
+          : phoneToShow
+      : phoneToShow;
+    onConfirm(finalPhone);
+  };
 
   return (
     <div className="modal-overlay">
@@ -26,12 +61,32 @@ const PhoneConfirmationModal = ({
         </div>
 
         <div className="modal-content">
-          <div className="phone-display">
-            <p className="text | light">Tu número de teléfono:</p>
-            <p className="phone-number text | bold">
-              {phoneNumber ? phoneNumber.replace("+591", "") : "(no ingresado)"}
-            </p>
-          </div>
+          {editable ? (
+            <div style={{ marginBottom: "1rem" }}>
+              <PhoneField
+                values={editableValues ?? (internalPhone as any)}
+                setter={
+                  editableSetter
+                    ? editableSetter
+                    : (val: TextFieldForm) => setInternalPhone(val)
+                }
+              />
+
+              <br />
+              <br />
+              <PrivacyTermsSection
+                isCheck={acceptTerms}
+                setCheck={setAcceptTerms}
+              />
+            </div>
+          ) : (
+            <div className="phone-display">
+              <p className="text | light">Tu número de teléfono:</p>
+              <p className="phone-number text | bold">
+                {phoneToShow || "(no ingresado)"}
+              </p>
+            </div>
+          )}
 
           <div className="modal-text-section">
             <p className="text | light">Utilizaremos este número para:</p>
@@ -70,8 +125,8 @@ const PhoneConfirmationModal = ({
             Editar número
           </button>
           <button
-            onClick={onConfirm}
-            disabled={isLoading}
+            onClick={handleConfirm}
+            disabled={isLoading || (editable && !acceptTerms)}
             className="general-button | modal-button-primary"
           >
             {isLoading ? "Creando cuenta..." : "Confirmar y crear"}

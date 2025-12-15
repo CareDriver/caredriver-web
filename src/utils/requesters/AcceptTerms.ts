@@ -19,7 +19,7 @@ export async function acceptTerms(uid: string) {
           "X-Firebase-AppCheck": token,
         },
         body: JSON.stringify({ uid }),
-      }
+      },
     );
 
     const data = await response.json();

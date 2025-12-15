@@ -6,9 +6,7 @@ import { ServiceType } from "@/interfaces/Services";
 import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import { deleteFile } from "@/utils/requesters/FileUploader";
 
-export class EnterpriseManagerEditedAsAdmin
-  implements IEditedEnterpriseManager
-{
+export class EnterpriseManagerEditedAsAdmin implements IEditedEnterpriseManager {
   validateData = async (
     userId: string,
     enterpriseId: string,

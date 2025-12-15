@@ -55,7 +55,7 @@ const CraneOperatorReviewForm = ({
   const [reviewState, setReviewState] =
     useState<ReviewState>(DEFAULT_REVIEW_STATE);
   const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(
-    null
+    null,
   );
   const [requesterUser, setRequesterUser] = useState<
     UserInterface | null | undefined
@@ -75,7 +75,7 @@ const CraneOperatorReviewForm = ({
           serviceReq,
           adminUser.id,
           wasApproved,
-          towReqCollection
+          towReqCollection,
         );
 
         if (isLimitToReviews) {
@@ -164,7 +164,7 @@ const CraneOperatorReviewForm = ({
               userToUpdate = await setFirstService(
                 requesterUser,
                 userToUpdate,
-                adminUser.id
+                adminUser.id,
               );
             }
 
@@ -174,14 +174,14 @@ const CraneOperatorReviewForm = ({
                 addUserServerToEnterprise(
                   enterprise,
                   serviceReq.userId,
-                  getIdSaved(requesterUser.fakeId)
+                  getIdSaved(requesterUser.fakeId),
                 ),
                 {
                   pending:
                     "Agregando al usuario al servicio como proveedor de servicios",
                   success: "Usuario agregado al servicio",
                   error: "Error al agregar al usuario al servicio",
-                }
+                },
               );
             }
 
@@ -201,7 +201,7 @@ const CraneOperatorReviewForm = ({
   const getVehicle = (type: VehicleType): Vehicle | null => {
     if (serviceReq.vehicles) {
       const vehicles = serviceReq.vehicles.filter(
-        (veh) => veh.type.type === type
+        (veh) => veh.type.type === type,
       );
       if (vehicles.length > 0) {
         return vehicles[0];
@@ -344,7 +344,7 @@ const CraneOperatorReviewForm = ({
             requesterUser?.alternativePhoneNumber
               ? parseBoliviaPhone(
                   (requesterUser?.alternativePhoneNumber?.countryCode ?? "") +
-                    (requesterUser?.alternativePhoneNumber?.number ?? "")
+                    (requesterUser?.alternativePhoneNumber?.number ?? ""),
                 ).number
               : ""
           }
@@ -378,7 +378,7 @@ const CraneOperatorReviewForm = ({
             email={requesterUser.email}
             phoneNumber={flatPhone(requesterUser.phoneNumber)}
             alternativePhoneNumber={flatPhone(
-              requesterUser.alternativePhoneNumber
+              requesterUser.alternativePhoneNumber,
             )}
           />
         ) : (

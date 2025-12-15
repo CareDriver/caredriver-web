@@ -51,7 +51,7 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
     UserInterface | null | undefined
   >(null);
   const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(
-    null
+    null,
   );
 
   const wasReviewed = (): boolean => {
@@ -68,7 +68,7 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
           serviceReq,
           adminUser.id,
           wasApproved,
-          mechanicReqCollection
+          mechanicReqCollection,
         );
 
         if (isLimitToReviews) {
@@ -109,7 +109,7 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               userToUpdate = await setFirstService(
                 requesterUser,
                 userToUpdate,
-                adminUser.id
+                adminUser.id,
               );
             }
 
@@ -127,14 +127,14 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 addUserServerToEnterprise(
                   enterprise,
                   serviceReq.userId,
-                  getIdSaved(requesterUser.fakeId)
+                  getIdSaved(requesterUser.fakeId),
                 ),
                 {
                   pending:
                     "Agregando al usuario al servicio como proveedor de servicios",
                   success: "Usuario agregado al servicio",
                   error: "Error al agregar al usuario al servicio",
-                }
+                },
               );
             }
 
@@ -284,7 +284,7 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
             requesterUser?.alternativePhoneNumber
               ? parseBoliviaPhone(
                   (requesterUser?.alternativePhoneNumber?.countryCode ?? "") +
-                    (requesterUser?.alternativePhoneNumber?.number ?? "")
+                    (requesterUser?.alternativePhoneNumber?.number ?? ""),
                 ).number
               : ""
           }
@@ -316,7 +316,7 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
             email={requesterUser.email}
             phoneNumber={flatPhone(requesterUser.phoneNumber)}
             alternativePhoneNumber={flatPhone(
-              requesterUser.alternativePhoneNumber
+              requesterUser.alternativePhoneNumber,
             )}
           />
         ) : (

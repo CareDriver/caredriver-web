@@ -9,9 +9,7 @@ import {
 } from "@/components/app_modules/enterprises/validators/validators_of_user_aggregators_to_enterprise/as_members/UserAggregatorValidatorToEnterpriseHelper";
 import { InputState } from "@/validators/InputValidatorSignature";
 
-export class ValidatorToAddUserToLaundryEnterpriseAsMember
-  implements IUserAggregatorValidatorToEnterpriseAsMember
-{
+export class ValidatorToAddUserToLaundryEnterpriseAsMember implements IUserAggregatorValidatorToEnterpriseAsMember {
   enterprise: Enterprise;
 
   constructor(enterprise: Enterprise) {

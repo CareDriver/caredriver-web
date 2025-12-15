@@ -29,7 +29,7 @@ function initAppCheck() {
   try {
     if (!appCheckInstance) {
       const appCheckKey = process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_CLIENT_KEY;
-      
+
       if (!appCheckKey) {
         console.warn("App Check key is missing - App Check disabled");
         return null;
@@ -43,12 +43,12 @@ function initAppCheck() {
       }
 
       console.log("Initializing App Check...");
-      
+
       appCheckInstance = initializeAppCheck(app, {
         provider: new ReCaptchaV3Provider(appCheckKey),
         isTokenAutoRefreshEnabled: true,
       });
-      
+
       console.log("App Check initialized successfully");
     }
   } catch (error: any) {
