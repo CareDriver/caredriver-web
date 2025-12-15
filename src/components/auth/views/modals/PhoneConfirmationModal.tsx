@@ -25,7 +25,7 @@ const PhoneConfirmationModal = ({
   editableSetter,
 }: PhoneConfirmationModalProps) => {
   const [internalPhone, setInternalPhone] = useState<TextFieldForm | null>(
-    editableValues ?? null,
+    editableValues ?? null
   );
   const [acceptTerms, setAcceptTerms] = useState(false);
 
@@ -117,13 +117,15 @@ const PhoneConfirmationModal = ({
         </div>
 
         <div className="modal-footer">
-          <button
-            onClick={onEdit}
-            disabled={isLoading}
-            className="general-button gray | modal-button-secondary"
-          >
-            Editar número
-          </button>
+          {!editable && (
+            <button
+              onClick={onEdit}
+              disabled={isLoading}
+              className="general-button gray | modal-button-secondary"
+            >
+              Editar número
+            </button>
+          )}
           <button
             onClick={handleConfirm}
             disabled={isLoading || (editable && !acceptTerms)}

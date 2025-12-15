@@ -143,7 +143,19 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (res) {
         var userId = res.uid;
         try {
-          getUserById(userId).then((userData) => {
+          (async () => {
+            let userData = await getUserById(userId);
+
+            // If user doc is not yet available, retry a few times (short polling)
+            let attempts = 0;
+            const maxAttempts = 4;
+            const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
+            while (!userData && attempts < maxAttempts) {
+              attempts++;
+              await delay(500);
+              userData = await getUserById(userId);
+            }
+
             if (userData) {
               if (userData.deleted) {
                 logoutWithReason(
@@ -179,11 +191,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setCheckUserAuth(false);
               }
             } else {
+              // If after retries we still don't have user data, avoid immediate redirect
+              // because it can race with user creation. Just mark checking finished
+              // and let the page that initiated auth decide navigation.
               setUser(undefined);
               setCheckUserAuth(false);
-              redirectToHome();
             }
-          });
+          })();
         } catch (e) {
           setUser(undefined);
           setCheckUserAuth(false);
