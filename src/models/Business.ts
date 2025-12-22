@@ -10,22 +10,23 @@ export const PHONE_BUSINESS = "+59177920245";
 
 export const NAME_BUSINESS = "CareDriver";
 
-export const DOMAIN = "https://caredriver-test-turg.vercel.app/";
+export const DOMAIN = "https://panel.caredriver.app/";
 
-export const DOMAIN_LANDING_PAGE = "https://caredriver.netlify.app/";
+export const DOMAIN_LANDING_PAGE = "https://caredriver.app/";
 
 export const DEFAULT_ARTICLE_IMAGE = DOMAIN.concat(
   "images/articles/deafultarticle.png",
 );
 
-export const POLICY_AND_PRIVACY =
-  DOMAIN_LANDING_PAGE.concat("policyandprivacy/");
+export const POLICY_AND_PRIVACY = DOMAIN_LANDING_PAGE.concat(
+  "politica-de-privacidad/",
+);
 
-export const SECURITY_TERMS = DOMAIN_LANDING_PAGE.concat("securityterms/");
+export const SECURITY_TERMS = DOMAIN_LANDING_PAGE.concat("terminos-de-uso/");
 
 export const CareDriverAuthor: Author = {
   name: NAME_BUSINESS,
-  url: "https://caredriver.netlify.app/aboutus/",
+  url: "https://caredriver.app/sobre-nosotros/",
 };
 
 export const DESCRIPTION_BUSINESS = {

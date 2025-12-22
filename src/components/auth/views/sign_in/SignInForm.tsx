@@ -14,7 +14,6 @@ import { TextField as TextFieldForm } from "@/components/form/models/FormFields"
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import { routeToSingUp } from "@/utils/route_builders/as_not_logged/RouteBuilderForAuth";
 import AuthProviders from "../providers/AuthProviders";
-import { acceptTerms } from "@/utils/requesters/AcceptTerms";
 
 interface Form {
   email: TextFieldForm;
@@ -55,7 +54,6 @@ const SignInForm = () => {
 
   const summitForm = async (e: FormEvent) => {
     e.preventDefault();
-    await acceptTerms("uid-test");
 
     if (loading) {
       return;
@@ -70,7 +68,7 @@ const SignInForm = () => {
       return;
     }
 
-    // await login();
+    await login();
   };
 
   useEffect(() => {

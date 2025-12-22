@@ -33,14 +33,12 @@ export const initAppCheck = (): AppCheck | null => {
   const appCheckKey = process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_CLIENT_KEY;
 
   if (!appCheckKey) {
-    console.warn("App Check key missing – App Check disabled");
     return null;
   }
 
   try {
     // 🔧 Debug token SOLO en desarrollo
     if (process.env.NODE_ENV === "development") {
-      console.log("App Check running in DEBUG mode");
       (window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
     }
 
@@ -49,7 +47,6 @@ export const initAppCheck = (): AppCheck | null => {
       isTokenAutoRefreshEnabled: true,
     });
 
-    console.log("App Check initialized");
     return appCheckInstance;
   } catch (error: any) {
     console.error("Failed to initialize App Check:", error?.message || error);
