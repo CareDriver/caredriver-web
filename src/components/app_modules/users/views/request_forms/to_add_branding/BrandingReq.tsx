@@ -126,7 +126,7 @@ const BrandingReq = () => {
         <PageLoader />
     ) : (
         <section className="service-form-wrapper | max-height-100">
-            <h1 className="text | big bolder">Branding</h1>
+            <h1 className="text | big bold">Branding</h1>
             <p className="text | light">
                 Por favor sube una foto de tu vehículo con el logo de nuestra aplicación
                 pegado a tu vehículo

@@ -4,13 +4,13 @@ import GuardOfPage from "@/components/guards/views/page_guards/base/GuardOfPage"
 import WrapperWithSideBar from "@/layouts/WrapperWithSideBar";
 
 const ListOfUsersOntheApplicationPage = () => {
-    return (
-        <GuardOfPage roles={ROLES_TO_VIEW_USERS}>
-            <WrapperWithSideBar>
-                <ListOfAllUsersWithSearcher />
-            </WrapperWithSideBar>
-        </GuardOfPage>
-    );
+  return (
+    <GuardOfPage roles={ROLES_TO_VIEW_USERS}>
+      <WrapperWithSideBar>
+        <ListOfAllUsersWithSearcher />
+      </WrapperWithSideBar>
+    </GuardOfPage>
+  );
 };
 
 export default ListOfUsersOntheApplicationPage;

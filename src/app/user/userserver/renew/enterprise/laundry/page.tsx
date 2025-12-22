@@ -2,11 +2,11 @@ import FormToChangeAssociatedEnterprise from "@/components/app_modules/server_us
 import GuardForServerUsers from "@/components/guards/views/page_guards/concrets/GuardForServerUsers";
 
 const Page = () => {
-    return (
-        <GuardForServerUsers>
-            <FormToChangeAssociatedEnterprise typeOfService="laundry" />
-        </GuardForServerUsers>
-    );
+  return (
+    <GuardForServerUsers>
+      <FormToChangeAssociatedEnterprise typeOfService="laundry" />
+    </GuardForServerUsers>
+  );
 };
 
 export default Page;

@@ -1,19 +1,21 @@
 .inprogress-wrapper {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.111111111rem;
-    overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.111111111rem;
+  overflow: hidden;
 
-    width: 100%;
-    padding: 3.888888889rem 2.777777778rem;
-    height: 100dvh;
+  width: 100%;
+  padding: 3.888888889rem 2.777777778rem;
+  height: 100dvh;
 }
 
 .inprogress-image {
-    height: 50vw;
-    max-height: 27.777777778rem;
+  z-index: 100;
 
-    object-fit: contain;
+  height: 50vw;
+  max-height: 27.777777778rem;
+
+  object-fit: contain;
 }

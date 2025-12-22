@@ -15,105 +15,101 @@ import { isValidTextField } from "@/components/form/validators/FieldValidators";
 import { validateConfirmationEnterpriseName } from "../../../validators/confirmations/ValidatorsForConfirmationWithEnterprises";
 
 interface Props {
-    enterprise: Enterprise;
+  enterprise: Enterprise;
 }
 
 const FormToDisableEnterprise: React.FC<Props> = ({ enterprise }) => {
-    const router = useRouter();
-    const { loading, setLoadingAll } = useContext(PageStateContext);
-    const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
-    const [nameVerification, setNameVerification] = useState(DEFAUL_TEXT_FIELD);
+  const router = useRouter();
+  const { loading, setLoadingAll } = useContext(PageStateContext);
+  const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
+  const [nameVerification, setNameVerification] = useState(DEFAUL_TEXT_FIELD);
 
-    const toggleDisableEnterprise = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (!loading && !formState.loading) {
-            if (enterprise.id) {
-                setLoadingAll(true, setFormState);
+  const toggleDisableEnterprise = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!loading && !formState.loading) {
+      if (enterprise.id) {
+        setLoadingAll(true, setFormState);
 
-                try {
-                    const newState = !enterprise.active;
-                    const messages = newState
-                        ? {
-                              pending: `Habilitando empresa`,
-                              success: "Empresa habilitada",
-                              error: `Error al habilitar la empresa, inténtalo de nuevo por favor`,
-                          }
-                        : {
-                              pending: `Deshabilitando la empresa`,
-                              success: "Deshabilitado",
-                              error: `Error al deshabilitar la empresa, inténtalo de nuevo por favor`,
-                          };
+        try {
+          const newState = !enterprise.active;
+          const messages = newState
+            ? {
+                pending: `Habilitando empresa`,
+                success: "Empresa habilitada",
+                error: `Error al habilitar la empresa, inténtalo de nuevo por favor`,
+              }
+            : {
+                pending: `Deshabilitando la empresa`,
+                success: "Deshabilitado",
+                error: `Error al deshabilitar la empresa, inténtalo de nuevo por favor`,
+              };
 
-                    await toast.promise(
-                        updateEnterprise(enterprise.id, {
-                            active: newState,
-                        }),
-                        messages,
-                    );
-                    window.location.reload();
-                } catch (e) {
-                    setLoadingAll(false, setFormState);
-                }
-            }
+          await toast.promise(
+            updateEnterprise(enterprise.id, {
+              active: newState,
+            }),
+            messages,
+          );
+          window.location.reload();
+        } catch (e) {
+          setLoadingAll(false, setFormState);
         }
-    };
+      }
+    }
+  };
 
-    useEffect(() => {
-        setFormState((prev) => ({
-            ...prev,
-            isValid: isValidTextField(nameVerification),
-        }));
-    }, [nameVerification]);
+  useEffect(() => {
+    setFormState((prev) => ({
+      ...prev,
+      isValid: isValidTextField(nameVerification),
+    }));
+  }, [nameVerification]);
 
-    return (
-        <div
-            className={"form-sub-container | margin-top-25 max-width-40"}
-            data-state={formState.loading || loading ? "loading" : "loaded"}
-        >
-            <h2 className="text medium-big bolder yellow | icon-wrapper yellow-icon">
-                <TriangleExclamation />
-                {`${enterprise.active ? "Deshabilitar" : "Habilitar"} empresa`}
-            </h2>
-            <p className="text">
-                Por favor escribe el nombre de la empresa para continuar.
-            </p>
-            <BaseForm
-                content={{
-                    button: {
-                        content: {
-                            legend: `${
-                                enterprise.active ? "Deshabilitar" : "Habilitar"
-                            } empresa`,
-                            buttonClassStyle:
-                                "small-general-button yellow | text bold",
-                        },
-                        behavior: {
-                            loading: formState.loading,
-                            isValid: formState.isValid,
-                        },
-                    },
-                    styleClasses: "small-form",
-                }}
-                behavior={{
-                    loading: formState.loading,
-                    onSummit: toggleDisableEnterprise,
-                }}
-            >
-                <TextField
-                    field={{
-                        values: nameVerification,
-                        setter: setNameVerification,
-                        validator: (d) =>
-                            validateConfirmationEnterpriseName(
-                                d,
-                                enterprise.name,
-                            ),
-                    }}
-                    legend="Nombre de la empresa | Confirmación"
-                />
-            </BaseForm>
-        </div>
-    );
+  return (
+    <div
+      className={"form-sub-container | margin-top-25 max-width-40"}
+      data-state={formState.loading || loading ? "loading" : "loaded"}
+    >
+      <h2 className="text medium-big bold yellow | icon-wrapper yellow-icon">
+        <TriangleExclamation />
+        {`${enterprise.active ? "Deshabilitar" : "Habilitar"} empresa`}
+      </h2>
+      <p className="text">
+        Por favor escribe el nombre de la empresa para continuar.
+      </p>
+      <BaseForm
+        content={{
+          button: {
+            content: {
+              legend: `${
+                enterprise.active ? "Deshabilitar" : "Habilitar"
+              } empresa`,
+              buttonClassStyle: "small-general-button yellow | text bold",
+            },
+            behavior: {
+              loading: formState.loading,
+              isValid: formState.isValid,
+            },
+          },
+          styleClasses: "small-form",
+        }}
+        behavior={{
+          loading: formState.loading,
+          onSummit: toggleDisableEnterprise,
+        }}
+      >
+        <TextField
+          field={{
+            values: nameVerification,
+            setter: setNameVerification,
+            validator: (d) =>
+              validateConfirmationEnterpriseName(d, enterprise.name),
+          }}
+          legend="Nombre de la empresa | Confirmación"
+        />
+      </BaseForm>
+    </div>
+  );
 };
 
 export default FormToDisableEnterprise;

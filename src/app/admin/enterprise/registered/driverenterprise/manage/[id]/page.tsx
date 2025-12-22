@@ -3,13 +3,13 @@ import GuardOfEnterprises from "@/components/guards/views/page_guards/concrets/G
 import { PageStateProviderContainer } from "@/context/PageStateContext";
 
 const Page = ({ params }: { params: any }) => {
-    return (
-        <GuardOfEnterprises>
-            <PageStateProviderContainer>
-                <EnterprisePanelForAdmin id={params.id} />;
-            </PageStateProviderContainer>
-        </GuardOfEnterprises>
-    );
+  return (
+    <GuardOfEnterprises>
+      <PageStateProviderContainer>
+        <EnterprisePanelForAdmin id={params.id} />;
+      </PageStateProviderContainer>
+    </GuardOfEnterprises>
+  );
 };
 
 export default Page;

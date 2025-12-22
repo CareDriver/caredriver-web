@@ -6,25 +6,25 @@ import Truck from "@/icons/Truck";
 import Motorcycle from "@/icons/Motorcycle";
 
 export function getColorButtonLicense(date: Date) {
-    var difference = differenceOnDays(date);
-    if (difference <= 0) return "red";
-    if (difference <= 7) return "yellow";
-    return "green";
+  var difference = differenceOnDays(date);
+  if (difference <= 0) return "red";
+  if (difference <= 7) return "yellow";
+  return "green";
 }
 
 export function getTransmissionsAsSpanish(
-    modes: VehicleTransmission[],
+  modes: VehicleTransmission[],
 ): string[] {
-    return modes.map((mode) => TRANSMITION_TO_SPANISH_V2[mode]);
+  return modes.map((mode) => TRANSMITION_TO_SPANISH_V2[mode]);
 }
 
 export function getVehicleIconByType(type: "car" | "motorcycle" | "tow") {
-    switch (type) {
-        case "car":
-            return CarSide;
-        case "motorcycle":
-            return Motorcycle;
-        case "tow":
-            return Truck;
-    }
+  switch (type) {
+    case "car":
+      return CarSide;
+    case "motorcycle":
+      return Motorcycle;
+    case "tow":
+      return Truck;
+  }
 }

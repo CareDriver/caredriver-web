@@ -2,11 +2,11 @@ import ListOfRequestsToUpdateUserPhotos from "@/components/app_modules/users/vie
 import GuardOfRequests from "@/components/guards/views/page_guards/concrets/GuardOfRequests";
 
 const Page = () => {
-    return (
-        <GuardOfRequests>
-            <ListOfRequestsToUpdateUserPhotos />
-        </GuardOfRequests>
-    );
+  return (
+    <GuardOfRequests>
+      <ListOfRequestsToUpdateUserPhotos />
+    </GuardOfRequests>
+  );
 };
 
 export default Page;

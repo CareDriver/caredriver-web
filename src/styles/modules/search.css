@@ -1,28 +1,28 @@
 .search-wrapper {
-    display: flex;
-    overflow: hidden;
+  display: flex;
+  overflow: hidden;
 
-    width: 65%;
-    border: 0.111111111rem solid var(--gray-dark);
-    border-radius: 1.388888889rem;
+  width: 65%;
+  border: 0.111111111rem solid var(--gray-dark);
+  border-radius: 1.388888889rem;
 }
 
 @media only screen and (max-width: 595px) {
-    .search-wrapper {
-        width: 100%;
-    }
+  .search-wrapper {
+    width: 100%;
+  }
 }
 
 .search-input {
-    width: 100%;
-    padding: 0.555555556rem 1.111111111rem;
-    font-size: 1.111111111rem;
+  width: 100%;
+  padding: 0.555555556rem 1.111111111rem;
+  font-size: 1.111111111rem;
 
-    border: none;
+  border: none;
 }
 
 .search-button {
-    padding: 0 1.111111111rem;
-    background-color: transparent;
-    border: none;
+  padding: 0 1.111111111rem;
+  background-color: transparent;
+  border: none;
 }

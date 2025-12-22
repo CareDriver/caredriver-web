@@ -1,9 +1,9 @@
 export interface FormState {
-    loading: boolean;
-    isValid: boolean;
+  loading: boolean;
+  isValid: boolean;
 }
 
 export const DEFAULT_FORM_STATE: FormState = {
-    loading: false,
-    isValid: true,
+  loading: false,
+  isValid: true,
 };

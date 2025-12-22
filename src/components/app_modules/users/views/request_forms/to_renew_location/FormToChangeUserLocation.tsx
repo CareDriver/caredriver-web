@@ -15,134 +15,135 @@ import BaseForm from "@/components/form/view/forms/BaseForm";
 import { routeToProfileAsUser } from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
 
 const FormToChangeUserLocation = () => {
-    const { checkingUserAuth, user } = useContext(AuthContext);
-    const [location, setLocation] = useState<Locations | undefined>(
-        user?.location,
+  const { checkingUserAuth, user, userProps } = useContext(AuthContext);
+  const [newLocation, setNewLocation] = useState<Locations>(
+    user?.location ?? Locations.CochabambaBolivia,
+  );
+  const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
+
+  const changeOfLocation = (): boolean => {
+    return (
+      !userProps.hasLocation ||
+      (user !== undefined && newLocation !== user.location)
     );
-    const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
+  };
 
-    const changeOfLocation = (): boolean => {
-        return (
-            location !== undefined &&
-            user !== undefined &&
-            location !== user.location
+  const sendMessage = (newLocation: Locations, oldLocation?: Locations) => {
+    let message: string;
+    if (!userProps.hasLocation || !oldLocation) {
+      message = greeting()
+        .concat(`Soy ${user?.fullName}, `)
+        .concat(
+          `, quisiera que me agreguen al grupo de Whatsaap de ${newLocation} 🌎`,
         );
-    };
-
-    const sendMessage = (newLocation: Locations, oldLocation: Locations) => {
-        let message = greeting()
-            .concat(`Soy ${user?.fullName}, `)
-            .concat(
-                `quisiera cambiarme de grupo de Whatsaap, 🔁🌎 porque ahora estoy en ${newLocation}.`,
-            )
-            .concat(`\nMi antigua ubicación era ${oldLocation} 👀`);
-
-        sendWhatsapp(PHONE_BUSINESS, message);
-    };
-
-    const submit = async (e: FormEvent) => {
-        e.preventDefault();
-        if (!formState.loading) {
-            setFormState((prev) => ({
-                ...prev,
-                loading: true,
-            }));
-            if (
-                !location ||
-                !user ||
-                !user.id ||
-                !user.location ||
-                !changeOfLocation()
-            ) {
-                toast.info("Sin cambios...", {
-                    toastId: "without-change-location",
-                });
-                setFormState((prev) => ({
-                    ...prev,
-                    loading: false,
-                }));
-                return;
-            }
-
-            try {
-                await toast.promise(
-                    updateUser(user.id, {
-                        location: location,
-                    }),
-                    {
-                        pending: "Actualizando localización, por favor espera",
-                        success: "Localización actualizada",
-                        error: "Error al actualizar tu localización, inténtalo de nuevo por favor",
-                    },
-                );
-
-                sendMessage(location, user.location);
-                window.location.replace(routeToProfileAsUser());
-            } catch (e) {
-                setFormState({
-                    loading: false,
-                    isValid: true,
-                });
-            }
-        }
-    };
-
-    useEffect(() => {
-        setFormState((prev) => ({
-            ...prev,
-            isValid: location !== undefined,
-        }));
-    }, [location]);
-
-    const getLocation = (input: string): Locations => {
-        var location = Locations.CochabambaBolivia;
-        locationList.forEach((value) => {
-            if (value === input) {
-                location = value;
-            }
-        });
-
-        return location;
-    };
-
-    if (checkingUserAuth || !location) {
-        return <PageLoading />;
+    } else {
+      message = greeting()
+        .concat(`Soy ${user?.fullName}, `)
+        .concat(
+          `quisiera cambiarme de grupo de Whatsaap, 🔁🌎 porque ahora estoy en ${newLocation}.`,
+        )
+        .concat(`\nMi antigua ubicación era ${oldLocation} 👀`);
     }
 
-    return (
-        user && (
-            <section className="service-form-wrapper | max-height-100">
-                <h1 className="text | big bolder">Cambia tu Localización</h1>
-                <p className="text | light">
-                    Podrás mandar un mensaje de solicitud por WhatsApp para
-                    cambiar el grupo donde perteneces.
-                </p>
+    sendWhatsapp(PHONE_BUSINESS, message);
+  };
 
-                <BaseForm
-                    content={{
-                        button: {
-                            content: {
-                                legend: "Cambiar localización",
-                            },
-                            behavior: {
-                                loading: formState.loading,
-                                isValid: formState.isValid,
-                            },
-                        },
-                        styleClasses: "max-width-60",
-                    }}
-                    behavior={{
-                        loading: formState.loading,
-                        onSummit: submit,
-                    }}
-                >
-                    <LocationField location={location} setter={setLocation} />
-                </BaseForm>
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!formState.loading) {
+      setFormState((prev) => ({
+        ...prev,
+        loading: true,
+      }));
+      if (!user || !user.id || !changeOfLocation()) {
+        toast.info("Sin cambios...", {
+          toastId: "without-change-location",
+        });
+        setFormState((prev) => ({
+          ...prev,
+          loading: false,
+        }));
+        return;
+      }
 
-                <span className="circles-right-bottomv2 green"></span>
-            </section>
-        )
-    );
+      try {
+        await toast.promise(
+          updateUser(user.id, {
+            location: newLocation,
+          }),
+          {
+            pending: "Actualizando localización, por favor espera",
+            success: "Localización actualizada",
+            error:
+              "Error al actualizar tu localización, inténtalo de nuevo por favor",
+          },
+        );
+
+        sendMessage(newLocation, user.location);
+        window.location.replace(routeToProfileAsUser());
+      } catch (e) {
+        setFormState({
+          loading: false,
+          isValid: true,
+        });
+      }
+    }
+  };
+
+  useEffect(() => {
+    setFormState((prev) => ({
+      ...prev,
+      isValid: newLocation !== undefined,
+    }));
+  }, [newLocation]);
+
+  if (checkingUserAuth || !newLocation) {
+    return <PageLoading />;
+  }
+
+  return (
+    user && (
+      <section className="service-form-wrapper | max-height-100">
+        <h1 className="text | big bold">Cambia tu ubicación</h1>
+        <p className="text | light">
+          La Ubicación sirve para recibir solicitudes de servicios en el área
+          donde te encuentras. Cámbiala sólo cuando te mudes de ciudad.
+        </p>
+        <br />
+        <p className="text | light">
+          Podrás mandar un mensaje de solicitud por WhatsApp para cambiar el
+          grupo donde perteneces.
+        </p>
+
+        <br />
+
+        <BaseForm
+          content={{
+            button: {
+              content: {
+                legend: userProps.hasLocation
+                  ? "Cambiar ubicación"
+                  : "Agregar ubicación",
+              },
+              behavior: {
+                loading: formState.loading,
+                isValid: formState.isValid,
+              },
+            },
+            styleClasses: "max-width-60",
+          }}
+          behavior={{
+            loading: formState.loading,
+            onSummit: submit,
+          }}
+        >
+          <LocationField location={newLocation} setter={setNewLocation} />
+        </BaseForm>
+
+        <span className="circles-right-bottomv2 green"></span>
+      </section>
+    )
+  );
 };
 
 export default FormToChangeUserLocation;

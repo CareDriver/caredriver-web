@@ -2,11 +2,11 @@ import ListOfRequestsForLicenseRenewal from "@/components/app_modules/server_use
 import GuardOfRequests from "@/components/guards/views/page_guards/concrets/GuardOfRequests";
 
 const Page = () => {
-    return (
-        <GuardOfRequests>
-            <ListOfRequestsForLicenseRenewal />
-        </GuardOfRequests>
-    );
+  return (
+    <GuardOfRequests>
+      <ListOfRequestsForLicenseRenewal />
+    </GuardOfRequests>
+  );
 };
 
 export default Page;

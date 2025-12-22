@@ -2,11 +2,11 @@ import ListOfAllEnterprises from "@/components/app_modules/enterprises/views/lis
 import GuardOfEnterprises from "@/components/guards/views/page_guards/concrets/GuardOfEnterprises";
 
 const Page = () => {
-    return (
-        <GuardOfEnterprises>
-            <ListOfAllEnterprises type="laundry" />;
-        </GuardOfEnterprises>
-    );
+  return (
+    <GuardOfEnterprises>
+      <ListOfAllEnterprises type="laundry" />;
+    </GuardOfEnterprises>
+  );
 };
 
 export default Page;

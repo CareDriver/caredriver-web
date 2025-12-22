@@ -4,13 +4,13 @@ import { ROLES_TO_SEE_NO_USER_PROFILE } from "@/components/guards/models/Permiss
 import UserProfileForAdmin from "@/components/app_modules/users/views/control_panels/UserProfileForAdmin";
 
 const AdminSupportProfilePage = () => {
-    return (
-        <GuardOfPage roles={ROLES_TO_SEE_NO_USER_PROFILE}>
-            <WrapperWithSideBar>
-                <UserProfileForAdmin />
-            </WrapperWithSideBar>
-        </GuardOfPage>
-    );
+  return (
+    <GuardOfPage roles={ROLES_TO_SEE_NO_USER_PROFILE}>
+      <WrapperWithSideBar>
+        <UserProfileForAdmin />
+      </WrapperWithSideBar>
+    </GuardOfPage>
+  );
 };
 
 export default AdminSupportProfilePage;

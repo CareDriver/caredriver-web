@@ -13,67 +13,65 @@ import { routeToRequestsToEditEnterpriseAsAdmin } from "@/utils/route_builders/a
 import { Unsubscribe } from "firebase/firestore";
 
 interface Props {
-    reqId: string;
-    type: ServiceType;
+  reqId: string;
+  type: ServiceType;
 }
 
 const ReviewFormForEditingAnEnterpriseWithLoader: React.FC<Props> = ({
-    reqId,
-    type,
+  reqId,
+  type,
 }) => {
-    const [enterpriseEdited, setEnterpriseEdited] =
-        useState<ReqEditEnterprise | null>(null);
-    const [enterprise, setEnterprise] = useState<Enterprise | null>(null);
-    const router = useRouter();
+  const [enterpriseEdited, setEnterpriseEdited] =
+    useState<ReqEditEnterprise | null>(null);
+  const [enterprise, setEnterprise] = useState<Enterprise | null>(null);
+  const router = useRouter();
 
-    useEffect(() => {
-        let unsubscribe: Unsubscribe | undefined;
+  useEffect(() => {
+    let unsubscribe: Unsubscribe | undefined;
 
-        const onNotFound = () => {
+    const onNotFound = () => {
+      router.push(routeToRequestsToEditEnterpriseAsAdmin(type));
+      toast.error("Petición no encontrada");
+    };
+
+    getReqToEditEnterpriseInRealTime(reqId, {
+      onFound: setEnterpriseEdited,
+      onNotFound: onNotFound,
+    })
+      .then((u) => {
+        unsubscribe = u;
+      })
+      .catch(() => onNotFound());
+
+    return () => unsubscribe && unsubscribe();
+  }, [reqId, router, type]);
+
+  useEffect(() => {
+    if (enterpriseEdited && enterpriseEdited.enterpriseId) {
+      getEnterpriseById(enterpriseEdited.enterpriseId)
+        .then((data) => {
+          if (data) {
+            setEnterprise(data);
+          } else {
             router.push(routeToRequestsToEditEnterpriseAsAdmin(type));
             toast.error("Petición no encontrada");
-        };
-
-        getReqToEditEnterpriseInRealTime(reqId, {
-            onFound: setEnterpriseEdited,
-            onNotFound: onNotFound,
+          }
         })
-            .then((u) => {
-                unsubscribe = u;
-            })
-            .catch(() => onNotFound());
+        .catch((e) => {
+          router.push(routeToRequestsToEditEnterpriseAsAdmin(type));
+          toast.error("Petición no encontrada");
+        });
+    }
+  }, [enterpriseEdited, router, type]);
 
-        return () => unsubscribe && unsubscribe();
-    }, []);
-
-    useEffect(() => {
-        if (enterpriseEdited && enterpriseEdited.enterpriseId) {
-            getEnterpriseById(enterpriseEdited.enterpriseId)
-                .then((data) => {
-                    if (data) {
-                        setEnterprise(data);
-                    } else {
-                        router.push(
-                            routeToRequestsToEditEnterpriseAsAdmin(type),
-                        );
-                        toast.error("Petición no encontrada");
-                    }
-                })
-                .catch((e) => {
-                    router.push(routeToRequestsToEditEnterpriseAsAdmin(type));
-                    toast.error("Petición no encontrada");
-                });
-        }
-    }, [enterpriseEdited]);
-
-    return enterpriseEdited && enterprise ? (
-        <ReviewFormForEditingAnEnterprise
-            enterpriseEditDoc={enterpriseEdited}
-            enteprise={enterprise}
-        />
-    ) : (
-        <PageLoading />
-    );
+  return enterpriseEdited && enterprise ? (
+    <ReviewFormForEditingAnEnterprise
+      enterpriseEditDoc={enterpriseEdited}
+      enteprise={enterprise}
+    />
+  ) : (
+    <PageLoading />
+  );
 };
 
 export default ReviewFormForEditingAnEnterpriseWithLoader;

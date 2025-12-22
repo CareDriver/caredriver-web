@@ -55,7 +55,7 @@ const ListOfRequestsForUserBranding = () => {
     return data ? (
         data.length > 0 ? (
             <div className="render-data-wrapper">
-                <h1 className={"text | big-medium bolder margin-bottom-25 capitalize"}>
+                <h1 className={"text | big-medium bold margin-bottom-25 capitalize"}>
                     Solicitudes de verificación de Branding
                 </h1>
                 <InfiniteScroll

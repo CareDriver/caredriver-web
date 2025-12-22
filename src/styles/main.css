@@ -11,5 +11,6 @@
 @import "modules/space.css";
 @import "modules/decoration.css";
 @import "modules/icon.css";
+@import "modules/modal.css";
 
 @import "theme/theme-light.css";

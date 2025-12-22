@@ -1,4 +1,5 @@
 "use client";
+// @ts-ignore
 import "react-international-phone/style.css";
 
 import { useContext, useEffect, useState } from "react";
@@ -12,111 +13,139 @@ import FormToDeleteEnterprise from "../../request_forms/to_delete/FormToDeleteEn
 import FormToDisableEnterprise from "../../request_forms/to_disable/FormToDisableEnterprise";
 import { routeToAllEnterprisesAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import { PageStateContext } from "@/context/PageStateContext";
-import ListOfUsersOfAEnterprise from "../../list_of_cards/ListOfUsersOfAEnterprise";
+import ListOfUsersOfAnEnterpriseByRole from "../../list_of_cards/ListOfUsersOfAnEnterpriseByRole";
 import { EnterpriseManagementView } from "../../../models/EntepriseMangementViews";
 import UserAdderToEnterprise from "../../request_forms/to_edit/UserAdderToEnterprise";
 import { AuthContext } from "@/context/AuthContext";
 import { ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE } from "../../../utils/EnterpriseSpanishTranslator";
 import EnterpriseManagementPanel from "../EnterpriseManagementPanel";
 import EnterpriseUsersPanel from "../EnterpriseUsersPanel";
+import CurrentEnterpriseDebt from "../../data_renderers/CurrentEnterpriseDebt";
+import EnterprisePaidDebtHistoryRenderer from "../../data_renderers/EnterprisePaidDebtHistoryRenderer";
+import EnterpriseComissionHistoryRenderer from "../../data_renderers/EnterpriseComissionHistoryRenderer";
+import FormToPaidEnterpriseDebt from "../../request_forms/to_manage_debt/FormToPaidEnterpriseDebt";
 
 interface Props {
-    id: string;
+  id: string;
 }
 
 const EnterprisePanelForAdmin: React.FC<Props> = ({ id }) => {
-    const router = useRouter();
-    const { user, checkingUserAuth } = useContext(AuthContext);
-    const { loading } = useContext(PageStateContext);
-    const [enterprise, setEnterprise] = useState<Enterprise | null>(null);
-    const [view, serView] = useState<EnterpriseManagementView>(
-        EnterpriseManagementView.HANDLE_ENTERPRISE,
-    );
+  const router = useRouter();
+  const { user, checkingUserAuth } = useContext(AuthContext);
+  const { loading } = useContext(PageStateContext);
+  const [enterprise, setEnterprise] = useState<Enterprise | null>(null);
+  const [view, serView] = useState<EnterpriseManagementView>(
+    EnterpriseManagementView.HANDLE_ENTERPRISE,
+  );
 
-    useEffect(() => {
-        getEnterpriseById(id)
-            .then((data) => {
-                if (data !== undefined) {
-                    if (data.deleted) {
-                        toast.warning("Empresa no encontrada", {
-                            toastId: "no-found-service-enterprise",
-                        });
-
-                        router.push(routeToAllEnterprisesAsAdmin(data.type));
-                        return;
-                    }
-
-                    setEnterprise(data);
-                } else {
-                    router.back();
-                    toast.error("Empresa no encontrada");
-                }
-            })
-            .catch(() => {
-                router.back();
-                toast.error("Empresa no encontrada");
+  useEffect(() => {
+    getEnterpriseById(id)
+      .then((data) => {
+        if (data !== undefined) {
+          if (data.deleted) {
+            toast.warning("Empresa no encontrada", {
+              toastId: "no-found-service-enterprise",
             });
-    }, []);
 
-    if (checkingUserAuth || !enterprise || !user) {
-        return <PageLoading />;
-    }
+            router.push(routeToAllEnterprisesAsAdmin(data.type));
+            return;
+          }
 
-    return (
-        <>
-            {view === EnterpriseManagementView.HANDLE_ENTERPRISE && (
-                <section className="service-form-wrapper">
-                    <h1 className="text | big bolder">
-                        Administracion{" "}
-                        {
-                            ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE[
-                                enterprise.type
-                            ]
-                        }
-                    </h1>
+          setEnterprise(data);
+        } else {
+          router.back();
+          toast.error("Empresa no encontrada");
+        }
+      })
+      .catch(() => {
+        router.back();
+        toast.error("Empresa no encontrada");
+      });
+  }, [id, router]);
 
-                    <EnterpriseManagementPanel
-                        enterprise={enterprise}
-                        editedEnterpriseManager={
-                            new EnterpriseManagerEditedAsAdmin()
-                        }
-                    />
+  if (checkingUserAuth || !enterprise || !user) {
+    return <PageLoading />;
+  }
 
-                    <EnterpriseUsersPanel
-                        content={{
-                            user: user,
-                            enterprise: enterprise,
-                        }}
-                        behavior={{
-                            loading: loading,
-                            setView: serView,
-                        }}
-                    />
+  return (
+    <>
+      {view === EnterpriseManagementView.HANDLE_ENTERPRISE && (
+        <section className="service-form-wrapper">
+          <h1 className="text | big bold">
+            Administracion{" "}
+            {
+              ENTERPRISE_TO_SPANISH_WITH_PROPOSITION_AND_ARTICLE[
+                enterprise.type
+              ]
+            }
+          </h1>
 
-                    <div className="max-width-80 margin-top-50">
-                        <div className="separator-horizontal"></div>
-                    </div>
+          <EnterpriseManagementPanel
+            enterprise={enterprise}
+            editedEnterpriseManager={new EnterpriseManagerEditedAsAdmin()}
+          />
 
-                    <FormToDisableEnterprise enterprise={enterprise} />
-                    <FormToDeleteEnterprise enterprise={enterprise} />
-                </section>
-            )}
-            {view === EnterpriseManagementView.VIEW_USERS && (
-                <div data-state={loading ? "loading" : "loaded"}>
-                    <ListOfUsersOfAEnterprise enterprise={enterprise} />
-                </div>
-            )}
+          <EnterpriseUsersPanel
+            content={{
+              user: user,
+              enterprise: enterprise,
+            }}
+            behavior={{
+              loading: loading,
+              setView: serView,
+            }}
+          />
 
-            {view === EnterpriseManagementView.ADD_USER && (
-                <div data-state={loading ? "loading" : "loaded"}>
-                    <UserAdderToEnterprise
-                        userLogged={user}
-                        enterprise={enterprise}
-                    />
-                </div>
-            )}
-        </>
-    );
+          {enterprise.commition && (
+            <>
+              <div className="max-width-80 margin-top-25">
+                <div className="separator-horizontal"></div>
+              </div>
+
+              <CurrentEnterpriseDebt enterprise={enterprise} />
+              <FormToPaidEnterpriseDebt enterprise={enterprise} />
+              <EnterprisePaidDebtHistoryRenderer
+                history={enterprise.paidDebtsHistory}
+              />
+              <EnterpriseComissionHistoryRenderer
+                history={enterprise.comissionsHistory}
+              />
+            </>
+          )}
+
+          <div className="max-width-80 margin-top-25">
+            <div className="separator-horizontal"></div>
+          </div>
+
+          <FormToDisableEnterprise enterprise={enterprise} />
+          <FormToDeleteEnterprise enterprise={enterprise} />
+        </section>
+      )}
+      {view === EnterpriseManagementView.VIEW_SERVER_USERS && (
+        <div data-state={loading ? "loading" : "loaded"}>
+          <ListOfUsersOfAnEnterpriseByRole
+            enterprise={enterprise}
+            role="user"
+          />
+        </div>
+      )}
+
+      {view === EnterpriseManagementView.VIEW_SUPPORT_USERS && (
+        <div data-state={loading ? "loading" : "loaded"}>
+          <ListOfUsersOfAnEnterpriseByRole
+            enterprise={enterprise}
+            role="support"
+          />
+        </div>
+      )}
+
+      {view === EnterpriseManagementView.ADD_USER && (
+        <div data-state={loading ? "loading" : "loaded"}>
+          <UserAdderToEnterprise userLogged={user} enterprise={enterprise} />
+        </div>
+      )}
+    </>
+  );
 };
 
 export default EnterprisePanelForAdmin;

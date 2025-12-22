@@ -14,52 +14,58 @@ import ServiceLocationRenderer from "../../renderers/ServiceLocationRenderer";
 import { UserInterface } from "@/interfaces/UserInterface";
 import GuardOfModule from "@/components/guards/views/module_guards/GuardOfModule";
 import { ROLES_TO_VIEW_USER_SERVICES } from "@/components/guards/models/PermissionsByUserRole";
+import ShareServiceByLink from "../../renderers/ShareServiceByLink";
+import { checkPermission } from "@/components/guards/validators/RoleValidator";
+import { isLessTime } from "@/utils/helpers/DateHelper";
 
 interface Props {
-    service: ServiceRequestInterface;
-    reviewerUser: UserInterface;
+  service: ServiceRequestInterface;
+  reviewerUser: UserInterface;
 }
 
 const MechanicalServicePerformed: React.FC<Props> = ({
-    service,
-    reviewerUser,
+  service,
+  reviewerUser,
 }) => {
-    return (
-        <section className="render-data-wrapper">
-            <ServiceHeaderRenderer service={service} />
-            <RendererOfTheUsersInvolvedInTheService service={service} />
-            <ServicePriceDetailsRenderer service={service} />
+  const renderMap = () => (
+    <MapRealTime
+      databaseURL={buildUrlDB(
+        UserServices.Mechanic,
+        service.location ? service.location : Locations.CochabambaBolivia,
+      )}
+      serviceId={service.id}
+      isCanceled={service.canceled ? service.canceled : false}
+      isFinished={service.finished ? service.finished : false}
+    />
+  );
 
-            <GuardOfModule
-                user={reviewerUser}
-                roles={ROLES_TO_VIEW_USER_SERVICES}
-            >
-                <VehicleDetailRenderer
-                    titleSection={`Detalles del vehículo
+  return (
+    <section className="render-data-wrapper">
+      <ServiceHeaderRenderer service={service} />
+      <ShareServiceByLink reviewerUser={reviewerUser} service={service} />
+      <RendererOfTheUsersInvolvedInTheService service={service} />
+      <ServicePriceDetailsRenderer service={service} />
+
+      <GuardOfModule user={reviewerUser} roles={ROLES_TO_VIEW_USER_SERVICES}>
+        <VehicleDetailRenderer
+          titleSection={`Detalles del vehículo
                     ${
-                        service.vehicle?.type &&
-                        " - ".concat(
-                            VEHICLE_CATEGORY_TO_SPANISH[service.vehicle.type],
-                        )
+                      service.vehicle?.type &&
+                      " - ".concat(
+                        VEHICLE_CATEGORY_TO_SPANISH[service.vehicle.type],
+                      )
                     }
                     `}
-                    vehicle={service.vehicle}
-                />
-                <ServiceLocationRenderer service={service} />
-                <MapRealTime
-                    databaseURL={buildUrlDB(
-                        UserServices.Mechanic,
-                        service.location
-                            ? service.location
-                            : Locations.CochabambaBolivia,
-                    )}
-                    serviceId={service.id}
-                    isCanceled={service.canceled ? service.canceled : false}
-                    isFinished={service.finished ? service.finished : false}
-                />
-            </GuardOfModule>
-        </section>
-    );
+          vehicle={service.vehicle}
+        />
+        <ServiceLocationRenderer service={service} />
+        {renderMap()}
+      </GuardOfModule>
+      {!checkPermission(reviewerUser.role, ROLES_TO_VIEW_USER_SERVICES) &&
+        isLessTime(service.sharing) &&
+        renderMap()}
+    </section>
+  );
 };
 
 export default MechanicalServicePerformed;

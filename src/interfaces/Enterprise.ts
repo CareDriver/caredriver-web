@@ -2,41 +2,50 @@ import { GeoPoint } from "firebase/firestore";
 import { RefAttachment } from "../components/form/models/RefAttachment";
 import { Locations } from "./Locations";
 import { ServiceType } from "./Services";
+import { ComissionHistory, DebtHistory, Price } from "./Payment";
 
 export type UserRoleInEnterprise = "user" | "support";
 
 export interface EnterpriseUser {
-    userId: string;
-    fakeUserId: string;
-    role: UserRoleInEnterprise;
+  userId: string;
+  fakeUserId: string;
+  role: UserRoleInEnterprise;
 }
 
 export const UserRoleEnterpriseRender = {
-    user: "Usuario Servidor",
-    support: "Soporte",
+  user: "Servidores",
+  support: "Soporte",
 };
 
-// Interface for crane companies
-export interface Enterprise {
-    id?: string;
-    type: ServiceType;
-    name: string;
-    logoImgUrl: RefAttachment;
-    coordinates?: GeoPoint; // Mandatory just for mechanics
-    latitude?: number;
-    longitude?: number;
-    phone?: string; // Optional (No need to be verified)
-    userId: string; // The user who created the enterprise
-    aproved?: boolean; // If the enterprise was aproved or is in reviewing
-    aprovedBy?: string; // the id of the admin user who aproved the enterprise registration
-    deleted: boolean; // It will be used for soft delete, to avoid saving repeated data in other documents. This also helps to restore them
-    active: boolean; // To be able to disable or enable it
-    location?: Locations;
-    addedUsersId?: string[];
-    addedUsers?: EnterpriseUser[];
-    commition?: boolean;
+export interface EnterpriseData {
+  id?: string;
+  type: ServiceType;
+  name: string;
+  nameArrayLower?: string[]; // Array with full name separated by words ej: ["nombre", "nombre"]
+  logoImgUrl: RefAttachment;
+  coordinates?: GeoPoint;
+  latitude?: number;
+  longitude?: number;
+  phone?: string;
+  phoneCountryCode?: string;
+  userId: string;
+  aproved?: boolean;
+  aprovedBy?: string;
+  deleted: boolean;
+  active: boolean;
+  location?: Locations;
+  commition?: boolean;
+  description?: string;
 }
 
-export interface ReqEditEnterprise extends Enterprise {
-    enterpriseId: string;
+export interface Enterprise extends EnterpriseData {
+  addedUsersId?: string[];
+  addedUsers?: EnterpriseUser[];
+  comissionsHistory?: ComissionHistory[];
+  currentDebt?: Price;
+  paidDebtsHistory?: DebtHistory[];
+}
+
+export interface ReqEditEnterprise extends EnterpriseData {
+  enterpriseId: string;
 }

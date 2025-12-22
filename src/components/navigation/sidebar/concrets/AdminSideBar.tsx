@@ -12,42 +12,42 @@ import LogoutOption from "../sidebar_options/LogoutOption";
 import RedirectToService from "../sidebar_options/RedirectToService";
 
 const AdminSideBar = ({
-    pathname,
-    logout,
+  pathname,
+  logout,
 }: {
-    pathname: string;
-    logout: () => void;
+  pathname: string;
+  logout: () => void;
 }) => {
-    return (
-        <>
-            <UserRoleSideBar role={UserRole.Admin}>
-                <UserTie />
-            </UserRoleSideBar>
-            <RequestsSection pathname={pathname} />
+  return (
+    <>
+      <UserRoleSideBar role={UserRole.Admin}>
+        <UserTie />
+      </UserRoleSideBar>
+      <RequestsSection pathname={pathname} />
 
-            <span className="text | medium bolder | margin-bottom-15">
-                Registros
-            </span>
-            <li className="sidebar-options">
-                <UsersOption pathname={pathname} />
-                <AddNewUserOption pathname={pathname} />
-                <RedirectToService />
-            </li>
-            <div>
-                <i className="separator-horizontal"></i>
-            </div>
-            <EnterpriseRegistersSection pathname={pathname} />
+      <span className="text | white medium bold | margin-bottom-15">
+        Registros
+      </span>
+      <li className="sidebar-options">
+        <UsersOption pathname={pathname} />
+        <AddNewUserOption pathname={pathname} />
+        <RedirectToService />
+      </li>
+      <div>
+        <i className="separator-horizontal green-opacity"></i>
+      </div>
+      <EnterpriseRegistersSection pathname={pathname} />
 
-            <span className="text | medium bolder | margin-bottom-15">
-                Perfil
-            </span>
+      <span className="text | white medium bold | margin-bottom-15">
+        Perfil
+      </span>
 
-            <li className="sidebar-options">
-                <NoServerUserProfileOp pathname={pathname} />
-                <LogoutOption logout={logout} />
-            </li>
-        </>
-    );
+      <li className="sidebar-options">
+        <NoServerUserProfileOp pathname={pathname} />
+        <LogoutOption logout={logout} />
+      </li>
+    </>
+  );
 };
 
 export default AdminSideBar;

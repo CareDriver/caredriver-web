@@ -10,42 +10,39 @@ import PageLoading from "@/components/loaders/PageLoading";
 import NewMechanicForm from "../../../request_forms/requests_to_be_servers/for_mechanic/NewMechanicForm";
 
 const MechanicPanelRedirector = () => {
-    const { user, checkingUserAuth } = useContext(AuthContext);
-    const [state, setState] = useState<ServiceReqState>(
-        ServiceReqState.NotSent,
-    );
+  const { user, checkingUserAuth } = useContext(AuthContext);
+  const [state, setState] = useState<ServiceReqState>(ServiceReqState.NotSent);
 
-    const getView = () => {
-        switch (state) {
-            case ServiceReqState.Approved:
-                return <MechanicPanel />;
-            case ServiceReqState.Reviewing:
-                return <RequestInProgress />;
-            default:
-                return <NewMechanicForm baseUser={user} />;
-        }
-    };
+  const getView = () => {
+    switch (state) {
+      case ServiceReqState.Approved:
+        return <MechanicPanel />;
+      case ServiceReqState.Reviewing:
+        return <RequestInProgress />;
+      default:
+        return <NewMechanicForm baseUser={user} />;
+    }
+  };
 
-    useEffect(() => {
-        if (!checkingUserAuth && user) {
-            if (
-                user.serviceRequests &&
-                user.serviceRequests.mechanic &&
-                user.serviceRequests.mechanic.state ===
-                    ServiceReqState.Reviewing
-            ) {
-                setState(ServiceReqState.Reviewing);
-            } else if (
-                user.serviceRequests &&
-                user.serviceRequests.mechanic &&
-                user.serviceRequests.mechanic.state === ServiceReqState.Approved
-            ) {
-                setState(ServiceReqState.Approved);
-            }
-        }
-    }, [checkingUserAuth]);
+  useEffect(() => {
+    if (!checkingUserAuth && user) {
+      if (
+        user.serviceRequests &&
+        user.serviceRequests.mechanic &&
+        user.serviceRequests.mechanic.state === ServiceReqState.Reviewing
+      ) {
+        setState(ServiceReqState.Reviewing);
+      } else if (
+        user.serviceRequests &&
+        user.serviceRequests.mechanic &&
+        user.serviceRequests.mechanic.state === ServiceReqState.Approved
+      ) {
+        setState(ServiceReqState.Approved);
+      }
+    }
+  }, [checkingUserAuth, user]);
 
-    return checkingUserAuth ? <PageLoading /> : getView();
+  return checkingUserAuth ? <PageLoading /> : getView();
 };
 
 export default MechanicPanelRedirector;

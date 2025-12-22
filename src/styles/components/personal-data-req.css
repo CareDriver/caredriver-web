@@ -1,69 +1,74 @@
 .personal-data-req-wrapper {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
 
-    grid-auto-rows: auto;
-    gap: 1.111111111rem;
+  grid-auto-rows: auto;
+  gap: 1.111111111rem;
 }
 
 .personal-data-req-item {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.277777778rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
-    padding: 2.222222222rem 1.111111111rem;
-    max-height: 16.666666667;
-    border: 0.111111111rem solid var(--gray-medium);
-    border-radius: 0.833333333rem;
-    transition: all ease-in 150ms;
+  max-height: 16.666666667;
+  border: 0.111rem solid var(--gray-light);
+  border-radius: 0.6rem;
+  transition: all ease-in-out 200ms;
 }
 
-.personal-data-req-item.fill-image > img {
-    height: 90% !important;
-    width: 100%;
-    object-fit: cover;
-    border-radius: 0.833333333rem;
-    margin-top: 1.111111111rem;
+.personal-data-req-item-header {
+  width: 100%;
+  padding: 4rem 1rem 1rem 1rem;
+
+  background-color: var(--gray-medium);
+  transition: all ease-in-out 200ms;
 }
 
-.personal-data-req-item.left {
-    align-items: flex-start;
-    padding: 1.666666667rem;
+.personal-data-req-item-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.277777778rem;
+
+  padding: 1rem;
 }
 
 .personal-data-req-item:hover {
-    border-color: var(--main-light);
+  border-color: var(--purple-light);
+  border-radius: 1rem;
+}
+
+.personal-data-req-item:hover > .personal-data-req-item-header {
+  background-color: var(--purple-light);
+}
+
+.personal-data-req-item:hover .separator-horizontal {
+  background-color: var(--second-dark);
 }
 
 .personal-data-req-item-name {
-    font-size: 1.388888889rem;
-    font-weight: 700;
+  font-size: 1.388888889rem;
+  font-weight: 700;
 }
 
 .personal-data-req-item-photo {
-    --size: 11.111111111rem;
+  width: 100%;
+  height: 18.75rem;
 
-    width: var(--size);
-    height: var(--size);
-    margin-top: 0.833333333rem;
+  object-fit: cover;
 
-    border-radius: 50%;
-    object-fit: cover;
-
-    background-color: var(--gray-light);
+  background-color: var(--gray-light);
 }
 
 .personal-data-req-item-aprove {
-    position: absolute;
-    bottom: 1.666666667rem;
-    right: 1.666666667rem;
+  position: absolute;
+  bottom: 1.666666667rem;
+  right: 1.666666667rem;
 }
 
 @media only screen and (max-width: 493px) {
-    .personal-data-req-wrapper {
-        grid-template-columns: 1fr;
-    }
+  .personal-data-req-wrapper {
+    grid-template-columns: 1fr;
+  }
 }

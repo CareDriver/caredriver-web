@@ -1,11 +1,11 @@
 export function routeToRedirector() {
-    return "/redirector";
+  return "/redirector";
 }
 
 export function routeToHomePage() {
-    return "/";
+  return "/";
 }
 
 export function routeToNoFound() {
-    return "/nofound";
+  return "/nofound";
 }

@@ -1,72 +1,93 @@
 .icon-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 0.666666667rem;
+  display: flex;
+  align-items: center;
+  gap: 0.666666667rem;
 }
 
 .icon-wrapper.center {
-    align-items: center;
-    justify-content: center;
+  align-items: center;
+  justify-content: center;
 }
 
 .icon-wrapper.bottom {
-    align-items: baseline;
+  align-items: baseline;
 }
 
 .icon-wrapper.column {
-    flex-direction: column;
-}
-
-.icon-wrapper.red-icon > svg {
-    fill: var(--red);
-}
-
-.icon-wrapper.white-icon > svg {
-    fill: white;
-}
-
-.icon-wrapper.gray-icon > svg {
-    fill: var(--gray-dark);
-}
-
-.icon-wrapper.gray-medium-icon > svg {
-    fill: var(--gray-medium);
-}
-
-.icon-wrapper.green-icon > svg {
-    fill: var(--main-light);
-}
-
-.icon-wrapper.yellow-icon > svg {
-    fill: var(--yellow);
+  flex-direction: column;
 }
 
 .icon-wrapper > svg {
-    height: 1.111111111rem;
-    width: 1.111111111rem;
+  fill: var(--second-dark);
+}
+
+.icon-wrapper.red-icon > svg {
+  fill: var(--red);
+}
+
+.icon-wrapper.white-icon > svg {
+  fill: var(--white);
+}
+
+.icon-wrapper.gray-icon > svg {
+  fill: var(--gray-dark);
+}
+
+.icon-wrapper.gray-medium-icon > svg {
+  fill: var(--gray-medium);
+}
+
+.icon-wrapper.green-icon > svg {
+  fill: var(--second-dark);
+}
+
+.icon-wrapper.green-light-icon > svg {
+  fill: var(--main-light);
+}
+
+.icon-wrapper.yellow-icon > svg {
+  fill: var(--yellow);
+}
+
+.icon-wrapper.yellow-dark-icon > svg {
+  fill: var(--yellow-dark);
+}
+
+.icon-wrapper.purple-icon > svg {
+  fill: var(--purple);
+}
+
+.icon-wrapper > svg {
+  height: 1.111111111rem;
+  width: 1.111111111rem;
 }
 
 .icon-wrapper.llb > svg {
-    height: 1rem;
-    width: 1rem;
+  height: 1rem;
+  width: 1rem;
 }
 
 .icon-wrapper.lb > svg {
-    height: 1.388888889rem;
-    width: 1.388888889rem;
+  height: 1.388888889rem;
+  width: 1.388888889rem;
 }
 
 .icon-wrapper.nb > svg {
-    height: 1.666666667rem;
-    width: 1.666666667rem;
+  height: 1.666666667rem;
+  width: 1.666666667rem;
 }
 
 .icon-wrapper.mb > svg {
-    height: 1.944444444rem;
-    width: 1.944444444rem;
+  height: 1.944444444rem;
+  width: 1.944444444rem;
 }
 
 .icon-wrapper.bg > svg {
-    height: 2.777777778rem;
-    width: 2.777777778rem;
+  height: 2.777777778rem;
+  width: 2.777777778rem;
+}
+
+.icon-wrapper.mbg > svg {
+  height: 6.777777778rem;
+  width: 6.777777778rem;
 }

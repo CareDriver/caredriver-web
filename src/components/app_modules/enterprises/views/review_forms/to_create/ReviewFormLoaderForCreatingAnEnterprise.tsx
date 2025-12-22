@@ -11,36 +11,36 @@ import { ServiceType } from "@/interfaces/Services";
 import { routeToRequestsToEditEnterpriseAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 
 const ReviewFormLoaderForCreatingAnEnterprise = ({
-    reqId,
-    type,
+  reqId,
+  type,
 }: {
-    reqId: string;
-    type: ServiceType;
+  reqId: string;
+  type: ServiceType;
 }) => {
-    const [serviceReq, setServiceReq] = useState<Enterprise | null>(null);
-    const router = useRouter();
+  const [serviceReq, setServiceReq] = useState<Enterprise | null>(null);
+  const router = useRouter();
 
-    useEffect(() => {
-        getEnterpriseById(reqId)
-            .then((data) => {
-                if (data) {
-                    setServiceReq(data);
-                } else {
-                    router.push(routeToRequestsToEditEnterpriseAsAdmin(type));
-                    toast.error("Petición no encontrada");
-                }
-            })
-            .catch((e) => {
-                router.push(routeToRequestsToEditEnterpriseAsAdmin(type));
-                toast.error("Petición no encontrada");
-            });
-    }, []);
+  useEffect(() => {
+    getEnterpriseById(reqId)
+      .then((data) => {
+        if (data) {
+          setServiceReq(data);
+        } else {
+          router.push(routeToRequestsToEditEnterpriseAsAdmin(type));
+          toast.error("Petición no encontrada");
+        }
+      })
+      .catch((e) => {
+        router.push(routeToRequestsToEditEnterpriseAsAdmin(type));
+        toast.error("Petición no encontrada");
+      });
+  }, [reqId, router, type]);
 
-    return serviceReq ? (
-        <ReviewFormForCreatingAnEnterprise enterprise={serviceReq} />
-    ) : (
-        <PageLoading />
-    );
+  return serviceReq ? (
+    <ReviewFormForCreatingAnEnterprise enterprise={serviceReq} />
+  ) : (
+    <PageLoading />
+  );
 };
 
 export default ReviewFormLoaderForCreatingAnEnterprise;
