@@ -2,6 +2,7 @@ import { useState } from "react";
 import PhoneField from "@/components/form/view/fields/PhoneField";
 import { TextField as TextFieldForm } from "@/components/form/models/FormFields";
 import PrivacyTermsSection from "@/components/form/view/sections/PrivacyTermsSection";
+import { isPhoneValid } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
 
 interface PhoneConfirmationModalProps {
   phoneNumber?: string;
@@ -128,7 +129,11 @@ const PhoneConfirmationModal = ({
           )}
           <button
             onClick={handleConfirm}
-            disabled={isLoading || (editable && !acceptTerms)}
+            disabled={
+              isLoading ||
+              !isPhoneValid(phoneNumber).isValid ||
+              (editable && !acceptTerms)
+            }
             className="general-button | modal-button-primary"
           >
             {isLoading ? "Creando cuenta..." : "Confirmar y crear"}
