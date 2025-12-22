@@ -15,7 +15,7 @@ export const DOMAIN = "https://panel.caredriver.app/";
 export const DOMAIN_LANDING_PAGE = "https://caredriver.app/";
 
 export const DEFAULT_ARTICLE_IMAGE = DOMAIN.concat(
-  "images/articles/deafultarticle.png",
+  "https://i.ibb.co/8wgXZJB/Screenshot-from-2025-12-05-13-22-46.png",
 );
 
 export const POLICY_AND_PRIVACY = DOMAIN_LANDING_PAGE.concat(
