@@ -11,42 +11,26 @@ const pageDescription =
   "Descubre cómo nuestro innovador servicio te conecta con choferes capacitados para conducir tu auto en momentos de necesidad, mecánicos expertos listos para solucionar cualquier problema y remolques rápidos para asistirte en situaciones difíciles, y lavaderos que garantizan dejar tu vehículo como nuevo. ¡Conduce seguro y tranquilo en todo momento!";
 
 export const metadata: Metadata = {
-  title: pageTitle,
-  description: pageDescription,
-  applicationName: NAME_BUSINESS,
-  authors: CareDriverAuthor,
-  category: "Servicios Automotrices",
-  keywords: [
-    "servicios automotrices",
-    "chofer privado",
-    "mecánico a domicilio",
-    "asistencia en carretera",
-    "servicio de grúa",
-    "lavado de autos",
-    "registro de proveedores de servicios",
-  ],
+  title: "CareDriver - Panel Web",
+  description:
+    "Plataforma de transporte y servicios especializados para automótivles. Envía tu solicitud para convertirte en Conductor, Mecánico, Operador de Grúa o Lavadero.",
+  keywords:
+    "transporte, conductor, mecánico, grúa, lavandería, servicios, caredriver, drivercare, servicios, conductor designado",
+  viewport: "width=device-width, initial-scale=1.0, maximum-scale=5.0",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
+  manifest: "/manifest.json",
   openGraph: {
+    title: "CareDriver - Panel Web",
+    description:
+      "Plataforma de transporte y servicios especializados para automóviles.",
     type: "website",
-    url: DOMAIN,
-    title: pageTitle,
-    description: pageDescription,
-    siteName: NAME_BUSINESS,
-    images: [
-      {
-        url: DEFAULT_ARTICLE_IMAGE,
-        alt: "Imagen representativa de servicios automotrices en CareDriver",
-      },
-    ],
-    locale: "es_ES",
+    siteName: "CareDriver",
+    images: "https://i.ibb.co/8wgXZJB/Screenshot-from-2025-12-05-13-22-46.png",
   },
-  twitter: {
-    card: "summary_large_image",
-    site: "@".concat(NAME_BUSINESS),
-    creator: "@".concat(NAME_BUSINESS),
-    images: DEFAULT_ARTICLE_IMAGE,
-    title: pageTitle,
-    description: pageDescription,
-  },
+  robots: "index, follow",
 };
 
 const Page = () => {

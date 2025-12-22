@@ -1,4 +1,6 @@
-import { initializeApp } from "firebase/app";
+"use client";
+
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -19,55 +21,52 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID!,
 };
 
-const app = initializeApp(firebaseConfig);
+// ✅ Evitar inicializar Firebase más de una vez (Next.js safe)
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
 let appCheckInstance: AppCheck | null = null;
 
-function initAppCheck() {
+export const initAppCheck = (): AppCheck | null => {
   if (typeof window === "undefined") return null;
+  if (appCheckInstance) return appCheckInstance;
 
-  try {
-    if (!appCheckInstance) {
-      const appCheckKey = process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_CLIENT_KEY;
+  const appCheckKey = process.env.NEXT_PUBLIC_FIREBASE_APPCHECK_CLIENT_KEY;
 
-      if (!appCheckKey) {
-        console.warn("App Check key is missing - App Check disabled");
-        return null;
-      }
-
-      // Habilitar debug token en desarrollo
-      if (process.env.NODE_ENV === "development") {
-        console.log("App Check: Using debug mode for development");
-        // Esto generará un token de debug en la consola
-        (window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
-      }
-
-      console.log("Initializing App Check...");
-
-      appCheckInstance = initializeAppCheck(app, {
-        provider: new ReCaptchaV3Provider(appCheckKey),
-        isTokenAutoRefreshEnabled: true,
-      });
-
-      console.log("App Check initialized successfully");
-    }
-  } catch (error: any) {
-    console.error("Error initializing App Check:", error?.message || error);
-    // No bloquear la aplicación si falla App Check
+  if (!appCheckKey) {
+    console.warn("App Check key missing – App Check disabled");
     return null;
   }
 
-  return appCheckInstance;
-}
+  try {
+    // 🔧 Debug token SOLO en desarrollo
+    if (process.env.NODE_ENV === "development") {
+      console.log("App Check running in DEBUG mode");
+      (window as any).FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+    }
 
-const auth = getAuth(app);
-const firestore = getFirestore(app);
-const storage = getStorage(app);
+    appCheckInstance = initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider(appCheckKey),
+      isTokenAutoRefreshEnabled: true,
+    });
 
-export { app, auth, firestore, storage, initAppCheck };
+    console.log("App Check initialized");
+    return appCheckInstance;
+  } catch (error: any) {
+    console.error("Failed to initialize App Check:", error?.message || error);
+    return null;
+  }
+};
 
+// Firebase services
+export const auth = getAuth(app);
+export const firestore = getFirestore(app);
+export const storage = getStorage(app);
+
+// Realtime Database (multi-instance safe)
 export const initializeRealtimeDatabase = (databaseURL: string) => {
   const configWithDatabaseURL = { ...firebaseConfig, databaseURL };
   const rtApp = initializeApp(configWithDatabaseURL, `realtime-${databaseURL}`);
   return getDatabase(rtApp);
 };
+
+export { app };
