@@ -48,7 +48,7 @@ const PhoneConfirmationModal = ({
           ? internalPhone.value
           : phoneToShow
       : phoneToShow;
-    
+
     onConfirm(finalPhone);
   };
 
