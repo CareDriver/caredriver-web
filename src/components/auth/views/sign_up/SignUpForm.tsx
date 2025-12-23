@@ -27,7 +27,6 @@ import BaseForm from "@/components/form/view/forms/BaseForm";
 import { isValidName } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
 import { EMPTY_USER_DATA } from "../../api/UserAuth";
 import { routeToSingIn } from "@/utils/route_builders/as_not_logged/RouteBuilderForAuth";
-import { sendVerificationCode } from "../../api/VerificationCodeSender";
 import CodeVerifier from "../verifiers/CodeVerifier";
 import AuthProviders from "../providers/AuthProviders";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
