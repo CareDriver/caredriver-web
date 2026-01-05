@@ -87,7 +87,7 @@ const saveUser = async (
       ...userData,
       fullNameArrayLower: generateKeywords(userData.fullName),
     };
-    await setDoc(userRef, userData);
+    await setDoc(userRef, data);
     return userRef;
   } catch (error) {
     throw error;

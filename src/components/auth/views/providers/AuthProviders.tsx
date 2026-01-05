@@ -73,7 +73,7 @@ const AuthProviders = ({
         ...EMPTY_USER_DATA,
         id: providerUser.uid,
         fullName: providerUser.displayName
-          ? providerUser.displayName.toLowerCase()
+          ? providerUser.displayName
           : "",
         photoUrl: { url: providerUser.photoURL ?? "", ref: "" },
         email: providerUser.email
