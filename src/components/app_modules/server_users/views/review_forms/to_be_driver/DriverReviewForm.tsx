@@ -47,6 +47,7 @@ import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 import { RefAttachment } from "@/components/form/models/RefAttachment";
 import { BloodTypes } from "@/interfaces/BloodTypes";
 import PDFRenderer from "@/components/form/view/field_renderers/PDFRenderer";
+import { Timestamp } from "firebase/firestore";
 
 const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const { user: adminUser } = useContext(AuthContext);
@@ -159,10 +160,32 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               wasApproved &&
               !requesterUser.services.includes(Services.Driver)
             ) {
-              userToUpdate = {
-                ...userToUpdate,
-                services: [...requesterUser.services, Services.Driver],
-              };
+              const currentDate = new Date();
+              const cutoffDate = new Date(2026, 1, 1); // 1 de febrero de 2026 (mes 1 = febrero)
+              cutoffDate.setHours(23, 59, 59, 999); // Hasta las 23:59:59 del día 1 de febrero
+
+              // Solo agregar saldo con expiración si la fecha actual es menor o igual al 1 de febrero de 2026
+              if (currentDate <= cutoffDate) {
+                const expirationDate = new Date();
+                expirationDate.setMonth(expirationDate.getMonth() + 3); // 3 meses desde ahora
+
+                userToUpdate = {
+                  ...userToUpdate,
+                  services: [...requesterUser.services, Services.Driver],
+                  balanceWithExpiration: {
+                    balance: {
+                      currency: "Bs. (BOB)",
+                      amount: 200,
+                    },
+                    expirationDate: Timestamp.fromDate(expirationDate),
+                  },
+                };
+              } else {
+                userToUpdate = {
+                  ...userToUpdate,
+                  services: [...requesterUser.services, Services.Driver],
+                };
+              }
             }
 
             if (serviceReq.driverEnterprise) {

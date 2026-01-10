@@ -15,6 +15,14 @@ const VehicleRendererWithCategory = ({ vehicle }: { vehicle: Vehicle }) => {
           legend={"Transmisión"}
         />
       ))}
+      <TextFieldRenderer
+        content={vehicle.license.requireGlasses ? "Sí" : "No"}
+        legend={"Requiere lentes"}
+      />
+      <TextFieldRenderer
+        content={vehicle.license.requireHeadphones ? "Sí" : "No"}
+        legend={"Requiere audífonos"}
+      />
       <LicenseReviewForm license={vehicle.license} />
     </div>
   );
