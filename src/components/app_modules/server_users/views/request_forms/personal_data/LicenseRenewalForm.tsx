@@ -7,7 +7,6 @@ import {
 import { FormEvent, useCallback, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  isValidLicenseCategory,
   isValidLicenseDate,
   isValidLicenseNumber,
 } from "@/components/app_modules/server_users/validators/for_data/DriveValidator";

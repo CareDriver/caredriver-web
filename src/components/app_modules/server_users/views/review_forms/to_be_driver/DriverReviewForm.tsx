@@ -10,7 +10,10 @@ import PersonalDataRenderer from "../../../../users/views/data_renderers/for_use
 import SelfieRenderer from "../../../../../form/view/field_renderers/SelfieRenderer";
 import VehiclesWithCategoryRenderer from "../../data_renderers/for_vehicles/VehiclesWithCategoryRenderer";
 import { useContext, useEffect, useState } from "react";
-import { driveReqCollection } from "@/components/app_modules/server_users/api/DriveRequester";
+import {
+  driveReqCollection,
+  saveDriveReq,
+} from "@/components/app_modules/server_users/api/DriveRequester";
 import { AuthContext } from "@/context/AuthContext";
 import {
   getUserById,
@@ -23,6 +26,7 @@ import {
   ServiceVehicles,
   UserInterface,
 } from "@/interfaces/UserInterface";
+import { Locations, locationList } from "@/interfaces/Locations";
 import { VehicleType } from "@/interfaces/VehicleInterface";
 import { ServiceReqState, Services } from "@/interfaces/Services";
 import { toast } from "react-toastify";
@@ -48,6 +52,9 @@ import { RefAttachment } from "@/components/form/models/RefAttachment";
 import { BloodTypes } from "@/interfaces/BloodTypes";
 import PDFRenderer from "@/components/form/view/field_renderers/PDFRenderer";
 import { Timestamp } from "firebase/firestore";
+import ImageRenderer from "@/components/form/view/field_renderers/ImageRenderer";
+import { DirectoryPath } from "@/firebase/StoragePaths";
+import { uploadFileBase64 } from "@/utils/requesters/FileUploader";
 
 const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const { user: adminUser } = useContext(AuthContext);
@@ -59,23 +66,55 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(
     null,
   );
+  const [isEditing, setIsEditing] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [photoUploadLoading, setPhotoUploadLoading] = useState(false);
+  const [editPhoto, setEditPhoto] = useState<string | RefAttachment>(
+    serviceReq.newProfilePhotoImgUrl ?? "",
+  );
+  const [editValues, setEditValues] = useState({
+    newFullName: serviceReq.newFullName ?? "",
+    homeAddress: serviceReq.homeAddress ?? "",
+    location: serviceReq.location ?? Locations.CochabambaBolivia,
+  });
 
-  const wasReviewed = (): boolean => {
-    return reviewState.reviewed || !serviceReq.active;
+  const currentReq: UserRequest = {
+    ...serviceReq,
+    newFullName: editValues.newFullName,
+    homeAddress: editValues.homeAddress,
+    location: editValues.location,
+    newProfilePhotoImgUrl: editPhoto,
   };
 
-  const saveReviewHistory = async (wasApproved: boolean) => {
+  const toBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const resetEdits = () => {
+    setEditValues({
+      newFullName: serviceReq.newFullName ?? "",
+      homeAddress: serviceReq.homeAddress ?? "",
+      location: serviceReq.location ?? Locations.CochabambaBolivia,
+    });
+    setEditPhoto(serviceReq.newProfilePhotoImgUrl ?? "");
+  };
+
+  const wasReviewed = (): boolean => {
+    return reviewState.reviewed || !currentReq.active;
+  };
+
+  const saveReviewHistory = async (req: UserRequest, wasApproved: boolean) => {
     try {
       if (adminUser && adminUser.id) {
         const isLimitToReviews: boolean =
-          serviceReq.reviewedByHistory !== undefined &&
-          serviceReq.reviewedByHistory.length + 1 === MIN_NUM_OF_APPROVALS;
-        await saveReview(
-          serviceReq,
-          adminUser.id,
-          wasApproved,
-          driveReqCollection,
-        );
+          req.reviewedByHistory !== undefined &&
+          req.reviewedByHistory.length + 1 === MIN_NUM_OF_APPROVALS;
+        await saveReview(req, adminUser.id, wasApproved, driveReqCollection);
 
         if (isLimitToReviews) {
           var car = getVehicle(VehicleType.CAR);
@@ -92,7 +131,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 : {};
 
             const serviceReqState = {
-              id: serviceReq.id,
+              id: req.id,
               state: wasApproved
                 ? ServiceReqState.Approved
                 : ServiceReqState.Refused,
@@ -161,7 +200,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               !requesterUser.services.includes(Services.Driver)
             ) {
               const currentDate = new Date();
-              const cutoffDate = new Date(2026, 1, 1); // 1 de febrero de 2026 (mes 1 = febrero)
+              const cutoffDate = new Date(2026, 2, 1); // 1 de febrero de 2026 (mes 1 = febrero)
               cutoffDate.setHours(23, 59, 59, 999); // Hasta las 23:59:59 del día 1 de febrero
 
               // Solo agregar saldo con expiración si la fecha actual es menor o igual al 1 de febrero de 2026
@@ -188,10 +227,10 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               }
             }
 
-            if (serviceReq.driverEnterprise) {
+            if (req.driverEnterprise) {
               userToUpdate = {
                 ...userToUpdate,
-                driverEnterpriseId: serviceReq.driverEnterprise,
+                driverEnterpriseId: req.driverEnterprise,
               };
             }
 
@@ -216,13 +255,10 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               );
             }
 
-            userToUpdate.photoUrl =
-              serviceReq.newProfilePhotoImgUrl as RefAttachment;
-            userToUpdate.addressPhoto =
-              serviceReq.addressPhoto as RefAttachment;
-            userToUpdate.homeAddress = serviceReq.homeAddress;
-            userToUpdate.bloodType =
-              serviceReq.bloodType ?? BloodTypes.OPositive;
+            userToUpdate.photoUrl = req.newProfilePhotoImgUrl as RefAttachment;
+            userToUpdate.addressPhoto = req.addressPhoto as RefAttachment;
+            userToUpdate.homeAddress = req.homeAddress;
+            userToUpdate.bloodType = req.bloodType ?? BloodTypes.OPositive;
 
             await updateUser(serviceReq.userId, userToUpdate);
             if (enterprise && wasApproved) {
@@ -255,8 +291,8 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   };
 
   const getVehicle = (type: VehicleType): Vehicle | null => {
-    if (serviceReq.vehicles) {
-      const vehicles = serviceReq.vehicles.filter(
+    if (currentReq.vehicles) {
+      const vehicles = currentReq.vehicles.filter(
         (veh) => veh.type.type === type,
       );
       if (vehicles.length > 0) {
@@ -273,8 +309,8 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
       loading: true,
     });
     try {
-      await deleteImagesIfLimitOfApproves(serviceReq);
-      await toast.promise(saveReviewHistory(wasApproved), {
+      await deleteImagesIfLimitOfApproves(currentReq);
+      await toast.promise(saveReviewHistory(currentReq, wasApproved), {
         pending: "Registrando revision, por favor espera",
         success: "Revision registrada",
         error: "Error al registrar revision, vuelve a intentarlo por favor",
@@ -314,6 +350,15 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   }, [serviceReq.userId]);
 
   useEffect(() => {
+    setEditValues({
+      newFullName: serviceReq.newFullName ?? "",
+      homeAddress: serviceReq.homeAddress ?? "",
+      location: serviceReq.location ?? Locations.CochabambaBolivia,
+    });
+    setEditPhoto(serviceReq.newProfilePhotoImgUrl ?? "");
+  }, [serviceReq]);
+
+  useEffect(() => {
     const fetchDriverEnterprise = async () => {
       if (serviceReq.driverEnterprise) {
         try {
@@ -331,7 +376,164 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
   return (
     <div className="service-form-wrapper | max-width-60">
-      <h1 className="text | big bold">Solicitud para ser {DRIVER}</h1>
+      <div className="row-wrapper | between items-center">
+        <h1 className="text | big bold">Solicitud para ser {DRIVER}</h1>
+        <div className="row-wrapper | gap-8">
+          <button
+            className="general-button gray"
+            onClick={() => {
+              if (isEditing) {
+                resetEdits();
+              }
+              setIsEditing((s) => !s);
+            }}
+            type="button"
+          >
+            {isEditing ? "Cancelar" : "Editar"}
+          </button>
+          {isEditing && (
+            <button
+              className="general-button green"
+              onClick={async () => {
+                setEditLoading(true);
+                try {
+                  const updatedReq: UserRequest = {
+                    ...serviceReq,
+                    newFullName: editValues.newFullName,
+                    homeAddress: editValues.homeAddress,
+                    location: editValues.location,
+                    newProfilePhotoImgUrl: editPhoto,
+                  };
+                  await saveDriveReq(serviceReq.id, updatedReq);
+                  toast.success("Cambios guardados en la solicitud");
+                  setIsEditing(false);
+                } catch (e) {
+                  console.error(e);
+                  toast.error("Error al guardar los cambios");
+                } finally {
+                  setEditLoading(false);
+                }
+              }}
+              type="button"
+              disabled={editLoading || photoUploadLoading}
+            >
+              {editLoading ? "Guardando..." : "Guardar"}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {isEditing && (
+        <div className="form-sub-container | card padded gap-16 margin-bottom-20">
+          <h2 className="text | medium bold">Editar datos de la solicitud</h2>
+
+          <div className="row-wrapper | gap-16 wrap items-center">
+            <ImageRenderer
+              content={{
+                image: editPhoto,
+                legend: "Foto de perfil",
+                noFoundReason: "No se encontró la foto de perfil",
+              }}
+              imageInCircle={true}
+            />
+            <label
+              className="general-button white bordered"
+              style={{ cursor: "pointer" }}
+            >
+              {photoUploadLoading ? "Subiendo..." : "Cambiar foto"}
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                disabled={photoUploadLoading}
+                onChange={async (e) => {
+                  const file = e.target.files ? e.target.files[0] : null;
+                  if (!file) return;
+                  setPhotoUploadLoading(true);
+                  try {
+                    const base64 = await toBase64(file);
+                    const uploaded = await uploadFileBase64(
+                      DirectoryPath.TempProfilePhotos,
+                      base64,
+                    );
+                    setEditPhoto(uploaded);
+                    toast.success("Nueva foto cargada");
+                  } catch (err) {
+                    console.error(err);
+                    toast.error("No se pudo cargar la foto");
+                  } finally {
+                    setPhotoUploadLoading(false);
+                    e.target.value = "";
+                  }
+                }}
+              />
+            </label>
+          </div>
+
+          <fieldset className="form-section">
+            <input
+              className="form-section-input"
+              value={editValues.newFullName}
+              onChange={(e) =>
+                setEditValues((prev) => ({
+                  ...prev,
+                  newFullName: e.target.value,
+                }))
+              }
+              placeholder="Ej: Juan Pérez Gómez"
+              autoComplete="off"
+              type="text"
+            />
+            <legend className="form-section-legend">Nombre completo</legend>
+            <small className="text | light">
+              Corrige typos o ajusta el orden de apellidos.
+            </small>
+          </fieldset>
+
+          <fieldset className="form-section">
+            <input
+              className="form-section-input"
+              value={editValues.homeAddress}
+              onChange={(e) =>
+                setEditValues((prev) => ({
+                  ...prev,
+                  homeAddress: e.target.value,
+                }))
+              }
+              placeholder="Calle, número y zona"
+              autoComplete="off"
+              type="text"
+            />
+            <legend className="form-section-legend">Dirección</legend>
+            <small className="text | light">
+              Usa la dirección de cobro o domicilio principal.
+            </small>
+          </fieldset>
+
+          <fieldset className="form-section | select-item">
+            <select
+              className="form-section-input"
+              value={editValues.location}
+              onChange={(e) =>
+                setEditValues((prev) => ({
+                  ...prev,
+                  location: e.target.value as Locations,
+                }))
+              }
+            >
+              {locationList.map((loc) => (
+                <option key={loc} value={loc}>
+                  {loc}
+                </option>
+              ))}
+            </select>
+            <legend className="form-section-legend">Ciudad</legend>
+            <small className="text | light">
+              Elige la ciudad de operación del conductor.
+            </small>
+          </fieldset>
+        </div>
+      )}
       <div className="row-wrapper | gap-20">
         <ApprovalsRenderer
           serviceReq={serviceReq}
@@ -387,11 +589,11 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
         }}
       >
         <PersonalDataRenderer
-          location={serviceReq.location}
-          homeAddress={serviceReq.homeAddress}
-          addressPhoto={serviceReq.addressPhoto}
-          name={serviceReq.newFullName}
-          photo={serviceReq.newProfilePhotoImgUrl}
+          location={currentReq.location}
+          homeAddress={currentReq.homeAddress}
+          addressPhoto={currentReq.addressPhoto}
+          name={currentReq.newFullName}
+          photo={currentReq.newProfilePhotoImgUrl}
           bloodType={requesterUser?.bloodType}
           alternativePhoneNumber={
             requesterUser?.alternativePhoneNumber
@@ -416,14 +618,14 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
         )}
 
         <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
-        {serviceReq.vehicles && (
-          <VehiclesWithCategoryRenderer vehicles={serviceReq.vehicles} />
+        {currentReq.vehicles && (
+          <VehiclesWithCategoryRenderer vehicles={currentReq.vehicles} />
         )}
 
         <PDFRenderer
           pdf={{
-            ref: serviceReq.policeRecordsPdf?.ref ?? "",
-            url: serviceReq.policeRecordsPdf?.url ?? "",
+            ref: currentReq.policeRecordsPdf?.ref ?? "",
+            url: currentReq.policeRecordsPdf?.url ?? "",
           }}
           legend="Antecedentes policiales"
         />
