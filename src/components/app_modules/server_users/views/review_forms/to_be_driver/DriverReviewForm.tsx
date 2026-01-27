@@ -55,6 +55,7 @@ import { Timestamp } from "firebase/firestore";
 import ImageRenderer from "@/components/form/view/field_renderers/ImageRenderer";
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { uploadFileBase64 } from "@/utils/requesters/FileUploader";
+import { generateKeywords } from "@/utils/helpers/StringHelper";
 
 const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const { user: adminUser } = useContext(AuthContext);
@@ -270,6 +271,8 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               );
             }
 
+            userToUpdate.fullName = req.newFullName;
+            userToUpdate.fullNameArrayLower = generateKeywords(req.newFullName);
             userToUpdate.photoUrl = req.newProfilePhotoImgUrl as RefAttachment;
             userToUpdate.addressPhoto = req.addressPhoto as RefAttachment;
             userToUpdate.homeAddress = req.homeAddress;
