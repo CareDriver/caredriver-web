@@ -1,8 +1,8 @@
 "use client";
 
 import { initializeRealtimeDatabase } from "@/firebase/FirebaseConfig";
-import { useEffect, useState } from "react";
-import { ref, onValue, off } from "firebase/database";
+import { useEffect, useMemo, useState } from "react";
+import { ref, onValue } from "firebase/database";
 import {
   CoordinateRegister,
   ServiceRoutes,
@@ -21,7 +21,7 @@ const MapRealTime = ({
   isCanceled: boolean;
   isFinished: boolean;
 }) => {
-  const [data, setData] = useState<ServiceRoutes | null | undefined>(null);
+  const [data, setData] = useState<ServiceRoutes | undefined>(undefined);
   const [route, setRoute] = useState<{
     prior: CoordinateRegister[];
     inProgress: CoordinateRegister[];
@@ -29,91 +29,82 @@ const MapRealTime = ({
     prior: [],
     inProgress: [],
   });
-  const database = initializeRealtimeDatabase(databaseURL);
+
+  const database = useMemo(() => {
+    console.log("Initializing realtime database");
+    return initializeRealtimeDatabase(databaseURL);
+  }, [databaseURL]);
 
   useEffect(() => {
-    if (database && serviceId) {
-      const starCountRef = ref(database, "services/" + serviceId);
+    console.log("MapRealTime effect fired", {
+      databaseExists: !!database,
+      serviceId,
+      isCanceled,
+      isFinished,
+    });
 
-      if (isCanceled || isFinished) {
-        onValue(
-          starCountRef,
-          (snapshot) => {
-            if (snapshot.exists()) {
-              const data = snapshot.val() as ServiceRoutes;
-              setData(data);
-
-              if (data.priorArrivalRoute) {
-                const priorPath = Object.values(data.priorArrivalRoute);
-                let statePaths = {
-                  ...route,
-                  prior: priorPath,
-                };
-                if (data.serviceInProgressRoute) {
-                  const inProgressPath = Object.values(
-                    data.serviceInProgressRoute,
-                  );
-                  statePaths = {
-                    ...statePaths,
-                    inProgress: inProgressPath,
-                  };
-                }
-                setRoute(statePaths);
-              }
-            } else {
-              setData(undefined);
-            }
-          },
-          {
-            onlyOnce: true,
-          },
-        );
-      } else {
-        const listener = onValue(starCountRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-            const service = data as ServiceRoutes;
-            setData(service);
-
-            if (service.priorArrivalRoute) {
-              const priorPath = Object.values(service.priorArrivalRoute);
-              let statePaths = {
-                ...route,
-                prior: priorPath,
-              };
-              if (service.serviceInProgressRoute) {
-                const inProgressPath = Object.values(
-                  service.serviceInProgressRoute,
-                );
-                statePaths = {
-                  ...statePaths,
-                  inProgress: inProgressPath,
-                };
-              }
-              setRoute(statePaths);
-            }
-          } else {
-            setData(undefined);
-          }
-        });
-
-        return () => {
-          off(starCountRef, "value", listener);
-        };
-      }
-    } else {
+    if (!database || !serviceId) {
+      console.log("Missing database or serviceId");
       setData(undefined);
+      return;
     }
-  }, [database, serviceId, isCanceled, isFinished, route]);
 
-  if (data === null) {
-    return <span className="loader-green | big-loader"></span>;
-  }
+    const serviceRef = ref(database, `services/${serviceId}`);
+    console.log("Listening to:", `services/${serviceId}`);
+
+    const handleSnapshot = (snapshot: any) => {
+      console.log("Snapshot received");
+      console.log("Exists:", snapshot.exists());
+      console.log("Raw value:", snapshot.val());
+
+      if (!snapshot.exists()) {
+        console.log("Snapshot does not exist");
+        setData(undefined);
+        return;
+      }
+
+      const service = snapshot.val() as ServiceRoutes;
+      console.log("Service data:", service);
+      setData(service);
+
+      const priorPath = service.priorArrivalRoute
+        ? Object.values(service.priorArrivalRoute)
+        : [];
+
+      const inProgressPath = service.serviceInProgressRoute
+        ? Object.values(service.serviceInProgressRoute)
+        : [];
+
+      setRoute({
+        prior: priorPath,
+        inProgress: inProgressPath,
+      });
+
+      console.log("Routes updated", {
+        prior: priorPath.length,
+        inProgress: inProgressPath.length,
+      });
+    };
+
+    const handleError = (error: Error) => {
+      console.error("Firebase listener error:", error);
+    };
+
+    console.log("Attaching realtime listener");
+
+    // Siempre usar listener en tiempo real
+    const unsubscribe = onValue(serviceRef, handleSnapshot, handleError);
+
+    return () => {
+      console.log("Detaching realtime listener");
+      unsubscribe();
+    };
+  }, [database, serviceId, isCanceled, isFinished]);
 
   if (data === undefined) {
     return (
       <div className="max-width-60">
-        <FieldDeleted description="No hay registro del la navegación" />
+        <FieldDeleted description="No hay registro de la navegación" />
       </div>
     );
   }
