@@ -208,7 +208,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               if (currentDate <= cutoffDate) {
                 // 1. Definimos la fecha límite: 6 de Febrero de 2026
                 const currentYear = new Date().getFullYear();
-                const deadline = new Date(currentYear, 1, 6); // (Año, Mes 0-index, Día) -> 1 es Febrero
+                const deadline = new Date(currentYear, 3, 6); // (Año, Mes 0-index, Día) -> 1 es Febrero
                 const now = new Date();
 
                 let expirationDate: Date;
