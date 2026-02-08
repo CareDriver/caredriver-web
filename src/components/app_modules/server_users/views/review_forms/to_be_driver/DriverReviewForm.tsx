@@ -216,11 +216,11 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 if (now < deadline) {
                   // Si es ANTES del 6 de feb: sumar 3 meses al 6 de feb
                   expirationDate = new Date(deadline);
-                  expirationDate.setMonth(expirationDate.getMonth() + 3);
+                  expirationDate.setMonth(expirationDate.getMonth() + 4);
                 } else {
                   // Si ya es 6 de feb o después: sumar 3 meses desde hoy
                   expirationDate = new Date(now);
-                  expirationDate.setMonth(expirationDate.getMonth() + 3);
+                  expirationDate.setMonth(expirationDate.getMonth() + 4);
                 }
 
                 // 2. Actualizamos el objeto

@@ -286,7 +286,7 @@ const SignUpForm = () => {
         isLoading={loading}
       />
 
-      <AuthProviders alternativeLegend="O registrate con" />
+      {/* <AuthProviders alternativeLegend="O registrate con" /> */}
       <Link href={routeToSingIn()} className="text | normal center">
         ¿Ya tienes cuenta? <b>Inicia sesión</b>
       </Link>
