@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
   LicenseCategories,
   licenseCategoriesList,
+  getLicenseCategoryLabel,
 } from "@/interfaces/LicenseCategories";
 
 interface Props {
@@ -28,7 +29,9 @@ const LicenseCategoryField: React.FC<Props> = ({ location, setter, style }) => {
   return (
     <fieldset className={`form-section | select-item`}>
       <div className="form-section-input | icon-wrapper" onClick={toggleMenu}>
-        <span className="selected-location">{location}</span>
+        <span className="selected-location">
+          {getLicenseCategoryLabel(location)}
+        </span>
       </div>
       <ChevronDown />
       <legend className="form-section-legend">Categoría de la Licencia</legend>
@@ -40,7 +43,7 @@ const LicenseCategoryField: React.FC<Props> = ({ location, setter, style }) => {
               onClick={() => selectLocation(loc)}
               className={`option-item ${loc === location ? "selected" : ""}`}
             >
-              {loc}
+              {getLicenseCategoryLabel(loc)}
             </li>
           ))}
         </ul>

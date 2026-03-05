@@ -45,14 +45,14 @@ const ListOfRequestsToEditEnterprises = ({ type }: { type: ServiceType }) => {
     getEditEnterpriseReqs(type, "next", startAfterDoc, endBeforeDoc, numPerPage)
       .then((result) => {
         if (data) {
-          setData([...data, ...result.result]);
+          setData((prev) => prev && [...prev, ...result.result]);
         } else {
           setData(result.result);
         }
         setLastDoc(result.lastDoc);
       })
       .catch(() => {});
-  }, [page, data, lastDoc, type]);
+  }, [page, type]);
 
   if (!data) {
     return <PageLoading />;

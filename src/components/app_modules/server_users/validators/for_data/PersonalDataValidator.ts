@@ -5,7 +5,6 @@ import {
 import { IdCard, PersonalData } from "../../models/PersonalDataFields";
 
 export function isValidPersonalData(data: PersonalData): boolean {
-  console.log(data);
   return (
     !isNaN(Number(data.alternativePhoneNumber.value)) &&
     isValidTextField(data.fullname) &&

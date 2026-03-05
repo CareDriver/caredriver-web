@@ -76,6 +76,7 @@ export interface UserInterface {
   photoUrl: RefAttachment; // URL of the user's photo
   email?: string; // User's email
   identityCard?: IdentityCard; // User's Id card
+  policeRecordsPdf?: RefAttachment; // Police records PDF for service providers
 
   // comments: string[]; // Array of comments given by drivers
   vehicles: VehicleInterface[]; // Array of vehicles associated with the user

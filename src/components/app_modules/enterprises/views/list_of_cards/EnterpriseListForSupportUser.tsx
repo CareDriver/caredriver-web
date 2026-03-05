@@ -67,7 +67,7 @@ const EnterpriseListForSupportUser: React.FC<Props> = ({
           console.log(e);
         });
     }
-  }, [page, data, lastDoc, typeOfEnterprise, user.id]);
+  }, [page, typeOfEnterprise, user.id]);
 
   const handleNextClick = () => {
     if (page === pages) return;

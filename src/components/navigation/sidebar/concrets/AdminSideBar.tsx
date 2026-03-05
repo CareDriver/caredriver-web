@@ -10,6 +10,7 @@ import EnterpriseRegistersSection from "../sidebar_sections/EnterpriseRegistersS
 import NoServerUserProfileOp from "../sidebar_options/NoServerUserProfileOp";
 import LogoutOption from "../sidebar_options/LogoutOption";
 import RedirectToService from "../sidebar_options/RedirectToService";
+import ServicesOption from "../sidebar_options/ServicesOption";
 
 const AdminSideBar = ({
   pathname,
@@ -32,6 +33,7 @@ const AdminSideBar = ({
         <UsersOption pathname={pathname} />
         <AddNewUserOption pathname={pathname} />
         <RedirectToService />
+        <ServicesOption pathname={pathname} />
       </li>
       <div>
         <i className="separator-horizontal green-opacity"></i>

@@ -18,4 +18,8 @@ export enum Collections {
   BrandingRequests = "branding-requests",
   ActionOnUsers = "action-on-users",
   ChangeEnterpriseRequests = "request-for-change-enterprise",
+  ProposalsDriver = "proposals-driver",
+  ProposalsMechanic = "proposals-mechanic",
+  ProposalTow = "proposals-tow",
+  ProposalCarWash = "proposals-car-wash",
 }

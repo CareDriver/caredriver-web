@@ -41,6 +41,8 @@ import { notifyRequestApprovalUser } from "../../../api/UserServerNotifier";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
 import { RefAttachment } from "@/components/form/models/RefAttachment";
 import { BloodTypes } from "@/interfaces/BloodTypes";
+import { Locations, locationList } from "@/interfaces/Locations";
+import { saveLaundryReq } from "@/components/app_modules/server_users/api/LaundryRequester";
 
 const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const { user: adminUser } = useContext(AuthContext);
@@ -52,19 +54,35 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const [enterprise, setEnterpise] = useState<Enterprise | null | undefined>(
     null,
   );
+  const [isEditing, setIsEditing] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editValues, setEditValues] = useState({
+    location: serviceReq.location ?? Locations.CochabambaBolivia,
+  });
+
+  const currentReq: UserRequest = {
+    ...serviceReq,
+    location: editValues.location,
+  };
+
+  const resetEdits = () => {
+    setEditValues({
+      location: serviceReq.location ?? Locations.CochabambaBolivia,
+    });
+  };
 
   const wasReviewed = (): boolean => {
-    return reviewState.reviewed || !serviceReq.active;
+    return reviewState.reviewed || !currentReq.active;
   };
 
   const saveReviewHistory = async (wasApproved: boolean) => {
     try {
       if (adminUser && adminUser.id) {
         const isLimitToReviews: boolean =
-          serviceReq.reviewedByHistory !== undefined &&
-          serviceReq.reviewedByHistory.length + 1 === MIN_NUM_OF_APPROVALS;
+          currentReq.reviewedByHistory !== undefined &&
+          currentReq.reviewedByHistory.length + 1 === MIN_NUM_OF_APPROVALS;
         await saveReview(
-          serviceReq,
+          currentReq,
           adminUser.id,
           wasApproved,
           laundryReqCollection,
@@ -73,7 +91,7 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
         if (isLimitToReviews) {
           if (requesterUser) {
             const serviceReqState = {
-              id: serviceReq.id,
+              id: currentReq.id,
               state: wasApproved
                 ? ServiceReqState.Approved
                 : ServiceReqState.Refused,
@@ -93,12 +111,12 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
             if (
               wasApproved &&
-              serviceReq.laundryEnterprite &&
+              currentReq.laundryEnterprite &&
               !requesterUser.services.includes(Services.Laundry)
             ) {
               userToUpdate = {
                 ...userToUpdate,
-                laundryEnterpriseId: serviceReq.laundryEnterprite,
+                laundryEnterpriseId: currentReq.laundryEnterprite,
                 services: [...requesterUser.services, Services.Laundry],
               };
             }
@@ -112,19 +130,19 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
             }
 
             userToUpdate.photoUrl =
-              serviceReq.newProfilePhotoImgUrl as RefAttachment;
+              currentReq.newProfilePhotoImgUrl as RefAttachment;
             userToUpdate.addressPhoto =
-              serviceReq.addressPhoto as RefAttachment;
-            userToUpdate.homeAddress = serviceReq.homeAddress;
+              currentReq.addressPhoto as RefAttachment;
+            userToUpdate.homeAddress = currentReq.homeAddress;
             userToUpdate.bloodType =
-              serviceReq.bloodType ?? BloodTypes.OPositive;
+              currentReq.bloodType ?? BloodTypes.OPositive;
 
-            await updateUser(serviceReq.userId, userToUpdate);
+            await updateUser(currentReq.userId, userToUpdate);
             if (enterprise && wasApproved) {
               await toast.promise(
                 addUserServerToEnterprise(
                   enterprise,
-                  serviceReq.userId,
+                  currentReq.userId,
                   getIdSaved(requesterUser.fakeId),
                 ),
                 {
@@ -155,7 +173,7 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
       loading: true,
     });
     try {
-      await deleteImagesIfLimitOfApproves(serviceReq);
+      await deleteImagesIfLimitOfApproves(currentReq);
       await toast.promise(saveReviewHistory(wasApproved), {
         pending: "Registrando revision, por favor espera",
         success: "Revision registrada",
@@ -213,12 +231,90 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
     });
   }, [serviceReq.userId]);
 
+  useEffect(() => {
+    setEditValues({
+      location: serviceReq.location ?? Locations.CochabambaBolivia,
+    });
+  }, [serviceReq]);
+
   return (
     <div className="service-form-wrapper | max-width-60">
-      <h1 className="text | big bold">Solicitud para ser Lavadero</h1>
+      <div className="row-wrapper | between items-center">
+        <h1 className="text | big bold">Solicitud para ser Lavadero</h1>
+        <div className="row-wrapper | gap-8">
+          <button
+            className="general-button gray"
+            onClick={() => {
+              if (isEditing) {
+                resetEdits();
+              }
+              setIsEditing((s) => !s);
+            }}
+            type="button"
+          >
+            {isEditing ? "Cancelar" : "Editar"}
+          </button>
+          {isEditing && (
+            <button
+              className="general-button green"
+              onClick={async () => {
+                setEditLoading(true);
+                try {
+                  const updatedReq: UserRequest = {
+                    ...serviceReq,
+                    location: editValues.location,
+                  };
+                  await saveLaundryReq(serviceReq.id, updatedReq);
+                  toast.success("Cambios guardados en la solicitud");
+                  setIsEditing(false);
+                } catch (e) {
+                  console.error(e);
+                  toast.error("Error al guardar los cambios");
+                } finally {
+                  setEditLoading(false);
+                }
+              }}
+              type="button"
+              disabled={editLoading}
+            >
+              {editLoading ? "Guardando..." : "Guardar"}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {isEditing && (
+        <div className="form-sub-container | card padded gap-16 margin-bottom-20">
+          <h2 className="text | medium bold">Editar datos de la solicitud</h2>
+
+          <fieldset className="form-section | select-item">
+            <select
+              className="form-section-input"
+              value={editValues.location}
+              onChange={(e) =>
+                setEditValues((prev) => ({
+                  ...prev,
+                  location: e.target.value as Locations,
+                }))
+              }
+            >
+              {locationList.map((loc) => (
+                <option key={loc} value={loc}>
+                  {loc}
+                </option>
+              ))}
+            </select>
+            <legend className="form-section-legend">Ciudad</legend>
+            <small className="text | light">
+              Elige la ciudad de operación del lavadero.
+            </small>
+          </fieldset>
+        </div>
+      )}
+
       <div className="row-wrapper | gap-20">
         <ApprovalsRenderer
-          serviceReq={serviceReq}
+          serviceReq={currentReq}
           reviewed={reviewState.reviewed}
         />
 
@@ -272,7 +368,7 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
         }}
       >
         <PersonalDataRenderer
-          location={serviceReq.location}
+          location={currentReq.location}
           homeAddress={serviceReq.homeAddress}
           addressPhoto={serviceReq.addressPhoto}
           name={serviceReq.newFullName}

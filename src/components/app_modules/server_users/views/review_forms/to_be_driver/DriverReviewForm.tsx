@@ -201,7 +201,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               !requesterUser.services.includes(Services.Driver)
             ) {
               const currentDate = new Date();
-              const cutoffDate = new Date(2026, 3, 2); // 1 de febrero de 2026 (mes 1 = febrero)
+              const cutoffDate = new Date(2027, 3, 2); // 1 de febrero de 2026 (mes 1 = febrero)
               cutoffDate.setHours(23, 59, 59, 999); // Hasta las 23:59:59 del día 1 de febrero
 
               // Solo agregar saldo con expiración si la fecha actual es menor o igual al 1 de febrero de 2026
@@ -216,11 +216,11 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                 if (now < deadline) {
                   // Si es ANTES del 6 de feb: sumar 3 meses al 6 de feb
                   expirationDate = new Date(deadline);
-                  expirationDate.setMonth(expirationDate.getMonth() + 4);
+                  expirationDate.setMonth(expirationDate.getMonth() + 3);
                 } else {
                   // Si ya es 6 de feb o después: sumar 3 meses desde hoy
                   expirationDate = new Date(now);
-                  expirationDate.setMonth(expirationDate.getMonth() + 4);
+                  expirationDate.setMonth(expirationDate.getMonth() + 3);
                 }
 
                 // 2. Actualizamos el objeto
@@ -230,7 +230,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
                   balanceWithExpiration: {
                     balance: {
                       currency: "Bs. (BOB)",
-                      amount: 200,
+                      amount: 100,
                     },
                     expirationDate: Timestamp.fromDate(expirationDate),
                   },

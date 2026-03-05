@@ -6,6 +6,7 @@ import "@/styles/components/pagination.css";
 import {
   getAllUsersPaginated,
   getSearchUsersPaginated,
+  UserSearchFilters,
 } from "@/components/app_modules/users/api/UserRequester";
 import { UserInterface } from "@/interfaces/UserInterface";
 import UserCardWithDetails from "../cards/UserCardWithDetails";
@@ -26,6 +27,10 @@ import {
 } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 import { isNullOrEmptyText } from "@/validators/TextValidator";
 import { validateSearchInput } from "../../validators/for_data/SearcherValidator";
+import { Services } from "@/interfaces/Services";
+import { locationList, Locations } from "@/interfaces/Locations";
+
+const FILTER_ANY = "__ANY__";
 
 const ListOfAllUsersWithSearcher = () => {
   const PAGE_SIZE = 10;
@@ -35,6 +40,10 @@ const ListOfAllUsersWithSearcher = () => {
     isSearching: false,
     currentInput: "",
     searchInput: "",
+    currentService: FILTER_ANY,
+    currentLocation: FILTER_ANY,
+    selectedService: FILTER_ANY,
+    selectedLocation: FILTER_ANY,
   });
   const [documents, setDocuments] = useState<UserInterface[]>([]);
   const [lastDoc, setLastDoc] = useState<DocumentSnapshot | undefined>(
@@ -42,6 +51,14 @@ const ListOfAllUsersWithSearcher = () => {
   );
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
+  const getAppliedFilters = useCallback(
+    (service: string, location: string): UserSearchFilters => ({
+      service: service !== FILTER_ANY ? (service as Services) : undefined,
+      location: location !== FILTER_ANY ? (location as Locations) : undefined,
+    }),
+    [],
+  );
 
   const updateDocuments = useCallback(
     (newDocs: UserInterface[]) => {
@@ -66,6 +83,7 @@ const ListOfAllUsersWithSearcher = () => {
       adminUser: UserInterface,
       searchCriteria: string,
       startAfterDoc: DocumentSnapshot | undefined,
+      filters: UserSearchFilters,
     ) => {
       if (loading) {
         return;
@@ -80,6 +98,7 @@ const ListOfAllUsersWithSearcher = () => {
           "next",
           startAfterDoc,
           PAGE_SIZE,
+          filters,
         );
         if (res.result.length > 0) {
           updateDocuments(res.result);
@@ -101,6 +120,7 @@ const ListOfAllUsersWithSearcher = () => {
     async (
       adminUser: UserInterface,
       startAfterDoc: DocumentSnapshot | undefined,
+      filters: UserSearchFilters,
     ) => {
       if (loading) {
         return;
@@ -115,6 +135,7 @@ const ListOfAllUsersWithSearcher = () => {
           "next",
           startAfterDoc,
           PAGE_SIZE,
+          filters,
         );
         if (res.result.length > 0) {
           updateDocuments(res.result);
@@ -135,8 +156,17 @@ const ListOfAllUsersWithSearcher = () => {
   const defaultLoading = async (adminUser: UserInterface) => {
     setDocuments([]);
     setHasMore(true);
-    setSearchState((prev) => ({ ...prev, isSearching: false }));
-    await findAllUsers(adminUser, undefined);
+    setSearchState((prev) => ({
+      ...prev,
+      isSearching: false,
+      searchInput: "",
+      currentInput: "",
+      currentService: FILTER_ANY,
+      currentLocation: FILTER_ANY,
+      selectedService: FILTER_ANY,
+      selectedLocation: FILTER_ANY,
+    }));
+    await findAllUsers(adminUser, undefined, {});
   };
 
   const performSearch = async (
@@ -144,9 +174,18 @@ const ListOfAllUsersWithSearcher = () => {
     adminUser: UserInterface,
   ) => {
     e.preventDefault();
+
+    const filters = getAppliedFilters(
+      searchState.currentService,
+      searchState.currentLocation,
+    );
+
     let validToSearch: boolean =
       !isNullOrEmptyText(searchState.currentInput) &&
       validateSearchInput(searchState.currentInput);
+
+    const hasAnyFilter = !!filters.service || !!filters.location;
+
     if (validToSearch) {
       setDocuments([]);
       setHasMore(true);
@@ -154,8 +193,26 @@ const ListOfAllUsersWithSearcher = () => {
         ...prev,
         searchInput: prev.currentInput,
         isSearching: true,
+        selectedService: prev.currentService,
+        selectedLocation: prev.currentLocation,
       }));
-      await searchUsers(adminUser, searchState.currentInput, undefined);
+      await searchUsers(
+        adminUser,
+        searchState.currentInput,
+        undefined,
+        filters,
+      );
+    } else if (hasAnyFilter) {
+      setDocuments([]);
+      setHasMore(true);
+      setSearchState((prev) => ({
+        ...prev,
+        searchInput: "",
+        isSearching: true,
+        selectedService: prev.currentService,
+        selectedLocation: prev.currentLocation,
+      }));
+      await findAllUsers(adminUser, undefined, filters);
     } else {
       setDocuments([]);
       setHasMore(false);
@@ -168,15 +225,26 @@ const ListOfAllUsersWithSearcher = () => {
 
   const next = useCallback(
     async (adminUser: UserInterface) => {
-      if (searchState.isSearching) {
-        await searchUsers(adminUser, searchState.searchInput, lastDoc);
+      const filters = getAppliedFilters(
+        searchState.selectedService,
+        searchState.selectedLocation,
+      );
+
+      if (
+        searchState.isSearching &&
+        !isNullOrEmptyText(searchState.searchInput)
+      ) {
+        await searchUsers(adminUser, searchState.searchInput, lastDoc, filters);
       } else {
-        await findAllUsers(adminUser, lastDoc);
+        await findAllUsers(adminUser, lastDoc, filters);
       }
     },
     [
+      getAppliedFilters,
       searchState.isSearching,
       searchState.searchInput,
+      searchState.selectedLocation,
+      searchState.selectedService,
       lastDoc,
       searchUsers,
       findAllUsers,
@@ -186,10 +254,11 @@ const ListOfAllUsersWithSearcher = () => {
   const nothingWasFound = (): boolean => documents.length === 0 && !hasMore;
 
   useEffect(() => {
-    if (!checkingUserAuth && adminUser) {
-      next(adminUser);
+    if (!checkingUserAuth && adminUser && documents.length === 0) {
+      findAllUsers(adminUser, undefined, {});
     }
-  }, [checkingUserAuth, adminUser, next]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkingUserAuth, adminUser]);
 
   if (checkingUserAuth || !adminUser) {
     return <PageLoading />;
@@ -219,6 +288,40 @@ const ListOfAllUsersWithSearcher = () => {
               }));
             }}
           />
+          <select
+            className="search-input"
+            value={searchState.currentService}
+            onChange={(e) =>
+              setSearchState((prev) => ({
+                ...prev,
+                currentService: e.target.value,
+              }))
+            }
+          >
+            <option value={FILTER_ANY}>Todos los servicios</option>
+            <option value={Services.Driver}>{Services.Driver}</option>
+            <option value={Services.Mechanic}>{Services.Mechanic}</option>
+            <option value={Services.Tow}>{Services.Tow}</option>
+            <option value={Services.Laundry}>{Services.Laundry}</option>
+            <option value={Services.Normal}>{Services.Normal}</option>
+          </select>
+          <select
+            className="search-input"
+            value={searchState.currentLocation}
+            onChange={(e) =>
+              setSearchState((prev) => ({
+                ...prev,
+                currentLocation: e.target.value,
+              }))
+            }
+          >
+            <option value={FILTER_ANY}>Todas las ubicaciones</option>
+            {locationList.map((location) => (
+              <option key={location} value={location}>
+                {location}
+              </option>
+            ))}
+          </select>
           <button className="search-button icon-wrapper | gray-icon">
             <Search />
           </button>

@@ -62,7 +62,7 @@ const ListOfRequestsForChangeEnteprise: React.FC<Props> = ({}) => {
       .catch((e) => {
         console.log(e);
       });
-  }, [page, data, lastDoc]);
+  }, [page]);
 
   if (!data) {
     return <PageLoading />;

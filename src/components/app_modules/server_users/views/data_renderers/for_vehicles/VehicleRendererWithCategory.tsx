@@ -7,7 +7,7 @@ import VehicleCategoryRenderer from "./VehicleCategoryRenderer";
 const VehicleRendererWithCategory = ({ vehicle }: { vehicle: Vehicle }) => {
   return (
     <div className="form-sub-container">
-      <VehicleCategoryRenderer category={vehicle.type.type} />
+      <VehicleCategoryRenderer category={vehicle.license.category} />
       {vehicle.type.mode.map((mode, i) => (
         <TextFieldRenderer
           key={`vehicle-mode-${i}`}

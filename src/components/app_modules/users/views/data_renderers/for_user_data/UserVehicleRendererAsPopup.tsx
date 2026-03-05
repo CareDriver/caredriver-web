@@ -4,7 +4,7 @@ import {
   VEHICLE_CATEGORY_TO_SPANISH,
   VEHICLE_CATEGORY_TO_SPANISH_WITH_ARTICLE,
 } from "@/components/app_modules/server_users/models/VehicleFields";
-import VehicleRenderer from "@/components/app_modules/server_users/views/data_renderers/for_vehicles/VehicleRenderer";
+import VehicleRendererWithCategory from "@/components/app_modules/server_users/views/data_renderers/for_vehicles/VehicleRendererWithCategory";
 import Popup from "@/components/modules/Popup";
 import { Vehicle } from "@/interfaces/UserRequest";
 import { differenceOnDays } from "@/utils/helpers/DateHelper";
@@ -35,7 +35,7 @@ const UserVehicleRendererAsPopup: React.FC<Props> = ({ vehicle, content }) => {
       <Popup isOpen={isViewVehicle} close={() => setViewVehicle(false)}>
         <div>
           <h2 className="text | bold big-medium">{content.legend}</h2>
-          <VehicleRenderer vehicle={vehicle.data} type={vehicle.type} />
+          <VehicleRendererWithCategory vehicle={vehicle.data} />
         </div>
       </Popup>
     </>
