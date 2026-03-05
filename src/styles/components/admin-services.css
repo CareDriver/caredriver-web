@@ -203,7 +203,7 @@
 /* Pagination Section */
 .pagination-section {
   display: flex;
-  items-align: center;
+  align-items: center;
   justify-content: center;
   gap: 2rem;
   padding: 2rem 1rem;
