@@ -1,0 +1,20 @@
+import { TypeOfServicePerformed } from "@/components/app_modules/services_performed/model/models/TypeOfServicePerformed";
+import ListOfServicesPerfByUser from "@/components/app_modules/services_performed/view/lists_of_cards/ListOfServicesPerfByUser";
+import ConsentForm from "@/components/guards/views/consent_forms/ConsentForm";
+import GuardForServices from "@/components/guards/views/page_guards/concrets/GuardForServices";
+
+const Page = ({ params }: { params: any }) => {
+  return (
+    <GuardForServices serviceType="driver" fakeServerUserId={params.id}>
+      <ConsentForm moduleTarget="userinfo" id={params.id}>
+        <ListOfServicesPerfByUser
+          userId={params.id}
+          typeOfService="driver"
+          typeOfPerf={TypeOfServicePerformed.Served}
+        />
+      </ConsentForm>
+    </GuardForServices>
+  );
+};
+
+export default Page;

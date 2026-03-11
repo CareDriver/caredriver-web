@@ -1,0 +1,113 @@
+"use client";
+import {
+  defaultCountries,
+  parseCountry,
+  PhoneInput,
+} from "react-international-phone";
+import { TextField } from "../../models/FormFields";
+import { TextFieldSetter } from "../../models/FieldSetters";
+import { TextFieldStateHandler } from "../../utils/TextFieldStateHandler";
+import { isPhoneValid } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
+import { useState } from "react";
+
+interface Props {
+  values: TextField;
+  setter: TextFieldSetter;
+}
+
+const PhoneField: React.FC<Props> = ({ values, setter }) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const stateValidator = new TextFieldStateHandler(setter, isPhoneValid);
+
+  const countries = defaultCountries.filter((country) => {
+    const { iso2 } = parseCountry(country);
+    return ["bo"].includes(iso2);
+  });
+
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+
+  // Handle change to prevent deletion of +591 prefix and keep value clean
+  const handleChange = (newValue: string) => {
+    // Always ensure +591 prefix
+    let sanitized = newValue.replace(/\D/g, ""); // Remove all non-digits
+
+    // If the sanitized value is empty or too short, still pass the +591 + input
+    if (!sanitized) {
+      stateValidator.changeValueAsText("+591");
+      return;
+    }
+
+    // Remove leading 591 if user typed it
+    if (sanitized.startsWith("591")) {
+      sanitized = sanitized.slice(3);
+    }
+
+    // Ensure +591 prefix
+    const fullValue = "+591" + sanitized;
+    stateValidator.changeValueAsText(fullValue);
+  };
+
+  return (
+    <fieldset className="form-section">
+      <PhoneInput
+        defaultCountry="bo"
+        countries={countries}
+        value={values.value}
+        placeholder="Ej: 765432189"
+        onChange={handleChange}
+        inputStyle={{
+          width: "100%",
+          padding: "1.666666667rem 1.111111111rem",
+          fontSize: "1.111111111rem",
+          fontWeight: "600",
+          borderTopRightRadius: "var(--rounded-field)",
+          borderBottomRightRadius: "var(--rounded-field)",
+          border: !isFocused
+            ? "0.0625rem solid var(--gray-medium)"
+            : "0.1rem solid var(--second-dark)",
+        }}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        countrySelectorStyleProps={{
+          buttonStyle: {
+            height: "100%",
+            padding: "0 0.555555556rem",
+            borderTopLeftRadius: "var(--rounded-field)",
+            borderBottomLeftRadius: "var(--rounded-field)",
+            border: !isFocused
+              ? "0.0625rem solid var(--gray-medium)"
+              : "0.1rem solid var(--second-dark)",
+            borderRight: !isFocused
+              ? "0.0625rem solid var(--gray-medium)"
+              : "0.05rem solid var(--second-dark)",
+          },
+          flagStyle: {
+            width: "2.5rem",
+            height: "2.5rem",
+          },
+          dropdownStyleProps: {
+            style: {
+              minWidth: "22.222222222rem",
+              borderRadius: "0.833333333rem",
+              zIndex: "2000",
+            },
+            listItemFlagStyle: {
+              width: "2.5rem",
+              height: "2.5rem",
+            },
+            listItemCountryNameStyle: {
+              fontSize: "0.888888889rem",
+            },
+            listItemDialCodeStyle: {
+              fontSize: "0.888888889rem",
+            },
+          },
+        }}
+      />
+      {values.message && <small>* {values.message}</small>}
+    </fieldset>
+  );
+};
+
+export default PhoneField;

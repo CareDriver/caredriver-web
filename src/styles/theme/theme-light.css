@@ -1,0 +1,4 @@
+/* *[data-theme="light"],
+*[data-theme="light"] > * {
+    color: black;
+} */

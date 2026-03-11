@@ -1,0 +1,197 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--second-dark-opacity);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(0.25rem);
+}
+
+.modal-container {
+  background-color: var(--white);
+  border-radius: 1.5rem;
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
+  max-width: 32rem;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 0.0625rem solid var(--gray-light);
+}
+
+.modal-header h2 {
+  margin: 0 0 0.5rem 0;
+  color: var(--second-dark);
+  font-size: 1.5rem;
+}
+
+.modal-header > .text {
+  margin: 0;
+  color: var(--gray-dark);
+  font-size: 0.975rem;
+}
+
+.modal-content {
+  padding: 1.5rem;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.phone-display {
+  background-color: var(--main-lighter);
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
+  border-left: 0.25rem solid var(--main-light);
+}
+
+.phone-display .text.light {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.975rem;
+  color: var(--second-dark);
+}
+
+.phone-number {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--second-dark);
+  font-family: "Courier New", monospace;
+}
+
+.modal-text-section {
+  margin-bottom: 1.25rem;
+}
+
+.modal-text-section > .text {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.975rem;
+  color: var(--second-dark);
+}
+
+.phone-usage-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.phone-usage-list li {
+  padding: 0.5rem 0 0.5rem 1.5rem;
+  font-size: 0.875rem;
+  color: var(--gray-darker);
+  position: relative;
+  line-height: 1.4;
+}
+
+.phone-usage-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--main-light);
+  font-weight: bold;
+}
+
+.modal-disclaimer {
+  background-color: var(--gray-lighter);
+  padding: 1rem;
+  border-radius: 0.75rem;
+  border-left: 0.25rem solid var(--yellow);
+}
+
+.modal-disclaimer .text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--gray-darker);
+  line-height: 1.5;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 0.0625rem solid var(--gray-light);
+  flex-wrap: wrap;
+}
+
+.modal-button-secondary,
+.modal-button-primary {
+  flex: 1;
+  min-width: 10rem;
+  font-size: 0.975rem;
+  padding: 0.875rem 1.25rem;
+}
+
+.modal-button-primary {
+  background-color: var(--main-light);
+  color: var(--second-dark);
+  font-weight: 600;
+}
+
+.modal-button-primary:hover {
+  background-color: var(--main-light);
+  opacity: 0.9;
+}
+
+.modal-button-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.modal-button-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .modal-container {
+    max-width: 100%;
+  }
+
+  .modal-header {
+    padding: 1.25rem 1.25rem 0.875rem;
+  }
+
+  .modal-header h2 {
+    font-size: 1.35rem;
+  }
+
+  .modal-content {
+    padding: 1.25rem;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .modal-button-secondary,
+  .modal-button-primary {
+    min-width: 100%;
+  }
+}

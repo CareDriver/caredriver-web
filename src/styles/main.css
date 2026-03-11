@@ -1,0 +1,18 @@
+@import "base/reset.css";
+@import "base/colors.css";
+@import "base/typografy.css";
+
+@import "layout/wrapper.css";
+
+@import "modules/form.css";
+@import "modules/text.css";
+@import "modules/loader.css";
+@import "modules/buttons.css";
+@import "modules/space.css";
+@import "modules/decoration.css";
+@import "modules/icon.css";
+@import "modules/modal.css";
+
+@import "components/admin-services.css";
+
+@import "theme/theme-light.css";

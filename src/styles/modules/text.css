@@ -1,0 +1,157 @@
+.text {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--second-dark);
+}
+
+.text.title {
+  font-family: "Beni", sans-serif !important;
+}
+
+.text.bigger {
+  font-family: "Beni", sans-serif !important;
+  font-size: 4.89rem;
+}
+
+.text.big {
+  font-family: "Beni", sans-serif !important;
+  font-size: 4.333333333rem;
+}
+
+.text.big-medium {
+  font-family: "Beni", sans-serif !important;
+  font-size: 2.777777778rem;
+}
+
+.text.big-medium-v2 {
+  font-size: 2.222222222rem;
+}
+
+.text.big-medium-v3 {
+  font-size: 1.666666667rem;
+}
+
+.text.big-medium-v4 {
+  font-size: 1.388888889rem;
+}
+
+.text.medium-big {
+  font-size: 1.222222222rem;
+}
+
+.text.medium {
+  font-size: 1.1rem;
+}
+
+.text.small {
+  font-size: 0.888888889rem;
+}
+
+.text.smaller {
+  font-size: 0.777777778rem;
+}
+
+.text.bolder {
+  font-weight: 900;
+}
+
+.text.bold {
+  font-weight: 700;
+}
+
+.text.normal {
+  font-weight: 500;
+}
+
+.text.light {
+  font-weight: 300;
+}
+
+.text.lighter {
+  font-weight: 100;
+}
+
+.text.underline {
+  text-decoration: underline;
+}
+
+.text.underline:hover {
+  color: var(--second-dark);
+}
+
+.text.center {
+  text-align: center;
+}
+
+.text.gray-dark {
+  color: var(--gray-dark);
+}
+
+.text.gray-medium {
+  color: var(--gray-medium);
+}
+
+.text.red {
+  color: var(--red);
+}
+
+.text.white {
+  color: var(--white);
+}
+
+.text.purple {
+  color: var(--purple);
+}
+
+.text.purple-light {
+  color: var(--purple-light);
+}
+
+.yellow {
+  color: var(--yellow);
+}
+
+.green {
+  color: var(--second-dark);
+}
+
+.green-light {
+  color: var(--main-light);
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.wrap {
+  word-break: break-all;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  hyphens: auto;
+  white-space: normal;
+}
+
+.text.circle {
+  width: max-content;
+  padding: 8px 12px;
+  font-weight: 800;
+
+  border-radius: 10px;
+  background-color: var(--yellow);
+  color: var(--yellow-dark);
+}
+
+.text.circle.purple {
+  background-color: var(--purple-light);
+  color: var(--purple);
+}
+
+.text.circle.red {
+  background-color: var(--red-opacity);
+  color: var(--red);
+}
+
+.text.circle.green-light {
+  background-color: var(--main-lighter);
+  color: var(--main-light);
+}

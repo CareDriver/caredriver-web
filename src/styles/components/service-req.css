@@ -1,0 +1,27 @@
+.service-req-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.111111111rem;
+}
+
+.service-req-item {
+  display: block;
+  padding: 1.666666667rem;
+  border: 0.1rem solid var(--gray-medium);
+  border-radius: 0.5rem;
+  transition:
+    border-radius ease-in-out 200ms,
+    border-color ease-in 100ms;
+}
+
+.service-req-item:hover {
+  border-radius: 0.9rem;
+  border-color: var(--purple-light);
+  background-color: var(--white-medium);
+}
+
+@media only screen and (max-width: 550px) {
+  .service-req-wrapper {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,70 @@
+.profile-wrapper {
+  display: flex;
+  gap: 1.666666667rem;
+  align-items: center;
+}
+
+.profile-info-wrapper {
+  display: inline-flex;
+  display: -ms-inline-flexbox;
+  flex-direction: column;
+  gap: 0.555555556rem;
+}
+
+.profile-info-wrapper.fit-width {
+  min-width: max-content;
+}
+
+.profile-fullname {
+  font-size: 3.333333333rem;
+  font-weight: 900;
+
+  text-transform: capitalize;
+}
+
+@media only screen and (max-width: 550px) {
+  .profile-wrapper {
+    flex-direction: column;
+  }
+
+  .profile-wrapper > * {
+    text-align: center;
+  }
+
+  .profile-fullname {
+    font-size: 2.9rem;
+  }
+}
+
+.profile-email {
+  font-size: 1.388888889rem;
+  font-weight: 700;
+}
+
+.profile-photo {
+  border-radius: 50%;
+  width: 11.111111111rem;
+  height: 11.111111111rem;
+
+  object-fit: cover;
+
+  background-color: var(--white-medium);
+  box-shadow: 0 0 2.222222222rem var(--gray-light);
+}
+
+.profile-subtitle {
+  font-size: 1.11rem;
+  font-weight: 700;
+}
+
+.location-field {
+  padding: 1.111111111rem 1.388888889rem;
+  border-radius: 0.833333333rem;
+  font-size: 1.111111111rem;
+
+  border: 0.166666667rem solid var(--main-light);
+}
+
+.location-field.red {
+  border-color: var(--red);
+}
