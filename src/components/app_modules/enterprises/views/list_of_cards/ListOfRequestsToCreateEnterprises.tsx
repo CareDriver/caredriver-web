@@ -52,7 +52,7 @@ const ListOfRequestsToCreateEnterprises = ({ type }: { type: ServiceType }) => {
         setLastDoc(result.lastDoc);
       })
       .catch(() => {});
-  }, [page, data, lastDoc, type]);
+  }, [page, type]);
 
   return data ? (
     data.length > 0 ? (

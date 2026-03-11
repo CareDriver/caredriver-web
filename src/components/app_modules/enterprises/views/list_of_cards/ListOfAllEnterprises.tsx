@@ -56,7 +56,7 @@ const ListOfAllEnterprises = ({ type }: { type: ServiceType }) => {
       }
       setLastDoc(result.lastDoc);
     });
-  }, [page, data, lastDoc, type]);
+  }, [page, type, searchTerm]);
 
   const handleNextClick = () => {
     if (page === pages) return;

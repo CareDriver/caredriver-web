@@ -251,7 +251,7 @@ const ReviewFormToRenewLIcense = ({ reqId }: { reqId: string }) => {
         ) : (
           <span className="loader-green"></span>
         )}
-        <VehicleCategoryRenderer category={req.vehicleType} />
+        <VehicleCategoryRenderer category={req.category} />
         <LicenseReviewForm license={req} />
         <SelfieRenderer image={req.realTimePhotoImgUrl} />
 

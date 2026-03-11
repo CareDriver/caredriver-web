@@ -42,7 +42,8 @@ export interface ServiceRequestInterface {
     // price of the service, mandatory just for trips and tows services
     currency: "Bs"; // Currency of the trip price, e.g., "Bs." for Bolivians
     price: number; // Numeric value of the trip price
-    method: "cash" | "qr"; // Payment method
+    method: "cash" | "qr"; // Payment method,
+    amount: number;
   };
   // TO DO: IN US 66, refactor price attribute to:
   // price?: ServicePayment;
@@ -99,6 +100,7 @@ export const initialServiceData = (
       currency: "Bs",
       price: 0,
       method: "cash",
+      amount: 0,
     },
     requestUserData: {
       fullName: "",

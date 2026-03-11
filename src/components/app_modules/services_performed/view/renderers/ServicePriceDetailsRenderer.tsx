@@ -17,7 +17,7 @@ const ServicePriceDetailsRenderer = ({
   return (
     service.price &&
     ((service.price.price && service.price.currency) ||
-      service.price.method) && (
+      service.price.amount) && (
       <>
         <div className="max-width-50 margin-bottom-15">
           <div className="separator-horizontal"></div>
@@ -28,10 +28,10 @@ const ServicePriceDetailsRenderer = ({
           </h2>
 
           <div className="column-wrapper">
-            {service.price.price && service.price.currency && (
+            {service.price.amount && service.price.currency && (
               <span className="text">
                 <b>Cantidad: </b>
-                {service.price.price} {service.price.currency}
+                {service.price.amount} {service.price.currency}
               </span>
             )}
             {service.price.method && (

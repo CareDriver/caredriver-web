@@ -20,6 +20,7 @@ import { routeToRedirector } from "@/utils/route_builders/as_not_logged/RouteBui
 import { toast } from "react-toastify";
 import { EMPTY_USER_DATA } from "../../api/UserAuth";
 import AppleIcon from "@/icons/AppleIcon";
+import { acceptTerms } from "@/utils/requesters/AcceptTerms";
 
 const AuthProviders = ({
   alternativeLegend,
@@ -71,9 +72,7 @@ const AuthProviders = ({
       const newUser = {
         ...EMPTY_USER_DATA,
         id: providerUser.uid,
-        fullName: providerUser.displayName
-          ? providerUser.displayName.toLowerCase()
-          : "",
+        fullName: providerUser.displayName ? providerUser.displayName : "",
         photoUrl: { url: providerUser.photoURL ?? "", ref: "" },
         email: providerUser.email
           ? providerUser.email.toLowerCase().trim()
@@ -90,6 +89,7 @@ const AuthProviders = ({
         error: "Error al crear la cuenta, inténtalo de nuevo por favor",
       });
       window.location.replace(routeToRedirector());
+      await acceptTerms(providerUser.uid ?? "");
     } catch (e) {
       console.error(e);
       toast.error("Error al crear la cuenta");

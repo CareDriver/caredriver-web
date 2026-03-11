@@ -39,14 +39,14 @@ const ListOfRequestsToUpdateUserPhotos = () => {
     getChangePhotoReqPaginated("next", startAfterDoc, endBeforeDoc, numPerPage)
       .then((result) => {
         if (data) {
-          setData((prev) => ({ ...prev, ...result.result }));
+          setData((prev) => prev && [...prev, ...result.result]);
         } else {
           setData(result.result);
         }
         setLastDoc(result.lastDoc);
       })
       .catch(() => {});
-  }, [page, data, lastDoc]);
+  }, [page]);
 
   const handleNextClick = () => {
     if (page === pages) return;

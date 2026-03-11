@@ -8,6 +8,10 @@ export interface TextField extends BaseField {
   value: string;
 }
 
+export interface TextArrayField extends BaseField {
+  value: string[];
+}
+
 export interface CheckField extends BaseField {
   value: boolean;
 }

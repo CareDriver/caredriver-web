@@ -21,6 +21,7 @@ import ChevronDown from "@/icons/ChevronDown";
 import HomeAddress from "@/icons/HomeAddress";
 import BloodTypeField from "@/components/form/view/fields/BloodTypeField";
 import { BloodTypes } from "@/interfaces/BloodTypes";
+import { generateKeywords } from "@/utils/helpers/StringHelper";
 
 interface Props {
   baseUser?: UserInterface;
@@ -46,6 +47,10 @@ const PersonalDataForm: React.FC<Props> = ({
       setPersonalData({
         fullname: {
           value: requesterUser.fullName,
+          message: null,
+        },
+        fullNameArrayLower: {
+          value: generateKeywords(requesterUser.fullName),
           message: null,
         },
         bloodType: {

@@ -3,10 +3,7 @@
 // @ts-ignore: No type declarations for this CSS side-effect importF
 import "react-international-phone/style.css";
 import { auth } from "@/firebase/FirebaseConfig";
-import {
-  checkEmailExists,
-  saveUser,
-} from "@/components/app_modules/users/api/UserRequester";
+import { saveUser } from "@/components/app_modules/users/api/UserRequester";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useContext, useEffect, useState, FormEvent } from "react";
 import { toast } from "react-toastify";
@@ -27,7 +24,6 @@ import BaseForm from "@/components/form/view/forms/BaseForm";
 import { isValidName } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
 import { EMPTY_USER_DATA } from "../../api/UserAuth";
 import { routeToSingIn } from "@/utils/route_builders/as_not_logged/RouteBuilderForAuth";
-import { sendVerificationCode } from "../../api/VerificationCodeSender";
 import CodeVerifier from "../verifiers/CodeVerifier";
 import AuthProviders from "../providers/AuthProviders";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
@@ -68,22 +64,22 @@ const SignUpForm = () => {
       return;
     }
 
-    let amountOfUsers = await checkEmailExists(
-      form.email.value.trim().toLocaleLowerCase(),
-    );
-    if (amountOfUsers > 0) {
-      setForm((prev) => ({
-        ...prev,
-        email: {
-          ...prev.email,
-          message: "El correo ya fue registrado",
-        },
-      }));
-      setLoading(false);
-      setValid(false);
-      toast.error("El correo ya fue registrado, inicia sesión");
-      return;
-    }
+    // let amountOfUsers = await checkEmailExists(
+    //   form.email.value.trim().toLocaleLowerCase(),
+    // );
+    // if (amountOfUsers > 0) {
+    //   setForm((prev) => ({
+    //     ...prev,
+    //     email: {
+    //       ...prev.email,
+    //       message: "El correo ya fue registrado",
+    //     },
+    //   }));
+    //   setLoading(false);
+    //   setValid(false);
+    //   toast.error("El correo ya fue registrado, inicia sesión");
+    //   return;
+    // }
 
     createUserWithEmailAndPassword(
       auth,
@@ -212,7 +208,7 @@ const SignUpForm = () => {
 
   useEffect(() => {
     setValid(isValidForm(form));
-  }, [form, setValid]);
+  }, [form]);
 
   if (view === View.VERIFYING_CODE) {
     return <CodeVerifier onSummbit={signUp} verificationCode={form.code} />;
@@ -290,7 +286,7 @@ const SignUpForm = () => {
         isLoading={loading}
       />
 
-      <AuthProviders alternativeLegend="O registrate con" />
+      {/* <AuthProviders alternativeLegend="O registrate con" /> */}
       <Link href={routeToSingIn()} className="text | normal center">
         ¿Ya tienes cuenta? <b>Inicia sesión</b>
       </Link>

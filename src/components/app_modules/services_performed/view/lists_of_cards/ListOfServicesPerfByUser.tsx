@@ -113,7 +113,7 @@ const ListOfServicesPerfByUser: React.FC<Props> = ({
       }
 
       try {
-        onSnapshot(q, (snapshot) => {
+        const unsubscribe = onSnapshot(q, (snapshot) => {
           if (!snapshot.empty) {
             const docs = snapshot.docs.map((doc) => {
               let serviceData = doc.data() as ServiceRequestInterface;
@@ -128,6 +128,7 @@ const ListOfServicesPerfByUser: React.FC<Props> = ({
           }
           setLoading(false);
         });
+        return unsubscribe;
       } catch {
         alert(
           "No se pudo obtener los datos, intenta de nuevo recargando la página.",
@@ -138,9 +139,15 @@ const ListOfServicesPerfByUser: React.FC<Props> = ({
   );
 
   useEffect(() => {
+    let unsubscribe: (() => void) | undefined;
     if (user) {
-      fetchDocuments();
+      unsubscribe = fetchDocuments();
     }
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, [user, deadline, fetchDocuments]);
 
   const handleLoadMore = () => {

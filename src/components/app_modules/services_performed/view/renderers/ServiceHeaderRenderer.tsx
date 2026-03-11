@@ -11,7 +11,7 @@ const ServiceHeaderRenderer = ({
   return (
     <>
       <h1 className="text | bold big">
-        Servicio hecho el{" "}
+        Servicio del{" "}
         <i className="text | bold big">
           {service.createdAt && timestampDateInSpanish(service.createdAt)}
         </i>

@@ -61,30 +61,34 @@ export const isValidIncreaseAmount = (num: string): InputState => {
 };
 
 export const isValidBankNumber = (number: string): InputState => {
-  const numberBankRegex: RegExp = /^[A-Za-z0-9]{8,12}$/;
+  // const numberBankRegex: RegExp = /^[A-Za-z0-9]{8,12}$/;
 
-  if (number.trim() === "") {
-    return {
-      isValid: false,
-      message: "Ingresar el número de transacción",
-    };
-  } else if (!numberBankRegex.test(number)) {
-    return {
-      isValid: false,
-      message: "Número de transacción invalido",
-    };
-  } else if (number.length > 100) {
-    return {
-      isValid: false,
-      message:
-        "No puedes ingresar mas de 100 caracteres para el número de transacción",
-    };
-  } else {
-    return {
-      isValid: true,
-      message: "número valido",
-    };
-  }
+  // if (number.trim() === "") {
+  //   return {
+  //     isValid: false,
+  //     message: "Ingresar el número de transacción",
+  //   };
+  // } else if (!numberBankRegex.test(number)) {
+  //   return {
+  //     isValid: false,
+  //     message: "Número de transacción invalido",
+  //   };
+  // } else if (number.length > 100) {
+  //   return {
+  //     isValid: false,
+  //     message:
+  //       "No puedes ingresar mas de 100 caracteres para el número de transacción",
+  //   };
+  // } else {
+  //   return {
+  //     isValid: true,
+  //     message: "número valido",
+  //   };
+  // }
+  return {
+    isValid: true,
+    message: "número valido",
+  };
 };
 
 export const isValidComplainId = (reason: string): InputState => {

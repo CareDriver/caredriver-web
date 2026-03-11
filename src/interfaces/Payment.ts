@@ -19,6 +19,11 @@ export interface BalanceHistory extends Payment {
   serviceFakeId?: string;
 }
 
+export interface ExpirationBalance {
+  balance: Price;
+  expirationDate: Timestamp;
+}
+
 export const defaultBalance: Price = {
   currency: "Bs. (BOB)",
   amount: 0,

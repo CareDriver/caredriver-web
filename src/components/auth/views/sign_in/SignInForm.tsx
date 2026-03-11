@@ -103,7 +103,7 @@ const SignInForm = () => {
           setter={(e) => setForm((prev) => ({ ...prev, password: e }))}
         />
       </BaseForm>
-      <AuthProviders alternativeLegend="O inicia sesion con" />
+      {/* <AuthProviders alternativeLegend="O inicia sesion con" /> */}
       <Link href={routeToSingUp()} className="text | normal center">
         ¿Aun no tienes una cuenta? <b>Crea una cuenta</b>
       </Link>

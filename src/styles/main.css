@@ -13,4 +13,6 @@
 @import "modules/icon.css";
 @import "modules/modal.css";
 
+@import "components/admin-services.css";
+
 @import "theme/theme-light.css";

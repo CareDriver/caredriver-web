@@ -64,7 +64,7 @@ export const RTDBLocationsCodes: Record<Locations, string> = {
 };
 
 export const buildUrlDB = (service: UserServices, location: Locations) => {
-  return `https://caredriver-${RTDBservicesCodes[service]}-${RTDBLocationsCodes[location]}.firebaseio.com/`;
+  return `https://caredriver-prod-${RTDBservicesCodes[service]}-${RTDBLocationsCodes[location]}.firebaseio.com/`;
 };
 
 /* 

@@ -44,6 +44,11 @@ import {
 } from "@/utils/text_helpers/TextCutter";
 import { Unsubscribe } from "firebase/firestore";
 import FormToIncreaseUserBalanceByAdmin from "../request_forms/to_manage_balance/FormToIncreaseUserBalanceByAdmin";
+import FormToChangeServiceRatingByAdmin from "../request_forms/to_manage_data/FormToChangeServiceRatingByAdmin";
+import FormToChangeServiceQuantityByAdmin from "../request_forms/to_manage_data/FormToChangeServiceQuantityByAdmin";
+import FormToChangeBalanceWithExpirationByAdmin from "../request_forms/to_manage_balance/FormToChangeBalanceWithExpirationByAdmin";
+import UserDocumentationAndRequestsRenderer from "../data_renderers/for_user_data/UserDocumentationAndRequestsRenderer";
+import { Services } from "@/interfaces/Services";
 
 const UserProfileForAppUser = ({ userId }: { userId: string }) => {
   const router = useRouter();
@@ -81,6 +86,9 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
     return <PageLoading />;
   }
 
+  const hasMoreThanOneServiceWithoutNormal =
+    user.services.filter((service) => service !== Services.Normal).length > 0;
+
   return (
     <section className="render-data-wrapper">
       <div className="user-info-wrapper">
@@ -91,13 +99,15 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
             {cutTextWithDotsByLength(user.fullName, MAX_LENGTH_FOR_NAMES)}
           </h1>
           <h3 className="text | medium">{user.email}</h3>
+          <h3 className="text | medium bold">
+            Celular: {flatPhone(user.phoneNumber)}
+          </h3>
           <GuardOfModule
             user={adminUser}
             roles={ROLES_TO_VIEW_USER_CREDENTIALS}
           >
             <>
               <h3 className="text | medium">{user.location}</h3>
-              <h3 className="text | medium">{flatPhone(user.phoneNumber)}</h3>
               {user.alternativePhoneNumber && (
                 <>
                   <br />
@@ -152,11 +162,8 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
           {(!user.role ||
             checkPermission(user.role, ROLES_FOR_SERVER_USER_ACTIONS)) && (
             <>
-              {
-                <GuardOfModule
-                  user={adminUser}
-                  roles={ROLES_TO_SET_USER_BALANCE}
-                >
+              <GuardOfModule user={adminUser} roles={ROLES_TO_SET_USER_BALANCE}>
+                {hasMoreThanOneServiceWithoutNormal ? (
                   <>
                     <FormToIncreaseUserBalanceByAdmin
                       user={user}
@@ -166,19 +173,25 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
                       user={user}
                       adminUser={adminUser}
                     />
+                    <FormToChangeBalanceWithExpirationByAdmin user={user} />
+                    <FormToChangeServiceRatingByAdmin user={user} />
+                    <FormToChangeServiceQuantityByAdmin user={user} />
+
                     <BalanceHistoryRenderer
                       balanceHistory={user.balanceHistory}
                     />
                   </>
-                </GuardOfModule>
-              }
-
-              <GuardOfModule
-                user={adminUser}
-                roles={ROLES_TO_SET_MIN_USER_BALANCE}
-              >
-                <FormToChangeTheMinimumUserBalance user={user} />
+                ) : null}
               </GuardOfModule>
+
+              {hasMoreThanOneServiceWithoutNormal && (
+                <GuardOfModule
+                  user={adminUser}
+                  roles={ROLES_TO_SET_MIN_USER_BALANCE}
+                >
+                  <FormToChangeTheMinimumUserBalance user={user} />
+                </GuardOfModule>
+              )}
 
               <GuardOfModule
                 user={adminUser}
@@ -211,6 +224,13 @@ const UserProfileForAppUser = ({ userId }: { userId: string }) => {
               <FormToDeleteUserByAdmin user={user} adminUser={adminUser} />
             </GuardOfModule>
           }
+
+          <GuardOfModule
+            user={adminUser}
+            roles={ROLES_TO_VIEW_USER_CREDENTIALS}
+          >
+            <UserDocumentationAndRequestsRenderer user={user} />
+          </GuardOfModule>
         </>
       ) : (
         <div className="max-width-60 margin-top-50">

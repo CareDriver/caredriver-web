@@ -36,6 +36,7 @@ export function timestampDateInSpanishWithHour(
   const year: number = date.getFullYear();
   const hours: number = date.getHours();
   const minutes: number = date.getMinutes();
+  const seconds: number = date.getSeconds();
 
   const monthsInSpanish: string[] = [
     "enero",
@@ -57,8 +58,10 @@ export function timestampDateInSpanishWithHour(
   const formatHours: string = hours < 10 ? "0" + hours : hours.toString();
   const formatMinutes: string =
     minutes < 10 ? "0" + minutes : minutes.toString();
+  const formatSeconds: string =
+    seconds < 10 ? "0" + seconds : seconds.toString();
 
-  return `${formatDay} de ${formatMonth} de ${year}, ${formatHours}:${formatMinutes}`;
+  return `${formatDay} de ${formatMonth} de ${year}, ${formatHours}:${formatMinutes}:${formatSeconds}`;
 }
 
 export const differenceOnDays = (fecha: Date): number => {

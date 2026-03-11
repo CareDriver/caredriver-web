@@ -10,7 +10,7 @@ export const isValidLicenseNumber = (licenseNumber: string): InputState => {
   } else if (!regex.test(licenseNumber)) {
     return {
       isValid: false,
-      message: "El número de licencia no puede contener numeros",
+      message: "El número de licencia solo puede contener numeros",
     };
   } else if (licenseNumber.length > 10 || licenseNumber.length < 6) {
     return {

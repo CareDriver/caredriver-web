@@ -2,7 +2,7 @@ import { GeoPoint, Timestamp } from "firebase/firestore";
 import { VehicleInterface } from "./VehicleInterface";
 import { ServiceReqState, Services } from "./Services";
 import { ServicesData } from "./ServicesDataInterface";
-import { BalanceHistory, Price } from "./Payment";
+import { BalanceHistory, ExpirationBalance, Price } from "./Payment";
 import { Locations } from "./Locations";
 import { ServiceStateRequest, Vehicle } from "./UserRequest";
 import {
@@ -76,6 +76,7 @@ export interface UserInterface {
   photoUrl: RefAttachment; // URL of the user's photo
   email?: string; // User's email
   identityCard?: IdentityCard; // User's Id card
+  policeRecordsPdf?: RefAttachment; // Police records PDF for service providers
 
   // comments: string[]; // Array of comments given by drivers
   vehicles: VehicleInterface[]; // Array of vehicles associated with the user
@@ -88,6 +89,7 @@ export interface UserInterface {
   balance: Price; // current debt of a server user towards the application, will contain the money that the user owes to the application following the services made and last time he/she paid
   minimumBalance: Price;
   balanceHistory?: BalanceHistory[]; // Array of the payments made by the service user to the app.
+  balanceWithExpiration?: ExpirationBalance; // Valid balance until a given date
 
   location?: Locations; // Location user begins
   disable?: boolean; // true when user did not paid to the app and was disabled.

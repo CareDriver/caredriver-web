@@ -7,6 +7,7 @@ import {
 import {
   AttachmentField,
   EntityDataFieldMandatory,
+  TextArrayField,
   TextField,
 } from "@/components/form/models/FormFields";
 import { BloodTypes } from "@/interfaces/BloodTypes";
@@ -19,6 +20,7 @@ export interface IdCard {
 
 export interface PersonalData {
   fullname: TextField;
+  fullNameArrayLower?: TextArrayField;
   photo: AttachmentField;
   gender: TextField;
   homeAddress: TextField;

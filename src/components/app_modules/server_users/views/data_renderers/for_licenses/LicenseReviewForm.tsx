@@ -6,6 +6,7 @@ import {
 import DateFieldRenderer from "../../../../../form/view/field_renderers/DateFieldRenderer";
 import ImageRenderer from "../../../../../form/view/field_renderers/ImageRenderer";
 import TextFieldRenderer from "@/components/form/view/field_renderers/TextFieldRenderer";
+import { getLicenseCategoryLabel } from "@/interfaces/LicenseCategories";
 
 const LicenseReviewForm = ({
   license,
@@ -18,12 +19,24 @@ const LicenseReviewForm = ({
         <AddressCar /> Licencia
       </h2>
       <TextFieldRenderer
+        content={getLicenseCategoryLabel(license.category)}
+        legend="Categoría"
+      />
+      <TextFieldRenderer
         content={license.licenseNumber}
         legend="Número de la licencia"
       />
       <DateFieldRenderer
         date={license.expiredDateLicense}
         legend="Fecha de expiración"
+      />
+      <TextFieldRenderer
+        content={license.requireGlasses ? "Sí" : "No"}
+        legend="Requiere lentes"
+      />
+      <TextFieldRenderer
+        content={license.requireHeadphones ? "Sí" : "No"}
+        legend="Requiere audífonos"
       />
       <ImageRenderer
         content={{

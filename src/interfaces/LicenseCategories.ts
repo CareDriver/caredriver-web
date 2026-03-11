@@ -15,3 +15,22 @@ export const licenseCategoriesList = [
   LicenseCategories.CategoryM,
   LicenseCategories.CategoryT,
 ];
+
+export function getLicenseCategoryLabel(category: LicenseCategories): string {
+  switch (category) {
+    case LicenseCategories.CategoryM:
+      return "Categoría M - Motos";
+    case LicenseCategories.CategoryP:
+      return "Categoría P - Uso Particular";
+    case LicenseCategories.CategoryA:
+      return "Categoría A - Conduce Auto de terceros";
+    case LicenseCategories.CategoryB:
+      return "Categoría B - Camionetas, minubuses carga";
+    case LicenseCategories.CategoryC:
+      return "Categoría C - Buses y camiones";
+    case LicenseCategories.CategoryT:
+      return "Categoría T - Maquinaria pesada";
+    default:
+      return "Categoría desconocida";
+  }
+}

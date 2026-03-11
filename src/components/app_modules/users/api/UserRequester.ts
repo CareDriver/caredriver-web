@@ -23,9 +23,31 @@ import {
   getDocInRealTime,
   RealTimeResponse,
 } from "@/utils/requesters/RealTimeFetcher";
-import { generateKeywords } from "@/utils/helpers/StringHelper";
+import { generateKeywords, normalizeText } from "@/utils/helpers/StringHelper";
+import { Services } from "@/interfaces/Services";
+import { Locations } from "@/interfaces/Locations";
 
 const usersCollection = collection(firestore, "users");
+
+export interface UserSearchFilters {
+  service?: Services;
+  location?: Locations;
+}
+
+const getNameSearchTerms = (searchInput: string): string[] => {
+  const normalized = normalizeText(searchInput);
+  if (!normalized) {
+    return [];
+  }
+
+  const terms = new Set<string>([normalized]);
+  normalized
+    .split(/\s+/)
+    .filter(Boolean)
+    .forEach((term) => terms.add(term));
+
+  return Array.from(terms);
+};
 
 export const getUserByEmail = async (
   email: string,
@@ -87,7 +109,7 @@ const saveUser = async (
       ...userData,
       fullNameArrayLower: generateKeywords(userData.fullName),
     };
-    await setDoc(userRef, userData);
+    await setDoc(userRef, data);
     return userRef;
   } catch (error) {
     throw error;
@@ -201,32 +223,41 @@ export const getAllUsersPaginated = async (
   direction: "next" | "prev" | undefined,
   startAfterDoc?: DocumentSnapshot,
   numPerPage: number = 8,
+  filters?: UserSearchFilters,
 ) => {
   let dataQuery;
+  const constraints: any[] = [
+    where("deleted", "==", false),
+    where("email", "!=", adminEmail),
+  ];
+
+  if (filters?.location) {
+    constraints.push(where("location", "==", filters.location));
+  }
 
   if (adminRole && adminRole === UserRole.BalanceRecharge) {
-    dataQuery = query(
-      usersCollection,
-      orderBy("fullName"),
-      limit(numPerPage),
-      where("deleted", "==", false),
-      where("email", "!=", adminEmail),
-      where("services", "array-contains-any", [
-        "Conductor",
-        "Mecánico",
-        "Remolque",
-        "Lavadero",
-      ]),
-    );
-  } else {
-    dataQuery = query(
-      usersCollection,
-      orderBy("fullName"),
-      limit(numPerPage),
-      where("deleted", "==", false),
-      where("email", "!=", adminEmail),
-    );
+    if (filters?.service) {
+      constraints.push(where("services", "array-contains", filters.service));
+    } else {
+      constraints.push(
+        where("services", "array-contains-any", [
+          "Conductor",
+          "Mecánico",
+          "Remolque",
+          "Lavadero",
+        ]),
+      );
+    }
+  } else if (filters?.service) {
+    constraints.push(where("services", "array-contains", filters.service));
   }
+
+  dataQuery = query(
+    usersCollection,
+    orderBy("fullName"),
+    limit(numPerPage),
+    ...constraints,
+  );
 
   if (direction === "next" && startAfterDoc) {
     dataQuery = query(dataQuery, startAfter(startAfterDoc));
@@ -259,31 +290,62 @@ export const getAllUsersNumPages = async (
   adminRole: UserRole | undefined,
   adminEmail: string,
   numPerPages: number,
+  filters?: UserSearchFilters,
 ): Promise<number> => {
   var dataQuery;
-  if (adminRole && adminRole === UserRole.BalanceRecharge) {
-    dataQuery = query(
-      usersCollection,
-      where("deleted", "==", false),
-      where("email", "!=", adminEmail),
-      where("services", "array-contains-any", [
-        "Conductor",
-        "Mecánico",
-        "Remolque",
-        "Lavadero",
-      ]),
-    );
-  } else {
-    dataQuery = query(
-      usersCollection,
-      where("deleted", "==", false),
-      where("email", "!=", adminEmail),
-    );
+  const constraints: any[] = [
+    where("deleted", "==", false),
+    where("email", "!=", adminEmail),
+  ];
+
+  if (filters?.location) {
+    constraints.push(where("location", "==", filters.location));
   }
+
+  if (adminRole && adminRole === UserRole.BalanceRecharge) {
+    if (filters?.service) {
+      constraints.push(where("services", "array-contains", filters.service));
+    } else {
+      constraints.push(
+        where("services", "array-contains-any", [
+          "Conductor",
+          "Mecánico",
+          "Remolque",
+          "Lavadero",
+        ]),
+      );
+    }
+  } else if (filters?.service) {
+    constraints.push(where("services", "array-contains", filters.service));
+  }
+
+  dataQuery = query(usersCollection, ...constraints);
 
   const count = await getCountFromServer(dataQuery);
   const numPages = Math.ceil(count.data().count / numPerPages);
   return numPages;
+};
+
+// Helper function to generate phone search variations
+const getPhoneSearchVariations = (searchInput: string): string[] => {
+  const trimmed = searchInput.trim();
+  const variations: Set<string> = new Set();
+
+  // Add the number as is (without spaces)
+  const clean = trimmed.replace(/\s+/g, "");
+  variations.add(clean);
+
+  // Add with +591 prefix
+  if (!clean.startsWith("+591") && !clean.startsWith("+")) {
+    variations.add("+591" + clean);
+  }
+
+  // Add with + prefix only
+  if (!clean.startsWith("+")) {
+    variations.add("+" + clean);
+  }
+
+  return Array.from(variations);
 };
 
 // GET ALL SEARCH USERS PAGINATED
@@ -295,67 +357,124 @@ export const getSearchUsersPaginated = async (
   direction: "next" | "prev" | undefined,
   startAfterDoc?: DocumentSnapshot,
   numPerPage: number = 8,
+  filters?: UserSearchFilters,
 ) => {
-  let dataQuery;
+  try {
+    let dataQuery;
+    const trimmedSearch = searchField.trim();
+    const phoneVariations = getPhoneSearchVariations(searchField);
+    const nameTerms = getNameSearchTerms(searchField).slice(0, 10);
+    const lowerSearch = trimmedSearch.toLowerCase();
 
-  if (adminRole && adminRole === UserRole.BalanceRecharge) {
-    dataQuery = query(
-      usersCollection,
-      and(
-        where("deleted", "==", false),
-        where("email", "!=", adminEmail),
-        where("services", "array-contains-any", [
-          "Conductor",
-          "Mecánico",
-          "Remolque",
-          "Lavadero",
-        ]),
-        or(
-          where("fullName", "==", searchField),
-          where("email", "==", searchField.toLowerCase()),
-          where("phoneNumber", "==", "+591" + searchField.toLowerCase()),
-          where("phoneNumber", "==", "+" + searchField.toLowerCase()),
-          where("phoneNumber", "==", searchField.toLowerCase()),
-        ),
-      ),
-      orderBy("fullName"),
-      limit(numPerPage),
+    const phoneConditions = phoneVariations.map((phone) =>
+      where("phoneNumber", "==", phone),
     );
-  } else {
-    dataQuery = query(
-      usersCollection,
-      and(
-        where("deleted", "==", false),
-        where("email", "!=", adminEmail),
-        or(
-          where("fullName", "==", searchField),
-          where("email", "==", searchField),
-          where("phoneNumber", "==", "+591" + searchField),
-          where("phoneNumber", "==", "+" + searchField),
-          where("phoneNumber", "==", searchField),
-        ),
-      ),
-      orderBy("fullName"),
-      limit(numPerPage),
-    );
+
+    const nameConditions = nameTerms.length
+      ? [where("fullNameArrayLower", "array-contains-any", nameTerms)]
+      : [];
+
+    const searchConditions = [
+      where("fullName", "==", trimmedSearch),
+      where("email", "==", lowerSearch),
+      ...nameConditions,
+      ...phoneConditions,
+    ];
+
+    console.log("[UserSearch][Paginated] params", {
+      adminRole,
+      adminEmail,
+      searchField,
+      trimmedSearch,
+      lowerSearch,
+      phoneVariations,
+      nameTerms,
+      direction,
+      hasStartAfterDoc: !!startAfterDoc,
+      numPerPage,
+      filters,
+    });
+
+    const baseConstraints: any[] = [
+      where("deleted", "==", false),
+      where("email", "!=", adminEmail),
+    ];
+
+    if (filters?.location) {
+      baseConstraints.push(where("location", "==", filters.location));
+    }
+
+    if (adminRole && adminRole === UserRole.BalanceRecharge) {
+      if (filters?.service) {
+        baseConstraints.push(
+          where("services", "array-contains", filters.service),
+        );
+      } else {
+        baseConstraints.push(
+          where("services", "array-contains-any", [
+            "Conductor",
+            "Mecánico",
+            "Remolque",
+            "Lavadero",
+          ]),
+        );
+      }
+
+      dataQuery = query(
+        usersCollection,
+        and(...baseConstraints, or(...searchConditions)),
+        orderBy("fullName"),
+        limit(numPerPage),
+      );
+    } else {
+      if (filters?.service) {
+        baseConstraints.push(
+          where("services", "array-contains", filters.service),
+        );
+      }
+
+      dataQuery = query(
+        usersCollection,
+        and(...baseConstraints, or(...searchConditions)),
+        orderBy("fullName"),
+        limit(numPerPage),
+      );
+    }
+
+    if (direction === "next" && startAfterDoc) {
+      dataQuery = query(dataQuery, startAfter(startAfterDoc));
+    }
+
+    const productsSnapshot = await getDocs(dataQuery);
+    const products: UserInterface[] = productsSnapshot.docs.map((doc) => {
+      var user = doc.data() as UserInterface;
+      user.id = doc.id;
+      return user;
+    });
+
+    console.log("[UserSearch][Paginated] results", {
+      count: products.length,
+      hasLastDoc: !!productsSnapshot.docs[productsSnapshot.docs.length - 1],
+      hasFirstDoc: !!productsSnapshot.docs[0],
+    });
+
+    return {
+      result: products,
+      lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
+      firstDoc: productsSnapshot.docs[0],
+    };
+  } catch (error) {
+    console.error("[UserSearch][Paginated] error", {
+      adminRole,
+      adminEmail,
+      searchField,
+      direction,
+      numPerPage,
+      filters,
+      error,
+    });
+    throw error;
   }
-
-  if (direction === "next" && startAfterDoc) {
-    dataQuery = query(dataQuery, startAfter(startAfterDoc));
-  }
-
-  const productsSnapshot = await getDocs(dataQuery);
-  const products: UserInterface[] = productsSnapshot.docs.map((doc) => {
-    var user = doc.data() as UserInterface;
-    user.id = doc.id;
-    return user;
-  });
-
-  return {
-    result: products,
-    lastDoc: productsSnapshot.docs[productsSnapshot.docs.length - 1],
-    firstDoc: productsSnapshot.docs[0],
-  };
 };
 
 export const getSearchUsersNumPages = async (
@@ -363,49 +482,102 @@ export const getSearchUsersNumPages = async (
   adminEmail: string,
   numPerPages: number,
   searchField: string,
+  filters?: UserSearchFilters,
 ): Promise<number> => {
-  let dataQuery;
-  if (adminRole && adminRole === UserRole.BalanceRecharge) {
-    dataQuery = query(
-      usersCollection,
-      and(
-        where("deleted", "==", false),
-        where("email", "!=", adminEmail),
-        where("services", "array-contains-any", [
-          "Conductor",
-          "Mecánico",
-          "Remolque",
-          "Lavadero",
-        ]),
-        or(
-          where("fullName", "==", searchField),
-          where("email", "==", searchField),
-          where("phoneNumber", "==", "+591" + searchField),
-          where("phoneNumber", "==", "+" + searchField),
-          where("phoneNumber", "==", searchField),
-        ),
-      ),
-    );
-  } else {
-    dataQuery = query(
-      usersCollection,
-      and(
-        where("deleted", "==", false),
-        where("email", "!=", adminEmail),
-        or(
-          where("fullName", "==", searchField),
-          where("email", "==", searchField),
-          where("phoneNumber", "==", "+591" + searchField),
-          where("phoneNumber", "==", "+" + searchField),
-          where("phoneNumber", "==", searchField),
-        ),
-      ),
-    );
-  }
+  try {
+    let dataQuery;
+    const trimmedSearch = searchField.trim();
+    const phoneVariations = getPhoneSearchVariations(searchField);
+    const nameTerms = getNameSearchTerms(searchField).slice(0, 10);
+    const lowerSearch = trimmedSearch.toLowerCase();
 
-  const count = await getCountFromServer(dataQuery);
-  const numPages = Math.ceil(count.data().count / numPerPages);
-  return numPages;
+    const phoneConditions = phoneVariations.map((phone) =>
+      where("phoneNumber", "==", phone),
+    );
+
+    const nameConditions = nameTerms.length
+      ? [where("fullNameArrayLower", "array-contains-any", nameTerms)]
+      : [];
+
+    const searchConditions = [
+      where("fullName", "==", trimmedSearch),
+      where("email", "==", lowerSearch),
+      ...nameConditions,
+      ...phoneConditions,
+    ];
+
+    console.log("[UserSearch][NumPages] params", {
+      adminRole,
+      adminEmail,
+      searchField,
+      trimmedSearch,
+      lowerSearch,
+      phoneVariations,
+      nameTerms,
+      numPerPages,
+      filters,
+    });
+
+    const baseConstraints: any[] = [
+      where("deleted", "==", false),
+      where("email", "!=", adminEmail),
+    ];
+
+    if (filters?.location) {
+      baseConstraints.push(where("location", "==", filters.location));
+    }
+
+    if (adminRole && adminRole === UserRole.BalanceRecharge) {
+      if (filters?.service) {
+        baseConstraints.push(
+          where("services", "array-contains", filters.service),
+        );
+      } else {
+        baseConstraints.push(
+          where("services", "array-contains-any", [
+            "Conductor",
+            "Mecánico",
+            "Remolque",
+            "Lavadero",
+          ]),
+        );
+      }
+
+      dataQuery = query(
+        usersCollection,
+        and(...baseConstraints, or(...searchConditions)),
+      );
+    } else {
+      if (filters?.service) {
+        baseConstraints.push(
+          where("services", "array-contains", filters.service),
+        );
+      }
+
+      dataQuery = query(
+        usersCollection,
+        and(...baseConstraints, or(...searchConditions)),
+      );
+    }
+
+    const count = await getCountFromServer(dataQuery);
+    const numPages = Math.ceil(count.data().count / numPerPages);
+    console.log("[UserSearch][NumPages] result", {
+      count: count.data().count,
+      numPages,
+    });
+    return numPages;
+  } catch (error) {
+    console.error("[UserSearch][NumPages] error", {
+      adminRole,
+      adminEmail,
+      searchField,
+      numPerPages,
+      filters,
+      error,
+    });
+    throw error;
+  }
 };
 
 export { saveUser, getUserById, updateUser, checkEmailExists };

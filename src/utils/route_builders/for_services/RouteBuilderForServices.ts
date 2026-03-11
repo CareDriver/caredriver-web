@@ -3,6 +3,7 @@ import { ServiceType } from "@/interfaces/Services";
 export const SERVICE_BASE_PATH = "/service";
 export const SERVICES_REQUESTED_BASE_PATH =
   SERVICE_BASE_PATH.concat("/many/requested/");
+export const SHARED_SERVICE_BASE_PATH = SERVICE_BASE_PATH.concat("/share/");
 export const SERVER_USER_QUERY_PARAM = "serveruser";
 
 function serviceRoute(type: ServiceType): string {
@@ -52,4 +53,13 @@ export function routeToServicePerformed(
   } else {
     return path.concat(`?${SERVER_USER_QUERY_PARAM}=`).concat(fakeServerUserId);
   }
+}
+
+export function routeToSharedService(
+  type: ServiceType,
+  serviceId: string,
+): string {
+  return SHARED_SERVICE_BASE_PATH.concat(serviceRoute(type))
+    .concat("/")
+    .concat(serviceId);
 }
