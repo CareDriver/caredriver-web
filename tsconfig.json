@@ -30,5 +30,5 @@
     "src/components/auth/SignUpWithPhone.jsx",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "functions"]
 }
