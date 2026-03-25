@@ -45,6 +45,12 @@ export interface ServiceRequestInterface {
     method: "cash" | "qr"; // Payment method,
     amount: number;
   };
+  priceRange?: {
+    // optional range used mainly in mechanical services
+    currency: "Bs";
+    min: number;
+    max: number;
+  };
   // TO DO: IN US 66, refactor price attribute to:
   // price?: ServicePayment;
   startedAt?: Timestamp;

@@ -134,6 +134,9 @@ const NewEnterpriseForm: React.FC<Props> = ({ enterpriseType }) => {
           addedUsersId: [],
           commition: form.hasCommition,
           comissionsHistory: [],
+          adminUserIds: [],
+          collaboratorUserIds: [],
+          members: [],
         };
 
         await toast.promise(sendEnterpriseReq(id, enterprise), {

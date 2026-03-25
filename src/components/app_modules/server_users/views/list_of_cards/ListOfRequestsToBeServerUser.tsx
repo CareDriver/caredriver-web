@@ -16,6 +16,8 @@ import DataLoading from "@/components/loaders/DataLoading";
 import WholeScreenText from "@/components/modules/WholeScreenText";
 import PageLoading from "@/components/loaders/PageLoading";
 import { ServiceType } from "@/interfaces/Services";
+import Link from "next/link";
+import { routeToRequestsHistoryToBeUserServerAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUserServerAsAdmin";
 
 const ListOfRequestsToBeServerUser = ({ type }: { type: ServiceType }) => {
   const PAGE_SIZE = 14;
@@ -63,9 +65,17 @@ const ListOfRequestsToBeServerUser = ({ type }: { type: ServiceType }) => {
   return data ? (
     data.length > 0 ? (
       <div className="render-data-wrapper">
-        <h1 className={`text | big bold margin-bottom-25`}>
-          Solicitudes para ser {userReqTypes[type]}
-        </h1>
+        <div className="row-wrapper | between items-center margin-bottom-25">
+          <h1 className={`text | big bold`}>
+            Solicitudes para ser {userReqTypes[type]}
+          </h1>
+          <Link
+            href={routeToRequestsHistoryToBeUserServerAsAdmin(type)}
+            className="general-button gray"
+          >
+            Historial
+          </Link>
+        </div>
 
         <InfiniteScroll
           dataLength={data.length}

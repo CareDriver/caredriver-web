@@ -56,6 +56,8 @@ import ImageRenderer from "@/components/form/view/field_renderers/ImageRenderer"
 import { DirectoryPath } from "@/firebase/StoragePaths";
 import { uploadFileBase64 } from "@/utils/requesters/FileUploader";
 import { generateKeywords } from "@/utils/helpers/StringHelper";
+import TextFieldRenderer from "@/components/form/view/field_renderers/TextFieldRenderer";
+import FieldDeleted from "@/components/form/view/field_renderers/FieldDeleted";
 
 const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const { user: adminUser } = useContext(AuthContext);
@@ -200,46 +202,31 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               wasApproved &&
               !requesterUser.services.includes(Services.Driver)
             ) {
-              const currentDate = new Date();
-              const cutoffDate = new Date(2027, 3, 2); // 1 de febrero de 2026 (mes 1 = febrero)
-              cutoffDate.setHours(23, 59, 59, 999); // Hasta las 23:59:59 del día 1 de febrero
+              userToUpdate = {
+                ...userToUpdate,
+                services: [...requesterUser.services, Services.Driver],
+              };
 
-              // Solo agregar saldo con expiración si la fecha actual es menor o igual al 1 de febrero de 2026
-              if (currentDate <= cutoffDate) {
-                // 1. Definimos la fecha límite: 6 de Febrero de 2026
-                const currentYear = new Date().getFullYear();
-                const deadline = new Date(currentYear, 3, 6); // (Año, Mes 0-index, Día) -> 1 es Febrero
-                const now = new Date();
+              if (!req.driverEnterprise) {
+                const existingBalance =
+                  requesterUser.balanceWithExpiration?.balance.amount ?? 0;
 
-                let expirationDate: Date;
-
-                if (now < deadline) {
-                  // Si es ANTES del 6 de feb: sumar 3 meses al 6 de feb
-                  expirationDate = new Date(deadline);
+                if (existingBalance < 70) {
+                  const expirationDate = new Date();
                   expirationDate.setMonth(expirationDate.getMonth() + 3);
-                } else {
-                  // Si ya es 6 de feb o después: sumar 3 meses desde hoy
-                  expirationDate = new Date(now);
-                  expirationDate.setMonth(expirationDate.getMonth() + 3);
-                }
+                  expirationDate.setDate(expirationDate.getDate() + 10);
 
-                // 2. Actualizamos el objeto
-                userToUpdate = {
-                  ...userToUpdate,
-                  services: [...requesterUser.services, Services.Driver],
-                  balanceWithExpiration: {
-                    balance: {
-                      currency: "Bs. (BOB)",
-                      amount: 100,
+                  userToUpdate = {
+                    ...userToUpdate,
+                    balanceWithExpiration: {
+                      balance: {
+                        currency: "Bs. (BOB)",
+                        amount: 70,
+                      },
+                      expirationDate: Timestamp.fromDate(expirationDate),
                     },
-                    expirationDate: Timestamp.fromDate(expirationDate),
-                  },
-                };
-              } else {
-                userToUpdate = {
-                  ...userToUpdate,
-                  services: [...requesterUser.services, Services.Driver],
-                };
+                  };
+                }
               }
             }
 
@@ -647,6 +634,25 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
           }}
           legend="Antecedentes policiales"
         />
+
+        {currentReq.policeRecordPendingByChat && (
+          <div className="form-sub-container">
+            <h3 className="text | medium bold">Antecedentes por chat</h3>
+            <p className="text | light">
+              El conductor confirmó que enviará sus antecedentes policiales por
+              chat con soporte.
+            </p>
+          </div>
+        )}
+
+        {currentReq.driverExperience ? (
+          <TextFieldRenderer
+            content={currentReq.driverExperience}
+            legend="Experiencia"
+          />
+        ) : (
+          <FieldDeleted description="No agregó experiencia adicional." />
+        )}
 
         {enterprise === null ? (
           <span className="loader-green"></span>

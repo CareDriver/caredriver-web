@@ -87,18 +87,7 @@ const ServerUserSideBar = ({
           }`}
         >
           <Truck />
-          <span>Operador de Grúa</span>
-        </Link>
-        <Link
-          href={routeToRequestToBeServerUserAsUser("laundry")}
-          className={`sidebar-option ${
-            (pathname.includes(routeToRequestToBeServerUserAsUser("laundry")) ||
-              pathname.includes(routeToRenewEnterpriseAsUser("laundry"))) &&
-            "selected"
-          }`}
-        >
-          <Soap />
-          <span>Lavadero</span>
+          <span>Remolque</span>
         </Link>
       </li>
       <span className="text | white medium bold | margin-bottom-15">
@@ -107,14 +96,14 @@ const ServerUserSideBar = ({
 
       <li className="sidebar-options | margin-bottom-25">
         <Link
-          href={routeToAllEnterprisesAsUser("driver")}
+          href={routeToAllEnterprisesAsUser("laundry")}
           className={`sidebar-option ${
-            pathname.includes(routeToAllEnterprisesAsUser("driver")) &&
+            pathname.includes(routeToAllEnterprisesAsUser("laundry")) &&
             "selected"
           }`}
         >
-          <Taxi />
-          <span>Empresas de {toCapitalize(DRIVER_PLURAL)}</span>
+          <Soap />
+          <span>Lavaderos</span>
         </Link>
         <Link
           href={routeToAllEnterprisesAsUser("mechanical")}
@@ -136,14 +125,14 @@ const ServerUserSideBar = ({
           <span>Empresas de Grúa</span>
         </Link>
         <Link
-          href={routeToAllEnterprisesAsUser("laundry")}
+          href={routeToAllEnterprisesAsUser("driver")}
           className={`sidebar-option ${
-            pathname.includes(routeToAllEnterprisesAsUser("laundry")) &&
+            pathname.includes(routeToAllEnterprisesAsUser("driver")) &&
             "selected"
           }`}
         >
-          <Soap />
-          <span>Lavaderos</span>
+          <Taxi />
+          <span>Empresas de {toCapitalize(DRIVER_PLURAL)}</span>
         </Link>
       </li>
       <span className="text | white medium bold | margin-bottom-15">

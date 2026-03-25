@@ -22,6 +22,12 @@ export function routeToRequestsToBeUserServerAsAdmin(
   return BASE_ROUTE.concat("/request/new/").concat(serviceRoute(type));
 }
 
+export function routeToRequestsHistoryToBeUserServerAsAdmin(
+  type: ServiceType,
+): string {
+  return routeToRequestsToBeUserServerAsAdmin(type).concat("/history");
+}
+
 export function routeToReviewRequestToBeUserServerAsAdmin(
   type: ServiceType,
   reqId: string,

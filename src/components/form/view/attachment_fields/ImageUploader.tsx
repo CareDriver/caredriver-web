@@ -6,6 +6,28 @@ import { AttachmentField } from "../../models/FormFields";
 import { AttachmentFieldSetter } from "../../models/FieldSetters";
 import Image from "next/image";
 
+const cropToSquare = (base64: string): Promise<string> =>
+  new Promise((resolve) => {
+    const img = new window.Image();
+    img.onload = () => {
+      const size = Math.min(img.width, img.height);
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        resolve(base64);
+        return;
+      }
+      const ox = (img.width - size) / 2;
+      const oy = (img.height - size) / 2;
+      ctx.drawImage(img, ox, oy, size, size, 0, 0, size, size);
+      resolve(canvas.toDataURL("image/jpeg", 0.9));
+    };
+    img.onerror = () => resolve(base64);
+    img.src = base64;
+  });
+
 interface Props {
   uploader: {
     image: AttachmentField;
@@ -88,10 +110,13 @@ const ImageUploader: React.FC<Props> = ({ uploader, content }) => {
       setUploading(true);
 
       const reader = new FileReader();
-      reader.onload = () => {
+      reader.onload = async () => {
         if (typeof reader.result === "string") {
+          const imageData = content.imageInCircle
+            ? await cropToSquare(reader.result)
+            : reader.result;
           uploader.setImage({
-            value: reader.result,
+            value: imageData,
             message: null,
           });
           setUploading(false);

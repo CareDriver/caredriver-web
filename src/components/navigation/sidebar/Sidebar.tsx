@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 import "@/styles/components/sidebar.css";
 import "@/styles/base/reset.css";
@@ -93,9 +94,9 @@ const SideBar = () => {
           <Bars />
         </button>
         <nav className="sidebar-wrapper" ref={navref}>
-          <span className="sidebar-name">
+          <Link href="/" className="sidebar-name">
             <CompanyNameWithPeetWhite />
-          </span>
+          </Link>
           {getSideBar()}
         </nav>
       </>

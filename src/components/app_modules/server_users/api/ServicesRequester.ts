@@ -92,6 +92,46 @@ export const getNumPages = async (
   return numPages;
 };
 
+export const getHistoryPaginatedData = async (
+  collection: CollectionReference,
+  startAfterDoc?: DocumentSnapshot,
+  numPerPage: number = 8,
+) => {
+  let dataQuery = query(
+    collection,
+    orderBy("id"),
+    limit(numPerPage),
+    where("active", "==", false),
+  );
+
+  if (startAfterDoc) {
+    dataQuery = query(dataQuery, startAfter(startAfterDoc));
+  }
+
+  const reqsSnapshot = await getDocs(dataQuery);
+  const reqs = reqsSnapshot.docs.map((docSnap) => {
+    var userReq = docSnap.data() as UserRequest;
+    userReq.id = docSnap.id;
+    return userReq;
+  });
+
+  return {
+    result: reqs,
+    lastDoc: reqsSnapshot.docs[reqsSnapshot.docs.length - 1],
+    firstDoc: reqsSnapshot.docs[0],
+  };
+};
+
+export const getHistoryNumPages = async (
+  numPerPages: number,
+  collection: CollectionReference,
+): Promise<number> => {
+  const count = await getCountFromServer(
+    query(collection, where("active", "==", false)),
+  );
+  return Math.ceil(count.data().count / numPerPages);
+};
+
 export const getReqToBeUserServerById = async (
   id: string,
   collection: CollectionReference,

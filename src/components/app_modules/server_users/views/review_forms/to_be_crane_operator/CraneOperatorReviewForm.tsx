@@ -47,6 +47,9 @@ import { RefAttachment } from "@/components/form/models/RefAttachment";
 import { BloodTypes } from "@/interfaces/BloodTypes";
 import { Locations, locationList } from "@/interfaces/Locations";
 import { saveTowReq } from "@/components/app_modules/server_users/api/TowRequester";
+import { Timestamp } from "firebase/firestore";
+import ImageRenderer from "@/components/form/view/field_renderers/ImageRenderer";
+import TextFieldRenderer from "@/components/form/view/field_renderers/TextFieldRenderer";
 
 const CraneOperatorReviewForm = ({
   serviceReq,
@@ -156,17 +159,40 @@ const CraneOperatorReviewForm = ({
               };
             }
 
-            if (wasApproved && serviceReq.towEnterprite) {
-              userToUpdate = {
-                ...userToUpdate,
-
-                towEnterpriseId: serviceReq.towEnterprite,
-              };
+            if (wasApproved) {
+              if (serviceReq.towEnterprite) {
+                userToUpdate = {
+                  ...userToUpdate,
+                  towEnterpriseId: serviceReq.towEnterprite,
+                };
+              }
               if (!requesterUser.services.includes(Services.Tow)) {
                 userToUpdate = {
                   ...userToUpdate,
                   services: [...requesterUser.services, Services.Tow],
                 };
+
+                if (!serviceReq.towEnterprite) {
+                  const existingBalance =
+                    requesterUser.balanceWithExpiration?.balance.amount ?? 0;
+
+                  if (existingBalance < 70) {
+                    const expirationDate = new Date();
+                    expirationDate.setMonth(expirationDate.getMonth() + 3);
+                    expirationDate.setDate(expirationDate.getDate() + 10);
+
+                    userToUpdate = {
+                      ...userToUpdate,
+                      balanceWithExpiration: {
+                        balance: {
+                          currency: "Bs. (BOB)",
+                          amount: 70,
+                        },
+                        expirationDate: Timestamp.fromDate(expirationDate),
+                      },
+                    };
+                  }
+                }
               }
             }
 
@@ -302,7 +328,9 @@ const CraneOperatorReviewForm = ({
   return (
     <div className="service-form-wrapper | max-width-60">
       <div className="row-wrapper | between items-center">
-        <h1 className="text | big bold">Solicitud para ser Operador de Grúa</h1>
+        <h1 className="text | big bold">
+          Solicitud para ser Operador de Remolque
+        </h1>
         <div className="row-wrapper | gap-8">
           <button
             className="general-button gray"
@@ -458,6 +486,29 @@ const CraneOperatorReviewForm = ({
         )}
 
         <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
+
+        <div className="form-sub-container">
+          <h2 className="text | medium-big bold">Vehículo de remolque</h2>
+          <ImageRenderer
+            content={{
+              image: serviceReq.towVehiclePhoto,
+              legend: "Foto del vehículo de remolque",
+              noFoundReason:
+                "No se encontró la foto del vehículo de remolque en la solicitud",
+            }}
+            imageInCircle={false}
+          />
+        </div>
+
+        {serviceReq.towExperience ? (
+          <TextFieldRenderer
+            content={serviceReq.towExperience}
+            legend="Experiencia"
+          />
+        ) : (
+          <FieldDeleted description="No agregó experiencia adicional." />
+        )}
+
         {serviceReq.vehicles && (
           <VehiclesWithCategoryRenderer vehicles={serviceReq.vehicles} />
         )}

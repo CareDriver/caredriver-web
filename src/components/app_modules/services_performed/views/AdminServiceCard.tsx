@@ -43,26 +43,112 @@ interface TimestampItem {
   timestamp?: { toDate: () => Date };
 }
 
+type TimestampLike =
+  | { toDate: () => Date }
+  | { seconds?: number; nanoseconds?: number }
+  | Date
+  | string
+  | number
+  | undefined;
+
+const normalizeTimestamp = (timestamp: TimestampLike) => {
+  if (!timestamp) return undefined;
+
+  if (typeof (timestamp as { toDate?: () => Date }).toDate === "function") {
+    return timestamp as { toDate: () => Date };
+  }
+
+  if (timestamp instanceof Date) {
+    return { toDate: () => timestamp };
+  }
+
+  if (typeof timestamp === "string" || typeof timestamp === "number") {
+    const parsedDate = new Date(timestamp);
+    if (!Number.isNaN(parsedDate.getTime())) {
+      return { toDate: () => parsedDate };
+    }
+    return undefined;
+  }
+
+  const timestampAsObject = timestamp as {
+    seconds?: number;
+    nanoseconds?: number;
+  };
+  if (typeof timestampAsObject.seconds === "number") {
+    const milliseconds =
+      timestampAsObject.seconds * 1000 +
+      (timestampAsObject.nanoseconds || 0) / 1000000;
+    return { toDate: () => new Date(milliseconds) };
+  }
+
+  return undefined;
+};
+
+const getComputedServiceFlags = (service: ServiceRequestInterface) => {
+  const dynamicCanceledAt = (
+    service as ServiceRequestInterface & {
+      canceledAt?: TimestampLike;
+    }
+  ).canceledAt;
+  const dynamicStartedAt = (
+    service as ServiceRequestInterface & {
+      startAt?: TimestampLike;
+      started_at?: TimestampLike;
+    }
+  ).startAt;
+
+  const startedAtTimestamp =
+    normalizeTimestamp(service.startedAt as TimestampLike) ||
+    normalizeTimestamp(dynamicStartedAt) ||
+    normalizeTimestamp(
+      (service as ServiceRequestInterface & { started_at?: TimestampLike })
+        .started_at,
+    );
+  const acceptedAtTimestamp = normalizeTimestamp(
+    service.acceptedAt as TimestampLike,
+  );
+  const finishedAtTimestamp = normalizeTimestamp(
+    service.finishedAt as TimestampLike,
+  );
+  const canceledAtTimestamp = normalizeTimestamp(dynamicCanceledAt);
+
+  return {
+    started: Boolean(service.started) || Boolean(startedAtTimestamp),
+    accepted: Boolean(service.accepted) || Boolean(acceptedAtTimestamp),
+    finished: Boolean(service.finished) || Boolean(finishedAtTimestamp),
+    canceled: Boolean(service.canceled) || Boolean(canceledAtTimestamp),
+    startedAtTimestamp,
+    acceptedAtTimestamp,
+    finishedAtTimestamp,
+    canceledAtTimestamp,
+  };
+};
+
 const getServiceStatusColor = (service: ServiceRequestInterface): string => {
-  if (service.finished) return "status-finished";
-  if (service.canceled) return "status-canceled";
-  if (service.started) return "status-started";
-  if (service.accepted) return "status-accepted";
+  const { finished, canceled, started, accepted } =
+    getComputedServiceFlags(service);
+  if (finished) return "status-finished";
+  if (canceled) return "status-canceled";
+  if (started) return "status-started";
+  if (accepted) return "status-accepted";
   return "status-pending";
 };
 
 const getServiceStatusLabel = (service: ServiceRequestInterface): string => {
-  if (service.finished) return "Finalizado";
-  if (service.canceled) return "Cancelado";
-  if (service.started) return "En curso";
-  if (service.accepted) return "Aceptado";
+  const { finished, canceled, started, accepted } =
+    getComputedServiceFlags(service);
+  if (finished) return "Finalizado";
+  if (canceled) return "Cancelado";
+  if (started) return "En curso";
+  if (accepted) return "Aceptado";
   return "Esperando propuesta";
 };
 
 const getCancelationInfo = (
   service: ServiceRequestInterface,
 ): string | null => {
-  if (!service.canceled) return null;
+  const { canceled, accepted } = getComputedServiceFlags(service);
+  if (!canceled) return null;
 
   // Si no hay proveedor asignado, fue cancelado por el usuario
   if (!service.serviceUserId || service.serviceUserId === "") {
@@ -70,7 +156,7 @@ const getCancelationInfo = (
   }
 
   // Si hay proveedor pero no se aceptó, también fue cancelado por el usuario
-  if (!service.accepted) {
+  if (!accepted) {
     return "Cancelado por el usuario";
   }
 
@@ -145,7 +231,10 @@ const AdminServiceCard = ({
     return timestampDateInSpanishWithHour(timestamp as any);
   };
 
-  const servicePrice = service.price?.amount ?? service.price?.amount ?? 0;
+  const servicePrice = service.price?.amount ?? service.price?.price ?? 0;
+  const hasPriceRange =
+    typeof service.priceRange?.min === "number" &&
+    typeof service.priceRange?.max === "number";
 
   const uniqueProposals = useMemo(() => {
     const proposalsMap = new Map<string, ProposalCardData>();
@@ -154,42 +243,43 @@ const AdminServiceCard = ({
   }, [proposals]);
 
   const timelineItems = useMemo<TimestampItem[]>(() => {
-    const dynamicCanceledAt = (
-      service as ServiceRequestInterface & {
-        canceledAt?: { toDate: () => Date };
-      }
-    ).canceledAt;
+    const {
+      acceptedAtTimestamp,
+      startedAtTimestamp,
+      finishedAtTimestamp,
+      canceledAtTimestamp,
+    } = getComputedServiceFlags(service);
 
     const allItems: TimestampItem[] = [
       {
         key: "createdAt",
         label: "Solicitado",
-        timestamp: service.createdAt as any,
+        timestamp: normalizeTimestamp(service.createdAt as TimestampLike),
       },
       {
         key: "acceptedAt",
         label: "Aceptado",
-        timestamp: service.acceptedAt as any,
+        timestamp: acceptedAtTimestamp,
       },
       {
         key: "startedAt",
         label: "Iniciado",
-        timestamp: service.startedAt as any,
+        timestamp: startedAtTimestamp,
       },
       {
         key: "finishedAt",
         label: "Finalizado",
-        timestamp: service.finishedAt as any,
+        timestamp: finishedAtTimestamp,
       },
       {
         key: "canceledAt",
         label: "Cancelado",
-        timestamp: dynamicCanceledAt as any,
+        timestamp: canceledAtTimestamp,
       },
       {
         key: "dateTime",
         label: "Hora programada",
-        timestamp: service.dateTime as any,
+        timestamp: normalizeTimestamp(service.dateTime as TimestampLike),
       },
     ];
 
@@ -356,6 +446,14 @@ const AdminServiceCard = ({
           <div className="detail-row price">
             <span className="price-label">Precio:</span>
             <span className="price-value">Bs. {servicePrice}</span>
+          </div>
+        )}
+        {hasPriceRange && (
+          <div className="detail-row price">
+            <span className="price-label">Rango:</span>
+            <span className="price-value">
+              Bs. {service.priceRange?.min} - Bs. {service.priceRange?.max}
+            </span>
           </div>
         )}
       </div>

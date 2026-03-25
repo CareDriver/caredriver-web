@@ -24,7 +24,6 @@ import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceReqState } from "@/interfaces/Services";
 import { isImageBase64 } from "@/validators/ImageValidator";
 import { saveTowReq } from "@/components/app_modules/server_users/api/TowRequester";
-import Building from "@/icons/Building";
 import { updateIdCard } from "@/components/app_modules/users/api/IdCardUpdated";
 import {
   DEFAULT_PERSONAL_DATA,
@@ -36,11 +35,11 @@ import {
 } from "@/components/app_modules/server_users/models/VehicleFields";
 import {
   AttachmentField,
-  EntityField,
+  TextField,
 } from "@/components/form/models/FormFields";
 import {
   DEFAUL_ATTACHMENT_FIELD,
-  DEFAUL_ENTITY_FIELD,
+  DEFAUL_TEXT_FIELD,
 } from "@/components/form/models/DefaultFields";
 import { DEFAULT_FORM_STATE, FormState } from "@/components/form/models/Forms";
 import VehicleForm from "../../vehicle_forms/VehicleForm";
@@ -50,54 +49,50 @@ import { CraneOperatorStatusHandler } from "@/components/app_modules/server_user
 import PageLoading from "@/components/loaders/PageLoading";
 import {
   isValidAttachmentField,
-  isValidEntityDataField,
   isValidTextField,
 } from "@/components/form/validators/FieldValidators";
 import { isValidPersonalData } from "@/components/app_modules/server_users/validators/for_data/PersonalDataValidator";
 import { isValidVehicle } from "@/components/app_modules/server_users/validators/for_data/VehicleValidator";
-import EnterpriseSelectorById from "@/components/app_modules/enterprises/views/selectors/EnterpriseSelectorById";
 import BaseForm from "@/components/form/view/forms/BaseForm";
 import { isPhoneValid } from "@/components/app_modules/users/validators/for_data/CredentialsValidator";
 import { parseBoliviaPhone } from "@/utils/helpers/PhoneHelper";
-import Link from "next/link";
-import { routeToAllEnterprisesAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
 import { acceptTerms } from "@/utils/requesters/AcceptTerms";
+import ImageUploader from "@/components/form/view/attachment_fields/ImageUploader";
 
 interface Form {
   personalData: PersonalData;
   vehicle: VehicleFiels;
-  enterprise: EntityField;
+  towVehiclePhoto: AttachmentField;
+  towExperience: TextField;
   selfie: AttachmentField;
   termsCheck: boolean;
 }
 
 interface Props {
   baseUser?: UserInterface;
-  baseEnterprise?: string;
 }
 
-const NewCraneOperatorForm: React.FC<Props> = ({
-  baseUser,
-  baseEnterprise,
-}) => {
+const NewCraneOperatorForm: React.FC<Props> = ({ baseUser }) => {
   const { user, checkingUserAuth } = useContext(AuthContext);
   const [requesterUser, setRequesterUser] = useState<UserInterface | undefined>(
     baseUser,
   );
   const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
-  const [form, setForm] = useState<Form>(DEFAULT_FORM(baseEnterprise));
+  const [form, setForm] = useState<Form>(DEFAULT_FORM);
   const [invalidFormMessage, setInvalidFormMessage] = useState<string>("");
   const [policeRecorderFile, setPoliceRecorderFile] = useState<AttachmentField>(
     {
       ...DEFAUL_ATTACHMENT_FIELD,
     },
   );
+  const [isTowExperienceFocused, setIsTowExperienceFocused] = useState(false);
 
   const uploadImages = async () => {
     let vehiclesData: Vehicle = emptyVehicleCar;
     var newProfilePhotoImgUrl: string | RefAttachment = EMPTY_REF_ATTACHMENT;
     var addressPhotoRef: string | RefAttachment = EMPTY_REF_ATTACHMENT;
     var realTimePhotoImgUrl: RefAttachment = EMPTY_REF_ATTACHMENT;
+    var towVehiclePhotoRef: RefAttachment = EMPTY_REF_ATTACHMENT;
 
     if (requesterUser) {
       newProfilePhotoImgUrl = requesterUser.photoUrl;
@@ -177,6 +172,17 @@ const NewCraneOperatorForm: React.FC<Props> = ({
           throw e;
         }
       }
+
+      if (form.towVehiclePhoto.value) {
+        try {
+          towVehiclePhotoRef = await uploadFileBase64(
+            DirectoryPath.Documents,
+            form.towVehiclePhoto.value,
+          );
+        } catch (e) {
+          throw e;
+        }
+      }
     }
 
     return {
@@ -184,6 +190,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
       newProfilePhotoImgUrl,
       addressPhotoRef,
       realTimePhotoImgUrl,
+      towVehiclePhotoRef,
     };
   };
 
@@ -192,8 +199,9 @@ const NewCraneOperatorForm: React.FC<Props> = ({
     newProfilePhotoImgUrl: string | RefAttachment,
     addressPhotoImgUrl: string | RefAttachment,
     realTimePhotoImgUrl: RefAttachment,
+    towVehiclePhotoRef: RefAttachment,
   ) => {
-    if (requesterUser && form.enterprise.value) {
+    if (requesterUser) {
       var formId = nanoid(30);
       try {
         const pdfRef = await toast.promise(uploadPDF(), {
@@ -213,7 +221,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
             form.personalData.homeAddress.value,
             addressPhotoImgUrl,
             newProfilePhotoImgUrl,
-            form.enterprise.value,
+            "", // enterprise assigned post-approval
             realTimePhotoImgUrl,
             requesterUser.services,
             requesterUser.location === undefined
@@ -221,6 +229,10 @@ const NewCraneOperatorForm: React.FC<Props> = ({
               : requesterUser.location,
             [vehicleData],
             pdfRef,
+            towVehiclePhotoRef,
+            isValidTextField(form.towExperience)
+              ? form.towExperience.value.trim()
+              : undefined,
           ),
         );
 
@@ -271,6 +283,10 @@ const NewCraneOperatorForm: React.FC<Props> = ({
       return "Por favor, tomate una selfie para verificar tu identidad.";
     }
 
+    if (!isValidAttachmentField(form.towVehiclePhoto)) {
+      return "Por favor, sube una foto de tu grúa o vehículo para remolcar.";
+    }
+
     if (!form.termsCheck) {
       return "Debes aceptar los términos y condiciones y la política de privacidad.";
     }
@@ -305,17 +321,6 @@ const NewCraneOperatorForm: React.FC<Props> = ({
       loading: true,
     }));
 
-    if (!form.enterprise.value) {
-      setForm((prev) => ({
-        ...prev,
-        enterprise: {
-          ...prev.enterprise,
-          message: "Por favor selecciona la Empresa de Grúa en la que trabajas",
-        },
-      }));
-      return;
-    }
-
     if (!isValidForm(form) || !requesterUser) {
       toast.error("Formulario invalido");
       setFormState((prev) => ({
@@ -333,6 +338,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
         newProfilePhotoImgUrl,
         addressPhotoRef,
         realTimePhotoImgUrl,
+        towVehiclePhotoRef,
       } = await toast.promise(uploadImages(), {
         pending: "Subiendo imágenes, por favor espera",
         success: "Imágenes subidas",
@@ -344,6 +350,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
           newProfilePhotoImgUrl,
           addressPhotoRef,
           realTimePhotoImgUrl,
+          towVehiclePhotoRef,
         ),
         {
           pending: "Enviando el formulario, por favor espera",
@@ -366,7 +373,7 @@ const NewCraneOperatorForm: React.FC<Props> = ({
       isValidPersonalData(form.personalData) &&
       isValidVehicle(form.vehicle) &&
       isValidAttachmentField(form.selfie) &&
-      isValidEntityDataField(form.enterprise) &&
+      isValidAttachmentField(form.towVehiclePhoto) &&
       policeRecorderFile.value !== undefined &&
       form.termsCheck
     );
@@ -430,39 +437,58 @@ const NewCraneOperatorForm: React.FC<Props> = ({
             craneOperator
           />
 
-          {!baseEnterprise && (
-            <div className="margin-top-25">
-              <h2 className="text icon-wrapper | medium-big bold margin-bottom-15">
-                <Building />
-                Empresa de Grúa
-              </h2>
+          <div className="form-sub-container | margin-top-25">
+            <h2 className="text | medium-big bold">
+              Foto del vehículo de remolque
+            </h2>
+            <p className="text | light">
+              Sube una foto clara del vehículo que usarás en el servicio de
+              remolque (grúa o auto remolcador habilitado).
+            </p>
+            <ImageUploader
+              uploader={{
+                image: form.towVehiclePhoto,
+                setImage: (d) =>
+                  setForm((prev) => ({ ...prev, towVehiclePhoto: d })),
+              }}
+              content={{
+                id: "tow-vehicle-photo",
+                legend: "Vehículo de remolque",
+                imageInCircle: false,
+              }}
+            />
+          </div>
 
-              <Link
-                href={routeToAllEnterprisesAsUser("tow")}
-                className="small-general-button text | bold margin-bottom-15"
-              >
-                Quiero registrar mi empresa operadora de gruas
-              </Link>
-              <EnterpriseSelectorById
-                typeOfEnterprise="tow"
-                field={{
-                  values: form.enterprise,
-                  setter: (d) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      enterprise: d,
-                    })),
-                }}
+          <div className="form-sub-container | margin-top-25">
+            <h2 className="text | medium-big bold">Experiencia (Opcional)</h2>
+            <fieldset className="form-section margin-top-10">
+              <textarea
+                className="form-section-input"
+                value={form.towExperience.value}
+                onChange={(e) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    towExperience: {
+                      ...prev.towExperience,
+                      value: e.target.value,
+                      message: null,
+                    },
+                  }))
+                }
+                placeholder={
+                  isTowExperienceFocused
+                    ? "Ejemplo: Tengo 5 años atendiendo remolques urbanos e interprovinciales, con maniobras seguras y buen trato al cliente."
+                    : ""
+                }
+                rows={4}
+                onFocus={() => setIsTowExperienceFocused(true)}
+                onBlur={() => setIsTowExperienceFocused(false)}
               />
-              {form.enterprise.message && (
-                <div className="margin-top-15">
-                  <small className="form-section-message">
-                    {form.enterprise.message}
-                  </small>
-                </div>
-              )}
-            </div>
-          )}
+              <legend className="form-section-legend">
+                Cuéntanos tu experiencia
+              </legend>
+            </fieldset>
+          </div>
 
           <SelfieSection
             image={form.selfie}
@@ -486,12 +512,11 @@ const NewCraneOperatorForm: React.FC<Props> = ({
 
 export default NewCraneOperatorForm;
 
-const DEFAULT_FORM = (baseEnterprise: string | undefined): Form => {
-  return {
-    personalData: DEFAULT_PERSONAL_DATA,
-    vehicle: DEFAULT_VEHICLE,
-    enterprise: { ...DEFAUL_ENTITY_FIELD, value: baseEnterprise },
-    selfie: DEFAUL_ATTACHMENT_FIELD,
-    termsCheck: false,
-  };
+const DEFAULT_FORM: Form = {
+  personalData: DEFAULT_PERSONAL_DATA,
+  vehicle: DEFAULT_VEHICLE,
+  towVehiclePhoto: DEFAUL_ATTACHMENT_FIELD,
+  towExperience: DEFAUL_TEXT_FIELD,
+  selfie: DEFAUL_ATTACHMENT_FIELD,
+  termsCheck: false,
 };

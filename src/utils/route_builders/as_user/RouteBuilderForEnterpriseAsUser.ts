@@ -27,3 +27,7 @@ export function routeToManageEnterpriseAsUser(
     .concat("/manage/")
     .concat(enterpriseId);
 }
+
+export function routeToRegisterEnterpriseAsUser(type: ServiceType): string {
+  return routeToAllEnterprisesAsUser(type).concat("/register");
+}

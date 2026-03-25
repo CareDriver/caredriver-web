@@ -57,6 +57,10 @@ export function routeToRequestToBeServerUserAsUser(type: ServiceType): string {
   return BASE_ROUTER.concat("/service/").concat(serviceRoute(type));
 }
 
+export function routeToServerServicesHubAsUser(): string {
+  return BASE_ROUTER.concat("/service");
+}
+
 export function routeToRequestToRegisterNewVehicleAsIndependent(
   type: VehicleToAddAsDriver,
 ): string {
