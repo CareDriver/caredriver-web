@@ -1,7 +1,12 @@
+import ClientIdPage from "@/components/guards/ClientIdPage";
 import SharedServiceViewWithLoader from "@/components/app_modules/services_performed/view/control_panels/SharedServiceViewWithLoader";
 
-const Page = ({ params }: { params: any }) => {
-  return <SharedServiceViewWithLoader id={params.id} type="laundry" />;
+const Page = () => {
+  return (
+    <ClientIdPage>
+      {(id) => <SharedServiceViewWithLoader id={id} type="laundry" />}
+    </ClientIdPage>
+  );
 };
 
 export function generateStaticParams() {

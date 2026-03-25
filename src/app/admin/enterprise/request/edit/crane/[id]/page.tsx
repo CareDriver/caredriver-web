@@ -1,19 +1,25 @@
+import ClientIdPage from "@/components/guards/ClientIdPage";
 import ReviewFormForEditingAnEnterpriseWithLoader from "@/components/app_modules/enterprises/views/review_forms/for_editing/ReviewFormForEditingAnEnterpriseWithLoader";
 import ConsentForm from "@/components/guards/views/consent_forms/ConsentForm";
 import GuardOfRequests from "@/components/guards/views/page_guards/concrets/GuardOfRequests";
 
-const Page = ({ params }: { params: any }) => {
+const Page = () => {
   return (
+    <ClientIdPage>
+      {(id) => (
     <GuardOfRequests>
-      <ConsentForm moduleTarget="editcranereq" id={params.id}>
+      <ConsentForm moduleTarget="editcranereq" id={id}>
         <ReviewFormForEditingAnEnterpriseWithLoader
-          reqId={params.id}
+          reqId={id}
           type="tow"
         />
       </ConsentForm>
     </GuardOfRequests>
+      )}
+    </ClientIdPage>
   );
 };
+
 
 export function generateStaticParams() {
   return [{ id: "_" }];

@@ -1,3 +1,4 @@
+import ClientIdPage from "@/components/guards/ClientIdPage";
 import EnterprisePanelForUserServer from "@/components/app_modules/enterprises/views/control_panels/concrete/EnterprisePanelForUserServer";
 import GuardForServerUsers from "@/components/guards/views/page_guards/concrets/GuardForServerUsers";
 import { PageStateProviderContainer } from "@/context/PageStateContext";
@@ -15,15 +16,20 @@ export const metadata: Metadata = {
   authors: CareDriverAuthor,
 };
 
-const Page = ({ params }: { params: any }) => {
+const Page = () => {
   return (
+    <ClientIdPage>
+      {(id) => (
     <GuardForServerUsers>
       <PageStateProviderContainer>
-        <EnterprisePanelForUserServer id={params.id} />
+        <EnterprisePanelForUserServer id={id} />
       </PageStateProviderContainer>
     </GuardForServerUsers>
+      )}
+    </ClientIdPage>
   );
 };
+
 
 export function generateStaticParams() {
   return [{ id: "_" }];

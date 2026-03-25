@@ -1,3 +1,4 @@
+import ClientIdPage from "@/components/guards/ClientIdPage";
 import ReviewFormToBeServerUserWithLoader from "@/components/app_modules/server_users/views/review_forms/ReviewFormToBeServerUserWithLoader";
 import ConsentForm from "@/components/guards/views/consent_forms/ConsentForm";
 import GuardOfRequests from "@/components/guards/views/page_guards/concrets/GuardOfRequests";
@@ -12,18 +13,23 @@ export const metadata: Metadata = {
   authors: CareDriverAuthor,
 };
 
-const Page = ({ params }: { params: any }) => {
+const Page = () => {
   return (
+    <ClientIdPage>
+      {(id) => (
     <GuardOfRequests>
-      <ConsentForm moduleTarget="mechanicservicereq" id={params.id}>
+      <ConsentForm moduleTarget="mechanicservicereq" id={id}>
         <ReviewFormToBeServerUserWithLoader
-          reqId={params.id}
+          reqId={id}
           type="mechanical"
         />
       </ConsentForm>
     </GuardOfRequests>
+      )}
+    </ClientIdPage>
   );
 };
+
 
 export function generateStaticParams() {
   return [{ id: "_" }];
