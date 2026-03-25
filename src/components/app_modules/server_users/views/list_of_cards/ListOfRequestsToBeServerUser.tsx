@@ -71,7 +71,7 @@ const ListOfRequestsToBeServerUser = ({ type }: { type: ServiceType }) => {
           </h1>
           <Link
             href={routeToRequestsHistoryToBeUserServerAsAdmin(type)}
-            className="general-button gray"
+            className="general-button no-full gray"
           >
             Historial
           </Link>

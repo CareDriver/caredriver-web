@@ -275,14 +275,14 @@ Extiende `EnterpriseData` con los mismos campos más:
 
 ```typescript
 enum MechanicSubService {
-  BatteryJumpStart = "Pasa corriente / arranque con batería",
+  BatteryJumpStart = "Pasa corriente",
   TireChange = "Cambio de llanta",
   TireInflation = "Inflado de llanta",
-  FlatTireAssistance = "Auxilio por llanta pinchada",
-  FuelDelivery = "Entrega de combustible",
-  VehicleUnlock = "Apertura de vehículo / Cerrajero",
-  ObdScan = "Escaneo electrónico del vehículo con OBD",
-  HomeQuickCheck = "Chequeo rápido del vehículo a domicilio",
+  FlatTireAssistance = "Llanta pinchada",
+  FuelDelivery = "Combustible",
+  VehicleUnlock = "Cerrajería",
+  ObdScan = "Escaneo OBD",
+  HomeQuickCheck = "Chequeo a domicilio",
 }
 ```
 

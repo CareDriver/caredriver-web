@@ -40,14 +40,14 @@ export interface TechnicalTitleEvidence {
 }
 
 export enum MechanicSubService {
-  BatteryJumpStart = "Pasa corriente / arranque con batería",
+  BatteryJumpStart = "Pasa corriente",
   TireChange = "Cambio de llanta",
   TireInflation = "Inflado de llanta",
-  FlatTireAssistance = "Auxilio por llanta pinchada",
-  FuelDelivery = "Entrega de combustible",
-  VehicleUnlock = "Apertura de vehículo / Cerrajero",
-  ObdScan = "Escaneo electrónico del vehículo con OBD",
-  HomeQuickCheck = "Chequeo rápido del vehículo a domicilio",
+  FlatTireAssistance = "Llanta pinchada",
+  FuelDelivery = "Combustible",
+  VehicleUnlock = "Cerrajería",
+  ObdScan = "Escaneo OBD",
+  HomeQuickCheck = "Chequeo a domicilio",
 }
 
 export const MECHANIC_SUB_SERVICES: {
@@ -56,37 +56,39 @@ export const MECHANIC_SUB_SERVICES: {
 }[] = [
   {
     key: MechanicSubService.BatteryJumpStart,
-    description: "Cuando la batería está descargada.",
+    description: "Arranque con batería cuando está descargada.",
   },
   {
     key: MechanicSubService.TireChange,
     description:
-      "Cuando el conductor tiene la llanta de repuesto pero no sabe cambiarla o no tiene herramientas.",
+      "Cambio de llanta de repuesto cuando el conductor no sabe cambiarla o no tiene herramientas.",
   },
   {
     key: MechanicSubService.TireInflation,
-    description: "Si la llanta está baja pero no pinchada.",
+    description: "Inflado de llanta baja (no pinchada).",
   },
   {
     key: MechanicSubService.FlatTireAssistance,
-    description: "Parche rápido o ayuda para instalar la de repuesto.",
+    description:
+      "Auxilio por llanta pinchada: parche rápido o instalación de repuesto.",
   },
   {
     key: MechanicSubService.FuelDelivery,
-    description: "Cuando alguien se queda sin gasolina.",
+    description: "Entrega de combustible cuando alguien se queda sin gasolina.",
   },
   {
     key: MechanicSubService.VehicleUnlock,
-    description: "Cuando el conductor deja las llaves dentro del auto.",
+    description:
+      "Apertura de vehículo cuando el conductor deja las llaves dentro.",
   },
   {
     key: MechanicSubService.ObdScan,
-    description: "Diagnóstico con escáner OBD.",
+    description: "Escaneo electrónico del vehículo con escáner OBD.",
   },
   {
     key: MechanicSubService.HomeQuickCheck,
     description:
-      "Revisión de aceite, refrigerante, líquido de frenos, batería, presión de llantas, luces y fugas visibles (10–15 min).",
+      "Chequeo rápido del vehículo a domicilio: aceite, refrigerante, frenos, batería, llantas, luces y fugas (10–15 min).",
   },
 ];
 
