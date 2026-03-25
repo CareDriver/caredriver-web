@@ -6,6 +6,9 @@ export enum DirectoryPath {
   Licenses = "requests/licenses/",
   TempProfilePhotos = "requests/temppriflephotos/",
   Enterprises = "enterprises/",
+  EnterpriseMembers = "enterprises/members/",
+  EnterpriseVehicles = "enterprises/vehicles/",
+  EnterpriseTools = "enterprises/tools/",
   Users = "users/",
   BrandingReqs = "requests/brandingreqs/",
 }

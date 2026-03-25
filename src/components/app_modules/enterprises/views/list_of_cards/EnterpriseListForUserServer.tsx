@@ -8,12 +8,7 @@ import "@/styles/components/pagination.css";
 import { UserInterface } from "@/interfaces/UserInterface";
 import { ServiceType } from "@/interfaces/Services";
 import { routeToManageEnterpriseAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
-import { sendWhatsapp } from "@/utils/senders/Sender";
-import { PHONE_BUSINESS } from "@/models/Business";
-import { greeting } from "@/utils/senders/Greeter";
-import { ENTERPRISE_TO_SPANISH } from "../../utils/EnterpriseSpanishTranslator";
-import Whatsapp from "@/icons/Whatsapp";
-import { MAX_NUMBER_ENTERPRISES } from "../../validators/validators_of_user_aggregators_to_enterprise/as_owners/EnterpriseOwnerValidator";
+import UserTie from "@/icons/UserTie";
 
 interface Props {
   user: UserInterface;
@@ -25,20 +20,6 @@ const EnterpriseListForUserServer: React.FC<Props> = ({
   typeOfEnterprise,
 }) => {
   const [data, setData] = useState<Enterprise[] | null>(null);
-
-  const sendMessageForFistEnterprise = () => {
-    let message = greeting().concat(
-      `Quiero registrar mi ${ENTERPRISE_TO_SPANISH[typeOfEnterprise]} con ustedes`,
-    );
-    sendWhatsapp(PHONE_BUSINESS, message);
-  };
-
-  const sendMessageForNewEnterprise = () => {
-    let message = greeting().concat(
-      `Quiero registrar una nueva ${ENTERPRISE_TO_SPANISH[typeOfEnterprise]} con ustedes`,
-    );
-    sendWhatsapp(PHONE_BUSINESS, message);
-  };
 
   useEffect(() => {
     if (user.id) {
@@ -57,27 +38,15 @@ const EnterpriseListForUserServer: React.FC<Props> = ({
   }
 
   if (data.length <= 0) {
-    return (
-      <div className="auto-height">
-        <h2 className="text" onClick={sendMessageForFistEnterprise}>
-          Si tienes una {ENTERPRISE_TO_SPANISH[typeOfEnterprise]},{" "}
-          <i className="text | bold">
-            contáctanos para registrarla y ofrecer tus servicios en CareDriver
-          </i>
-        </h2>
-        <button
-          onClick={sendMessageForFistEnterprise}
-          className="small-general-button text wrap | icon-wrapper lb | margin-top-25"
-        >
-          <Whatsapp />
-          <span className="text">Enviar mensaje</span>
-        </button>
-      </div>
-    );
+    return null;
   }
 
   return (
     <>
+      <h2 className="text | medium-big bold | icon-wrapper margin-bottom-10">
+        <UserTie />
+        Tus empresas
+      </h2>
       <div className="enterprise-list">
         {data.map(
           (enterprise, i) =>
@@ -93,22 +62,6 @@ const EnterpriseListForUserServer: React.FC<Props> = ({
             ),
         )}
       </div>
-      {data.length < MAX_NUMBER_ENTERPRISES && (
-        <div className="auto-height">
-          <h2 className="text" onClick={sendMessageForFistEnterprise}>
-            <i className="text | bold">¿Tienes mas empresas? </i>
-            contáctanos para registrar tu{" "}
-            {ENTERPRISE_TO_SPANISH[typeOfEnterprise]} con nosotros.
-          </h2>
-          <button
-            onClick={sendMessageForNewEnterprise}
-            className="small-general-button text wrap | icon-wrapper lb | margin-top-25"
-          >
-            <Whatsapp />
-            <span className="text">Enviar mensaje</span>
-          </button>
-        </div>
-      )}
     </>
   );
 };

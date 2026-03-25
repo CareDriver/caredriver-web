@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import UserIcon from "@/icons/UserIcon";
 
 import { AuthContext } from "@/context/AuthContext";
@@ -39,80 +39,80 @@ const PersonalDataForm: React.FC<Props> = ({
     baseUser,
   );
   const [loading, setLoading] = useState<boolean>(true);
-  const fillInformation = useCallback(() => {
-    if (requesterUser) {
+  const fillInformation = (sourceUser: UserInterface | undefined) => {
+    if (sourceUser) {
       var hasIdCard: boolean =
-        requesterUser.identityCard !== null &&
-        requesterUser.identityCard !== undefined;
+        sourceUser.identityCard !== null &&
+        sourceUser.identityCard !== undefined;
       setPersonalData({
         fullname: {
-          value: requesterUser.fullName,
+          value: sourceUser.fullName,
           message: null,
         },
         fullNameArrayLower: {
-          value: generateKeywords(requesterUser.fullName),
+          value: generateKeywords(sourceUser.fullName),
           message: null,
         },
         bloodType: {
-          value: requesterUser.bloodType || BloodTypes.OPositive,
+          value: sourceUser.bloodType || BloodTypes.OPositive,
           message: null,
         },
         gender: {
-          value: requesterUser.gender || Gender.Male,
+          value: sourceUser.gender || Gender.Male,
           message: null,
         },
         homeAddress: {
-          value: requesterUser.homeAddress,
+          value: sourceUser.homeAddress,
           message: "Introduce tu dirección de domicilio",
         },
         addressPhoto: {
           value:
-            requesterUser.addressPhoto?.url.length > 0
-              ? requesterUser.addressPhoto.url
+            sourceUser.addressPhoto?.url.length > 0
+              ? sourceUser.addressPhoto.url
               : undefined,
           message:
-            requesterUser.addressPhoto?.url.length > 0
+            sourceUser.addressPhoto?.url.length > 0
               ? null
               : "Sube una foto de la factura de luz de tu domicilio.",
         },
         photo: {
           value:
-            requesterUser.photoUrl.url.length > 0
-              ? requesterUser.photoUrl.url
+            sourceUser.photoUrl.url.length > 0
+              ? sourceUser.photoUrl.url
               : undefined,
           message:
-            requesterUser.photoUrl.url.length > 0
+            sourceUser.photoUrl.url.length > 0
               ? null
               : "Por favor, sube una foto de perfil",
         },
         alternativePhoneNumber: {
-          value: flatPhone(requesterUser.alternativePhoneNumber) ?? "",
+          value: flatPhone(sourceUser.alternativePhoneNumber) ?? "",
           message: null,
         },
         alternativePhoneNumberName: {
-          value: requesterUser.alternativePhoneNumberName ?? "",
+          value: sourceUser.alternativePhoneNumberName ?? "",
           message: null,
         },
         idCard: {
           frontCard: {
-            value: requesterUser.identityCard
-              ? requesterUser.identityCard.frontCard.url
+            value: sourceUser.identityCard
+              ? sourceUser.identityCard.frontCard.url
               : undefined,
             message: hasIdCard
               ? null
               : "Suba una foto mostrando la parte frontal de tu carnet de identidad",
           },
           backCard: {
-            value: requesterUser.identityCard
-              ? requesterUser.identityCard.backCard.url
+            value: sourceUser.identityCard
+              ? sourceUser.identityCard.backCard.url
               : undefined,
             message: hasIdCard
               ? null
               : "Suba una foto mostrando la parte posterior de tu carnet de identidad",
           },
           location: {
-            value: requesterUser.identityCard
-              ? requesterUser.identityCard.location
+            value: sourceUser.identityCard
+              ? sourceUser.identityCard.location
               : "Cochabamba, Bolivia",
             message: hasIdCard ? null : "",
           },
@@ -151,8 +151,7 @@ const PersonalDataForm: React.FC<Props> = ({
           message: null,
         },
         alternativePhoneNumberName: {
-          value:
-            "Escribe el nombre de un contacto alternativo, como un familiar por favor.",
+          value: "",
           message: null,
         },
         idCard: {
@@ -174,21 +173,17 @@ const PersonalDataForm: React.FC<Props> = ({
       });
       setLoading(false);
     }
-  }, [requesterUser, setPersonalData, setLoading]);
-
-  const loadRequesterUserData = useCallback(() => {
-    if (!baseUser && user) {
-      setRequesterUser(user);
-    }
-
-    fillInformation();
-  }, [user, baseUser, setRequesterUser]);
+  };
 
   useEffect(() => {
-    if (!checkingUserAuth) {
-      loadRequesterUserData();
+    if (checkingUserAuth) {
+      return;
     }
-  }, [checkingUserAuth, loadRequesterUserData]);
+
+    const sourceUser = baseUser ?? user;
+    setRequesterUser(sourceUser);
+    fillInformation(sourceUser);
+  }, [checkingUserAuth, baseUser, user]);
 
   return (
     <>
@@ -228,7 +223,7 @@ const PersonalDataForm: React.FC<Props> = ({
             <ChevronDown />
             <select
               key={"form-section-vehicle-types"}
-              defaultValue={""}
+              value={personalData.gender.value as string}
               onChange={(e) => {
                 setPersonalData({
                   ...personalData,

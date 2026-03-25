@@ -150,28 +150,24 @@ const UserAdderToEnterprise: React.FC<Props> = ({ userLogged, enterprise }) => {
           ) : (
             <NewDriverForm
               baseUser={userToAdd}
-              defaultTowEnterprise={enterprise.id}
             />
           );
         case "mechanical":
           return (
             <NewMechanicForm
               baseUser={userToAdd}
-              baseEnterprise={enterprise.id}
             />
           );
         case "tow":
           return (
             <NewCraneOperatorForm
               baseUser={userToAdd}
-              baseEnterprise={enterprise.id}
             />
           );
         default:
           return (
             <NewLaundererForm
               baseUser={userToAdd}
-              baseEnterprise={enterprise.id}
             />
           );
       }

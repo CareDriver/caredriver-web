@@ -28,7 +28,7 @@ export class CraneOperatorStatusHandler implements HandleableServiceStatus {
     }
 
     return {
-      title: "Solicitud para ofrecer servicios como Operador de Grúa",
+      title: "Solicitud para ofrecer servicios como Remolque",
       description:
         "Necesitamos verificar que todos los datos que se llenen sean validos antes de darte permisos para ofrecer servicios en CareDriver.",
     };

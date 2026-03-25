@@ -5,11 +5,10 @@ import { useCallback, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { UserInterface, UserRole } from "@/interfaces/UserInterface";
 import { toast } from "react-toastify";
-import { ServiceReqState } from "@/interfaces/Services";
 import PageLoading from "../../../loaders/PageLoading";
 import { routeToAllUsersAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
-import { routeToRequestToBeServerUserAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
 import { routeToRequestsToBeUserServerAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUserServerAsAdmin";
+import { routeToServerServicesHubAsUser } from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
 
 const UserRedirect = () => {
   const { checkingUserAuth, user } = useContext(AuthContext);
@@ -17,25 +16,7 @@ const UserRedirect = () => {
 
   const redirectServerUser = useCallback(
     (userData: UserInterface) => {
-      if (userData.serviceRequests) {
-        var pageRedirection;
-        if (
-          userData.serviceRequests.mechanic &&
-          userData.serviceRequests.mechanic.state === ServiceReqState.Approved
-        ) {
-          pageRedirection = routeToRequestToBeServerUserAsUser("mechanical");
-        } else if (
-          userData.serviceRequests.tow &&
-          userData.serviceRequests.tow.state === ServiceReqState.Approved
-        ) {
-          pageRedirection = routeToRequestToBeServerUserAsUser("tow");
-        } else {
-          pageRedirection = routeToRequestToBeServerUserAsUser("driver");
-        }
-        router.push(pageRedirection);
-      } else {
-        router.push(routeToRequestToBeServerUserAsUser("driver"));
-      }
+      router.push(routeToServerServicesHubAsUser());
     },
     [router],
   );

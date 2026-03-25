@@ -3,6 +3,7 @@ export enum Collections {
   Proposals = "proposals",
   Enterprises = "enterprises",
   EditEnterprises = "edit-enterprises",
+  EnterpriseRequests = "enterprise-requests",
   DriverServices = "driver-services",
   MechanicalServices = "mechanical-services",
   TowsServices = "tow-services",
@@ -22,4 +23,5 @@ export enum Collections {
   ProposalsMechanic = "proposals-mechanic",
   ProposalTow = "proposals-tow",
   ProposalCarWash = "proposals-car-wash",
+  AdminSettings = "admin-settings",
 }

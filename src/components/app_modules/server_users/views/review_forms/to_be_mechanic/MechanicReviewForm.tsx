@@ -44,6 +44,7 @@ import { RefAttachment } from "@/components/form/models/RefAttachment";
 import { BloodTypes } from "@/interfaces/BloodTypes";
 import { Locations, locationList } from "@/interfaces/Locations";
 import { saveMechanicReq } from "@/components/app_modules/server_users/api/MechanicRequester";
+import { Timestamp } from "firebase/firestore";
 
 const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const { user: adminUser } = useContext(AuthContext);
@@ -79,6 +80,7 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   const saveReviewHistory = async (wasApproved: boolean) => {
     try {
       if (adminUser && adminUser.id) {
+        const isUpdateRequest = currentReq.isMechanicUpdateRequest === true;
         const isLimitToReviews: boolean =
           currentReq.reviewedByHistory !== undefined &&
           currentReq.reviewedByHistory.length + 1 === MIN_NUM_OF_APPROVALS;
@@ -91,6 +93,28 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
 
         if (isLimitToReviews) {
           if (requesterUser) {
+            const isAlreadyApprovedMechanic =
+              requesterUser.services.includes(Services.Mechanic) ||
+              requesterUser.serviceRequests?.mechanic?.state ===
+                ServiceReqState.Approved;
+
+            if (isUpdateRequest && isAlreadyApprovedMechanic) {
+              if (wasApproved) {
+                await updateUser(currentReq.userId, {
+                  serviceRequests: {
+                    ...requesterUser.serviceRequests,
+                    mechanic: {
+                      id:
+                        requesterUser.serviceRequests?.mechanic?.id ??
+                        currentReq.id,
+                      state: ServiceReqState.Approved,
+                    },
+                  },
+                });
+              }
+              return;
+            }
+
             const serviceReqState = {
               id: currentReq.id,
               state: wasApproved
@@ -110,16 +134,40 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
               serviceRequests: newReqState,
             };
 
-            if (wasApproved && serviceReq.mechanicalWorkShop) {
-              userToUpdate = {
-                ...userToUpdate,
-                mechanicalWorkShopId: serviceReq.mechanicalWorkShop,
-              };
+            if (wasApproved) {
+              if (serviceReq.mechanicalWorkShop) {
+                userToUpdate = {
+                  ...userToUpdate,
+                  mechanicalWorkShopId: serviceReq.mechanicalWorkShop,
+                };
+              }
               if (!requesterUser.services.includes(Services.Mechanic)) {
                 userToUpdate = {
                   ...userToUpdate,
                   services: [...requesterUser.services, Services.Mechanic],
                 };
+
+                if (!serviceReq.mechanicalWorkShop) {
+                  const existingBalance =
+                    requesterUser.balanceWithExpiration?.balance.amount ?? 0;
+
+                  if (existingBalance < 70) {
+                    const expirationDate = new Date();
+                    expirationDate.setMonth(expirationDate.getMonth() + 3);
+                    expirationDate.setDate(expirationDate.getDate() + 10);
+
+                    userToUpdate = {
+                      ...userToUpdate,
+                      balanceWithExpiration: {
+                        balance: {
+                          currency: "Bs. (BOB)",
+                          amount: 70,
+                        },
+                        expirationDate: Timestamp.fromDate(expirationDate),
+                      },
+                    };
+                  }
+                }
               }
             }
 
@@ -242,7 +290,11 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
   return (
     <div className="service-form-wrapper | max-width-60">
       <div className="row-wrapper | between items-center">
-        <h1 className="text | big bold">Solicitud para ser Mecánico</h1>
+        <h1 className="text | big bold">
+          {serviceReq.isMechanicUpdateRequest
+            ? "Solicitud de actualización de Mecánico"
+            : "Solicitud para ser Mecánico"}
+        </h1>
         <div className="row-wrapper | gap-8">
           <button
             className="general-button gray"
@@ -399,7 +451,14 @@ const MechanicReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
         )}
         <SelfieRenderer image={serviceReq.realTimePhotoImgUrl} />
 
-        <MechanicToolsRenderer tools={serviceReq.mechanicTools} />
+        <MechanicToolsRenderer
+          tools={serviceReq.mechanicTools}
+          subServices={serviceReq.mechanicSubServices}
+          toolEvidences={serviceReq.mechanicToolEvidences}
+          technicalTitle={serviceReq.mechanicTechnicalTitle}
+          experience={serviceReq.mechanicExperience}
+          isUpdateRequest={serviceReq.isMechanicUpdateRequest}
+        />
 
         {enterprise === null ? (
           <span className="loader-green"></span>

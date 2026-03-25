@@ -44,3 +44,19 @@ export function routeToReviewRequestToEditEnterpriseAsAdmin(
 ): string {
   return routeToRequestsToEditEnterpriseAsAdmin(type).concat("/").concat(id);
 }
+
+// requests to register a new enterprise
+export function routeToEnterpriseRegistrationRequestsAsAdmin(
+  type: ServiceType,
+): string {
+  return BASE_ROUTE.concat("/request/register/").concat(enterpriseRoute(type));
+}
+
+export function routeToReviewEnterpriseRegistrationRequestAsAdmin(
+  type: ServiceType,
+  id: string,
+): string {
+  return routeToEnterpriseRegistrationRequestsAsAdmin(type)
+    .concat("/")
+    .concat(id);
+}

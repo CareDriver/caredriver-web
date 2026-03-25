@@ -15,9 +15,12 @@ const ServicePriceDetailsRenderer = ({
   };
 
   return (
-    service.price &&
-    ((service.price.price && service.price.currency) ||
-      service.price.amount) && (
+    ((service.price &&
+      ((service.price.price && service.price.currency) ||
+        service.price.amount)) ||
+      (service.priceRange &&
+        service.priceRange.min !== undefined &&
+        service.priceRange.max !== undefined)) && (
       <>
         <div className="max-width-50 margin-bottom-15">
           <div className="separator-horizontal"></div>
@@ -28,13 +31,21 @@ const ServicePriceDetailsRenderer = ({
           </h2>
 
           <div className="column-wrapper">
-            {service.price.amount && service.price.currency && (
+            {service.priceRange &&
+              service.priceRange.min !== undefined &&
+              service.priceRange.max !== undefined && (
+                <span className="text">
+                  <b>Rango: </b>
+                  {service.priceRange.min} - {service.priceRange.max} Bs
+                </span>
+              )}
+            {service.price?.amount && service.price?.currency && (
               <span className="text">
                 <b>Cantidad: </b>
                 {service.price.amount} {service.price.currency}
               </span>
             )}
-            {service.price.method && (
+            {service.price?.method && (
               <span className="text">
                 <b>Método de pago: </b>
                 {getMethod(service.price.method)}

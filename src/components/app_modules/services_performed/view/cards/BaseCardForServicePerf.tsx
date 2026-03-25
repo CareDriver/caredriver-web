@@ -37,6 +37,13 @@ const BaseCardForServicePerf: React.FC<Props> = ({
           {service.price.price} {service.price.currency}
         </h3>
       )}
+      {!service.price?.price &&
+        service.priceRange?.min !== undefined &&
+        service.priceRange?.max !== undefined && (
+          <h3 className="text | bold margin-bottom-25">
+            {service.priceRange.min} - {service.priceRange.max} Bs
+          </h3>
+        )}
 
       {children && children}
     </>

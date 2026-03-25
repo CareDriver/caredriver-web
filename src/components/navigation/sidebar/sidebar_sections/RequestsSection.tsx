@@ -9,7 +9,10 @@ import Truck from "@/icons/Truck";
 import Warehouse from "@/icons/Warehouse";
 import Wrench from "@/icons/Wrench";
 import { DRIVER, DRIVER_PLURAL } from "@/models/Business";
-import { routeToRequestsToEditEnterpriseAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
+import {
+  routeToRequestsToEditEnterpriseAsAdmin,
+  routeToEnterpriseRegistrationRequestsAsAdmin,
+} from "@/utils/route_builders/as_admin/RouteBuilderForEnterpriseAsAdmin";
 import { routeToUserRequestsToRenewPhotoAsAdmin } from "@/utils/route_builders/as_admin/RouteBuilderForUsersAsAdmin";
 import {
   routeToRequestsToBeUserServerAsAdmin,
@@ -73,17 +76,16 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
         </div>
 
         <Link
-          href={routeToRequestsToEditEnterpriseAsAdmin("driver")}
+          href={routeToRequestsToEditEnterpriseAsAdmin("laundry")}
           className={`sidebar-option ${
             pathname.includes(
-              routeToRequestsToEditEnterpriseAsAdmin("driver"),
+              routeToRequestsToEditEnterpriseAsAdmin("laundry"),
             ) && "selected"
           }`}
         >
-          <Taxi />
-          <span>Edicion de Emp. de {toCapitalize(DRIVER_PLURAL)}</span>
+          <Soap />
+          <span>Edicion de Lavaderos</span>
         </Link>
-
         <Link
           href={routeToRequestsToEditEnterpriseAsAdmin("mechanical")}
           className={`sidebar-option ${
@@ -106,15 +108,64 @@ const RequestsSection = ({ pathname }: { pathname: string }) => {
           <span>Edicion de Emp. de Grúa</span>
         </Link>
         <Link
-          href={routeToRequestsToEditEnterpriseAsAdmin("laundry")}
+          href={routeToRequestsToEditEnterpriseAsAdmin("driver")}
           className={`sidebar-option ${
             pathname.includes(
-              routeToRequestsToEditEnterpriseAsAdmin("laundry"),
+              routeToRequestsToEditEnterpriseAsAdmin("driver"),
+            ) && "selected"
+          }`}
+        >
+          <Taxi />
+          <span>Edicion de Emp. de {toCapitalize(DRIVER_PLURAL)}</span>
+        </Link>
+
+        <div>
+          <i className="separator-horizontal green-opacity"></i>
+        </div>
+
+        <Link
+          href={routeToEnterpriseRegistrationRequestsAsAdmin("laundry")}
+          className={`sidebar-option ${
+            pathname.includes(
+              routeToEnterpriseRegistrationRequestsAsAdmin("laundry"),
             ) && "selected"
           }`}
         >
           <Soap />
-          <span>Edicion de Lavaderos</span>
+          <span>Registro de Lavaderos</span>
+        </Link>
+        <Link
+          href={routeToEnterpriseRegistrationRequestsAsAdmin("mechanical")}
+          className={`sidebar-option ${
+            pathname.includes(
+              routeToEnterpriseRegistrationRequestsAsAdmin("mechanical"),
+            ) && "selected"
+          }`}
+        >
+          <Warehouse />
+          <span>Registro de Talleres</span>
+        </Link>
+        <Link
+          href={routeToEnterpriseRegistrationRequestsAsAdmin("tow")}
+          className={`sidebar-option ${
+            pathname.includes(
+              routeToEnterpriseRegistrationRequestsAsAdmin("tow"),
+            ) && "selected"
+          }`}
+        >
+          <Building />
+          <span>Registro Emp. de Grúa</span>
+        </Link>
+        <Link
+          href={routeToEnterpriseRegistrationRequestsAsAdmin("driver")}
+          className={`sidebar-option ${
+            pathname.includes(
+              routeToEnterpriseRegistrationRequestsAsAdmin("driver"),
+            ) && "selected"
+          }`}
+        >
+          <Taxi />
+          <span>Registro Emp. de {toCapitalize(DRIVER_PLURAL)}</span>
         </Link>
 
         <div>

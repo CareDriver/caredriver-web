@@ -93,6 +93,7 @@ export const aproveEnterpriseReq = async (
   var newData: Partial<Enterprise> = {
     aproved: true,
     aprovedBy: adminId,
+    currentDebt: { currency: "Bs. (BOB)", amount: -40 },
   };
   await updateEnterprise(enterPriseId, newData);
 };

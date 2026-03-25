@@ -28,10 +28,72 @@ export interface Vehicle {
   license: LicenseInterface;
 }
 
+export interface MechanicToolEvidence {
+  name: string;
+  photo: RefAttachment;
+}
+
+export interface TechnicalTitleEvidence {
+  titleName: string;
+  issueDate?: Timestamp;
+  photo: RefAttachment;
+}
+
+export enum MechanicSubService {
+  BatteryJumpStart = "Pasa corriente / arranque con batería",
+  TireChange = "Cambio de llanta",
+  TireInflation = "Inflado de llanta",
+  FlatTireAssistance = "Auxilio por llanta pinchada",
+  FuelDelivery = "Entrega de combustible",
+  VehicleUnlock = "Apertura de vehículo / Cerrajero",
+  ObdScan = "Escaneo electrónico del vehículo con OBD",
+  HomeQuickCheck = "Chequeo rápido del vehículo a domicilio",
+}
+
+export const MECHANIC_SUB_SERVICES: {
+  key: MechanicSubService;
+  description: string;
+}[] = [
+  {
+    key: MechanicSubService.BatteryJumpStart,
+    description: "Cuando la batería está descargada.",
+  },
+  {
+    key: MechanicSubService.TireChange,
+    description:
+      "Cuando el conductor tiene la llanta de repuesto pero no sabe cambiarla o no tiene herramientas.",
+  },
+  {
+    key: MechanicSubService.TireInflation,
+    description: "Si la llanta está baja pero no pinchada.",
+  },
+  {
+    key: MechanicSubService.FlatTireAssistance,
+    description: "Parche rápido o ayuda para instalar la de repuesto.",
+  },
+  {
+    key: MechanicSubService.FuelDelivery,
+    description: "Cuando alguien se queda sin gasolina.",
+  },
+  {
+    key: MechanicSubService.VehicleUnlock,
+    description: "Cuando el conductor deja las llaves dentro del auto.",
+  },
+  {
+    key: MechanicSubService.ObdScan,
+    description: "Diagnóstico con escáner OBD.",
+  },
+  {
+    key: MechanicSubService.HomeQuickCheck,
+    description:
+      "Revisión de aceite, refrigerante, líquido de frenos, batería, presión de llantas, luces y fugas visibles (10–15 min).",
+  },
+];
+
 export const userReqTypes = {
   driver: toCapitalize(DRIVER),
   mechanical: "Mecánico",
-  tow: "Operador de Grúa",
+  tow: "Remolque",
   laundry: "Lavadero",
 };
 
@@ -77,7 +139,16 @@ export interface UserRequest {
   location?: Locations; // just if user does not have a location registered yet.
   vehicles?: Vehicle[]; // vehicles that are in the request
   policeRecordsPdf?: RefAttachment;
+  policeRecordPendingByChat?: boolean;
+  driverExperience?: string;
+  towVehiclePhoto?: RefAttachment;
+  towExperience?: string;
   mechanicTools?: string;
+  mechanicSubServices?: MechanicSubService[];
+  mechanicToolEvidences?: MechanicToolEvidence[];
+  mechanicTechnicalTitle?: TechnicalTitleEvidence;
+  mechanicExperience?: string;
+  isMechanicUpdateRequest?: boolean;
 }
 
 export const emptyVehicleCar: Vehicle = {
@@ -131,6 +202,8 @@ export const driveReqBuilder = (
   gender: Gender,
   driverEnterprise: string | undefined,
   pdfRef?: RefAttachment,
+  policeRecordPendingByChat?: boolean,
+  driverExperience?: string,
 ): UserRequest => {
   let userRequest: UserRequest = {
     id,
@@ -148,6 +221,7 @@ export const driveReqBuilder = (
     vehicles,
     gender,
     bloodType,
+    driverExperience,
   };
 
   if (driverEnterprise) {
@@ -161,6 +235,13 @@ export const driveReqBuilder = (
     userRequest = {
       ...userRequest,
       policeRecordsPdf: pdfRef,
+    };
+  }
+
+  if (policeRecordPendingByChat) {
+    userRequest = {
+      ...userRequest,
+      policeRecordPendingByChat,
     };
   }
 
@@ -198,41 +279,47 @@ export const mechanicReqBuilder = (
   location: Locations,
   mechanicalWorkShop: string | undefined,
   mechanicTools: string,
+  mechanicSubServices: MechanicSubService[],
+  mechanicToolEvidences: MechanicToolEvidence[],
+  mechanicTechnicalTitle?: TechnicalTitleEvidence,
+  mechanicExperience?: string,
+  isMechanicUpdateRequest?: boolean,
 ): UserRequest => {
+  let mechanicReq: UserRequest = {
+    id,
+    userId,
+    newFullName,
+    homeAddress,
+    addressPhoto,
+    newProfilePhotoImgUrl,
+    aproved: false,
+    active: true,
+    reviewedByHistory: [],
+    realTimePhotoImgUrl,
+    services: services,
+    location,
+    mechanicTools,
+    mechanicSubServices,
+    mechanicToolEvidences,
+    mechanicExperience,
+    isMechanicUpdateRequest,
+  };
+
   if (mechanicalWorkShop) {
-    return {
-      id,
-      userId,
-      newFullName,
-      homeAddress,
-      addressPhoto,
-      newProfilePhotoImgUrl,
-      aproved: false,
-      active: true,
-      reviewedByHistory: [],
-      realTimePhotoImgUrl,
-      services: services,
-      location,
+    mechanicReq = {
+      ...mechanicReq,
       mechanicalWorkShop,
-      mechanicTools,
-    };
-  } else {
-    return {
-      id,
-      userId,
-      newFullName,
-      homeAddress,
-      addressPhoto,
-      newProfilePhotoImgUrl,
-      aproved: false,
-      active: true,
-      reviewedByHistory: [],
-      realTimePhotoImgUrl,
-      services: services,
-      location,
-      mechanicTools,
     };
   }
+
+  if (mechanicTechnicalTitle) {
+    mechanicReq = {
+      ...mechanicReq,
+      mechanicTechnicalTitle,
+    };
+  }
+
+  return mechanicReq;
 };
 
 export const laundryReqBuilder = (
@@ -277,8 +364,10 @@ export const towReqBuilder = (
   location: Locations,
   vehicles: Vehicle[],
   pdfRef: RefAttachment,
+  towVehiclePhoto?: RefAttachment,
+  towExperience?: string,
 ): UserRequest => {
-  return {
+  let towReq: UserRequest = {
     id,
     userId,
     newFullName,
@@ -294,5 +383,15 @@ export const towReqBuilder = (
     towEnterprite: towEnterprite,
     vehicles,
     policeRecordsPdf: pdfRef,
+    towExperience,
   };
+
+  if (towVehiclePhoto) {
+    towReq = {
+      ...towReq,
+      towVehiclePhoto,
+    };
+  }
+
+  return towReq;
 };
