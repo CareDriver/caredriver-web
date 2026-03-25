@@ -24,7 +24,6 @@
     "@types/js-cookie": "^3.0.6",
     "browser-image-compression": "^2.0.2",
     "firebase": "^10.9.0",
-    "firebase-admin": "^12.1.0",
     "generate-verification-code": "^1.0.2",
     "google-libphonenumber": "^3.2.34",
     "js-cookie": "^3.0.5",

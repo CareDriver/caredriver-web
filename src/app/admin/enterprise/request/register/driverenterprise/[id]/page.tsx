@@ -15,4 +15,8 @@ const Page = ({ params }: { params: any }) => {
   );
 };
 
+export function generateStaticParams() {
+  return [{ id: "_" }];
+}
+
 export default Page;

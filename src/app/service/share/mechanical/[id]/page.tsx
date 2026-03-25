@@ -4,4 +4,8 @@ const Page = ({ params }: { params: any }) => {
   return <SharedServiceViewWithLoader id={params.id} type="mechanical" />;
 };
 
+export function generateStaticParams() {
+  return [{ id: "_" }];
+}
+
 export default Page;

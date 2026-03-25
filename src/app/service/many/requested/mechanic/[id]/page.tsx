@@ -2,19 +2,27 @@ import { TypeOfServicePerformed } from "@/components/app_modules/services_perfor
 import ListOfServicesPerfByUser from "@/components/app_modules/services_performed/view/lists_of_cards/ListOfServicesPerfByUser";
 import ConsentForm from "@/components/guards/views/consent_forms/ConsentForm";
 import GuardForServices from "@/components/guards/views/page_guards/concrets/GuardForServices";
+import PageLoading from "@/components/loaders/PageLoading";
+import { Suspense } from "react";
 
 const Page = ({ params }: { params: any }) => {
   return (
-    <GuardForServices serviceType="mechanical">
-      <ConsentForm moduleTarget="userinfo" id={params.id}>
-        <ListOfServicesPerfByUser
-          userId={params.id}
-          typeOfService="mechanical"
-          typeOfPerf={TypeOfServicePerformed.Requested}
-        />
-      </ConsentForm>
-    </GuardForServices>
+    <Suspense fallback={<PageLoading />}>
+      <GuardForServices serviceType="mechanical">
+        <ConsentForm moduleTarget="userinfo" id={params.id}>
+          <ListOfServicesPerfByUser
+            userId={params.id}
+            typeOfService="mechanical"
+            typeOfPerf={TypeOfServicePerformed.Requested}
+          />
+        </ConsentForm>
+      </GuardForServices>
+    </Suspense>
   );
 };
+
+export function generateStaticParams() {
+  return [{ id: "_" }];
+}
 
 export default Page;
