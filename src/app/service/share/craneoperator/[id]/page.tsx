@@ -1,10 +1,10 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useRouteId } from "@/hooks/useRouteId";
 import SharedServiceViewWithLoader from "@/components/app_modules/services_performed/view/control_panels/SharedServiceViewWithLoader";
 
 const Page = () => {
-  const { id } = useParams() as { id: string };
+  const id = useRouteId();
   return <SharedServiceViewWithLoader id={id} type="tow" />;
 };
 

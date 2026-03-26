@@ -4,9 +4,11 @@ const analyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
+const isProduction = process.env.NODE_ENV === "production";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
+  output: isProduction ? "export" : undefined,
   trailingSlash: true,
   images: {
     unoptimized: true,
