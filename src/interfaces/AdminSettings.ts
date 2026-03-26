@@ -182,6 +182,7 @@ const DEFAULT_SERVICE_CONFIGS_BY_LOCATION = (): Record<
     [Locations.CochabambaBolivia]: defaultServiceConfigs,
     [Locations.SantaCruzBolivia]: defaultServiceConfigs,
     [Locations.LaPazBolivia]: defaultServiceConfigs,
+    [Locations.ElAltoBolivia]: defaultServiceConfigs,
     [Locations.TarijaBolivia]: defaultServiceConfigs,
     [Locations.ChuquisacaBolivia]: defaultServiceConfigs,
     [Locations.PotosiBolivia]: defaultServiceConfigs,
@@ -225,6 +226,14 @@ const DEFAULT_AVAILABLE_SERVICES_BY_LOCATION = (): Record<
       },
     },
     [Locations.LaPazBolivia]: {
+      activeServices: [],
+      upcomingServices: allAppServices,
+      mechanicSubServices: {
+        active: [],
+        upcoming: allMechanicSubServices,
+      },
+    },
+    [Locations.ElAltoBolivia]: {
       activeServices: [],
       upcomingServices: allAppServices,
       mechanicSubServices: {

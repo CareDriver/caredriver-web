@@ -2,6 +2,7 @@ export enum Locations {
   CochabambaBolivia = "Cochabamba, Bolivia",
   SantaCruzBolivia = "Santa Cruz, Bolivia",
   LaPazBolivia = "La Paz, Bolivia",
+  ElAltoBolivia = "El Alto, Bolivia",
   TarijaBolivia = "Tarija, Bolivia",
   ChuquisacaBolivia = "Chuquisaca, Bolivia",
   PotosiBolivia = "Potosí, Bolivia",
@@ -14,6 +15,7 @@ export const locationList = [
   Locations.CochabambaBolivia,
   Locations.SantaCruzBolivia,
   Locations.LaPazBolivia,
+  Locations.ElAltoBolivia,
   Locations.TarijaBolivia,
   Locations.ChuquisacaBolivia,
   Locations.PotosiBolivia,
@@ -30,6 +32,8 @@ export function abbreviateLocation(location: Locations): string {
       return "SCZ";
     case Locations.LaPazBolivia:
       return "LPB";
+    case Locations.ElAltoBolivia:
+      return "EAL";
     case Locations.TarijaBolivia:
       return "TJA";
     case Locations.ChuquisacaBolivia:
@@ -57,6 +61,8 @@ export function locationFromAbbreviation(
       return Locations.SantaCruzBolivia;
     case "LPB":
       return Locations.LaPazBolivia;
+    case "EAL":
+      return Locations.ElAltoBolivia;
     case "TJA":
       return Locations.TarijaBolivia;
     case "CHU":
@@ -88,6 +94,9 @@ export function flagOfLocation(location: Locations): string {
       break;
     case Locations.LaPazBolivia:
       path = "la-paz.png";
+      break;
+    case Locations.ElAltoBolivia:
+      path = "el-alto.png";
       break;
     case Locations.OruroBolivia:
       path = "oruro.png";

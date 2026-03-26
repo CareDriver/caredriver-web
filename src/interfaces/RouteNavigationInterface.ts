@@ -55,6 +55,7 @@ export const RTDBLocationsCodes: Record<Locations, string> = {
   [Locations.CochabambaBolivia]: "cbba-bolivia",
   [Locations.SantaCruzBolivia]: "stz-bolivia",
   [Locations.LaPazBolivia]: "lpz-bolivia",
+  [Locations.ElAltoBolivia]: "eal-bolivia",
   [Locations.TarijaBolivia]: "tja-bolivia",
   [Locations.ChuquisacaBolivia]: "ch-bolivia",
   [Locations.PotosiBolivia]: "pt-bolivia",

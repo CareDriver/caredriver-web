@@ -47,7 +47,7 @@ Documentos vigentes (estructura v2 por ubicación):
 
 ```ts
 {
-  serviceType: ServicesApp, // "Conductor" | "Mecánico" | "Remolque" | "Lavadero"
+  serviceType: ServicesApp, // ServicesApp.Driver="Conductor" | ServicesApp.Mechanic="Mecánico" | ServicesApp.Tow="Remolque" | ServicesApp.CarWash="Lavadero"
   pricingMode: "recommended" | "range" | "fixed",
   defaultRecommendedPrice?: number,
   recommendedPriceFormula?: string, // ej: "46 + 5 * z - 0.0402 * z**2 + 0.000681 * z**3"
@@ -76,6 +76,26 @@ Documentos vigentes (estructura v2 por ubicación):
       }
     }
   }
+}
+```
+
+### TemporalPricingRule
+
+```ts
+{
+  id: string,
+  serviceType: ServicesApp, // ServicesApp.Driver="Conductor" | ServicesApp.Mechanic="Mecánico" | ServicesApp.Tow="Remolque" | ServicesApp.CarWash="Lavadero"
+  startAtIso: string,
+  endAtIso: string,
+  location?: Locations,
+  userCreatedBeforeIso?: string,
+  pricingMode: "recommended" | "range" | "fixed",
+  recommendedPrice?: number,
+  range?: { min: number, max: number },
+  commissionPercent?: number,
+  fixedCommissionBs?: number,
+  active: boolean,
+  note?: string
 }
 ```
 
@@ -128,10 +148,10 @@ Documentos vigentes (estructura v2 por ubicación):
 ### Estado inicial configurado
 
 - Cochabamba: activo solo `Conductor`; resto de servicios en `upcoming`.
-- Santa Cruz y La Paz: todos los servicios en `upcoming`.
+- Santa Cruz, La Paz y El Alto: todos los servicios en `upcoming`.
 - Resto de departamentos: vacío.
 - Subservicios mecánicos:
-  - Cochabamba / Santa Cruz / La Paz: en `upcoming`.
+  - Cochabamba / Santa Cruz / La Paz / El Alto: en `upcoming`.
   - Resto: vacío.
 
 ---
