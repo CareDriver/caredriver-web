@@ -277,6 +277,11 @@ const AdminServiceCard = ({
         timestamp: canceledAtTimestamp,
       },
       {
+        key: "priceUpdatedAt",
+        label: "Precio actualizado",
+        timestamp: normalizeTimestamp(service.priceUpdatedAt as TimestampLike),
+      },
+      {
         key: "dateTime",
         label: "Hora programada",
         timestamp: normalizeTimestamp(service.dateTime as TimestampLike),

@@ -47,7 +47,7 @@ Documentos vigentes (estructura v2 por ubicación):
 
 ```ts
 {
-  serviceType: "driver" | "mechanical" | "tow" | "laundry",
+  serviceType: ServicesApp, // "Conductor" | "Mecánico" | "Remolque" | "Lavadero"
   pricingMode: "recommended" | "range" | "fixed",
   defaultRecommendedPrice?: number,
   recommendedPriceFormula?: string, // ej: "46 + 5 * z - 0.0402 * z**2 + 0.000681 * z**3"

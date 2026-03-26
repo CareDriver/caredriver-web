@@ -36,6 +36,7 @@ export interface ServiceRequestInterface {
   canceled?: boolean; // true if the request was canceled
   createdAt?: Timestamp;
   acceptedAt?: Timestamp;
+  priceUpdatedAt?: Timestamp; // time when user updated the price if elegible
   willArrivedAt?: Timestamp; // aprox date that service user will arrive (taking time in account)
   sharing?: Timestamp | false;
   price?: {

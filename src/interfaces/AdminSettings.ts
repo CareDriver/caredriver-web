@@ -1,5 +1,6 @@
 import { Locations } from "./Locations";
-import { Services, ServiceType } from "./Services";
+import { Services } from "./Services";
+import { ServicesApp } from "./ServiceRequestInterface";
 import { MECHANIC_SUB_SERVICES, MechanicSubService } from "./UserRequest";
 
 export type PricingMode = "recommended" | "range" | "fixed";
@@ -10,7 +11,7 @@ export interface PriceRange {
 }
 
 export interface ServicePricingConfig {
-  serviceType: ServiceType;
+  serviceType: ServicesApp;
   pricingMode: PricingMode;
   defaultRecommendedPrice?: number;
   recommendedPriceFormula?: string;
@@ -52,7 +53,7 @@ export interface ServicePricingConfig {
 
 export interface TemporalPricingRule {
   id: string;
-  serviceType: ServiceType;
+  serviceType: ServicesApp;
   startAtIso: string;
   endAtIso: string;
   location?: Locations;
@@ -143,7 +144,7 @@ const DEFAULT_SERVICE_CONFIGS_BY_LOCATION = (): Record<
 
   const defaultServiceConfigs: ServicePricingConfig[] = [
     {
-      serviceType: "driver",
+      serviceType: ServicesApp.Driver,
       pricingMode: "recommended",
       recommendedPriceFormula: "46 + 5 * z - 0.0402 * z**2 + 0.000681 * z**3",
       formulaVariable: "z",
@@ -151,7 +152,7 @@ const DEFAULT_SERVICE_CONFIGS_BY_LOCATION = (): Record<
       defaultCommissionPercent: 13,
     },
     {
-      serviceType: "mechanical",
+      serviceType: ServicesApp.Mechanic,
       pricingMode: "range",
       defaultRecommendedPrice: 45,
       defaultRange: { min: 20, max: 150 },
@@ -160,14 +161,14 @@ const DEFAULT_SERVICE_CONFIGS_BY_LOCATION = (): Record<
       mechanicSubServiceRanges: mechanicSubServiceRangesDefault,
     },
     {
-      serviceType: "laundry",
+      serviceType: ServicesApp.CarWash,
       pricingMode: "range",
       defaultRecommendedPrice: 120,
       defaultCommissionPercent: 12,
       defaultRange: { min: 50, max: 300 },
     },
     {
-      serviceType: "tow",
+      serviceType: ServicesApp.Tow,
       pricingMode: "recommended",
       defaultRecommendedPrice: 180,
       recommendedPriceFormula: "46 + 5 * z - 0.0402 * z**2 + 0.000681 * z**3",
