@@ -24,12 +24,12 @@ const ListOfRequestsHistoryServerUser = ({ type }: { type: ServiceType }) => {
   const collection: CollectionReference = getServiceCollection(type);
 
   useEffect(() => {
-    getAllHistoryData(collection)
-      .then(setAllData)
-      .catch(console.error);
+    getAllHistoryData(collection).then(setAllData).catch(console.error);
   }, []);
 
-  const numPages = allData ? Math.max(1, Math.ceil(allData.length / PAGE_SIZE)) : null;
+  const numPages = allData
+    ? Math.max(1, Math.ceil(allData.length / PAGE_SIZE))
+    : null;
 
   const pageData = useMemo(() => {
     if (!allData) return [];

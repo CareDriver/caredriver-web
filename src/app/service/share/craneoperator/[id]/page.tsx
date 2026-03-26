@@ -1,16 +1,11 @@
-import ClientIdPage from "@/components/guards/ClientIdPage";
+"use client";
+
+import { useParams } from "next/navigation";
 import SharedServiceViewWithLoader from "@/components/app_modules/services_performed/view/control_panels/SharedServiceViewWithLoader";
 
 const Page = () => {
-  return (
-    <ClientIdPage>
-      {(id) => <SharedServiceViewWithLoader id={id} type="tow" />}
-    </ClientIdPage>
-  );
+  const { id } = useParams() as { id: string };
+  return <SharedServiceViewWithLoader id={id} type="tow" />;
 };
-
-export function generateStaticParams() {
-  return [{ id: "_" }];
-}
 
 export default Page;
