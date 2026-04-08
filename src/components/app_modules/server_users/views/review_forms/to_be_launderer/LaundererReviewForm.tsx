@@ -136,6 +136,7 @@ const LaundererReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
             userToUpdate.homeAddress = currentReq.homeAddress;
             userToUpdate.bloodType =
               currentReq.bloodType ?? BloodTypes.OPositive;
+            userToUpdate.location = currentReq.location;
 
             await updateUser(currentReq.userId, userToUpdate);
             if (enterprise && wasApproved) {

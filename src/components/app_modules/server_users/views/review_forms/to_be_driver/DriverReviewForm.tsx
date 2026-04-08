@@ -264,6 +264,7 @@ const DriverReviewForm = ({ serviceReq }: { serviceReq: UserRequest }) => {
             userToUpdate.addressPhoto = req.addressPhoto as RefAttachment;
             userToUpdate.homeAddress = req.homeAddress;
             userToUpdate.bloodType = req.bloodType ?? BloodTypes.OPositive;
+            userToUpdate.location = req.location;
 
             await updateUser(serviceReq.userId, userToUpdate);
             if (enterprise && wasApproved) {

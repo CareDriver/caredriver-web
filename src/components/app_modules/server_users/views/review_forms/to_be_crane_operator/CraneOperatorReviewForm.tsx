@@ -203,6 +203,7 @@ const CraneOperatorReviewForm = ({
             userToUpdate.homeAddress = currentReq.homeAddress;
             userToUpdate.bloodType =
               currentReq.bloodType ?? BloodTypes.OPositive;
+            userToUpdate.location = currentReq.location;
 
             if (wasApproved) {
               userToUpdate = await setFirstService(
