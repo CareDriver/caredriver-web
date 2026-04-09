@@ -140,6 +140,8 @@ interface EnterpriseFormState {
   name: TextField;
   logo: AttachmentField;
   description: TextField;
+  phone: TextField;
+  phoneCountryCode: TextField;
   latitude: TextField;
   longitude: TextField;
   // Mechanic
@@ -583,6 +585,12 @@ const NewEnterpriseRequestForm: React.FC<Props> = ({ type }) => {
           description: isValidTextField(form.description)
             ? form.description.value.trim()
             : undefined,
+          phone: isValidTextField(form.phone)
+            ? form.phone.value.trim()
+            : undefined,
+          phoneCountryCode: isValidTextField(form.phoneCountryCode)
+            ? form.phoneCountryCode.value.trim()
+            : undefined,
           latitude: isValidTextField(form.latitude)
             ? parseFloat(form.latitude.value)
             : undefined,
@@ -786,6 +794,54 @@ const NewEnterpriseRequestForm: React.FC<Props> = ({ type }) => {
             />
             <legend className="form-section-legend">
               Descripción (Opcional)
+            </legend>
+          </fieldset>
+
+          <fieldset className="form-section margin-top-10">
+            <input
+              type="tel"
+              className="form-section-input"
+              value={form.phone.value}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  phone: {
+                    ...prev.phone,
+                    value: e.target.value,
+                    message: null,
+                  },
+                }))
+              }
+              placeholder={isFocused("phone") ? "Ej: 77712345" : ""}
+              onFocus={() => setFocus("phone", true)}
+              onBlur={() => setFocus("phone", false)}
+            />
+            <legend className="form-section-legend">
+              Teléfono de la empresa (Opcional)
+            </legend>
+          </fieldset>
+
+          <fieldset className="form-section margin-top-10">
+            <input
+              type="text"
+              className="form-section-input"
+              value={form.phoneCountryCode.value}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  phoneCountryCode: {
+                    ...prev.phoneCountryCode,
+                    value: e.target.value,
+                    message: null,
+                  },
+                }))
+              }
+              placeholder="Ej: +591"
+              onFocus={() => setFocus("phoneCC", true)}
+              onBlur={() => setFocus("phoneCC", false)}
+            />
+            <legend className="form-section-legend">
+              Código de país (Opcional)
             </legend>
           </fieldset>
 
@@ -1891,6 +1947,8 @@ function createDefaultForm(type: ServiceType): EnterpriseFormState {
     name: DEFAUL_TEXT_FIELD,
     logo: DEFAUL_ATTACHMENT_FIELD,
     description: DEFAUL_TEXT_FIELD,
+    phone: DEFAUL_TEXT_FIELD,
+    phoneCountryCode: { ...DEFAUL_TEXT_FIELD, value: "+591" },
     latitude: DEFAUL_TEXT_FIELD,
     longitude: DEFAUL_TEXT_FIELD,
     mechanicTools: DEFAUL_TEXT_FIELD,

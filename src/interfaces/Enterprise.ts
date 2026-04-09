@@ -207,6 +207,9 @@ export interface EnterpriseRequest {
   // Tow-specific
   towVehiclePhotos?: RefAttachment[];
 
+  phone?: string;
+  phoneCountryCode?: string;
+
   createdAt: Timestamp;
 }
 
@@ -241,6 +244,8 @@ export const buildEnterpriseRequest = (
     mechanicToolEvidences?: MechanicToolEvidence[];
     carWashServiceMode?: CarWashServiceMode;
     towVehiclePhotos?: RefAttachment[];
+    phone?: string;
+    phoneCountryCode?: string;
   },
 ): EnterpriseRequest => {
   const adminIds = members
@@ -273,6 +278,8 @@ export const buildEnterpriseRequest = (
     mechanicToolEvidences: opts?.mechanicToolEvidences,
     carWashServiceMode: opts?.carWashServiceMode,
     towVehiclePhotos: opts?.towVehiclePhotos,
+    phone: opts?.phone,
+    phoneCountryCode: opts?.phoneCountryCode,
   };
 };
 
@@ -304,6 +311,8 @@ export const buildDefaultEnterprise = (
     mechanicToolEvidences: request.mechanicToolEvidences,
     carWashServiceMode: request.carWashServiceMode,
     towVehiclePhotos: request.towVehiclePhotos,
+    phone: request.phone,
+    phoneCountryCode: request.phoneCountryCode,
     currentDebt: { currency: "Bs. (BOB)", amount: -40 },
     createdAt: request.createdAt,
     approvedAt: Timestamp.now(),

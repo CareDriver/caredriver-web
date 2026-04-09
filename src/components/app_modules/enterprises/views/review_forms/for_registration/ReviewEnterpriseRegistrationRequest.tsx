@@ -139,6 +139,13 @@ const ReviewEnterpriseRegistrationRequest: React.FC<Props> = ({ request }) => {
                 <b>Descripción:</b> {request.description}
               </p>
             )}
+            {request.phone && (
+              <p className="text margin-top-5">
+                <b>Teléfono:</b>{" "}
+                {request.phoneCountryCode ? `${request.phoneCountryCode} ` : ""}
+                {request.phone}
+              </p>
+            )}
             {request.location && (
               <p className="text margin-top-5">
                 <b>Ubicación:</b> {request.location}
