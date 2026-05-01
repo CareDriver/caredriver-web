@@ -38,17 +38,20 @@ import {
   CheckField,
   DateField as DateFieldType,
   EntityDataFieldMandatory,
+  GeoPointField,
   TextField,
 } from "@/components/form/models/FormFields";
 import {
   DEFAUL_ATTACHMENT_FIELD,
   DEFAUL_DATE_FIELD,
+  DEFAUL_GEOPOINT_FIELD,
   DEFAUL_TEXT_FIELD,
   DEFAULT_CHECK_FIELD,
   createEntityDataFieldMandatory,
 } from "@/components/form/models/DefaultFields";
 import {
   isValidAttachmentField,
+  isValidGeoPointField,
   isValidTextField,
 } from "@/components/form/validators/FieldValidators";
 import { generateKeywords } from "@/utils/helpers/StringHelper";
@@ -68,6 +71,7 @@ import {
 } from "@/interfaces/VehicleInterface";
 import TransmissionField from "@/components/form/view/fields/TransmissionField";
 import CCheckField from "@/components/form/view/fields/CheckField";
+import MapLocationField from "@/components/form/view/fields/MapLocationField";
 import ChevronDown from "@/icons/ChevronDown";
 import Car from "@/icons/Car";
 import AddressCar from "@/icons/AddressCar";
@@ -142,8 +146,7 @@ interface EnterpriseFormState {
   description: TextField;
   phone: TextField;
   phoneCountryCode: TextField;
-  latitude: TextField;
-  longitude: TextField;
+  coordinates: GeoPointField;
   // Mechanic
   mechanicTools: TextField;
   mechanicSubServices: MechanicSubService[];
@@ -591,12 +594,7 @@ const NewEnterpriseRequestForm: React.FC<Props> = ({ type }) => {
           phoneCountryCode: isValidTextField(form.phoneCountryCode)
             ? form.phoneCountryCode.value.trim()
             : undefined,
-          latitude: isValidTextField(form.latitude)
-            ? parseFloat(form.latitude.value)
-            : undefined,
-          longitude: isValidTextField(form.longitude)
-            ? parseFloat(form.longitude.value)
-            : undefined,
+          coordinates: form.coordinates.value ?? undefined,
           location: user.location ?? Locations.CochabambaBolivia,
           mechanicSubServices:
             type === "mechanical" ? form.mechanicSubServices : undefined,
@@ -845,54 +843,13 @@ const NewEnterpriseRequestForm: React.FC<Props> = ({ type }) => {
             </legend>
           </fieldset>
 
-          <div className="row-wrapper | gap-10 margin-top-10">
-            <fieldset className="form-section" style={{ flex: 1 }}>
-              <input
-                type="text"
-                className="form-section-input"
-                value={form.latitude.value}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    latitude: {
-                      ...prev.latitude,
-                      value: e.target.value,
-                      message: null,
-                    },
-                  }))
-                }
-                placeholder={isFocused("lat") ? "Ej: -17.3935" : ""}
-                onFocus={() => setFocus("lat", true)}
-                onBlur={() => setFocus("lat", false)}
-              />
-              <legend className="form-section-legend">
-                Latitud (Opcional)
-              </legend>
-            </fieldset>
-            <fieldset className="form-section" style={{ flex: 1 }}>
-              <input
-                type="text"
-                className="form-section-input"
-                value={form.longitude.value}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    longitude: {
-                      ...prev.longitude,
-                      value: e.target.value,
-                      message: null,
-                    },
-                  }))
-                }
-                placeholder={isFocused("lng") ? "Ej: -66.1570" : ""}
-                onFocus={() => setFocus("lng", true)}
-                onBlur={() => setFocus("lng", false)}
-              />
-              <legend className="form-section-legend">
-                Longitud (Opcional)
-              </legend>
-            </fieldset>
-          </div>
+          <MapLocationField
+            field={{
+              values: form.coordinates,
+              setter: (d) => setForm((prev) => ({ ...prev, coordinates: d })),
+            }}
+            legend="Ubicación de la empresa (Opcional)"
+          />
         </div>
 
         {/* ── Car wash service mode ──────────────────────────────── */}
@@ -1949,8 +1906,7 @@ function createDefaultForm(type: ServiceType): EnterpriseFormState {
     description: DEFAUL_TEXT_FIELD,
     phone: DEFAUL_TEXT_FIELD,
     phoneCountryCode: { ...DEFAUL_TEXT_FIELD, value: "+591" },
-    latitude: DEFAUL_TEXT_FIELD,
-    longitude: DEFAUL_TEXT_FIELD,
+    coordinates: DEFAUL_GEOPOINT_FIELD,
     mechanicTools: DEFAUL_TEXT_FIELD,
     mechanicSubServices: [],
     carWashServiceMode: null,

@@ -40,7 +40,12 @@ const ListOfEnterpriseRegistrationRequests = ({
       .then((pages) => {
         setPages(pages);
       })
-      .catch(() => {});
+      .catch((err) => {
+        console.error(
+          "[EnterpriseRequests] Error al obtener número de páginas:",
+          err,
+        );
+      });
   }, [type]);
 
   useEffect(() => {
@@ -53,7 +58,12 @@ const ListOfEnterpriseRegistrationRequests = ({
         }
         setLastDoc(result.lastDoc);
       })
-      .catch(() => {});
+      .catch((err) => {
+        console.error(
+          "[EnterpriseRequests] Error al obtener solicitudes:",
+          err,
+        );
+      });
   }, [page, type]);
 
   if (!data) {
