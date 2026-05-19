@@ -24,6 +24,7 @@ import CurrentEnterpriseDebt from "../../data_renderers/CurrentEnterpriseDebt";
 import EnterprisePaidDebtHistoryRenderer from "../../data_renderers/EnterprisePaidDebtHistoryRenderer";
 import EnterpriseComissionHistoryRenderer from "../../data_renderers/EnterpriseComissionHistoryRenderer";
 import FormToPaidEnterpriseDebt from "../../request_forms/to_manage_debt/FormToPaidEnterpriseDebt";
+import CarWashEnterprisePanel from "../CarWashEnterprisePanel";
 
 interface Props {
   id: string;
@@ -95,6 +96,10 @@ const EnterprisePanelForAdmin: React.FC<Props> = ({ id }) => {
               setView: serView,
             }}
           />
+
+          {enterprise.type === "laundry" && (
+            <CarWashEnterprisePanel enterprise={enterprise} />
+          )}
 
           {enterprise.commition && (
             <>

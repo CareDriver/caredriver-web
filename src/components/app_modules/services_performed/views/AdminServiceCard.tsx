@@ -353,7 +353,54 @@ const AdminServiceCard = ({
           {getServiceStatusLabel(service)}
         </span>
         <span className="service-type-badge">{getServiceTypeSpanish()}</span>
+        {service.serviceUserOnTheWay && !service.started && (
+          <span
+            className="service-status-chip"
+            style={{ background: "#2563eb", color: "#fff" }}
+            title={
+              service.driverEnRouteAt
+                ? `En camino desde las ${normalizeTimestamp(
+                    service.driverEnRouteAt as TimestampLike,
+                  )
+                    ?.toDate()
+                    .toLocaleTimeString("es-BO", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}`
+                : "En camino"
+            }
+          >
+            🛣️ En camino
+          </span>
+        )}
+        {service.isImmediate === false && (
+          <span
+            className="service-status-chip"
+            style={{ background: "#7c3aed", color: "#fff" }}
+          >
+            📅 Programado
+          </span>
+        )}
       </div>
+
+      {/* Scheduled date/time */}
+      {service.isImmediate === false && service.scheduledDateTime && (
+        <div
+          style={{
+            padding: "6px 10px",
+            borderRadius: 6,
+            background: "#1e1b4b",
+            marginBottom: 8,
+            color: "#fff",
+            fontSize: 13,
+          }}
+        >
+          Fecha programada:{" "}
+          <strong>
+            {timestampDateInSpanishWithHour(service.scheduledDateTime as any)}
+          </strong>
+        </div>
+      )}
 
       {/* Usuario Solicitante */}
       <div className="admin-service-user-section">

@@ -12,6 +12,8 @@ import LogoutOption from "../sidebar_options/LogoutOption";
 import RedirectToService from "../sidebar_options/RedirectToService";
 import ServicesOption from "../sidebar_options/ServicesOption";
 import AdminPricingSettingsOption from "../sidebar_options/AdminPricingSettingsOption";
+import ProviderMapOption from "../sidebar_options/ProviderMapOption";
+import NearbyProvidersOption from "../sidebar_options/NearbyProvidersOption";
 
 const AdminSideBar = ({
   pathname,
@@ -35,6 +37,8 @@ const AdminSideBar = ({
         <AddNewUserOption pathname={pathname} />
         <RedirectToService />
         <ServicesOption pathname={pathname} />
+        <ProviderMapOption pathname={pathname} />
+        <NearbyProvidersOption pathname={pathname} />
         <AdminPricingSettingsOption pathname={pathname} />
       </li>
       <div>

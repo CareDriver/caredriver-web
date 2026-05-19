@@ -62,6 +62,83 @@ export const CarWashServiceModeRender: Record<CarWashServiceMode, string> = {
   [CarWashServiceMode.Both]: "Ambas modalidades",
 };
 
+// ─── CarWash Plans & Schedule ────────────────────────────────────────────────
+export type VehicleSize = "small" | "medium" | "large" | "suv";
+export const VEHICLE_SIZE_LABEL: Record<VehicleSize, string> = {
+  small: "Pequeño",
+  medium: "Mediano",
+  large: "Grande",
+  suv: "SUV / 4x4",
+};
+
+export interface CarWashPriceBySize {
+  size: VehicleSize;
+  price: number;
+}
+
+export interface CarWashZonePricing {
+  zoneId: string;
+  zoneName: string;
+  pricesBySize: CarWashPriceBySize[];
+}
+
+export interface CarWashPlan {
+  id: string;
+  name: string;
+  description?: string;
+  durationMinutes: number;
+  pricesBySize: CarWashPriceBySize[];
+  zonePricing?: CarWashZonePricing[]; // optional distance-based zones
+  active: boolean;
+}
+
+export interface CarWashAvailabilitySlot {
+  dayOfWeek: 0 | 1 | 2 | 3 | 4 | 5 | 6; // JS Date.getDay()
+  startTime: string; // "HH:mm"
+  endTime: string; // "HH:mm"
+  maxServicesPerSlot: number;
+}
+
+export interface CarWashScheduleConfig {
+  availabilitySlots: CarWashAvailabilitySlot[];
+  blockedDates?: string[]; // ["YYYY-MM-DD", ...]
+  rescheduleLeadTimeHours: number;
+  cancelLeadTimeHours: number;
+  maxBookAheadHours?: number; // 1–24h, default 24
+}
+
+// ─── CarWash Booking (carwash-bookings collection) ───────────────────────────
+export interface CarWashBooking {
+  id?: string;
+  userId: string;
+  enterprise: string; // Enterprise doc ID
+  requestUserData: {
+    fullName: string;
+    phoneNumber: string;
+  };
+  confirmedVehicleSize: VehicleSize;
+  carWashPlanId: string;
+  carWashZoneId?: string;
+  scheduledDateTime: Timestamp;
+  scheduledDate: string; // "YYYY-MM-DD"
+  accepted: boolean;
+  canceled: boolean;
+  canceledBy?: "client" | "serviceUser";
+  finished: boolean;
+  finishedAt?: Timestamp;
+  carWashBookingConfirmedAt?: Timestamp;
+  carWashBookingConfirmedBy?: string;
+  carWashRescheduleRequestedAt?: Timestamp;
+  carWashUserRatedEnterprise?: boolean;
+  carWashUserRating?: number;
+  carWashEnterpriseRatedUser?: boolean;
+  carWashEnterpriseRating?: number;
+  // En camino
+  serviceUserOnTheWay?: boolean;
+  driverEnRouteAt?: Timestamp;
+  createdAt?: Timestamp;
+}
+
 /**
  * Represents a member (admin or collaborator) of an enterprise.
  * - All admins MUST provide personal data (carnet, factura de luz, dirección).
@@ -149,6 +226,11 @@ export interface Enterprise extends EnterpriseData {
 
   // Car wash-specific
   carWashServiceMode?: CarWashServiceMode;
+  carWashPlans?: CarWashPlan[];
+  carWashScheduleConfig?: CarWashScheduleConfig;
+  carWashCancellationsMonth?: number;
+  carWashCancellationsMonthRef?: Timestamp;
+  carWashMaxMonthlyCancellations?: number;
 
   // Tow-specific: enterprise fleet photos
   towVehiclePhotos?: RefAttachment[];

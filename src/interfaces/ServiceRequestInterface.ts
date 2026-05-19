@@ -73,8 +73,12 @@ export interface ServiceRequestInterface {
     serviceData?: ServicesDataInterface; // The data of the normal service for the request user (rating, comments, etc)
   };
   serviceUserOnTheWay?: boolean; // Indicates if the service user is already going to the pickup location
+  driverEnRouteAt?: Timestamp; // Timestamp when driver marked "en camino"
   // true by default
   serviceUserArrived?: boolean; // Indicates if the service user already arrived to the pickup location
+  // Scheduled service fields (release 2.0.0)
+  scheduledDateTime?: Timestamp; // Only when isImmediate === false
+
   proposalId?: string; // the id  of the accepted proposal
   serviceUserAlreadyRated?: boolean; // If the service user was already rated by the normal user
   requestUserAlreadyRated?: boolean; // If the normal user was already rated by the service user

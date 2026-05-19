@@ -12,6 +12,43 @@ import {
 import { Branding } from "./BrandingInterface";
 import { BloodTypes } from "./BloodTypes";
 
+// ─── Provider availability config ───────────────────────────────────────────
+export interface DayAvailabilitySlot {
+  startTime: string; // "HH:mm" (24h)
+  endTime: string; // "HH:mm" (24h)
+}
+
+export interface DayAvailability {
+  enabled: boolean;
+  slots: DayAvailabilitySlot[]; // multiple ranges in the same day
+}
+
+export interface AvailabilityConfig {
+  weeklySchedule: {
+    monday: DayAvailability;
+    tuesday: DayAvailability;
+    wednesday: DayAvailability;
+    thursday: DayAvailability;
+    friday: DayAvailability;
+    saturday: DayAvailability;
+    sunday: DayAvailability;
+  };
+  specificDates?: Array<{
+    date: string; // "YYYY-MM-DD"
+    slots: DayAvailabilitySlot[];
+    disabled?: boolean;
+  }>;
+  lastUpdated?: Timestamp;
+}
+
+// ─── Last known location ─────────────────────────────────────────────────────
+export interface LastKnownLocation {
+  latitude: number;
+  longitude: number;
+  updatedAt: Timestamp;
+  location: Locations;
+}
+
 export interface HistoryLocationInterface {
   latitude?: number;
   longitude?: number;
@@ -106,6 +143,18 @@ export interface UserInterface {
   branding?: Branding;
   createdAt?: Timestamp;
   serverUserAt?: Timestamp;
+
+  // Provider location tracking (written by provider app)
+  lastKnownLocation?: LastKnownLocation;
+  isAvailable?: boolean;
+
+  // CarWash
+  carWashFavoriteEnterprises?: string[];
+  averageServiceRating?: number;
+  totalRatingsGiven?: number;
+
+  // Availability config (multi-range per day)
+  availabilityConfig?: AvailabilityConfig;
 }
 
 export interface PhoneNumber {
