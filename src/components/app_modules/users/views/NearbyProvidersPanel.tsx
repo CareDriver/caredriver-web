@@ -289,8 +289,15 @@ const NearbyProvidersPanel: React.FC = () => {
                       )}
                     </p>
                   )}
-                  {provider.availabilityConfig && (
+                  {provider.availabilityConfig ? (
                     <AvailabilityBadges config={provider.availabilityConfig} />
+                  ) : (
+                    <p
+                      className="text small"
+                      style={{ margin: "2px 0 0", color: "#aaa" }}
+                    >
+                      Sin disponibilidad configurada
+                    </p>
                   )}
                 </div>
 
