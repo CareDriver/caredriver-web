@@ -20,7 +20,15 @@ interface Props {
 const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [googleMapsUrl, setGoogleMapsUrl] = useState<string | null>(null);
+  const setLocationRef = useRef(setLocation);
 
+  useEffect(() => {
+    setLocationRef.current = setLocation;
+  }, [setLocation]);
+
+  // Initializes the map only once to avoid re-creating it (and flickering)
+  // when location changes. The click handler updates the marker and pans
+  // the map in-place.
   useEffect(() => {
     let lastMarker: google.maps.marker.AdvancedMarkerElement | null = null;
 
@@ -82,14 +90,15 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
           });
         }
 
+        map.panTo(newPosition);
         let mapUrl: string = createGoogleMapsUrl(newPosition);
         setGoogleMapsUrl(mapUrl);
-        setLocation(new GeoPoint(newPosition.lat, newPosition.lng));
+        setLocationRef.current(new GeoPoint(newPosition.lat, newPosition.lng));
       });
     };
 
     initMap();
-  }, [location, setLocation]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="map-main-wrapper">
