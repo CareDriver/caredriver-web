@@ -780,7 +780,7 @@ const NewEnterpriseRequestForm: React.FC<Props> = ({ type }) => {
               }
               placeholder={
                 isFocused("description")
-                  ? "Puedes incluir tu NIT, horarios, servicios especiales, etc."
+                  ? "Puedes incluir tus, horarios, servicios especiales, etc para llamar la atención del usuario."
                   : ""
               }
               rows={3}
@@ -833,28 +833,40 @@ const NewEnterpriseRequestForm: React.FC<Props> = ({ type }) => {
               Selecciona cómo ofrecerás tu servicio de lavado:
             </p>
             <div className="margin-top-10">
-              {Object.values(CarWashServiceMode).map((mode) => (
-                <label
-                  key={mode}
-                  className="row-wrapper | gap-10 margin-top-10 touchable"
-                  style={{ alignItems: "flex-start" }}
-                >
-                  <input
-                    type="radio"
-                    name="carWashMode"
-                    checked={form.carWashServiceMode === mode}
-                    onChange={() =>
-                      setForm((prev) => ({
-                        ...prev,
-                        carWashServiceMode: mode,
-                      }))
-                    }
-                  />
-                  <span className="text">
-                    <b>{CarWashServiceModeRender[mode]}</b>
-                  </span>
-                </label>
-              ))}
+              {/* Solo lavado móvil disponible por ahora */}
+              <label
+                className="row-wrapper | gap-10 margin-top-10 touchable"
+                style={{ alignItems: "flex-start" }}
+              >
+                <input
+                  type="radio"
+                  name="carWashMode"
+                  checked={
+                    form.carWashServiceMode === CarWashServiceMode.MobileOnly
+                  }
+                  onChange={() =>
+                    setForm((prev) => ({
+                      ...prev,
+                      carWashServiceMode: CarWashServiceMode.MobileOnly,
+                    }))
+                  }
+                />
+                <span className="text">
+                  <b>
+                    {CarWashServiceModeRender[CarWashServiceMode.MobileOnly]}
+                  </b>
+                </span>
+              </label>
+              {/* <label className="row-wrapper | gap-10 margin-top-10 touchable" style={{ alignItems: "flex-start" }}>
+                <input type="radio" name="carWashMode" checked={form.carWashServiceMode === CarWashServiceMode.PickupAndReturn}
+                  onChange={() => setForm((prev) => ({ ...prev, carWashServiceMode: CarWashServiceMode.PickupAndReturn }))} />
+                <span className="text"><b>{CarWashServiceModeRender[CarWashServiceMode.PickupAndReturn]}</b></span>
+              </label>
+              <label className="row-wrapper | gap-10 margin-top-10 touchable" style={{ alignItems: "flex-start" }}>
+                <input type="radio" name="carWashMode" checked={form.carWashServiceMode === CarWashServiceMode.Both}
+                  onChange={() => setForm((prev) => ({ ...prev, carWashServiceMode: CarWashServiceMode.Both }))} />
+                <span className="text"><b>{CarWashServiceModeRender[CarWashServiceMode.Both]}</b></span>
+              </label> */}
             </div>
             {form.carWashServiceMode !== CarWashServiceMode.MobileOnly &&
               form.carWashServiceMode !== null && (
@@ -1881,7 +1893,8 @@ function createDefaultForm(type: ServiceType): EnterpriseFormState {
     coordinates: DEFAUL_GEOPOINT_FIELD,
     mechanicTools: DEFAUL_TEXT_FIELD,
     mechanicSubServices: [],
-    carWashServiceMode: null,
+    carWashServiceMode:
+      type === "laundry" ? CarWashServiceMode.MobileOnly : null,
     towVehiclePhotos: [DEFAUL_ATTACHMENT_FIELD],
     selfAdmin: {
       identityCardFront: DEFAUL_ATTACHMENT_FIELD,
