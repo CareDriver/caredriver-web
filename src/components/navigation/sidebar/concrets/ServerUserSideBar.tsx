@@ -1,6 +1,7 @@
 "use client";
 import Building from "@/icons/Building";
 import Car from "@/icons/Car";
+import Handshake from "@/icons/Handshake";
 import LocationDot from "@/icons/LocationDot";
 import Soap from "@/icons/Soap";
 import Truck from "@/icons/Truck";
@@ -54,6 +55,13 @@ const ServerUserSideBar = ({
         Servicios
       </span>
       <li className="sidebar-options margin-bottom-25">
+        <Link
+          href="/user/userserver/service"
+          className={`sidebar-option ${pathname === "/user/userserver/service" && "selected"}`}
+        >
+          <Handshake />
+          <span>Inicio</span>
+        </Link>
         <Link
           href={routeToRequestToBeServerUserAsUser("driver")}
           className={`sidebar-option ${
