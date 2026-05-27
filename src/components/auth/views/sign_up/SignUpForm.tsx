@@ -36,7 +36,7 @@ interface Form {
   phone: TextFieldForm;
   email: TextFieldForm;
   password: TextFieldForm;
-  location: Locations;
+  location: Locations | undefined;
   code: string;
   termsChecked: boolean;
 }
@@ -302,7 +302,7 @@ const DEFAULT_FORM: Form = {
   email: DEFAUL_TEXT_FIELD,
   password: DEFAUL_TEXT_FIELD,
   code: "",
-  location: Locations.CochabambaBolivia,
+  location: undefined,
   termsChecked: false,
 };
 
@@ -312,6 +312,7 @@ const isValidForm = (form: Form): boolean => {
     isValidTextField(form.password) &&
     isValidTextField(form.fullName) &&
     isValidTextField(form.phone) &&
+    form.location !== undefined &&
     form.termsChecked
   );
 };

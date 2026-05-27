@@ -11,7 +11,7 @@ import { useState } from "react";
 import Image from "next/image";
 
 interface Props {
-  location: Locations;
+  location: Locations | undefined;
   setter: LocationFieldSetter;
   style?: {
     abbreviatedLocation?: boolean;
@@ -32,12 +32,24 @@ const LocationField: React.FC<Props> = ({ location, setter, style }) => {
     <fieldset className={`form-section | select-item`}>
       <div className="form-section-input | icon-wrapper" onClick={toggleMenu}>
         <span className="selected-location">
-          <img className="flag-icon" src={flagOfLocation(location)} alt="" />
-          {style?.abbreviatedLocation ? abbreviateLocation(location) : location}
+          {location ? (
+            <>
+              <img
+                className="flag-icon"
+                src={flagOfLocation(location)}
+                alt=""
+              />
+              {style?.abbreviatedLocation
+                ? abbreviateLocation(location)
+                : location}
+            </>
+          ) : (
+            <span className="text | light">Selecciona tu ciudad *</span>
+          )}
         </span>
       </div>
       <ChevronDown />
-      <legend className="form-section-legend">Ubicación</legend>
+      <legend className="form-section-legend">Ubicación *</legend>
       {isOpen && (
         <ul className="options-menu">
           {locationList.map((loc, i) => (

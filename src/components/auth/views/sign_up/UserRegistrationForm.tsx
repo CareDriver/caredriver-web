@@ -43,7 +43,7 @@ interface Form {
   phone: TextFieldForm;
   email: TextFieldForm;
   password: TextFieldForm;
-  location: Locations;
+  location: Locations | undefined;
   role: UserRole;
   photo: AttachmentField;
 }
@@ -258,7 +258,7 @@ export const DEFAULT_FORM: Form = {
   phone: DEFAUL_TEXT_FIELD,
   email: DEFAUL_TEXT_FIELD,
   password: DEFAUL_TEXT_FIELD,
-  location: Locations.CochabambaBolivia,
+  location: undefined,
   role: UserRole.Support,
   photo: DEFAUL_ATTACHMENT_FIELD,
 };
@@ -268,7 +268,8 @@ const isValidForm = (form: Form): boolean => {
     isValidTextField(form.email) &&
     isValidTextField(form.password) &&
     isValidTextField(form.fullName) &&
-    isValidTextField(form.phone)
+    isValidTextField(form.phone) &&
+    form.location !== undefined
   );
 };
 

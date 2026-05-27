@@ -145,7 +145,6 @@ interface EnterpriseFormState {
   logo: AttachmentField;
   description: TextField;
   phone: TextField;
-  phoneCountryCode: TextField;
   coordinates: GeoPointField;
   // Mechanic
   mechanicTools: TextField;
@@ -591,9 +590,7 @@ const NewEnterpriseRequestForm: React.FC<Props> = ({ type }) => {
           phone: isValidTextField(form.phone)
             ? form.phone.value.trim()
             : undefined,
-          phoneCountryCode: isValidTextField(form.phoneCountryCode)
-            ? form.phoneCountryCode.value.trim()
-            : undefined,
+          phoneCountryCode: user.phoneNumber?.countryCode ?? undefined,
           coordinates: form.coordinates.value ?? undefined,
           location: user.location ?? Locations.CochabambaBolivia,
           mechanicSubServices:
@@ -816,30 +813,6 @@ const NewEnterpriseRequestForm: React.FC<Props> = ({ type }) => {
             />
             <legend className="form-section-legend">
               Teléfono de la empresa (Opcional)
-            </legend>
-          </fieldset>
-
-          <fieldset className="form-section margin-top-10">
-            <input
-              type="text"
-              className="form-section-input"
-              value={form.phoneCountryCode.value}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  phoneCountryCode: {
-                    ...prev.phoneCountryCode,
-                    value: e.target.value,
-                    message: null,
-                  },
-                }))
-              }
-              placeholder="Ej: +591"
-              onFocus={() => setFocus("phoneCC", true)}
-              onBlur={() => setFocus("phoneCC", false)}
-            />
-            <legend className="form-section-legend">
-              Código de país (Opcional)
             </legend>
           </fieldset>
 
@@ -1905,7 +1878,6 @@ function createDefaultForm(type: ServiceType): EnterpriseFormState {
     logo: DEFAUL_ATTACHMENT_FIELD,
     description: DEFAUL_TEXT_FIELD,
     phone: DEFAUL_TEXT_FIELD,
-    phoneCountryCode: { ...DEFAUL_TEXT_FIELD, value: "+591" },
     coordinates: DEFAUL_GEOPOINT_FIELD,
     mechanicTools: DEFAUL_TEXT_FIELD,
     mechanicSubServices: [],

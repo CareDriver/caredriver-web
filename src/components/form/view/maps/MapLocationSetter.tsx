@@ -17,6 +17,20 @@ interface Props {
   setLocation: (g: GeoPoint) => void;
 }
 
+function getUserPosition(): Promise<{ lat: number; lng: number } | null> {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve(null);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => resolve(null),
+      { timeout: 5000 },
+    );
+  });
+}
+
 const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [googleMapsUrl, setGoogleMapsUrl] = useState<string | null>(null);
@@ -40,10 +54,17 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
 
       const { Map } = await loader.importLibrary("maps");
 
-      const position = location ? location : DEFAULT_LOCATION;
+      // Use the saved location, or the user's real GPS position, or Cochabamba.
+      const userPos = !location ? await getUserPosition() : null;
+      const center: { lat: number; lng: number } = location
+        ? { lat: location.latitude, lng: location.longitude }
+        : (userPos ?? {
+            lat: DEFAULT_LOCATION.latitude,
+            lng: DEFAULT_LOCATION.longitude,
+          });
 
       const mapOptions: google.maps.MapOptions = {
-        center: geoPointToLatLng(position),
+        center,
         zoom: 17,
         mapId: "GOOGLEMAP_FORM_ID",
       };
@@ -60,6 +81,18 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
         glyphColor: SECOND_COLOR_LIGHT,
         borderColor: SECOND_COLOR_LIGHT,
       });
+
+      // Show a blue "you are here" dot when there is no saved location.
+      if (!location && userPos) {
+        const dot = document.createElement("div");
+        dot.style.cssText =
+          "width:14px;height:14px;background:#4285F4;border-radius:50%;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,.4)";
+        new AdvancedMarkerElement({
+          map,
+          position: userPos,
+          content: dot,
+        });
+      }
 
       if (location) {
         lastMarker = new AdvancedMarkerElement({
@@ -102,6 +135,9 @@ const MapLocationSetter: React.FC<Props> = ({ location, setLocation }) => {
 
   return (
     <div className="map-main-wrapper">
+      <p className="text | light" style={{ marginBottom: 8, fontSize: 14 }}>
+        Toca el mapa para marcar tu ubicación exacta
+      </p>
       <div className="map-content-wrapper" ref={mapRef}></div>
       <GoogleMapsRedirector googleMapsUrl={googleMapsUrl} />
     </div>
