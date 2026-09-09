@@ -155,6 +155,12 @@ export interface UserInterface {
 
   // Availability config (multi-range per day)
   availabilityConfig?: AvailabilityConfig;
+
+  // Referral code (new) — código PROPIO del usuario, para referir negocios
+  referralCode?: string;
+
+  // Admin claim denormalized (optional, for admin panel display)
+  isAdmin?: boolean;
 }
 
 export interface PhoneNumber {

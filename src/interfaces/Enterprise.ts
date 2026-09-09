@@ -10,7 +10,6 @@ import {
   ComissionHistory,
   DebtHistory,
   Price,
-  defaultBalance,
 } from "./Payment";
 import { LicenseInterface } from "./PersonalDocumentsInterface";
 import { VehicleType, VehicleTransmission } from "./VehicleInterface";
@@ -19,6 +18,19 @@ import {
   MechanicToolEvidence,
   TechnicalTitleEvidence,
 } from "./UserRequest";
+
+/**
+ * Directory sub-service item.
+ *
+ * Mirrors `DirectorySubService` in `caredriver-firebase/functions/src/utils/interfaces/Enterprise.ts`.
+ * Replaces the legacy `MechanicSubService` enum for directory businesses.
+ */
+export interface DirectorySubService {
+  id: string;
+  categoryId: string;
+  label: string;
+  active: boolean;
+}
 
 // ─── Legacy roles (kept for backward compatibility) ─────────────────────────
 export type UserRoleInEnterprise = "user" | "support";
@@ -35,12 +47,13 @@ export const UserRoleEnterpriseRender = {
 };
 
 // ─── New enterprise member system ───────────────────────────────────────────
-export type EnterpriseMemberRole = "admin" | "collaborator";
+export type EnterpriseMemberRole = "admin" | "collaborator" | "marketing";
 
 export const EnterpriseMemberRoleRender: Record<EnterpriseMemberRole, string> =
   {
     admin: "Administrador",
     collaborator: "Colaborador",
+    marketing: "Marketing",
   };
 
 /**
@@ -147,6 +160,7 @@ export interface CarWashBooking {
  * - Collaboradores must accept membership via the hub (`accepted` field).
  */
 export interface EnterpriseMember {
+  id?: string; // Firestore document id (added by listeners)
   userId: string;
   fakeUserId: string;
   role: EnterpriseMemberRole;
@@ -241,6 +255,33 @@ export interface Enterprise extends EnterpriseData {
   comissionsHistory?: ComissionHistory[];
   balanceHistory?: BalanceHistoryItem[];
 
+  // Directory fields (new)
+  city?: string;
+  g?: string;
+  zoneLabel?: string | null;
+  chainId?: string | null;
+  directoryCategories?: string[];
+  subServices?: DirectorySubService[]; // generalised pattern — reused for all directory types
+  carouselPhotoUrls?: string[];
+  tags?: string[];
+  hours?: Record<string, { open: string; close: string; closed: boolean }>;
+  whatsapp?: string;
+  plan?: "free" | "verified" | "featured";
+  favoriteCount?: number;
+  contactCount?: number; // leads received via directory
+  avgResponseMinutes?: number | null;
+  verifiedAt?: Timestamp | null;
+  licenseStatus?: "active" | "past_due" | "suspended" | "none";
+  daysOverdue?: number;
+  discrepancyCount?: number;
+  chainBillingMode?: "per_branch" | "shared" | null;
+
+  // Referral fields (new)
+  referralCode?: string;
+  referredByCode?: string | null;
+  referredByType?: "enterprise" | "user" | null;
+  referredById?: string | null;
+
   // Timestamps
   createdAt?: Timestamp;
   approvedAt?: Timestamp;
@@ -292,6 +333,20 @@ export interface EnterpriseRequest {
   phone?: string;
   phoneCountryCode?: string;
 
+  // Directory fields (new)
+  city?: string;
+  directoryCategories?: string[];
+  subServices?: DirectorySubService[];
+  carouselPhotoUrls?: string[];
+  tags?: string[];
+  hours?: Record<string, { open: string; close: string; closed: boolean }>;
+  whatsapp?: string;
+  requestedPlan?: "free" | "verified" | "featured";
+  chainId?: string | null;
+
+  // Referral field (new)
+  referredByCode?: string | null;
+
   createdAt: Timestamp;
 }
 
@@ -328,6 +383,15 @@ export const buildEnterpriseRequest = (
     towVehiclePhotos?: RefAttachment[];
     phone?: string;
     phoneCountryCode?: string;
+    // Directory fields (new)
+    city?: string;
+    directoryCategories?: string[];
+    subServices?: DirectorySubService[];
+    carouselPhotoUrls?: string[];
+    tags?: string[];
+    whatsapp?: string;
+    requestedPlan?: "free" | "verified" | "featured";
+    chainId?: string | null;
   },
 ): EnterpriseRequest => {
   const adminIds = members
@@ -362,6 +426,15 @@ export const buildEnterpriseRequest = (
     towVehiclePhotos: opts?.towVehiclePhotos,
     phone: opts?.phone,
     phoneCountryCode: opts?.phoneCountryCode,
+    // Directory fields (new)
+    city: opts?.city,
+    directoryCategories: opts?.directoryCategories,
+    subServices: opts?.subServices,
+    carouselPhotoUrls: opts?.carouselPhotoUrls,
+    tags: opts?.tags,
+    whatsapp: opts?.whatsapp,
+    requestedPlan: opts?.requestedPlan,
+    chainId: opts?.chainId ?? null,
   };
 };
 
@@ -398,6 +471,17 @@ export const buildDefaultEnterprise = (
     currentDebt: { currency: "Bs. (BOB)", amount: -40 },
     createdAt: request.createdAt,
     approvedAt: Timestamp.now(),
+    // Directory fields (new)
+    city: request.city,
+    directoryCategories: request.directoryCategories,
+    subServices: request.subServices,
+    carouselPhotoUrls: request.carouselPhotoUrls,
+    tags: request.tags,
+    whatsapp: request.whatsapp,
+    plan: "free",
+    chainId: request.chainId ?? null,
+    licenseStatus: "none",
+    daysOverdue: 0,
   };
 };
 

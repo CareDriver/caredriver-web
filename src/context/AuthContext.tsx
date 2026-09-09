@@ -1,7 +1,7 @@
 "use client";
 
 import { auth } from "@/firebase/FirebaseConfig";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, getIdTokenResult } from "firebase/auth";
 import {
   DEFAULT_PHONE,
   defaultServiceReq,
@@ -42,6 +42,7 @@ type ContextType = {
   user: UserInterface | undefined;
   checkingUserAuth: boolean;
   userProps: UserProps;
+  isAdminClaim: boolean;
 
   logout: () => void;
 };
@@ -50,6 +51,7 @@ const DEFAULT_CONTEXT: ContextType = {
   user: undefined,
   checkingUserAuth: true,
   userProps: DEFAULT_USER_PROPS,
+  isAdminClaim: false,
 
   logout: () => {},
 };
@@ -108,6 +110,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [checkingUserAuth, setCheckUserAuth] = useState(true);
   const [user, setUser] = useState<UserInterface | undefined>(undefined);
   const [userProps, setUserProps] = useState<UserProps>(DEFAULT_USER_PROPS);
+  const [isAdminClaim, setIsAdminClaim] = useState(false);
 
   const redirectToHome = useCallback(() => {
     if (!pathname.includes("auth")) {
@@ -156,8 +159,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               userData = await getUserById(userId);
             }
 
-            if (userData) {
-              if (userData.deleted) {
+              if (userData) {
+                // Check custom claim admin: true
+                try {
+                  const tokenResult = await getIdTokenResult(res, true);
+                  setIsAdminClaim(tokenResult.claims.admin === true);
+                } catch {
+                  setIsAdminClaim(false);
+                }
+
+                if (userData.deleted) {
                 logoutWithReason(
                   "Tu cuenta fue borrada, comunícate con uno de nuestro administradores",
                 );
@@ -230,7 +241,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ checkingUserAuth, user, logout, userProps }}>
+    <AuthContext.Provider value={{ checkingUserAuth, user, logout, userProps, isAdminClaim }}>
       {children}
     </AuthContext.Provider>
   );

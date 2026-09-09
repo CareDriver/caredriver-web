@@ -9,6 +9,9 @@ import Head from "next/head";
 import Script from "next/script";
 import { useEffect } from "react";
 import { initAppCheck } from "@/firebase/FirebaseConfig";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import careDriverTheme from "@/theme/CareDriverTheme";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
@@ -21,7 +24,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <body>
-        <AuthProvider>{children}</AuthProvider>
+        <ThemeProvider theme={careDriverTheme}>
+          <CssBaseline />
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
         <ToastContainer
           position="bottom-right"
           autoClose={4000}
