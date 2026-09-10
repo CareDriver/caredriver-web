@@ -1,35 +1,26 @@
 "use client";
 
-import { initAppCheck } from "@/firebase/FirebaseConfig";
-import { getToken } from "firebase/app-check";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { firestore } from "@/firebase/FirebaseConfig";
 
 export async function acceptTerms(uid: string) {
+  if (!uid) {
+    return { success: false, error: "UID no válido" };
+  }
+
   try {
-    const appCheck = initAppCheck();
-    if (!appCheck) return;
-    const { token } = await getToken(appCheck, true);
+    await addDoc(collection(firestore, "termsAcceptances"), {
+      uid,
+      acceptedAt: serverTimestamp(),
+      userAgent:
+        typeof navigator !== "undefined" ? navigator.userAgent : null,
+    });
 
-    const response = await fetch(
-      "https://us-central1-caredriver-3ecad.cloudfunctions.net/logTermsAcceptance",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Firebase-AppCheck": token,
-        },
-        body: JSON.stringify({
-          uid: uid,
-        }),
-      },
-    );
-
-    console.log(response);
-
-    const data = await response.json();
-
-    if (!response.ok) throw new Error(data.error || "Error desconocido");
     return { success: true };
   } catch (error) {
-    return { success: false, error: (error as Error).message };
+    return {
+      success: false,
+      error: (error as Error).message,
+    };
   }
 }

@@ -9,6 +9,11 @@ import {
   getDoc,
   getDocs,
   setDoc,
+  updateDoc,
+  runTransaction,
+  writeBatch,
+  increment,
+  serverTimestamp,
   Timestamp,
   Unsubscribe,
 } from "firebase/firestore";
@@ -141,8 +146,31 @@ export async function reviewPaymentReceipt(
   });
 }
 
-export async function markReceiptInvoiced(receiptId: string) {
-  return adminFetch<{ success: boolean }>("markReceiptInvoiced", { receiptId });
+export async function markReceiptInvoiced(
+  receiptId: string,
+): Promise<{ success: boolean } | null> {
+  try {
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error("No authenticated user");
+
+    await updateDoc(doc(firestore, "paymentReceipts", receiptId), {
+      invoiced: true,
+      invoicedBy: uid,
+      invoicedAt: serverTimestamp(),
+    });
+
+    await writeAdminAuditLog({
+      action: "markReceiptInvoiced",
+      targetCollection: "paymentReceipts",
+      targetId: receiptId,
+      details: { invoiced: true },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("markReceiptInvoiced failed", error);
+    return null;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -182,31 +210,111 @@ export function listenBusinesses(
   );
 }
 
-export async function verifyBusiness(enterpriseId: string, verified: boolean) {
-  return adminFetch<{ success: boolean }>("verifyBusiness", {
-    enterpriseId,
-    verified,
-  });
+export async function verifyBusiness(
+  enterpriseId: string,
+  verified: boolean,
+): Promise<{ success: boolean } | null> {
+  try {
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error("No authenticated user");
+
+    await updateDoc(doc(firestore, "enterprises", enterpriseId), {
+      verifiedAt: verified ? Timestamp.now() : null,
+      updatedAt: Timestamp.now(),
+      updatedBy: uid,
+    });
+
+    await writeAdminAuditLog({
+      action: "verifyBusiness",
+      targetCollection: "enterprises",
+      targetId: enterpriseId,
+      details: { verified },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("verifyBusiness failed", error);
+    return null;
+  }
 }
 
 export async function changeBusinessPlan(
   enterpriseId: string,
   plan: "free" | "verified" | "featured",
-) {
-  return adminFetch<{ success: boolean }>("changeBusinessPlan", {
-    enterpriseId,
-    plan,
-  });
+): Promise<{ success: boolean } | null> {
+  try {
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error("No authenticated user");
+
+    await runTransaction(firestore, async (t) => {
+      t.update(doc(firestore, "enterprises", enterpriseId), {
+        plan,
+        updatedAt: Timestamp.now(),
+        updatedBy: uid,
+      });
+      t.set(
+        doc(firestore, "subscriptions", enterpriseId),
+        {
+          enterpriseId,
+          plan,
+          updatedAt: Timestamp.now(),
+        },
+        { merge: true },
+      );
+    });
+
+    await writeAdminAuditLog({
+      action: "changeBusinessPlan",
+      targetCollection: "enterprises",
+      targetId: enterpriseId,
+      details: { plan },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("changeBusinessPlan failed", error);
+    return null;
+  }
 }
 
 export async function suspendBusiness(
   enterpriseId: string,
   suspended: boolean,
-) {
-  return adminFetch<{ success: boolean }>("suspendBusiness", {
-    enterpriseId,
-    suspended,
-  });
+): Promise<{ success: boolean } | null> {
+  try {
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error("No authenticated user");
+
+    await runTransaction(firestore, async (t) => {
+      t.update(doc(firestore, "enterprises", enterpriseId), {
+        active: !suspended,
+        updatedAt: Timestamp.now(),
+        updatedBy: uid,
+        ...(suspended && { licenseStatus: "suspended" }),
+      });
+      t.set(
+        doc(firestore, "subscriptions", enterpriseId),
+        {
+          enterpriseId,
+          licenseStatus: suspended ? "suspended" : "active",
+          updatedAt: Timestamp.now(),
+        },
+        { merge: true },
+      );
+    });
+
+    await writeAdminAuditLog({
+      action: "suspendBusiness",
+      targetCollection: "enterprises",
+      targetId: enterpriseId,
+      details: { suspended },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("suspendBusiness failed", error);
+    return null;
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -248,8 +356,62 @@ export async function updatePricingSettings(body: {
   featuredBasePrice?: number;
   verifiedTag?: string;
   featuredTag?: string;
-}) {
-  return adminFetch<{ success: boolean }>("updatePricingSettings", body);
+  qrCodeImageUrl?: string;
+  paymentInstructions?: string;
+}): Promise<{ success: boolean } | null> {
+  try {
+    const { verifiedBasePrice, featuredBasePrice, verifiedTag, featuredTag } =
+      body;
+    const { qrCodeImageUrl, paymentInstructions } = body;
+
+    const hasPricingFields =
+      verifiedBasePrice !== undefined ||
+      featuredBasePrice !== undefined ||
+      verifiedTag !== undefined ||
+      featuredTag !== undefined;
+
+    const hasPaymentFields =
+      qrCodeImageUrl !== undefined || paymentInstructions !== undefined;
+
+    if (hasPricingFields) {
+      const pricingUpdate: Record<string, unknown> = {
+        updatedAt: Timestamp.now(),
+      };
+      if (verifiedBasePrice !== undefined)
+        pricingUpdate.verifiedBasePrice = verifiedBasePrice;
+      if (featuredBasePrice !== undefined)
+        pricingUpdate.featuredBasePrice = featuredBasePrice;
+      if (verifiedTag !== undefined) pricingUpdate.verifiedTag = verifiedTag;
+      if (featuredTag !== undefined) pricingUpdate.featuredTag = featuredTag;
+
+      await setDoc(
+        doc(firestore, "platformSettings", "pricing"),
+        pricingUpdate,
+        { merge: true },
+      );
+    }
+
+    if (hasPaymentFields) {
+      const paymentUpdate: Record<string, unknown> = {
+        updatedAt: Timestamp.now(),
+      };
+      if (qrCodeImageUrl !== undefined)
+        paymentUpdate.qrCodeImageUrl = qrCodeImageUrl;
+      if (paymentInstructions !== undefined)
+        paymentUpdate.paymentInstructions = paymentInstructions;
+
+      await setDoc(
+        doc(firestore, "platformSettings", "payment"),
+        paymentUpdate,
+        { merge: true },
+      );
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("updatePricingSettings failed", error);
+    return null;
+  }
 }
 
 export async function updatePlatformPaymentSettings(body: {
@@ -308,20 +470,141 @@ export function listenSeasonalCampaigns(
 
 export async function saveDiscountCampaign(
   body: Partial<DiscountCampaign> & { id?: string },
-) {
-  return adminFetch<{ success: boolean; campaignId: string }>(
-    "saveDiscountCampaign",
-    body,
-  );
+): Promise<{ success: boolean; campaignId: string } | null> {
+  try {
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error("No authenticated user");
+
+    const isNew = !body.id;
+    const ref = body.id
+      ? doc(firestore, "discountCampaigns", body.id)
+      : doc(collection(firestore, "discountCampaigns"));
+
+    const {
+      id: _id,
+      name,
+      appliesToPlans,
+      discountType,
+      discountValue,
+      durationCycles,
+      active,
+      eligibilityWindow,
+    } = body as Record<string, unknown>;
+
+    const data: Record<string, unknown> = {
+      updatedAt: Timestamp.now(),
+      updatedBy: uid,
+    };
+
+    if (name !== undefined) data.name = name;
+    if (appliesToPlans !== undefined) data.appliesToPlans = appliesToPlans;
+    if (discountType !== undefined) data.discountType = discountType;
+    if (discountValue !== undefined) data.discountValue = discountValue;
+    if (durationCycles !== undefined) data.durationCycles = durationCycles;
+    if (active !== undefined) data.active = active;
+    if (eligibilityWindow !== undefined) {
+      // Convert date strings/objects to Timestamps if needed
+      const ew = eligibilityWindow as Record<string, unknown>;
+      const converted: Record<string, unknown> = {};
+      for (const key of Object.keys(ew)) {
+        const val = ew[key];
+        if (val instanceof Date) {
+          converted[key] = Timestamp.fromDate(val);
+        } else {
+          converted[key] = val;
+        }
+      }
+      data.eligibilityWindow = converted;
+    }
+
+    if (isNew) {
+      data.createdAt = Timestamp.now();
+      data.createdBy = uid;
+    }
+
+    await setDoc(ref, data, { merge: true });
+
+    await writeAdminAuditLog({
+      action: isNew ? "createDiscountCampaign" : "updateDiscountCampaign",
+      targetCollection: "discountCampaigns",
+      targetId: ref.id,
+      details: { name: data.name },
+    });
+
+    return { success: true, campaignId: ref.id };
+  } catch (error) {
+    console.error("saveDiscountCampaign failed", error);
+    return null;
+  }
 }
 
 export async function saveSeasonalCampaign(
   body: Partial<SeasonalCampaign> & { id?: string },
-) {
-  return adminFetch<{ success: boolean; campaignId: string }>(
-    "saveSeasonalCampaign",
-    body,
-  );
+): Promise<{ success: boolean; campaignId: string } | null> {
+  try {
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error("No authenticated user");
+
+    const isNew = !body.id;
+    const ref = body.id
+      ? doc(firestore, "seasonalCampaigns", body.id)
+      : doc(collection(firestore, "seasonalCampaigns"));
+
+    const {
+      id: _id,
+      name,
+      bannerText,
+      categoryIds,
+      active,
+      startsAt,
+      endsAt,
+    } = body as Record<string, unknown>;
+
+    const toTimestamp = (val: unknown): Timestamp | undefined => {
+      if (!val) return undefined;
+      if (val instanceof Timestamp) return val;
+      if (val instanceof Date) return Timestamp.fromDate(val);
+      if (typeof val === "string" || typeof val === "number") {
+        return Timestamp.fromDate(new Date(val));
+      }
+      return undefined;
+    };
+
+    const data: Record<string, unknown> = {
+      updatedAt: Timestamp.now(),
+      updatedBy: uid,
+    };
+
+    if (name !== undefined) data.name = name;
+    if (bannerText !== undefined) data.bannerText = bannerText;
+    if (categoryIds !== undefined) data.categoryIds = categoryIds;
+    if (active !== undefined) data.active = active;
+
+    const startsAtTs = toTimestamp(startsAt);
+    if (startsAtTs) data.startsAt = startsAtTs;
+
+    const endsAtTs = toTimestamp(endsAt);
+    if (endsAtTs) data.endsAt = endsAtTs;
+
+    if (isNew) {
+      data.createdAt = Timestamp.now();
+      data.createdBy = uid;
+    }
+
+    await setDoc(ref, data, { merge: true });
+
+    await writeAdminAuditLog({
+      action: isNew ? "createSeasonalCampaign" : "updateSeasonalCampaign",
+      targetCollection: "seasonalCampaigns",
+      targetId: ref.id,
+      details: { name: data.name },
+    });
+
+    return { success: true, campaignId: ref.id };
+  } catch (error) {
+    console.error("saveSeasonalCampaign failed", error);
+    return null;
+  }
 }
 
 export async function countSubscriptionsWithCampaign(
@@ -397,11 +680,85 @@ export async function fetchReferralEarningsForUser(
   );
 }
 
-export async function payUserReferralEarnings(userId: string) {
-  return adminFetch<{ success: boolean; amountPaid: number }>(
-    "payUserReferralEarnings",
-    { userId },
-  );
+export async function payUserReferralEarnings(
+  userId: string,
+): Promise<{ success: boolean; amountPaid: number } | null> {
+  try {
+    const uid = auth.currentUser?.uid;
+    if (!uid) throw new Error("No authenticated user");
+
+    // 1. Query pending ledger entries for this user
+    const ledgerSnap = await getDocs(
+      query(
+        collection(firestore, "referralEarningsLedger"),
+        where("userId", "==", userId),
+        where("status", "==", "pending"),
+      ),
+    );
+
+    // 2. Nothing to pay
+    if (ledgerSnap.empty) {
+      return { success: true, amountPaid: 0 };
+    }
+
+    // 3. Sum amountEarned across all pending docs
+    let amountPaid = 0;
+    for (const d of ledgerSnap.docs) {
+      const data = d.data();
+      amountPaid += typeof data.amountEarned === "number" ? data.amountEarned : 0;
+    }
+
+    // 4 & 5. Batch: mark each ledger entry as paid + update userReferralEarnings summary
+    const batch = writeBatch(firestore);
+
+    for (const d of ledgerSnap.docs) {
+      batch.update(d.ref, {
+        status: "paid",
+        paidAt: Timestamp.now(),
+        paidBy: uid,
+      });
+    }
+
+    batch.set(
+      doc(firestore, "userReferralEarnings", userId),
+      {
+        totalPaid: increment(amountPaid),
+        totalOwed: 0,
+        lastPayoutAt: Timestamp.now(),
+      },
+      { merge: true },
+    );
+
+    // 6. Commit batch
+    await batch.commit();
+
+    await writeAdminAuditLog({
+      action: "payUserReferralEarnings",
+      targetCollection: "userReferralEarnings",
+      targetId: userId,
+      details: { amountPaid },
+    });
+
+    // 7. Fire-and-forget push notification via CF
+    adminFetch("sendPushNotification", {
+      userId,
+      notification: {
+        title: "Comisión pagada",
+        body: `Te pagaron Bs. ${amountPaid} por comisiones de referidos.`,
+        data: {
+          type: "referral_earnings_paid",
+          amountPaid: String(amountPaid),
+        },
+      },
+      channelId: "subscription_updates",
+    });
+
+    // 8. Return result
+    return { success: true, amountPaid };
+  } catch (error) {
+    console.error("payUserReferralEarnings failed", error);
+    return null;
+  }
 }
 
 // ---------------------------------------------------------------------------
