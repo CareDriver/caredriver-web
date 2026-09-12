@@ -22,6 +22,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import BuildIcon from "@mui/icons-material/Build";
 import MessageIcon from "@mui/icons-material/Message";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
@@ -40,6 +41,12 @@ const NAV_ITEMS = [
     label: "Inicio",
     href: "/directory/business",
     icon: DashboardIcon,
+  },
+  {
+    key: "orders",
+    label: "Órdenes de Servicio",
+    href: "/directory/business/orders",
+    icon: BuildIcon,
   },
   {
     key: "contacts",
