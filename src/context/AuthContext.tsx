@@ -159,16 +159,16 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               userData = await getUserById(userId);
             }
 
-              if (userData) {
-                // Check custom claim admin: true
-                try {
-                  const tokenResult = await getIdTokenResult(res, true);
-                  setIsAdminClaim(tokenResult.claims.admin === true);
-                } catch {
-                  setIsAdminClaim(false);
-                }
+            if (userData) {
+              // Check custom claim admin: true
+              try {
+                const tokenResult = await getIdTokenResult(res, true);
+                setIsAdminClaim(tokenResult.claims.admin === true);
+              } catch {
+                setIsAdminClaim(false);
+              }
 
-                if (userData.deleted) {
+              if (userData.deleted) {
                 logoutWithReason(
                   "Tu cuenta fue borrada, comunícate con uno de nuestro administradores",
                 );
@@ -241,7 +241,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ checkingUserAuth, user, logout, userProps, isAdminClaim }}>
+    <AuthContext.Provider
+      value={{ checkingUserAuth, user, logout, userProps, isAdminClaim }}
+    >
       {children}
     </AuthContext.Provider>
   );

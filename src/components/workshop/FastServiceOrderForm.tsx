@@ -31,16 +31,54 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { firestore, auth } from "@/firebase/FirebaseConfig";
-import { generateWhatsAppMessage, openWhatsAppUrl } from "@/utils/helpers/whatsappHelper";
+import {
+  generateWhatsAppMessage,
+  openWhatsAppUrl,
+} from "@/utils/helpers/whatsappHelper";
 
 const PREVENTIVE_SERVICES = [
-  { id: "oil_synthetic", label: "Aceite Sintético", defaultIntervalKm: 10000, defaultMonths: 6 },
-  { id: "oil_mineral", label: "Aceite Mineral", defaultIntervalKm: 5000, defaultMonths: 3 },
-  { id: "filter_oil", label: "Filtro de Aceite", defaultIntervalKm: 5000, defaultMonths: 3 },
-  { id: "filter_air", label: "Filtro de Aire", defaultIntervalKm: 10000, defaultMonths: 6 },
-  { id: "brakes_inspect", label: "Frenos / Balatas", defaultIntervalKm: 10000, defaultMonths: 6 },
-  { id: "fluids_check", label: "Revisión de Niveles", defaultIntervalKm: 5000, defaultMonths: 3 },
-  { id: "spark_plugs", label: "Bujías", defaultIntervalKm: 20000, defaultMonths: 12 },
+  {
+    id: "oil_synthetic",
+    label: "Aceite Sintético",
+    defaultIntervalKm: 10000,
+    defaultMonths: 6,
+  },
+  {
+    id: "oil_mineral",
+    label: "Aceite Mineral",
+    defaultIntervalKm: 5000,
+    defaultMonths: 3,
+  },
+  {
+    id: "filter_oil",
+    label: "Filtro de Aceite",
+    defaultIntervalKm: 5000,
+    defaultMonths: 3,
+  },
+  {
+    id: "filter_air",
+    label: "Filtro de Aire",
+    defaultIntervalKm: 10000,
+    defaultMonths: 6,
+  },
+  {
+    id: "brakes_inspect",
+    label: "Frenos / Balatas",
+    defaultIntervalKm: 10000,
+    defaultMonths: 6,
+  },
+  {
+    id: "fluids_check",
+    label: "Revisión de Niveles",
+    defaultIntervalKm: 5000,
+    defaultMonths: 3,
+  },
+  {
+    id: "spark_plugs",
+    label: "Bujías",
+    defaultIntervalKm: 20000,
+    defaultMonths: 12,
+  },
 ];
 
 interface Props {
@@ -48,7 +86,10 @@ interface Props {
   workshopName: string;
 }
 
-export default function FastServiceOrderForm({ workshopId, workshopName }: Props) {
+export default function FastServiceOrderForm({
+  workshopId,
+  workshopName,
+}: Props) {
   const [plate, setPlate] = useState("");
   const [phone, setPhone] = useState("");
   const [customerName, setCustomerName] = useState("");
@@ -60,7 +101,10 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
 
   const [linkedUserId, setLinkedUserId] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
-  const [servicesDone, setServicesDone] = useState<string[]>(["oil_synthetic", "filter_oil"]);
+  const [servicesDone, setServicesDone] = useState<string[]>([
+    "oil_synthetic",
+    "filter_oil",
+  ]);
 
   const [nextServiceKm, setNextServiceKm] = useState<number>(0);
   const [nextServiceMonths, setNextServiceMonths] = useState<number>(6);
@@ -69,7 +113,8 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
   const [successOrder, setSuccessOrder] = useState<any | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const normalizePlate = (val: string) => val.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const normalizePlate = (val: string) =>
+    val.toUpperCase().replace(/[^A-Z0-9]/g, "");
 
   useEffect(() => {
     if (typeof currentMileage === "number" && currentMileage > 0) {
@@ -103,7 +148,8 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
           setBrand(vData.brand || "");
           setModel(vData.model || "");
           if (vData.currentMileage) setCurrentMileage(vData.currentMileage);
-          if (vData.currentOwnerPhone && !phone) setPhone(vData.currentOwnerPhone);
+          if (vData.currentOwnerPhone && !phone)
+            setPhone(vData.currentOwnerPhone);
           if (vData.userId) setLinkedUserId(vData.userId);
         }
 
@@ -112,7 +158,7 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
           const uQuery = query(
             collection(firestore, "users"),
             where("phoneNumber", "in", [cleanPhone, `+591${cleanPhone}`]),
-            where("role", "==", "driver")
+            where("role", "==", "driver"),
           );
           const uSnap = await getDocs(uQuery);
           if (!uSnap.empty) {
@@ -133,7 +179,7 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
 
   const toggleService = (id: string) => {
     setServicesDone((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     );
   };
 
@@ -158,7 +204,9 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
         workshopName,
         vehicleId: cleanPlate,
         plate: cleanPlate,
-        customerPhone: phone.trim().startsWith("+") ? phone.trim() : `+591${phone.trim()}`,
+        customerPhone: phone.trim().startsWith("+")
+          ? phone.trim()
+          : `+591${phone.trim()}`,
         customerName: customerName.trim() || "Cliente",
         userId: linkedUserId,
         serviceDate: Timestamp.fromDate(now),
@@ -189,7 +237,7 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
           userId: linkedUserId,
           updatedAt: serverTimestamp(),
         },
-        { merge: true }
+        { merge: true },
       );
 
       setSuccessOrder(serviceData);
@@ -216,9 +264,16 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
   };
 
   return (
-    <Card sx={{ maxWidth: 800, mx: "auto", p: 2, borderRadius: 3, boxShadow: 3 }}>
+    <Card
+      sx={{ maxWidth: 800, mx: "auto", p: 2, borderRadius: 3, boxShadow: 3 }}
+    >
       <CardContent>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={2}
+        >
           <Typography variant="h5" fontWeight={700} color="primary">
             Nueva Orden de Mantenimiento
           </Typography>
@@ -227,11 +282,13 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
 
         {linkedUserId ? (
           <Alert severity="success" icon={<CheckCircleIcon />} sx={{ mb: 2 }}>
-            Conductor registrado en CareDriver App. Recibirá notificaciones push automáticas.
+            Conductor registrado en CareDriver App. Recibirá notificaciones push
+            automáticas.
           </Alert>
         ) : (
           <Alert severity="info" sx={{ mb: 2 }}>
-            Conductor no registrado. Podrás enviarle comprobante por WhatsApp en 1 clic.
+            Conductor no registrado. Podrás enviarle comprobante por WhatsApp en
+            1 clic.
           </Alert>
         )}
 
@@ -280,7 +337,11 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
                 type="number"
                 label="Kilometraje Actual (km)"
                 value={currentMileage}
-                onChange={(e) => setCurrentMileage(e.target.value === "" ? "" : Number(e.target.value))}
+                onChange={(e) =>
+                  setCurrentMileage(
+                    e.target.value === "" ? "" : Number(e.target.value),
+                  )
+                }
               />
             </Grid>
 
@@ -313,7 +374,9 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
                     key={srv.id}
                     label={srv.label}
                     clickable
-                    color={servicesDone.includes(srv.id) ? "primary" : "default"}
+                    color={
+                      servicesDone.includes(srv.id) ? "primary" : "default"
+                    }
                     onClick={() => toggleService(srv.id)}
                   />
                 ))}
@@ -324,7 +387,9 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
               <Grid item xs={12}>
                 <Box sx={{ p: 1.5, bgcolor: "grey.100", borderRadius: 2 }}>
                   <Typography variant="body2" color="text.secondary">
-                    Próximo servicio proyectado: <strong>{nextServiceKm.toLocaleString()} km</strong> (~{nextServiceMonths} meses)
+                    Próximo servicio proyectado:{" "}
+                    <strong>{nextServiceKm.toLocaleString()} km</strong> (~
+                    {nextServiceMonths} meses)
                   </Typography>
                 </Box>
               </Grid>
@@ -337,7 +402,11 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
                 type="number"
                 label="Total Cobrado (Bs.)"
                 value={totalAmount}
-                onChange={(e) => setTotalAmount(e.target.value === "" ? "" : Number(e.target.value))}
+                onChange={(e) =>
+                  setTotalAmount(
+                    e.target.value === "" ? "" : Number(e.target.value),
+                  )
+                }
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -357,7 +426,9 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
                 variant="contained"
                 size="large"
                 disabled={saving}
-                startIcon={saving ? <CircularProgress size={20} /> : <SaveIcon />}
+                startIcon={
+                  saving ? <CircularProgress size={20} /> : <SaveIcon />
+                }
                 sx={{ py: 1.5, fontWeight: 700 }}
               >
                 {saving ? "Guardando..." : "Registrar Orden (<60s)"}
@@ -367,8 +438,20 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
         </form>
 
         {successOrder && (
-          <Box sx={{ mt: 3, p: 2, border: "2px dashed #4caf50", borderRadius: 2, bgcolor: "#f9fff9" }}>
-            <Typography variant="subtitle1" fontWeight={700} color="success.main">
+          <Box
+            sx={{
+              mt: 3,
+              p: 2,
+              border: "2px dashed #4caf50",
+              borderRadius: 2,
+              bgcolor: "#f9fff9",
+            }}
+          >
+            <Typography
+              variant="subtitle1"
+              fontWeight={700}
+              color="success.main"
+            >
               ✅ Orden #{successOrder.id.slice(-6)} Guardada Exitosamente
             </Typography>
             <Typography variant="body2" sx={{ my: 1 }}>
@@ -412,4 +495,3 @@ export default function FastServiceOrderForm({ workshopId, workshopName }: Props
     </Card>
   );
 }
-

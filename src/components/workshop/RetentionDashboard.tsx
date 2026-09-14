@@ -20,7 +20,10 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LoopIcon from "@mui/icons-material/Loop";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { generateWhatsAppMessage, openWhatsAppUrl } from "@/utils/helpers/whatsappHelper";
+import {
+  generateWhatsAppMessage,
+  openWhatsAppUrl,
+} from "@/utils/helpers/whatsappHelper";
 
 export interface ServiceRecordItem {
   id: string;
@@ -46,24 +49,37 @@ export default function RetentionDashboard({ records, workshopName }: Props) {
     const currentYear = now.getFullYear();
 
     const currentMonthRecords = records.filter((r) => {
-      const d = r.serviceDate?.toDate ? r.serviceDate.toDate() : new Date(r.serviceDate);
+      const d = r.serviceDate?.toDate
+        ? r.serviceDate.toDate()
+        : new Date(r.serviceDate);
       return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
     });
 
-    const totalMonthIncome = currentMonthRecords.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0);
-    const avgTicket = currentMonthRecords.length > 0 ? Math.round(totalMonthIncome / currentMonthRecords.length) : 0;
+    const totalMonthIncome = currentMonthRecords.reduce(
+      (acc, curr) => acc + (curr.totalAmount || 0),
+      0,
+    );
+    const avgTicket =
+      currentMonthRecords.length > 0
+        ? Math.round(totalMonthIncome / currentMonthRecords.length)
+        : 0;
 
     const plateFrequency: Record<string, number> = {};
     records.forEach((r) => {
       plateFrequency[r.plate] = (plateFrequency[r.plate] || 0) + 1;
     });
     const uniquePlates = Object.keys(plateFrequency).length;
-    const returningPlates = Object.values(plateFrequency).filter((count) => count > 1).length;
-    const retentionRate = uniquePlates > 0 ? Math.round((returningPlates / uniquePlates) * 100) : 0;
+    const returningPlates = Object.values(plateFrequency).filter(
+      (count) => count > 1,
+    ).length;
+    const retentionRate =
+      uniquePlates > 0 ? Math.round((returningPlates / uniquePlates) * 100) : 0;
 
     const pendingThisMonth = records.filter((r) => {
       if (!r.nextServiceDate) return false;
-      const nd = r.nextServiceDate?.toDate ? r.nextServiceDate.toDate() : new Date(r.nextServiceDate);
+      const nd = r.nextServiceDate?.toDate
+        ? r.nextServiceDate.toDate()
+        : new Date(r.nextServiceDate);
       return nd.getMonth() === currentMonth && nd.getFullYear() === currentYear;
     });
 
@@ -91,7 +107,8 @@ export default function RetentionDashboard({ records, workshopName }: Props) {
                   Bs. {metrics.avgTicket}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Total: Bs. {metrics.totalMonthIncome.toLocaleString()} ({metrics.currentMonthCount} órdenes)
+                  Total: Bs. {metrics.totalMonthIncome.toLocaleString()} (
+                  {metrics.currentMonthCount} órdenes)
                 </Typography>
               </Box>
             </Box>
@@ -145,12 +162,24 @@ export default function RetentionDashboard({ records, workshopName }: Props) {
         <Table>
           <TableHead sx={{ bgcolor: "grey.50" }}>
             <TableRow>
-              <TableCell><strong>Placa</strong></TableCell>
-              <TableCell><strong>Cliente</strong></TableCell>
-              <TableCell><strong>Celular</strong></TableCell>
-              <TableCell><strong>Fecha Estimada</strong></TableCell>
-              <TableCell><strong>Km Proyectado</strong></TableCell>
-              <TableCell align="center"><strong>Acción WhatsApp</strong></TableCell>
+              <TableCell>
+                <strong>Placa</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Cliente</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Celular</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Fecha Estimada</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Km Proyectado</strong>
+              </TableCell>
+              <TableCell align="center">
+                <strong>Acción WhatsApp</strong>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -163,7 +192,9 @@ export default function RetentionDashboard({ records, workshopName }: Props) {
             ) : (
               metrics.pendingThisMonth.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell><Chip label={row.plate} size="small" variant="outlined" /></TableCell>
+                  <TableCell>
+                    <Chip label={row.plate} size="small" variant="outlined" />
+                  </TableCell>
                   <TableCell>{row.customerName}</TableCell>
                   <TableCell>{row.customerPhone}</TableCell>
                   <TableCell>
@@ -171,7 +202,9 @@ export default function RetentionDashboard({ records, workshopName }: Props) {
                       ? row.nextServiceDate.toDate().toLocaleDateString("es-BO")
                       : "—"}
                   </TableCell>
-                  <TableCell>{row.nextServiceKm?.toLocaleString()} km</TableCell>
+                  <TableCell>
+                    {row.nextServiceKm?.toLocaleString()} km
+                  </TableCell>
                   <TableCell align="center">
                     <Button
                       size="small"
@@ -203,4 +236,3 @@ export default function RetentionDashboard({ records, workshopName }: Props) {
     </Box>
   );
 }
-

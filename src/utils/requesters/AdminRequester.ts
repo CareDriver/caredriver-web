@@ -705,7 +705,8 @@ export async function payUserReferralEarnings(
     let amountPaid = 0;
     for (const d of ledgerSnap.docs) {
       const data = d.data();
-      amountPaid += typeof data.amountEarned === "number" ? data.amountEarned : 0;
+      amountPaid +=
+        typeof data.amountEarned === "number" ? data.amountEarned : 0;
     }
 
     // 4 & 5. Batch: mark each ledger entry as paid + update userReferralEarnings summary

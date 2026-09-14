@@ -12,11 +12,19 @@ import {
 } from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
-import { collection, query, where, orderBy, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
 import { firestore } from "@/firebase/FirebaseConfig";
 import { useBusinessPanel } from "@/components/directory/business-panel/BusinessPanelContext";
 import FastServiceOrderForm from "@/components/workshop/FastServiceOrderForm";
-import RetentionDashboard, { ServiceRecordItem } from "@/components/workshop/RetentionDashboard";
+import RetentionDashboard, {
+  ServiceRecordItem,
+} from "@/components/workshop/RetentionDashboard";
 
 export default function WorkshopOrdersPage() {
   const { enterprise, loading: panelLoading } = useBusinessPanel();
@@ -30,7 +38,7 @@ export default function WorkshopOrdersPage() {
     const q = query(
       collection(firestore, "service_records"),
       where("workshopId", "==", enterprise.id),
-      orderBy("serviceDate", "desc")
+      orderBy("serviceDate", "desc"),
     );
 
     const unsubscribe = onSnapshot(
@@ -46,7 +54,7 @@ export default function WorkshopOrdersPage() {
       (error) => {
         console.error("Error al cargar service_records:", error);
         setLoadingRecords(false);
-      }
+      },
     );
 
     return () => unsubscribe();
@@ -54,7 +62,12 @@ export default function WorkshopOrdersPage() {
 
   if (panelLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="50vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -71,11 +84,15 @@ export default function WorkshopOrdersPage() {
   return (
     <Box>
       <Box sx={{ mb: 3 }}>
-        <Typography variant="h4" sx={{ fontWeight: 700, color: "primary.main", mb: 0.5 }}>
+        <Typography
+          variant="h4"
+          sx={{ fontWeight: 700, color: "primary.main", mb: 0.5 }}
+        >
           Gestión de Mantenimientos & Retención
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Registra órdenes de servicio en segundos y mantén la lealtad de tus clientes con alertas predictivas.
+          Registra órdenes de servicio en segundos y mantén la lealtad de tus
+          clientes con alertas predictivas.
         </Typography>
       </Box>
 
@@ -87,8 +104,16 @@ export default function WorkshopOrdersPage() {
           indicatorColor="primary"
           textColor="primary"
         >
-          <Tab icon={<AddCircleOutlineIcon />} label="Nueva Orden (<60 seg)" iconPosition="start" />
-          <Tab icon={<QueryStatsIcon />} label={`Métricas & Retención (${records.length})`} iconPosition="start" />
+          <Tab
+            icon={<AddCircleOutlineIcon />}
+            label="Nueva Orden (<60 seg)"
+            iconPosition="start"
+          />
+          <Tab
+            icon={<QueryStatsIcon />}
+            label={`Métricas & Retención (${records.length})`}
+            iconPosition="start"
+          />
         </Tabs>
       </Paper>
 

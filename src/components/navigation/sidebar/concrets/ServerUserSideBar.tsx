@@ -1,37 +1,26 @@
 "use client";
+
+import "@/styles/components/sidebar.css";
+import "@/styles/base/reset.css";
+import Link from "next/link";
 import Building from "@/icons/Building";
-import Car from "@/icons/Car";
-import Handshake from "@/icons/Handshake";
-import LocationDot from "@/icons/LocationDot";
-import Soap from "@/icons/Soap";
-import Truck from "@/icons/Truck";
-import UserIcon from "@/icons/UserIcon";
 import Warehouse from "@/icons/Warehouse";
 import Wrench from "@/icons/Wrench";
-import Link from "next/link";
-import LogoutOption from "../sidebar_options/LogoutOption";
-import Taxi from "@/icons/Taxi";
-import {
-  routeToRenewEnterpriseAsUser,
-  routeToRequestToBeServerUserAsUser,
-} from "@/utils/route_builders/as_user/RouteBuilderForUserServerAsUser";
-import { routeToAllEnterprisesAsUser } from "@/utils/route_builders/as_user/RouteBuilderForEnterpriseAsUser";
-import {
-  routeToProfileAsUser,
-  routeToRenewLocationAsUser,
-  routeToRenewPhoneAsUser,
-  routeToRenewPhotoAsUser,
-} from "@/utils/route_builders/as_user/RouteBuilderForProfileAsUser";
-import Camera from "@/icons/Camera";
-import { toCapitalize } from "@/utils/text_helpers/TextFormatter";
-import { DRIVER, DRIVER_PLURAL } from "@/models/Business";
-import { useContext } from "react";
-import { AuthContext } from "@/context/AuthContext";
+import Bullhorn from "@/icons/Bullhorn";
+import Users from "@/icons/Users";
+import SackDollar from "@/icons/SackDollar";
+import UserIcon from "@/icons/UserIcon";
+import LocationDot from "@/icons/LocationDot";
 import Phone from "@/icons/Phone";
-import { UserInterface, UserRole } from "@/interfaces/UserInterface";
+import Camera from "@/icons/Camera";
+import LogoutOption from "../sidebar_options/LogoutOption";
+import { UserInterface } from "@/interfaces/UserInterface";
 import UserRoleSideBar from "../sidebar_sections/UserRoleSideBar";
 import UserGear from "@/icons/UserGear";
-import { isUserServer } from "@/components/app_modules/users/utils/UserRoleGetter";
+import { useContext } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import Plus from "@/icons/Plus";
+import MessageIcon from "@/icons/Envelope";
 
 const ServerUserSideBar = ({
   pathname,
@@ -46,151 +35,141 @@ const ServerUserSideBar = ({
 
   return (
     <>
-      {isUserServer(user) && (
-        <UserRoleSideBar customRole={"Proveedor de Servicios"}>
-          <UserGear />
-        </UserRoleSideBar>
-      )}
-      <span className="text | white medium bold | margin-top-25 margin-bottom-15">
-        Servicios
-      </span>
-      <li className="sidebar-options margin-bottom-25">
-        <Link
-          href="/user/userserver/service"
-          className={`sidebar-option ${pathname === "/user/userserver/service" && "selected"}`}
-        >
-          <Handshake />
-          <span>Inicio</span>
-        </Link>
-        <Link
-          href={routeToRequestToBeServerUserAsUser("driver")}
-          className={`sidebar-option ${
-            (pathname.includes(routeToRequestToBeServerUserAsUser("driver")) ||
-              pathname.includes(routeToRenewEnterpriseAsUser("driver"))) &&
-            "selected"
-          }`}
-        >
-          <Car />
-          <span>{toCapitalize(DRIVER)}</span>
-        </Link>
-        <Link
-          href={routeToRequestToBeServerUserAsUser("mechanical")}
-          className={`sidebar-option ${
-            (pathname.includes(
-              routeToRequestToBeServerUserAsUser("mechanical"),
-            ) ||
-              pathname.includes(routeToRenewEnterpriseAsUser("mechanical"))) &&
-            "selected"
-          }`}
-        >
-          <Wrench />
-          <span>Mecánico</span>
-        </Link>
-        <Link
-          href={routeToRequestToBeServerUserAsUser("tow")}
-          className={`sidebar-option lb-icon ${
-            (pathname.includes(routeToRequestToBeServerUserAsUser("tow")) ||
-              pathname.includes(routeToRenewEnterpriseAsUser("tow"))) &&
-            "selected"
-          }`}
-        >
-          <Truck />
-          <span>Remolque</span>
-        </Link>
-      </li>
-      <span className="text | white medium bold | margin-bottom-15">
-        Registros
-      </span>
+      <UserRoleSideBar customRole={"Panel de Taller"}>
+        <UserGear />
+      </UserRoleSideBar>
 
-      <li className="sidebar-options | margin-bottom-25">
+      <span className="text | white medium bold | margin-bottom-15">
+        Mi Negocio
+      </span>
+      <li className="sidebar-options margin-bottom-15">
         <Link
-          href={routeToAllEnterprisesAsUser("laundry")}
+          href="/directory/business"
           className={`sidebar-option ${
-            pathname.includes(routeToAllEnterprisesAsUser("laundry")) &&
-            "selected"
-          }`}
-        >
-          <Soap />
-          <span>Lavaderos</span>
-        </Link>
-        <Link
-          href={routeToAllEnterprisesAsUser("mechanical")}
-          className={`sidebar-option ${
-            pathname.includes(routeToAllEnterprisesAsUser("mechanical")) &&
-            "selected"
+            pathname === "/directory/business" && "selected"
           }`}
         >
           <Warehouse />
-          <span>Talleres Mecánicos</span>
+          <span>Dashboard</span>
         </Link>
         <Link
-          href={routeToAllEnterprisesAsUser("tow")}
+          href="/directory/business/orders"
           className={`sidebar-option ${
-            pathname.includes(routeToAllEnterprisesAsUser("tow")) && "selected"
+            pathname.startsWith("/directory/business/orders") && "selected"
+          }`}
+        >
+          <Wrench />
+          <span>Órdenes</span>
+        </Link>
+        <Link
+          href="/directory/business/contacts"
+          className={`sidebar-option ${
+            pathname.startsWith("/directory/business/contacts") && "selected"
+          }`}
+        >
+          <MessageIcon />
+          <span>Contactos</span>
+        </Link>
+        <Link
+          href="/directory/business/offers"
+          className={`sidebar-option ${
+            pathname.startsWith("/directory/business/offers") && "selected"
+          }`}
+        >
+          <Bullhorn />
+          <span>Ofertas</span>
+        </Link>
+        <Link
+          href="/directory/business/profile"
+          className={`sidebar-option ${
+            pathname.startsWith("/directory/business/profile") && "selected"
           }`}
         >
           <Building />
-          <span>Empresas de Grúa</span>
+          <span>Ficha de Negocio</span>
         </Link>
         <Link
-          href={routeToAllEnterprisesAsUser("driver")}
+          href="/directory/business/team"
           className={`sidebar-option ${
-            pathname.includes(routeToAllEnterprisesAsUser("driver")) &&
+            pathname.startsWith("/directory/business/team") && "selected"
+          }`}
+        >
+          <Users />
+          <span>Equipo</span>
+        </Link>
+        <Link
+          href="/directory/business/subscription"
+          className={`sidebar-option ${
+            pathname.startsWith("/directory/business/subscription") &&
             "selected"
           }`}
         >
-          <Taxi />
-          <span>Empresas de {toCapitalize(DRIVER_PLURAL)}</span>
+          <SackDollar />
+          <span>Mi Plan</span>
         </Link>
       </li>
-      <span className="text | white medium bold | margin-bottom-15">
-        Perfil
-      </span>
 
+      <div>
+        <i className="separator-horizontal green-opacity"></i>
+      </div>
+
+      <span className="text | white medium bold | margin-bottom-15">
+        Registro
+      </span>
+      <li className="sidebar-options margin-bottom-15">
+        <Link
+          href="/directory/register"
+          className={`sidebar-option ${
+            pathname === "/directory/register" && "selected"
+          }`}
+        >
+          <Plus />
+          <span>Registrar Negocio</span>
+        </Link>
+      </li>
+
+      <div>
+        <i className="separator-horizontal green-opacity"></i>
+      </div>
+
+      <span className="text | white medium bold | margin-bottom-15">
+        Mi Cuenta
+      </span>
       <li className="sidebar-options">
         <Link
-          href={routeToProfileAsUser()}
+          href="/user/profile"
           className={`sidebar-option ${
-            pathname === routeToProfileAsUser() && "selected"
+            pathname === "/user/profile" && "selected"
           }`}
         >
           <UserIcon />
           <span>Mi Perfil</span>
         </Link>
 
-        {!userProps.hasPhone && (
+        {!userProps?.hasPhone && (
           <Link
-            href={routeToRenewPhoneAsUser()}
+            href="/user/profile/renew/phone"
             className={`sidebar-option ${
-              pathname === routeToRenewPhoneAsUser() && "selected"
+              pathname === "/user/profile/renew/phone" && "selected"
             }`}
           >
             <Phone />
-            <span>Agregar Numero</span>
+            <span>Agregar Teléfono</span>
           </Link>
         )}
         <Link
-          href={routeToRenewPhotoAsUser()}
+          href="/user/profile/renew/profilepicture"
           className={`sidebar-option ${
-            pathname === routeToRenewPhotoAsUser() && "selected"
+            pathname === "/user/profile/renew/profilepicture" && "selected"
           }`}
         >
           <Camera />
           <span>Foto de Perfil</span>
         </Link>
-        {/*                 <Link
-                    href={""}
-                    className={`sidebar-option ${
-                        pathname.includes("branding") && "selected"
-                    }`}
-                >
-                    <Bullhorn />
-                    <span>Branding</span>
-                </Link> */}
         <Link
-          href={routeToRenewLocationAsUser()}
+          href="/user/profile/renew/location"
           className={`sidebar-option ${
-            pathname.includes(routeToRenewLocationAsUser()) && "selected"
+            pathname === "/user/profile/renew/location" && "selected"
           }`}
         >
           <LocationDot />

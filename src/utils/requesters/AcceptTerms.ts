@@ -12,8 +12,7 @@ export async function acceptTerms(uid: string) {
     await addDoc(collection(firestore, "termsAcceptances"), {
       uid,
       acceptedAt: serverTimestamp(),
-      userAgent:
-        typeof navigator !== "undefined" ? navigator.userAgent : null,
+      userAgent: typeof navigator !== "undefined" ? navigator.userAgent : null,
     });
 
     return { success: true };

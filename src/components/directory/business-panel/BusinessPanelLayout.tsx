@@ -30,6 +30,7 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import PeopleIcon from "@mui/icons-material/People";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { useBusinessPanel } from "./BusinessPanelContext";
+import { AuthContext } from "@/context/AuthContext";
 import SuspendedBanner from "./SuspendedBanner";
 import BranchSelector from "./BranchSelector";
 
@@ -96,6 +97,7 @@ export default function BusinessPanelLayout({
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { enterprise, myRole, subscription } = useBusinessPanel();
+  const { logout } = React.useContext(AuthContext);
 
   const plan = enterprise?.plan || "free";
   const status =
@@ -218,8 +220,19 @@ export default function BusinessPanelLayout({
           fullWidth
           variant="outlined"
           href="/directory/business/subscription"
+          sx={{ mb: 1 }}
         >
           Gestionar plan
+        </Button>
+        <Button
+          fullWidth
+          variant="text"
+          color="inherit"
+          size="small"
+          onClick={logout}
+          sx={{ color: "text.secondary" }}
+        >
+          Cerrar sesión
         </Button>
       </Box>
     </Box>

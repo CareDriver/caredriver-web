@@ -15,10 +15,12 @@ import {
   Badge,
   useMediaQuery,
   IconButton,
+  Button,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useAdminPanel } from "./AdminPanelContext";
+import { AuthContext } from "@/context/AuthContext";
 
 const DRAWER_WIDTH = 280;
 
@@ -32,6 +34,7 @@ export default function AdminPanelLayout({
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { requests, receipts } = useAdminPanel();
+  const { user, logout } = React.useContext(AuthContext);
 
   const navItems = [
     { label: "Dashboard", href: "/directory/admin", badge: 0 },
@@ -115,6 +118,44 @@ export default function AdminPanelLayout({
           );
         })}
       </List>
+
+      <Box sx={{ p: 2, borderTop: `1px solid ${theme.palette.divider}` }}>
+        <Typography
+          variant="body2"
+          sx={{
+            fontWeight: 600,
+            color: "text.primary",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {user?.fullName || "Administrador"}
+        </Typography>
+        <Typography
+          variant="caption"
+          sx={{
+            color: "text.secondary",
+            display: "block",
+            mb: 1.5,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {user?.email || "admin@caredriver.com"}
+        </Typography>
+        <Button
+          fullWidth
+          variant="outlined"
+          color="inherit"
+          size="small"
+          onClick={logout}
+          sx={{ borderColor: "divider" }}
+        >
+          Cerrar sesión
+        </Button>
+      </Box>
     </Box>
   );
 

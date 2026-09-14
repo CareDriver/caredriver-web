@@ -22,7 +22,9 @@ export function sanitizeBoliviaPhone(rawPhone: string): string {
 /**
  * Generates a wa.me deep link with pre-filled encoded text
  */
-export function generateWhatsAppMessage(payload: WhatsAppMessagePayload): string {
+export function generateWhatsAppMessage(
+  payload: WhatsAppMessagePayload,
+): string {
   const cleanPhone = sanitizeBoliviaPhone(payload.phone);
 
   let text = "";
@@ -52,4 +54,3 @@ export function openWhatsAppUrl(url: string) {
     window.open(url, "_blank", "noopener,noreferrer");
   }
 }
-

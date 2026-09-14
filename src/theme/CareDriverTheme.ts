@@ -1,4 +1,4 @@
-import {createTheme} from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 
 /**
  * CareDriver Brand Tokens
@@ -7,9 +7,9 @@ import {createTheme} from "@mui/material/styles";
  * Reference: CareDriver brand manual — Esmeralda, Verde, Menta.
  */
 export const brandColors = {
-  esmeralda: "#043C40",   // primary dark — headers, sidebar, main text
-  verde: "#07E580",       // primary accent — CTAs, positive states, actions
-  menta: "#B4FCC7",       // soft backgrounds, badges, subtle highlights
+  esmeralda: "#043C40", // primary dark — headers, sidebar, main text
+  verde: "#07E580", // primary accent — CTAs, positive states, actions
+  menta: "#B4FCC7", // soft backgrounds, badges, subtle highlights
   white: "#FFFFFF",
   black: "#000000",
   grayLight: "#F5F5F5",
@@ -44,22 +44,22 @@ export const careDriverTheme = createTheme({
       primary: brandColors.esmeralda,
       secondary: brandColors.grayDark,
     },
-    error: {main: brandColors.error},
-    warning: {main: brandColors.warning},
-    info: {main: brandColors.info},
-    success: {main: brandColors.verde},
+    error: { main: brandColors.error },
+    warning: { main: brandColors.warning },
+    info: { main: brandColors.info },
+    success: { main: brandColors.verde },
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
-    h1: {fontWeight: 700, color: brandColors.esmeralda},
-    h2: {fontWeight: 700, color: brandColors.esmeralda},
-    h3: {fontWeight: 600, color: brandColors.esmeralda},
-    h4: {fontWeight: 600, color: brandColors.esmeralda},
-    h5: {fontWeight: 600},
-    h6: {fontWeight: 600},
-    button: {fontWeight: 600, textTransform: "none" as const},
+    h1: { fontWeight: 700, color: brandColors.esmeralda },
+    h2: { fontWeight: 700, color: brandColors.esmeralda },
+    h3: { fontWeight: 600, color: brandColors.esmeralda },
+    h4: { fontWeight: 600, color: brandColors.esmeralda },
+    h5: { fontWeight: 600 },
+    h6: { fontWeight: 600 },
+    button: { fontWeight: 600, textTransform: "none" as const },
   },
-  shape: {borderRadius: 8},
+  shape: { borderRadius: 8 },
   components: {
     MuiButton: {
       styleOverrides: {
@@ -69,12 +69,12 @@ export const careDriverTheme = createTheme({
         },
         containedPrimary: {
           backgroundColor: brandColors.esmeralda,
-          "&:hover": {backgroundColor: "#032D30"},
+          "&:hover": { backgroundColor: "#032D30" },
         },
         containedSecondary: {
           backgroundColor: brandColors.verde,
           color: brandColors.esmeralda,
-          "&:hover": {backgroundColor: "#06C96E"},
+          "&:hover": { backgroundColor: "#06C96E" },
         },
       },
     },

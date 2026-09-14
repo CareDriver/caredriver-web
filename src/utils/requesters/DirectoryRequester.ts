@@ -294,24 +294,19 @@ export async function getCurrentPrice(
     const pricingData = pricingSnap.data() as Record<string, unknown>;
 
     // 2. Subscription doc
-    const subSnap = await getDoc(
-      doc(firestore, "subscriptions", enterpriseId),
-    );
+    const subSnap = await getDoc(doc(firestore, "subscriptions", enterpriseId));
     const subData = subSnap.exists()
       ? (subSnap.data() as Record<string, unknown>)
       : {};
 
     // 3. Enterprise doc — to resolve effective plan
-    const entSnap = await getDoc(
-      doc(firestore, "enterprises", enterpriseId),
-    );
+    const entSnap = await getDoc(doc(firestore, "enterprises", enterpriseId));
     if (!entSnap.exists()) return null;
     const entData = entSnap.data() as Record<string, unknown>;
     const plan = (entData.plan as string) || "free";
     const requestedPlan = (entData.requestedPlan as string) || null;
 
-    const effectivePlan =
-      plan === "free" ? (requestedPlan || plan) : plan;
+    const effectivePlan = plan === "free" ? requestedPlan || plan : plan;
 
     // Base price
     const basePrice: number =
@@ -637,7 +632,8 @@ export async function updateOffer(body: {
     if (active !== undefined) allowedFields.active = active;
     if (title !== undefined) allowedFields.title = title;
     if (description !== undefined) allowedFields.description = description;
-    if (discountValue !== undefined) allowedFields.discountValue = discountValue;
+    if (discountValue !== undefined)
+      allowedFields.discountValue = discountValue;
 
     await updateDoc(
       doc(firestore, "enterprises", enterpriseId, "offers", offerId),
