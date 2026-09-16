@@ -50,6 +50,13 @@ export default function AdminBusinessesView() {
     return matchesSearch && matchesPlan;
   });
 
+  console.log(
+    "🏢 [AdminBusinessesView] Rendered. Total businesses in context:",
+    businesses.length,
+    "Filtered count:",
+    filtered.length,
+  );
+
   const handleVerify = async (id: string, verified: boolean) => {
     setLoading(`verify-${id}`);
     await verifyBusiness(id, verified);

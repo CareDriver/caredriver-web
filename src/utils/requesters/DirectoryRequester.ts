@@ -863,44 +863,58 @@ export async function getPublicPricing(plan: "verified" | "featured"): Promise<{
     const pricingSnap = await getDoc(
       doc(firestore, "platformSettings", "pricing"),
     );
-    if (!pricingSnap.exists()) return null;
+    if (!pricingSnap.exists()) {
+      const defaultPrice = plan === "featured" ? 150 : 80;
+      return {
+        basePrice: defaultPrice,
+        finalPrice: defaultPrice,
+        discountApplied: false,
+        cyclesRemaining: 0,
+        campaignName: null,
+        tag: plan === "featured" ? "Popular" : null,
+      };
+    }
     const pricingData = pricingSnap.data() as Record<string, unknown>;
 
     const basePrice: number =
       plan === "featured"
-        ? ((pricingData.featuredBasePrice as number) ?? 0)
-        : ((pricingData.verifiedBasePrice as number) ?? 0);
+        ? ((pricingData.featuredBasePrice as number) ?? 150)
+        : ((pricingData.verifiedBasePrice as number) ?? 80);
 
     const tag: string | null =
       (pricingData[`${plan}Tag`] as string | null) ?? null;
 
     // Query active discount campaigns that apply to this plan
-    const campaignQ = query(
-      collection(firestore, "discountCampaigns"),
-      where("active", "==", true),
-      where("appliesToPlans", "array-contains", plan),
-      limit(1),
-    );
-    const campaignSnap = await getDocs(campaignQ);
-
-    let finalPrice = basePrice;
     let discountApplied = false;
     let cyclesRemaining = 0;
     let campaignName: string | null = null;
+    let finalPrice = basePrice;
 
-    if (!campaignSnap.empty) {
-      const campaign = campaignSnap.docs[0].data() as Record<string, unknown>;
-      const discountType = campaign.discountType as string;
-      const discountValue = (campaign.discountValue as number) ?? 0;
-      campaignName = (campaign.name as string) ?? null;
-      cyclesRemaining = (campaign.durationCycles as number) ?? 0;
+    try {
+      const campaignQ = query(
+        collection(firestore, "discountCampaigns"),
+        where("active", "==", true),
+        where("appliesToPlans", "array-contains", plan),
+        limit(1),
+      );
+      const campaignSnap = await getDocs(campaignQ);
 
-      if (discountType === "percent") {
-        finalPrice = Math.round(basePrice * (1 - discountValue / 100));
-      } else if (discountType === "fixed_amount") {
-        finalPrice = Math.max(0, basePrice - discountValue);
+      if (!campaignSnap.empty) {
+        const campaign = campaignSnap.docs[0].data() as Record<string, unknown>;
+        const discountType = campaign.discountType as string;
+        const discountValue = (campaign.discountValue as number) ?? 0;
+        campaignName = (campaign.name as string) ?? null;
+        cyclesRemaining = (campaign.durationCycles as number) ?? 0;
+
+        if (discountType === "percent") {
+          finalPrice = Math.round(basePrice * (1 - discountValue / 100));
+        } else if (discountType === "fixed_amount") {
+          finalPrice = Math.max(0, basePrice - discountValue);
+        }
+        discountApplied = true;
       }
-      discountApplied = true;
+    } catch (campaignErr) {
+      console.warn("Could not query discount campaigns:", campaignErr);
     }
 
     return {
@@ -913,7 +927,15 @@ export async function getPublicPricing(plan: "verified" | "featured"): Promise<{
     };
   } catch (error) {
     console.error("getPublicPricing failed", error);
-    return null;
+    const fallbackPrice = plan === "featured" ? 150 : 80;
+    return {
+      basePrice: fallbackPrice,
+      finalPrice: fallbackPrice,
+      discountApplied: false,
+      cyclesRemaining: 0,
+      campaignName: null,
+      tag: plan === "featured" ? "Popular" : null,
+    };
   }
 }
 
@@ -986,5 +1008,40 @@ export async function notifyAdminNewRequest(name: string, city: string) {
     });
   } catch {
     // Silently ignore ntfy failures; the request is already saved.
+  }
+}
+
+export interface UserPendingRequest {
+  id: string;
+  name: string;
+  city: string;
+  requestedPlan: string;
+  createdAt?: any;
+  status?: string;
+  rejectionReason?: string;
+  aproved?: boolean;
+}
+
+export async function fetchUserPendingEnterpriseRequest(): Promise<UserPendingRequest | null> {
+  try {
+    const uid = auth.currentUser?.uid;
+    if (!uid) return null;
+
+    const q = query(
+      collection(firestore, "enterprise-requests"),
+      where("requestedByUserId", "==", uid),
+      where("active", "==", true),
+      where("deleted", "==", false),
+      limit(1),
+    );
+    const snap = await getDocs(q);
+    if (!snap.empty) {
+      const docSnap = snap.docs[0];
+      return { id: docSnap.id, ...docSnap.data() } as UserPendingRequest;
+    }
+    return null;
+  } catch (error) {
+    console.error("fetchUserPendingEnterpriseRequest failed", error);
+    return null;
   }
 }

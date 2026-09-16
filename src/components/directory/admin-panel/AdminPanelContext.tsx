@@ -62,17 +62,81 @@ export const AdminPanelProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log(
+      "🚀 [AdminPanelContext] Provider mounted, initializing listeners...",
+    );
     setLoading(false);
     const unsubs: (() => void)[] = [];
-    unsubs.push(listenBusinesses(setBusinesses));
-    unsubs.push(listenEnterpriseRequests(setRequests));
-    unsubs.push(listenPaymentReceipts(setReceipts));
-    unsubs.push(listenSubscriptions(setSubscriptions));
-    unsubs.push(listenDiscountCampaigns(setDiscountCampaigns));
-    unsubs.push(listenSeasonalCampaigns(setSeasonalCampaigns));
-    unsubs.push(listenReferrals(setReferrals));
-    unsubs.push(listenUserReferralEarnings(setUserReferralEarnings));
-    return () => unsubs.forEach((u) => u());
+
+    unsubs.push(
+      listenBusinesses((data) => {
+        console.log(
+          "🏢 [AdminPanelContext] Businesses received:",
+          data.length,
+          data.map((b) => b.name),
+        );
+        setBusinesses(data);
+      }),
+    );
+    unsubs.push(
+      listenEnterpriseRequests((data) => {
+        console.log("📝 [AdminPanelContext] Requests received:", data.length);
+        setRequests(data);
+      }),
+    );
+    unsubs.push(
+      listenPaymentReceipts((data) => {
+        console.log("🧾 [AdminPanelContext] Receipts received:", data.length);
+        setReceipts(data);
+      }),
+    );
+    unsubs.push(
+      listenSubscriptions((data) => {
+        console.log(
+          "💳 [AdminPanelContext] Subscriptions received:",
+          data.length,
+        );
+        setSubscriptions(data);
+      }),
+    );
+    unsubs.push(
+      listenDiscountCampaigns((data) => {
+        console.log(
+          "🏷️ [AdminPanelContext] Discount campaigns received:",
+          data.length,
+        );
+        setDiscountCampaigns(data);
+      }),
+    );
+    unsubs.push(
+      listenSeasonalCampaigns((data) => {
+        console.log(
+          "❄️ [AdminPanelContext] Seasonal campaigns received:",
+          data.length,
+        );
+        setSeasonalCampaigns(data);
+      }),
+    );
+    unsubs.push(
+      listenReferrals((data) => {
+        console.log("👥 [AdminPanelContext] Referrals received:", data.length);
+        setReferrals(data);
+      }),
+    );
+    unsubs.push(
+      listenUserReferralEarnings((data) => {
+        console.log(
+          "💰 [AdminPanelContext] User referral earnings received:",
+          data.length,
+        );
+        setUserReferralEarnings(data);
+      }),
+    );
+
+    return () => {
+      console.log("🛑 [AdminPanelContext] Cleaning up listeners");
+      unsubs.forEach((u) => u());
+    };
   }, []);
 
   return (

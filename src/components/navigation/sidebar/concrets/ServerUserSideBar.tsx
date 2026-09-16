@@ -21,6 +21,7 @@ import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import Plus from "@/icons/Plus";
 import MessageIcon from "@/icons/Envelope";
+import Store from "@/icons/Store";
 
 const ServerUserSideBar = ({
   pathname,
@@ -123,7 +124,7 @@ const ServerUserSideBar = ({
             pathname === "/directory/register" && "selected"
           }`}
         >
-          <Plus />
+          <Store />
           <span>Registrar Negocio</span>
         </Link>
       </li>
@@ -177,6 +178,31 @@ const ServerUserSideBar = ({
         </Link>
         <LogoutOption logout={logout} />
       </li>
+
+      {process.env.NODE_ENV === "development" && (
+        <>
+          <div>
+            <i className="separator-horizontal green-opacity"></i>
+          </div>
+          <span
+            className="text | white medium bold | margin-bottom-15"
+            style={{ color: "#07E580" }}
+          >
+            🛠️ Dev Tools
+          </span>
+          <li className="sidebar-options">
+            <Link
+              href="/dev/seed"
+              className={`sidebar-option ${
+                pathname === "/dev/seed" && "selected"
+              }`}
+            >
+              <Wrench />
+              <span>Datos de Prueba</span>
+            </Link>
+          </li>
+        </>
+      )}
     </>
   );
 };

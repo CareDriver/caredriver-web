@@ -40,7 +40,14 @@ import { uploadFileBlod } from "@/utils/requesters/FileUploader";
 import {
   submitDirectoryEnterpriseRequest,
   notifyAdminNewRequest,
+  fetchUserPendingEnterpriseRequest,
+  UserPendingRequest,
 } from "@/utils/requesters/DirectoryRequester";
+import { AuthContext } from "@/context/AuthContext";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import LogoutIcon from "@mui/icons-material/Logout";
+import StoreIcon from "@mui/icons-material/Store";
 import MapPicker from "./MapPicker";
 import PlanSelector from "./PlanSelector";
 import BusinessPreviewCard from "./BusinessPreviewCard";
@@ -60,6 +67,29 @@ const MenuProps = {
 export default function BusinessRegistrationForm() {
   const searchParams = useSearchParams();
   const chainId = searchParams.get("chainId");
+  const { logout, user } = React.useContext(AuthContext);
+
+  const [checkingPending, setCheckingPending] = useState(true);
+  const [pendingRequest, setPendingRequest] =
+    useState<UserPendingRequest | null>(null);
+  const [showNewFormAnyway, setShowNewFormAnyway] = useState(false);
+
+  React.useEffect(() => {
+    let active = true;
+    fetchUserPendingEnterpriseRequest()
+      .then((req) => {
+        if (active) {
+          setPendingRequest(req);
+          setCheckingPending(false);
+        }
+      })
+      .catch(() => {
+        if (active) setCheckingPending(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -198,22 +228,178 @@ export default function BusinessRegistrationForm() {
     setLoading(false);
   };
 
-  if (submitted) {
+  if (checkingPending) {
     return (
-      <Box sx={{ maxWidth: 600, mx: "auto", textAlign: "center", py: 8 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          py: 10,
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (pendingRequest && !showNewFormAnyway && !chainId) {
+    return (
+      <Box
+        sx={{
+          maxWidth: 620,
+          mx: "auto",
+          textAlign: "center",
+          py: { xs: 4, md: 6 },
+          px: 3,
+        }}
+      >
+        <Box
+          sx={{
+            width: 76,
+            height: 76,
+            borderRadius: "50%",
+            bgcolor: "warning.light",
+            color: "warning.dark",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            mx: "auto",
+            mb: 2.5,
+          }}
+        >
+          <HourglassEmptyIcon sx={{ fontSize: 40 }} />
+        </Box>
         <Typography
           variant="h4"
-          sx={{ fontWeight: 700, color: "primary.main", mb: 2 }}
+          sx={{ fontWeight: 800, color: "text.primary", mb: 1.5 }}
         >
-          Solicitud enviada
+          Tu solicitud está en revisión
+        </Typography>
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ mb: 3.5, maxWidth: 520, mx: "auto" }}
+        >
+          Ya recibimos los datos de tu negocio{" "}
+          <strong>{pendingRequest.name}</strong> en {pendingRequest.city}.
+          Nuestro equipo de administración está revisando la información para
+          habilitar tu acceso al panel.
+        </Typography>
+
+        <Box
+          sx={{
+            p: 3,
+            bgcolor: "background.paper",
+            borderRadius: 3,
+            border: 1,
+            borderColor: "divider",
+            mb: 4,
+            textAlign: "left",
+          }}
+        >
+          <Typography
+            variant="subtitle2"
+            color="primary"
+            sx={{ fontWeight: 700, mb: 1.5 }}
+          >
+            Resumen de la solicitud
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 0.8 }}>
+            <strong>Taller / Negocio:</strong> {pendingRequest.name}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 0.8 }}>
+            <strong>Ciudad:</strong> {pendingRequest.city}
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 0.8 }}>
+            <strong>Plan seleccionado:</strong>{" "}
+            {pendingRequest.requestedPlan === "featured"
+              ? "Destacado VIP"
+              : pendingRequest.requestedPlan === "verified"
+                ? "Verificado"
+                : "Ficha Básica (Gratis)"}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            <strong>Estado:</strong> Pendiente de aprobación administrativa
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            gap: 2,
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            variant="outlined"
+            color="error"
+            startIcon={<LogoutIcon />}
+            onClick={logout}
+            sx={{ borderRadius: 2 }}
+          >
+            Cerrar sesión
+          </Button>
+          <Button
+            variant="text"
+            color="primary"
+            startIcon={<StoreIcon />}
+            onClick={() => setShowNewFormAnyway(true)}
+          >
+            Registrar otra sucursal o negocio
+          </Button>
+        </Box>
+      </Box>
+    );
+  }
+
+  if (submitted) {
+    return (
+      <Box
+        sx={{ maxWidth: 600, mx: "auto", textAlign: "center", py: 8, px: 3 }}
+      >
+        <Box
+          sx={{
+            width: 76,
+            height: 76,
+            borderRadius: "50%",
+            bgcolor: "success.light",
+            color: "success.dark",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            mx: "auto",
+            mb: 2.5,
+          }}
+        >
+          <CheckCircleOutlineIcon sx={{ fontSize: 44 }} />
+        </Box>
+        <Typography
+          variant="h4"
+          sx={{ fontWeight: 800, color: "primary.main", mb: 2 }}
+        >
+          ¡Solicitud enviada con éxito!
         </Typography>
         <Typography variant="body1" sx={{ mb: 2 }}>
-          Tu solicitud está en revisión. Te avisaremos cuando sea aprobada.
+          Tu solicitud está en revisión. Te avisaremos cuando sea aprobada para
+          que ingreses a tu panel de control.
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Si elegiste un plan pago, vas a poder subir el comprobante desde tu
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
+          Si elegiste un plan pago, vas a poder subir el comprobante QR desde tu
           panel de negocio una vez aprobada la solicitud.
         </Typography>
+        <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
+          <Button
+            variant="outlined"
+            color="error"
+            startIcon={<LogoutIcon />}
+            onClick={logout}
+            sx={{ borderRadius: 2 }}
+          >
+            Cerrar sesión
+          </Button>
+        </Box>
       </Box>
     );
   }

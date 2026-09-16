@@ -22,9 +22,20 @@ const AdminClaimGuard: React.FC<Props> = ({ children, fallbackUrl = "/" }) => {
   const router = useRouter();
 
   useEffect(() => {
+    console.log("🛡️ [AdminClaimGuard] Status:", {
+      checkingUserAuth,
+      userEmail: user?.email,
+      userRole: user?.role,
+      isAdminClaim,
+    });
+
     if (!checkingUserAuth) {
       const isAdmin = isAdminClaim || user?.role === UserRole.Admin;
       if (!isAdmin) {
+        console.warn(
+          "⛔ [AdminClaimGuard] User is not admin! Redirecting to",
+          fallbackUrl,
+        );
         toast.error(
           "Acceso denegado: se requieren privilegios de administrador",
           {
@@ -33,6 +44,10 @@ const AdminClaimGuard: React.FC<Props> = ({ children, fallbackUrl = "/" }) => {
         );
         router.replace(fallbackUrl);
       } else {
+        console.log(
+          "🔓 [AdminClaimGuard] Admin access granted for:",
+          user?.email,
+        );
         setAuthorized(true);
       }
     }

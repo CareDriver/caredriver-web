@@ -18,6 +18,7 @@ import Users from "@/icons/Users";
 import UserPlus from "@/icons/UserPlus";
 import UserIcon from "@/icons/UserIcon";
 import Warehouse from "@/icons/Warehouse";
+import Wrench from "@/icons/Wrench";
 
 const AdminSideBar = ({
   pathname,
@@ -157,6 +158,31 @@ const AdminSideBar = ({
         </Link>
         <LogoutOption logout={logout} />
       </li>
+
+      {process.env.NODE_ENV === "development" && (
+        <>
+          <div>
+            <i className="separator-horizontal green-opacity"></i>
+          </div>
+          <span
+            className="text | white medium bold | margin-bottom-15"
+            style={{ color: "#07E580" }}
+          >
+            🛠️ Dev Tools
+          </span>
+          <li className="sidebar-options">
+            <Link
+              href="/dev/seed"
+              className={`sidebar-option ${
+                pathname === "/dev/seed" && "selected"
+              }`}
+            >
+              <Wrench />
+              <span>Datos de Prueba</span>
+            </Link>
+          </li>
+        </>
+      )}
     </>
   );
 };

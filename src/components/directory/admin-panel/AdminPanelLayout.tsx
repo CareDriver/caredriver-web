@@ -16,6 +16,7 @@ import {
   useMediaQuery,
   IconButton,
   Button,
+  Chip,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -70,13 +71,34 @@ export default function AdminPanelLayout({
 
   const drawer = (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <Toolbar sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}>
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: 700, color: "primary.main" }}
-        >
-          CareDriver Admin
-        </Typography>
+      <Toolbar
+        sx={{
+          borderBottom: `1px solid ${theme.palette.divider}`,
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          px: 2,
+        }}
+      >
+        <Box
+          component="img"
+          src={
+            theme.palette.mode === "dark"
+              ? "/assets/logo/logoWhite.png"
+              : "/assets/logo/logoGreen.png"
+          }
+          alt="CareDriver"
+          sx={{ height: 30, width: "auto", objectFit: "contain" }}
+          onError={(e: any) => {
+            e.currentTarget.src = "/logo.svg";
+          }}
+        />
+        <Chip
+          label="Admin"
+          size="small"
+          color="primary"
+          sx={{ height: 20, fontSize: "0.65rem", fontWeight: 800 }}
+        />
       </Toolbar>
       <List sx={{ flex: 1, py: 1 }}>
         {navItems.map((item) => {

@@ -4,6 +4,8 @@ import {
   where,
   orderBy,
   limit,
+  startAfter,
+  getCountFromServer,
   onSnapshot,
   doc,
   getDoc,
@@ -16,6 +18,8 @@ import {
   serverTimestamp,
   Timestamp,
   Unsubscribe,
+  DocumentSnapshot,
+  QueryDocumentSnapshot,
 } from "firebase/firestore";
 import { auth, firestore } from "@/firebase/FirebaseConfig";
 import { Enterprise, EnterpriseRequest } from "@/interfaces/Enterprise";
@@ -75,22 +79,34 @@ async function adminFetch<T>(
 export function listenEnterpriseRequests(
   callback: (requests: EnterpriseRequest[]) => void,
 ): Unsubscribe {
+  console.log("🔍 [AdminRequester] listenEnterpriseRequests starting query...");
   const q = query(
     collection(firestore, "enterprise-requests"),
-    where("aproved", "==", null),
     where("deleted", "==", false),
-    orderBy("createdAt", "asc"),
     limit(200),
   );
   return onSnapshot(
     q,
     (snap) => {
-      const requests = snap.docs.map(
-        (d) => ({ id: d.id, ...d.data() }) as unknown as EnterpriseRequest,
+      console.log(
+        "✅ [AdminRequester] listenEnterpriseRequests received snapshot:",
+        snap.size,
+        "docs",
       );
+      const requests = snap.docs
+        .map((d) => ({ id: d.id, ...d.data() }) as unknown as EnterpriseRequest)
+        .filter((r: any) => !r.aproved);
+      requests.sort((a, b) => {
+        const tA = (a.createdAt as any)?.toMillis?.() || 0;
+        const tB = (b.createdAt as any)?.toMillis?.() || 0;
+        return tA - tB;
+      });
       callback(requests);
     },
-    () => callback([]),
+    (err) => {
+      console.error("❌ [AdminRequester] listenEnterpriseRequests error:", err);
+      callback([]);
+    },
   );
 }
 
@@ -116,21 +132,34 @@ export async function approveDirectoryEnterpriseRequest(
 export function listenPaymentReceipts(
   callback: (receipts: PaymentReceipt[]) => void,
 ): Unsubscribe {
+  console.log("🔍 [AdminRequester] listenPaymentReceipts starting query...");
   const q = query(
     collection(firestore, "paymentReceipts"),
     where("status", "==", "pending"),
-    orderBy("submittedAt", "asc"),
     limit(200),
   );
   return onSnapshot(
     q,
     (snap) => {
+      console.log(
+        "✅ [AdminRequester] listenPaymentReceipts received snapshot:",
+        snap.size,
+        "docs",
+      );
       const receipts = snap.docs.map(
         (d) => ({ id: d.id, ...d.data() }) as PaymentReceipt,
       );
+      receipts.sort((a, b) => {
+        const tA = (a.submittedAt as any)?.toMillis?.() || 0;
+        const tB = (b.submittedAt as any)?.toMillis?.() || 0;
+        return tA - tB;
+      });
       callback(receipts);
     },
-    () => callback([]),
+    (err) => {
+      console.error("❌ [AdminRequester] listenPaymentReceipts error:", err);
+      callback([]);
+    },
   );
 }
 
@@ -178,35 +207,52 @@ export async function markReceiptInvoiced(
 // ---------------------------------------------------------------------------
 
 export async function fetchAllBusinesses(): Promise<Enterprise[]> {
-  const snap = await getDocs(
-    query(
-      collection(firestore, "enterprises"),
-      where("deleted", "==", false),
-      orderBy("name"),
-      limit(500),
-    ),
-  );
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }) as Enterprise);
+  try {
+    const snap = await getDocs(
+      query(
+        collection(firestore, "enterprises"),
+        where("deleted", "==", false),
+        limit(500),
+      ),
+    );
+    const list = snap.docs.map(
+      (d) => ({ id: d.id, ...d.data() }) as Enterprise,
+    );
+    list.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+    return list;
+  } catch (error) {
+    console.error("fetchAllBusinesses error:", error);
+    return [];
+  }
 }
 
 export function listenBusinesses(
   callback: (businesses: Enterprise[]) => void,
 ): Unsubscribe {
+  console.log("🔍 [AdminRequester] listenBusinesses query starting...");
   const q = query(
     collection(firestore, "enterprises"),
     where("deleted", "==", false),
-    orderBy("name"),
     limit(500),
   );
   return onSnapshot(
     q,
     (snap) => {
+      console.log(
+        "✅ [AdminRequester] listenBusinesses snapshot received:",
+        snap.size,
+        "businesses",
+      );
       const businesses = snap.docs.map(
         (d) => ({ id: d.id, ...d.data() }) as Enterprise,
       );
+      businesses.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
       callback(businesses);
     },
-    () => callback([]),
+    (error) => {
+      console.error("❌ [AdminRequester] listenBusinesses error:", error);
+      callback([]);
+    },
   );
 }
 
@@ -324,16 +370,25 @@ export async function suspendBusiness(
 export function listenSubscriptions(
   callback: (subs: Subscription[]) => void,
 ): Unsubscribe {
+  console.log("🔍 [AdminRequester] listenSubscriptions starting query...");
   const q = query(collection(firestore, "subscriptions"), limit(500));
   return onSnapshot(
     q,
     (snap) => {
+      console.log(
+        "✅ [AdminRequester] listenSubscriptions received snapshot:",
+        snap.size,
+        "subscriptions",
+      );
       const subs = snap.docs.map(
         (d) => ({ enterpriseId: d.id, ...d.data() }) as Subscription,
       );
       callback(subs);
     },
-    () => callback([]),
+    (err) => {
+      console.error("❌ [AdminRequester] listenSubscriptions error:", err);
+      callback([]);
+    },
   );
 }
 
@@ -431,40 +486,50 @@ export async function updatePlatformPaymentSettings(body: {
 export function listenDiscountCampaigns(
   callback: (campaigns: DiscountCampaign[]) => void,
 ): Unsubscribe {
-  const q = query(
-    collection(firestore, "discountCampaigns"),
-    orderBy("updatedAt", "desc"),
-    limit(100),
-  );
+  console.log("🔍 [AdminRequester] listenDiscountCampaigns starting query...");
+  const q = query(collection(firestore, "discountCampaigns"), limit(100));
   return onSnapshot(
     q,
     (snap) => {
+      console.log(
+        "✅ [AdminRequester] listenDiscountCampaigns received snapshot:",
+        snap.size,
+        "campaigns",
+      );
       const campaigns = snap.docs.map(
         (d) => ({ id: d.id, ...d.data() }) as DiscountCampaign,
       );
       callback(campaigns);
     },
-    () => callback([]),
+    (err) => {
+      console.error("❌ [AdminRequester] listenDiscountCampaigns error:", err);
+      callback([]);
+    },
   );
 }
 
 export function listenSeasonalCampaigns(
   callback: (campaigns: SeasonalCampaign[]) => void,
 ): Unsubscribe {
-  const q = query(
-    collection(firestore, "seasonalCampaigns"),
-    orderBy("updatedAt", "desc"),
-    limit(100),
-  );
+  console.log("🔍 [AdminRequester] listenSeasonalCampaigns starting query...");
+  const q = query(collection(firestore, "seasonalCampaigns"), limit(100));
   return onSnapshot(
     q,
     (snap) => {
+      console.log(
+        "✅ [AdminRequester] listenSeasonalCampaigns received snapshot:",
+        snap.size,
+        "campaigns",
+      );
       const campaigns = snap.docs.map(
         (d) => ({ id: d.id, ...d.data() }) as SeasonalCampaign,
       );
       callback(campaigns);
     },
-    () => callback([]),
+    (err) => {
+      console.error("❌ [AdminRequester] listenSeasonalCampaigns error:", err);
+      callback([]);
+    },
   );
 }
 
@@ -766,18 +831,200 @@ export async function payUserReferralEarnings(
 // Users
 // ---------------------------------------------------------------------------
 
+export async function getTotalUsersCount(): Promise<number> {
+  try {
+    const snap = await getCountFromServer(collection(firestore, "users"));
+    return snap.data().count;
+  } catch (error) {
+    console.error("getTotalUsersCount error:", error);
+    return 0;
+  }
+}
+
+export interface FetchAdminUsersParams {
+  pageSize?: number;
+  sortBy?: "createdAt" | "fullName" | "default";
+  sortDirection?: "desc" | "asc";
+  startAfterDoc?: DocumentSnapshot | null;
+}
+
+export interface FetchAdminUsersResponse {
+  users: UserInterface[];
+  lastDoc: DocumentSnapshot | null;
+}
+
+export async function fetchAdminUsersPaginated({
+  pageSize = 25,
+  sortBy = "createdAt",
+  sortDirection = "desc",
+  startAfterDoc = null,
+}: FetchAdminUsersParams): Promise<FetchAdminUsersResponse> {
+  try {
+    const constraints: any[] = [];
+
+    if (sortBy === "createdAt") {
+      constraints.push(orderBy("createdAt", sortDirection));
+    } else if (sortBy === "fullName") {
+      constraints.push(orderBy("fullName", sortDirection));
+    }
+
+    constraints.push(limit(pageSize));
+
+    if (startAfterDoc) {
+      constraints.push(startAfter(startAfterDoc));
+    }
+
+    const q = query(collection(firestore, "users"), ...constraints);
+    const snap = await getDocs(q);
+
+    const users = snap.docs.map(
+      (d) => ({ id: d.id, ...d.data() }) as unknown as UserInterface,
+    );
+    const lastDoc =
+      snap.docs.length > 0 ? snap.docs[snap.docs.length - 1] : null;
+
+    return { users, lastDoc };
+  } catch (error) {
+    console.warn(
+      "fetchAdminUsersPaginated ordered query failed, falling back to unordered",
+      error,
+    );
+    try {
+      const fallbackConstraints: any[] = [limit(pageSize)];
+      if (startAfterDoc) {
+        fallbackConstraints.push(startAfter(startAfterDoc));
+      }
+      const fallbackSnap = await getDocs(
+        query(collection(firestore, "users"), ...fallbackConstraints),
+      );
+      return {
+        users: fallbackSnap.docs.map(
+          (d) => ({ id: d.id, ...d.data() }) as unknown as UserInterface,
+        ),
+        lastDoc:
+          fallbackSnap.docs.length > 0
+            ? fallbackSnap.docs[fallbackSnap.docs.length - 1]
+            : null,
+      };
+    } catch (fallbackErr) {
+      console.error("fetchAdminUsersPaginated fallback failed", fallbackErr);
+      return { users: [], lastDoc: null };
+    }
+  }
+}
+
 export async function searchUsers(
   searchTerm: string,
 ): Promise<UserInterface[]> {
-  const q = query(
-    collection(firestore, "users"),
-    where("fullNameArrayLower", "array-contains", searchTerm.toLowerCase()),
-    limit(50),
-  );
-  const snap = await getDocs(q);
-  return snap.docs.map(
-    (d) => ({ id: d.id, ...d.data() }) as unknown as UserInterface,
-  );
+  try {
+    const trimmed = searchTerm.trim().toLowerCase();
+    if (!trimmed) {
+      const { users } = await fetchAdminUsersPaginated({
+        pageSize: 50,
+        sortBy: "createdAt",
+        sortDirection: "desc",
+      });
+      return users;
+    }
+
+    const userMap = new Map<string, UserInterface>();
+
+    // 1. Direct email match
+    try {
+      const emailSnap = await getDocs(
+        query(
+          collection(firestore, "users"),
+          where("email", "==", trimmed),
+          limit(20),
+        ),
+      );
+      emailSnap.docs.forEach((d) =>
+        userMap.set(d.id, {
+          id: d.id,
+          ...d.data(),
+        } as unknown as UserInterface),
+      );
+    } catch (_) {}
+
+    // 2. Array-contains on fullNameArrayLower
+    try {
+      const nameArraySnap = await getDocs(
+        query(
+          collection(firestore, "users"),
+          where("fullNameArrayLower", "array-contains", trimmed),
+          limit(30),
+        ),
+      );
+      nameArraySnap.docs.forEach((d) =>
+        userMap.set(d.id, {
+          id: d.id,
+          ...d.data(),
+        } as unknown as UserInterface),
+      );
+    } catch (_) {}
+
+    // 3. Phone number match
+    try {
+      const phoneSnap = await getDocs(
+        query(
+          collection(firestore, "users"),
+          where("phoneNumber.number", "==", searchTerm.trim()),
+          limit(20),
+        ),
+      );
+      phoneSnap.docs.forEach((d) =>
+        userMap.set(d.id, {
+          id: d.id,
+          ...d.data(),
+        } as unknown as UserInterface),
+      );
+    } catch (_) {}
+
+    // 4. Prefix search on fullName
+    try {
+      const capitalized =
+        searchTerm.trim().charAt(0).toUpperCase() + searchTerm.trim().slice(1);
+      const prefixSnap = await getDocs(
+        query(
+          collection(firestore, "users"),
+          orderBy("fullName"),
+          where("fullName", ">=", capitalized),
+          where("fullName", "<=", capitalized + "\uf8ff"),
+          limit(30),
+        ),
+      );
+      prefixSnap.docs.forEach((d) =>
+        userMap.set(d.id, {
+          id: d.id,
+          ...d.data(),
+        } as unknown as UserInterface),
+      );
+    } catch (_) {}
+
+    if (userMap.size > 0) {
+      return Array.from(userMap.values());
+    }
+
+    // Fallback: search across first 300 users in memory
+    const fallbackSnap = await getDocs(
+      query(collection(firestore, "users"), limit(300)),
+    );
+    return fallbackSnap.docs
+      .map((d) => ({ id: d.id, ...d.data() }) as unknown as UserInterface)
+      .filter((u) => {
+        const name = (u.fullName || "").toLowerCase();
+        const email = (u.email || "").toLowerCase();
+        const phone = (u.phoneNumber?.number || "").toLowerCase();
+        return (
+          name.includes(trimmed) ||
+          email.includes(trimmed) ||
+          phone.includes(trimmed)
+        );
+      });
+  } catch (error) {
+    console.error("searchUsers error:", error);
+    return [];
+  }
 }
 
 export async function setUserAdminClaim(userId: string, isAdmin: boolean) {
