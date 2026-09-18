@@ -411,7 +411,7 @@ export default function BusinessRegistrationForm() {
           variant="h4"
           sx={{ fontWeight: 700, color: "primary.main", mb: 3 }}
         >
-          {chainId ? "Agregar sucursal" : "Registrá tu negocio"}
+          {chainId ? "Agregar sucursal" : "Registra tu negocio"}
         </Typography>
 
         <Section title="Datos básicos">

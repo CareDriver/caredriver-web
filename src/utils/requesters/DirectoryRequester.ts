@@ -323,6 +323,7 @@ export async function getCurrentPrice(
     let discountApplied = false;
     let cyclesRemaining = 0;
     let campaignName: string | null = null;
+    let campaignQrCodeImageUrl: string | null = null;
 
     const discountCyclesRemaining =
       (subData.discountCyclesRemaining as number) ?? 0;
@@ -338,6 +339,8 @@ export async function getCurrentPrice(
         const discountType = campaign.discountType as string;
         const discountValue = (campaign.discountValue as number) ?? 0;
         campaignName = (campaign.name as string) ?? null;
+        campaignQrCodeImageUrl =
+          (campaign.qrCodeImageUrl as string | null) ?? null;
         cyclesRemaining = discountCyclesRemaining;
 
         if (discountType === "percent") {
@@ -356,8 +359,18 @@ export async function getCurrentPrice(
     const paymentData = paymentSnap.exists()
       ? (paymentSnap.data() as Record<string, unknown>)
       : {};
+
+    const planQrCode =
+      effectivePlan === "featured"
+        ? ((paymentData.featuredQrCodeImageUrl as string | null) ?? null)
+        : ((paymentData.verifiedQrCodeImageUrl as string | null) ?? null);
+
+    const defaultQrCode = (paymentData.qrCodeImageUrl as string | null) ?? null;
+
+    // Hierarchy: Campaign QR -> Plan QR -> Default QR
     const qrCodeImageUrl =
-      (paymentData.qrCodeImageUrl as string | null) ?? null;
+      campaignQrCodeImageUrl || planQrCode || defaultQrCode;
+
     const paymentInstructions =
       (paymentData.paymentInstructions as string | null) ?? null;
 

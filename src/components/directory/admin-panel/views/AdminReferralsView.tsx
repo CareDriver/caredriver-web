@@ -276,8 +276,8 @@ export default function AdminReferralsView() {
             a <strong>{payingUser?.fullName || payingUser?.userId}</strong>.
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            Esto no transfiere la plata — hacé la transferencia vos primero.
-            Esto solo registra que ya se pagó.
+            Esto no transfiere la plata — haz la transferencia vos primero. Esto
+            solo registra que ya se pagó.
           </Typography>
         </DialogContent>
         <DialogActions>

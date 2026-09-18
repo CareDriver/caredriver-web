@@ -3,7 +3,7 @@ import BusinessRegistrationForm from "@/components/directory/registration/Busine
 import RequireAuth from "@/components/directory/registration/RequireAuth";
 
 export const metadata: Metadata = {
-  title: "Registrá tu negocio — CareDriver",
+  title: "Registra tu negocio — CareDriver",
 };
 
 export default function BusinessRegistrationPage() {

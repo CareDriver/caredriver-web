@@ -105,7 +105,7 @@ export default function OffersView() {
 
       {plan === "free" && (
         <Alert severity="info" sx={{ mb: 3 }}>
-          Tu plan Gratuito no permite crear ofertas. Actualizá a Verificado o
+          Tu plan Gratuito no permite crear ofertas. Actualiza a Verificado o
           Destacado.
         </Alert>
       )}

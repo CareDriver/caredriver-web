@@ -470,8 +470,10 @@ export async function updatePricingSettings(body: {
 }
 
 export async function updatePlatformPaymentSettings(body: {
-  qrCodeImageUrl?: string;
-  paymentInstructions?: string;
+  verifiedQrCodeImageUrl?: string | null;
+  featuredQrCodeImageUrl?: string | null;
+  qrCodeImageUrl?: string | null;
+  paymentInstructions?: string | null;
 }) {
   const ref = doc(firestore, "platformSettings", "payment");
   const { id: _id, ...rest } = body as Record<string, unknown>;
@@ -554,6 +556,7 @@ export async function saveDiscountCampaign(
       durationCycles,
       active,
       eligibilityWindow,
+      qrCodeImageUrl,
     } = body as Record<string, unknown>;
 
     const data: Record<string, unknown> = {
@@ -567,6 +570,7 @@ export async function saveDiscountCampaign(
     if (discountValue !== undefined) data.discountValue = discountValue;
     if (durationCycles !== undefined) data.durationCycles = durationCycles;
     if (active !== undefined) data.active = active;
+    if (qrCodeImageUrl !== undefined) data.qrCodeImageUrl = qrCodeImageUrl;
     if (eligibilityWindow !== undefined) {
       // Convert date strings/objects to Timestamps if needed
       const ew = eligibilityWindow as Record<string, unknown>;

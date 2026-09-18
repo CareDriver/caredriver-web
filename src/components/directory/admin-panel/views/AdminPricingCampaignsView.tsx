@@ -79,8 +79,10 @@ export default function AdminPricingCampaignsView() {
   const handleSavePayment = async () => {
     setLoading(true);
     await updatePlatformPaymentSettings({
-      qrCodeImageUrl: payment.qrCodeImageUrl,
-      paymentInstructions: payment.paymentInstructions,
+      verifiedQrCodeImageUrl: payment.verifiedQrCodeImageUrl || null,
+      featuredQrCodeImageUrl: payment.featuredQrCodeImageUrl || null,
+      qrCodeImageUrl: payment.qrCodeImageUrl || null,
+      paymentInstructions: payment.paymentInstructions || null,
     });
     setLoading(false);
   };
@@ -101,6 +103,7 @@ export default function AdminPricingCampaignsView() {
       discountType: "percent",
       discountValue: 0,
       durationCycles: 1,
+      qrCodeImageUrl: "",
       active: true,
     });
     setDialogOpen(true);
@@ -174,31 +177,116 @@ export default function AdminPricingCampaignsView() {
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-                Método de pago
+              <Typography variant="h6" sx={{ fontWeight: 700, mb: 0.5 }}>
+                Método de pago y Códigos QR
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Configura los QRs con monto fijo para cada plan o un QR general
+                de respaldo.
+              </Typography>
+
+              {/* QR Plan Verificado */}
+              <Typography
+                variant="subtitle2"
+                sx={{ fontWeight: 600, mb: 0.5, color: "primary.main" }}
+              >
+                QR Plan Verificado (ej. Bs. {pricing.verifiedBasePrice || 80})
               </Typography>
               <TextField
-                label="URL imagen QR"
+                label="URL imagen QR Plan Verificado"
                 fullWidth
-                sx={{ mb: 2 }}
+                size="small"
+                sx={{ mb: 1.5 }}
+                value={payment.verifiedQrCodeImageUrl || ""}
+                onChange={(e) =>
+                  setPayment({
+                    ...payment,
+                    verifiedQrCodeImageUrl: e.target.value,
+                  })
+                }
+              />
+              {payment.verifiedQrCodeImageUrl && (
+                <Box sx={{ mb: 2, textAlign: "center" }}>
+                  <img
+                    src={payment.verifiedQrCodeImageUrl}
+                    alt="QR Verificado preview"
+                    style={{
+                      maxHeight: 140,
+                      objectFit: "contain",
+                      borderRadius: 8,
+                      border: "1px solid #e0e0e0",
+                    }}
+                  />
+                </Box>
+              )}
+
+              {/* QR Plan Destacado */}
+              <Typography
+                variant="subtitle2"
+                sx={{ fontWeight: 600, mb: 0.5, color: "secondary.main" }}
+              >
+                QR Plan Destacado (ej. Bs. {pricing.featuredBasePrice || 150})
+              </Typography>
+              <TextField
+                label="URL imagen QR Plan Destacado"
+                fullWidth
+                size="small"
+                sx={{ mb: 1.5 }}
+                value={payment.featuredQrCodeImageUrl || ""}
+                onChange={(e) =>
+                  setPayment({
+                    ...payment,
+                    featuredQrCodeImageUrl: e.target.value,
+                  })
+                }
+              />
+              {payment.featuredQrCodeImageUrl && (
+                <Box sx={{ mb: 2, textAlign: "center" }}>
+                  <img
+                    src={payment.featuredQrCodeImageUrl}
+                    alt="QR Destacado preview"
+                    style={{
+                      maxHeight: 140,
+                      objectFit: "contain",
+                      borderRadius: 8,
+                      border: "1px solid #e0e0e0",
+                    }}
+                  />
+                </Box>
+              )}
+
+              {/* QR General / Respaldo */}
+              <Typography
+                variant="subtitle2"
+                sx={{ fontWeight: 600, mb: 0.5, color: "text.secondary" }}
+              >
+                QR General / Respaldo (monto abierto o default)
+              </Typography>
+              <TextField
+                label="URL imagen QR General"
+                fullWidth
+                size="small"
+                sx={{ mb: 1.5 }}
                 value={payment.qrCodeImageUrl || ""}
                 onChange={(e) =>
                   setPayment({ ...payment, qrCodeImageUrl: e.target.value })
                 }
               />
               {payment.qrCodeImageUrl && (
-                <Box sx={{ mb: 2 }}>
+                <Box sx={{ mb: 2, textAlign: "center" }}>
                   <img
                     src={payment.qrCodeImageUrl}
-                    alt="QR preview"
+                    alt="QR General preview"
                     style={{
-                      width: "100%",
-                      maxHeight: 240,
+                      maxHeight: 140,
                       objectFit: "contain",
+                      borderRadius: 8,
+                      border: "1px solid #e0e0e0",
                     }}
                   />
                 </Box>
               )}
+
               <TextField
                 label="Instrucciones de pago"
                 fullWidth
@@ -259,7 +347,20 @@ export default function AdminPricingCampaignsView() {
               <TableBody>
                 {discountCampaigns.map((campaign) => (
                   <TableRow key={campaign.id} hover>
-                    <TableCell>{campaign.name}</TableCell>
+                    <TableCell>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        {campaign.name}
+                        {campaign.qrCodeImageUrl && (
+                          <Chip
+                            size="small"
+                            label="QR propio"
+                            color="success"
+                            variant="outlined"
+                            sx={{ ml: 1, height: 20, fontSize: "0.65rem" }}
+                          />
+                        )}
+                      </Box>
+                    </TableCell>
                     <TableCell>
                       {(campaign.appliesToPlans || []).map((p) => (
                         <Chip key={p} size="small" label={p} sx={{ mr: 0.5 }} />
@@ -380,6 +481,33 @@ export default function AdminPricingCampaignsView() {
               })
             }
           />
+          <TextField
+            label="URL imagen QR promocional (opcional)"
+            fullWidth
+            sx={{ my: 1 }}
+            value={editingCampaign?.qrCodeImageUrl || ""}
+            onChange={(e) =>
+              setEditingCampaign({
+                ...editingCampaign,
+                qrCodeImageUrl: e.target.value,
+              })
+            }
+            helperText="Si esta campaña tiene un precio especial cerrado, puedes pegar el QR con ese monto exacto."
+          />
+          {editingCampaign?.qrCodeImageUrl && (
+            <Box sx={{ my: 1, textAlign: "center" }}>
+              <img
+                src={editingCampaign.qrCodeImageUrl}
+                alt="QR promocional preview"
+                style={{
+                  maxHeight: 140,
+                  objectFit: "contain",
+                  borderRadius: 8,
+                  border: "1px solid #e0e0e0",
+                }}
+              />
+            </Box>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogOpen(false)}>Cancelar</Button>

@@ -178,7 +178,7 @@ export default function DashboardView() {
                   }}
                 >
                   <Typography variant="body1" color="text.secondary">
-                    Actualizá a Destacado para ver tendencias completas de tu
+                    Actualiza a Destacado para ver tendencias completas de tu
                     zona.
                   </Typography>
                   <Button

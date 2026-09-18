@@ -84,6 +84,8 @@ export interface PlatformPricingSettings {
  * Platform payment settings stored in `platformSettings/payment`.
  */
 export interface PlatformPaymentSettings {
+  verifiedQrCodeImageUrl?: string | null;
+  featuredQrCodeImageUrl?: string | null;
   qrCodeImageUrl?: string | null;
   paymentInstructions?: string | null;
   updatedAt?: Timestamp;
@@ -105,6 +107,7 @@ export interface DiscountCampaign {
     start: Timestamp;
     end: Timestamp;
   };
+  qrCodeImageUrl?: string | null;
   createdAt?: Timestamp;
 }
 
